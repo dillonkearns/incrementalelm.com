@@ -18,6 +18,7 @@ type alias Model =
 
 type Msg
     = EverybodySwitch
+    | MoveIn
     | Animate Animation.Msg
 
 
@@ -31,6 +32,15 @@ type alias Palette =
 
 palette : Palette
 palette =
+    { orange = rgb 216 219 226
+    , green = rgb 27 27 30
+    , lavender = rgb 55 63 81
+    , blue = rgb 88 164 176
+    }
+
+
+originalPalette : Palette
+originalPalette =
     { orange = rgb 240 173 0
     , green = rgb 127 209 59
     , lavender = rgb 90 99 120
@@ -125,11 +135,23 @@ update action model =
             , Cmd.none
             )
 
+        MoveIn ->
+            ( updateStyles model, Cmd.none )
+
+
+updateStyles : Model -> Model
+updateStyles model =
+    { model
+        | styles =
+            model.styles
+                |> List.indexedMap makeTranslated
+    }
+
 
 view : Model -> Html Msg
 view model =
     div
-        [ onClick EverybodySwitch
+        [ onClick MoveIn
         , Attr.style [ ( "margin", "200px auto" ), ( "width", "500px" ), ( "height", "500px" ), ( "cursor", "pointer" ) ]
         ]
         [ h1 [] [ text "Click to morph!" ]
@@ -141,7 +163,7 @@ view model =
             ]
           <|
             [ rect
-                [ fill "#7FD13B"
+                [ fill "rgb(27,27,30)"
                 , x "192.99"
                 , y "107.392"
                 , width "107.676"
@@ -155,11 +177,35 @@ view model =
         ]
 
 
+translate n =
+    Animation.translate (Animation.px n) (Animation.px n)
+
+
+makeTranslated i polygon =
+    polygon
+        |> Animation.interrupt
+            [ Animation.set
+                [ translate -1000
+                , Animation.scale 1
+                ]
+            , Animation.wait (Time.second * toFloat i * 0.1 + (((toFloat i * toFloat i) * Time.second * 0.05) / (toFloat i + 1)))
+            , Animation.to
+                [ translate 0
+                , Animation.scale 1
+                ]
+            ]
+
+
 init : ( Model, Cmd Msg )
 init =
-    ( { styles = List.map Animation.style polygons
+    ( { styles =
+            polygons
+                |> List.map Animation.style
+
+      -- |> List.map translate
       , index = 1
       }
+        |> updateStyles
     , Cmd.none
     )
 
