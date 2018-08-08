@@ -4,7 +4,6 @@ import Animation exposing (px)
 import Color exposing (green, purple, rgb)
 import Html exposing (Html, div, h1)
 import Html.Attributes as Attr
-import Html.Events exposing (..)
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
 import Time exposing (second)
@@ -17,9 +16,7 @@ type alias Model =
 
 
 type Msg
-    = EverybodySwitch
-    | MoveIn
-    | Animate Animation.Msg
+    = Animate Animation.Msg
 
 
 type alias Palette =
@@ -99,44 +96,12 @@ polygons =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update action model =
     case action of
-        EverybodySwitch ->
-            let
-                wrappedIndex =
-                    if List.length model.styles < model.index then
-                        model.index - List.length model.styles
-                    else
-                        model.index
-
-                newStyles =
-                    List.drop wrappedIndex polygons ++ List.take wrappedIndex polygons
-            in
-            ( { model
-                | index = wrappedIndex + 1
-                , styles =
-                    List.map3
-                        (\i style newStyle ->
-                            Animation.interrupt
-                                [ Animation.wait (toFloat i * 0.05 * second)
-                                , Animation.to newStyle
-                                ]
-                                style
-                        )
-                        (List.range 0 (List.length model.styles))
-                        model.styles
-                        newStyles
-              }
-            , Cmd.none
-            )
-
         Animate time ->
             ( { model
                 | styles = List.map (Animation.update time) model.styles
               }
             , Cmd.none
             )
-
-        MoveIn ->
-            ( updateStyles model, Cmd.none )
 
 
 updateStyles : Model -> Model
@@ -151,11 +116,9 @@ updateStyles model =
 view : Model -> Html Msg
 view model =
     div
-        [ onClick MoveIn
-        , Attr.style [ ( "margin", "200px auto" ), ( "width", "500px" ), ( "height", "500px" ), ( "cursor", "pointer" ) ]
+        [ Attr.style [ ( "margin", "200px auto" ), ( "width", "500px" ), ( "height", "500px" ), ( "cursor", "pointer" ) ]
         ]
-        [ h1 [] [ text "Click to morph!" ]
-        , svg
+        [ svg
             [ version "1.1"
             , x "0"
             , y "0"
@@ -201,8 +164,6 @@ init =
     ( { styles =
             polygons
                 |> List.map Animation.style
-
-      -- |> List.map translate
       , index = 1
       }
         |> updateStyles
