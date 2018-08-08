@@ -1,0 +1,15 @@
+{
+  "name": "incremental-elm",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "elm-live Logo.elm --open"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "elm-live": "^2.7.5"
+  }
+}
