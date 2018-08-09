@@ -16,8 +16,17 @@ palette : Palette
 palette =
     { orange = rgb 216 219 226
     , green = rgb 27 27 30
-    , lavender = rgb 55 63 81
+    , lavender = rgb 169 188 208
     , blue = rgb 88 164 176
+    }
+
+
+purplePalette : Palette
+purplePalette =
+    { orange = rgb 86 3 173
+    , green = Color.rgb 21 26 29
+    , lavender = rgb 216 219 226
+    , blue = rgb 67 72 76
     }
 
 

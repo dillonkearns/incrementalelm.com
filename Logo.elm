@@ -3,6 +3,7 @@ module Main exposing (..)
 import Animation exposing (px)
 import Color exposing (blue, darkBlue, green, purple, rgb)
 import Element exposing (Element, alignRight, el, row, text)
+import Element.Background as Background
 import ElmLogo
 import Html exposing (Html, div, h1)
 import Svg exposing (..)
@@ -42,8 +43,16 @@ updateStyles model =
 
 view : Model -> Html Msg
 view model =
-    animationView model
+    mainView model
         |> Element.layout []
+
+
+mainView model =
+    [ animationView model ]
+        |> Element.row
+            [ Background.color (Color.rgb 55 63 81)
+            , Element.alignTop
+            ]
 
 
 animationView model =
