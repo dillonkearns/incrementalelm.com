@@ -180,15 +180,16 @@ init =
     )
 
 
+subscriptions : Model -> Sub Msg
+subscriptions model =
+    Animation.subscription Animate model.styles
+
+
 main : Program Never Model Msg
 main =
     Html.program
         { init = init
         , view = view
         , update = update
-        , subscriptions =
-            \model ->
-                Animation.subscription
-                    Animate
-                    model.styles
+        , subscriptions = subscriptions
         }
