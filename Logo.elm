@@ -1,12 +1,12 @@
 module Main exposing (..)
 
 import Animation
-import Color
 import Element exposing (Element)
 import Element.Background as Background
 import Element.Font
 import ElmLogo
 import Html exposing (Html)
+import Style exposing (palette)
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
 import Time exposing (second)
@@ -52,13 +52,13 @@ mainView model =
     [ animationView model
     , Element.text "Incremental Elm"
         |> Element.el
-            [ Element.Font.color Color.white
+            [ Element.Font.color palette.mainBackground
             , Element.Font.size 50
             , Element.Font.family [ Element.Font.typeface "Lato" ]
             ]
     ]
         |> Element.row
-            [ Background.color (Color.rgb 55 63 81)
+            [ Background.color palette.highlightBackground
             , Element.alignTop
             ]
 
