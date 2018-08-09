@@ -44,7 +44,7 @@ updateStyles model =
 
 view : Model -> Html Msg
 view model =
-    [ mainView model
+    [ navbar model
     , [ "Build safer frontends"
             |> Element.text
             |> Element.el
@@ -68,7 +68,7 @@ view model =
         |> Element.layout []
 
 
-mainView model =
+navbar model =
     [ animationView model
     , Element.text "Incremental Elm Consulting"
         |> Element.el
