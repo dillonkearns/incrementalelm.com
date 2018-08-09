@@ -20,7 +20,29 @@ palette =
     , light = Color.rgb 169 188 208
     , highlight = Color.rgb 88 164 176
     , mainBackground = Color.white
+    , highlightBackground = Color.rgb 88 164 176
+    }
+
+
+palette3 : Palette
+palette3 =
+    { main = Color.rgb 216 219 226
+    , bold = Color.rgb 27 27 30
+    , light = Color.rgb 169 188 208
+    , highlight = Color.rgb 88 164 176
+    , mainBackground = Color.white
     , highlightBackground = Color.rgb 55 63 81
+    }
+
+
+paletteLightGreen : Palette
+paletteLightGreen =
+    { main = Color.rgb 66 122 161
+    , bold = Color.rgb 5 102 141
+    , light = Color.rgb 169 188 208
+    , highlight = Color.rgb 165 190 0
+    , mainBackground = Color.rgb 235 242 250
+    , highlightBackground = Color.rgb 103 148 54
     }
 
 

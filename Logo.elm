@@ -43,7 +43,27 @@ updateStyles model =
 
 view : Model -> Html Msg
 view model =
-    mainView model
+    [ mainView model
+    , [ "Build safer frontends"
+            |> Element.text
+            |> Element.el
+                [ Element.Font.color palette.main
+                , Element.centerX
+                , Element.centerY
+                , Element.Font.size 55
+                , Element.Font.family [ Element.Font.typeface "Lato" ]
+                ]
+      ]
+        |> Element.column
+            [ Background.color palette.highlightBackground
+            , Element.height (Element.px 300)
+            , Element.width Element.fill
+            ]
+    ]
+        |> Element.column
+            [ Element.height Element.shrink
+            , Element.alignTop
+            ]
         |> Element.layout []
 
 
@@ -51,13 +71,13 @@ mainView model =
     [ animationView model
     , Element.text "Incremental Elm"
         |> Element.el
-            [ Element.Font.color palette.mainBackground
+            [ Element.Font.color palette.bold
             , Element.Font.size 50
             , Element.Font.family [ Element.Font.typeface "Lato" ]
             ]
     ]
         |> Element.row
-            [ Background.color palette.highlightBackground
+            [ Background.color palette.mainBackground
             , Element.alignTop
             ]
 
