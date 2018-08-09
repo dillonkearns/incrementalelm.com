@@ -3,10 +3,7 @@ module Main exposing (..)
 import Animation exposing (px)
 import Color exposing (blue, darkBlue, green, purple, rgb)
 import Element exposing (Element, alignRight, el, row, text)
-import Element.Background as Background
-import Element.Border as Border
 import Html exposing (Html, div, h1)
-import Html.Attributes as Attr
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
 import Time exposing (second)
@@ -123,30 +120,33 @@ view model =
 
 
 animationView model =
-    div
-        [ Attr.style [ ( "margin", "200px auto" ), ( "width", "500px" ), ( "height", "500px" ), ( "cursor", "pointer" ) ]
+    svg
+        [ version "1.1"
+        , x "0"
+        , y "0"
+        , viewBox "0 0 323.141 322.95"
+        , width "100%"
         ]
-        [ svg
-            [ version "1.1"
-            , x "0"
-            , y "0"
-            , viewBox "0 0 323.141 322.95"
+        [ rect
+            [ fill "rgb(27,27,30)"
+            , x "192.99"
+            , y "107.392"
+            , width "107.676"
+            , height "108.167"
+            , transform "matrix(0.7071 0.7071 -0.7071 0.7071 186.4727 -127.2386)"
             ]
-          <|
-            [ rect
-                [ fill "rgb(27,27,30)"
-                , x "192.99"
-                , y "107.392"
-                , width "107.676"
-                , height "108.167"
-                , transform "matrix(0.7071 0.7071 -0.7071 0.7071 186.4727 -127.2386)"
-                ]
-                []
-            , Svg.g []
-                (List.map (\poly -> polygon (Animation.render poly) []) model.styles)
-            ]
+            []
+        , Svg.g []
+            (List.map (\poly -> polygon (Animation.render poly) []) model.styles)
         ]
         |> Element.html
+        |> Element.el
+            [ Element.padding 20
+            , Element.height Element.shrink
+            , Element.width (Element.px 100)
+            , Element.alignTop
+            , Element.alignLeft
+            ]
 
 
 translate n =
