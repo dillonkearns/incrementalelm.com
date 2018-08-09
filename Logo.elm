@@ -68,14 +68,30 @@ view model =
         |> Element.layout []
 
 
-navbar model =
-    [ animationView model
-    , Element.text "Incremental Elm Consulting"
+logoText =
+    [ Element.text "Incremental Elm"
         |> Element.el
             [ Element.Font.color palette.bold
             , Element.Font.size 50
-            , Element.Font.family [ Element.Font.typeface "Lato" ]
             ]
+    , Element.text "Consulting"
+        |> Element.el
+            [ Element.Font.color palette.bold
+            , Element.Font.size 17
+            , Element.alignRight
+            ]
+    ]
+        |> Element.column
+            [ Element.Font.family []
+            , Element.width Element.shrink
+            , Element.height Element.shrink
+            , Element.spacing 5
+            ]
+
+
+navbar model =
+    [ animationView model
+    , logoText
     ]
         |> Element.row
             [ Background.color palette.mainBackground
