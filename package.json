@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "elm-live Logo.elm --open"
+    "start": "elm-live Logo.elm --open --output elm.js"
   },
   "keywords": [],
   "author": "",

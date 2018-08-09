@@ -4,6 +4,7 @@ import Animation exposing (px)
 import Color exposing (blue, darkBlue, green, purple, rgb)
 import Element exposing (Element, alignRight, el, row, text)
 import Element.Background as Background
+import Element.Font
 import ElmLogo
 import Html exposing (Html, div, h1)
 import Svg exposing (..)
@@ -48,7 +49,14 @@ view model =
 
 
 mainView model =
-    [ animationView model ]
+    [ animationView model
+    , Element.text "Incremental Elm"
+        |> Element.el
+            [ Element.Font.color Color.white
+            , Element.Font.size 35
+            , Element.Font.family [ Element.Font.typeface "helvetica" ]
+            ]
+    ]
         |> Element.row
             [ Background.color (Color.rgb 55 63 81)
             , Element.alignTop
