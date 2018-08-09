@@ -128,13 +128,27 @@ logoText =
             ]
 
 
+isMobile { dimensions } =
+    dimensions.width < 1000
+
+
 navbar model =
-    [ animationView model
-    , logoText
-    ]
-        |> Element.row
+    if isMobile model then
+        Element.column
             [ Background.color palette.mainBackground
             , Element.alignTop
+            ]
+            [ animationView model
+            , logoText
+            ]
+
+    else
+        Element.row
+            [ Background.color palette.mainBackground
+            , Element.alignTop
+            ]
+            [ animationView model
+            , logoText
             ]
 
 
