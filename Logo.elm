@@ -70,7 +70,7 @@ view model =
 
 mainView model =
     [ animationView model
-    , Element.text "Incremental Elm"
+    , Element.text "Incremental Elm Consulting"
         |> Element.el
             [ Element.Font.color palette.bold
             , Element.Font.size 50
