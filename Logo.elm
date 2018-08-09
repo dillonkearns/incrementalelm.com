@@ -53,8 +53,8 @@ mainView model =
     , Element.text "Incremental Elm"
         |> Element.el
             [ Element.Font.color Color.white
-            , Element.Font.size 35
-            , Element.Font.family [ Element.Font.typeface "helvetica" ]
+            , Element.Font.size 50
+            , Element.Font.family [ Element.Font.typeface "Lato" ]
             ]
     ]
         |> Element.row
