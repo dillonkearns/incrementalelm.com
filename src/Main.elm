@@ -2,24 +2,31 @@ module Main exposing (..)
 
 import Animation
 import Browser
+import Browser.Dom
 import Element exposing (Element)
 import Element.Background as Background
 import Element.Font
 import ElmLogo
 import Html exposing (Html)
-import Style exposing (palette)
+import Style exposing (fonts, palette)
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
+import Task
 import Time
 
 
 type alias Model =
     { styles : List Animation.State
+    , dimensions :
+        { width : Float
+        , height : Float
+        }
     }
 
 
 type Msg
     = Animate Animation.Msg
+    | InitialViewport Browser.Dom.Viewport
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -28,6 +35,20 @@ update action model =
         Animate time ->
             ( { model
                 | styles = List.map (Animation.update time) model.styles
+              }
+            , Cmd.none
+            )
+
+        InitialViewport { viewport } ->
+            let
+                _ =
+                    Debug.log "viewport" viewport
+            in
+            ( { model
+                | dimensions =
+                    { width = viewport.width
+                    , height = viewport.height
+                    }
               }
             , Cmd.none
             )
@@ -58,8 +79,19 @@ mainView model =
                 , Element.centerX
                 , Element.centerY
                 , Element.Font.size 55
-                , Element.Font.family [ Element.Font.typeface "Lato" ]
+                , fonts.body
                 ]
+
+      -- , model.dimensions
+      --       |> Debug.toString
+      --       |> Element.text
+      --       |> Element.el
+      --           [ Element.Font.color (Element.rgb 255 255 255)
+      --           , Element.centerX
+      --           , Element.centerY
+      --           , Element.Font.size 55
+      --           , fonts.body
+      --           ]
       ]
         |> Element.column
             [ Background.color palette.light
@@ -160,9 +192,14 @@ makeTranslated i polygon =
 init : () -> ( Model, Cmd Msg )
 init () =
     ( { styles = ElmLogo.polygons |> List.map Animation.style
+      , dimensions =
+            { width = 0
+            , height = 0
+            }
       }
         |> updateStyles
-    , Cmd.none
+    , Browser.Dom.getViewport
+        |> Task.perform InitialViewport
     )
 
 
@@ -179,12 +216,3 @@ main =
         , update = update
         , subscriptions = subscriptions
         }
-
-
-
--- Html.program
---     { init = init
---     , view = view
---     , update = update
---     , subscriptions = subscriptions
---     }

@@ -2,6 +2,13 @@ module Style exposing (..)
 
 import Animation
 import Element
+import Element.Font
+
+
+fonts =
+    { title = Element.Font.family [ Element.Font.typeface "Lato" ]
+    , body = Element.Font.family [ Element.Font.typeface "Raleway" ]
+    }
 
 
 
