@@ -1,7 +1,7 @@
 module Main exposing (..)
 
 import Animation
-import Color
+import Browser
 import Element exposing (Element)
 import Element.Background as Background
 import Element.Font
@@ -10,7 +10,7 @@ import Html exposing (Html)
 import Style exposing (palette)
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
-import Time exposing (second)
+import Time
 
 
 type alias Model =
@@ -42,13 +42,19 @@ updateStyles model =
     }
 
 
-view : Model -> Html Msg
+view : Model -> Browser.Document Msg
 view model =
+    { title = "Incremental Elm"
+    , body = [ mainView model ]
+    }
+
+
+mainView model =
     [ navbar model
     , [ "Build safer frontends"
             |> Element.text
             |> Element.el
-                [ Element.Font.color Color.white
+                [ Element.Font.color (Element.rgb 255 255 255)
                 , Element.centerX
                 , Element.centerY
                 , Element.Font.size 55
@@ -64,6 +70,7 @@ view model =
         |> Element.column
             [ Element.height Element.shrink
             , Element.alignTop
+            , Element.width Element.fill
             ]
         |> Element.layout []
 
@@ -124,6 +131,10 @@ translate n =
     Animation.translate (Animation.px n) (Animation.px n)
 
 
+second =
+    1000
+
+
 makeTranslated i polygon =
     polygon
         |> Animation.interrupt
@@ -131,7 +142,14 @@ makeTranslated i polygon =
                 [ translate -1000
                 , Animation.scale 1
                 ]
-            , Animation.wait (Time.second * toFloat i * 0.1 + (((toFloat i * toFloat i) * Time.second * 0.05) / (toFloat i + 1)))
+            , Animation.wait
+                (second
+                    * toFloat i
+                    * 0.1
+                    + (((toFloat i * toFloat i) * second * 0.05) / (toFloat i + 1))
+                    |> round
+                    |> Time.millisToPosix
+                )
             , Animation.to
                 [ translate 0
                 , Animation.scale 1
@@ -139,8 +157,8 @@ makeTranslated i polygon =
             ]
 
 
-init : ( Model, Cmd Msg )
-init =
+init : () -> ( Model, Cmd Msg )
+init () =
     ( { styles = ElmLogo.polygons |> List.map Animation.style
       }
         |> updateStyles
@@ -153,11 +171,20 @@ subscriptions model =
     Animation.subscription Animate model.styles
 
 
-main : Program Never Model Msg
+main : Program () Model Msg
 main =
-    Html.program
+    Browser.document
         { init = init
         , view = view
         , update = update
         , subscriptions = subscriptions
         }
+
+
+
+-- Html.program
+--     { init = init
+--     , view = view
+--     , update = update
+--     , subscriptions = subscriptions
+--     }
