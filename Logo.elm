@@ -1,6 +1,7 @@
 module Main exposing (..)
 
 import Animation
+import Color
 import Element exposing (Element)
 import Element.Background as Background
 import Element.Font
@@ -47,7 +48,7 @@ view model =
     , [ "Build safer frontends"
             |> Element.text
             |> Element.el
-                [ Element.Font.color palette.main
+                [ Element.Font.color Color.white
                 , Element.centerX
                 , Element.centerY
                 , Element.Font.size 55
@@ -55,7 +56,7 @@ view model =
                 ]
       ]
         |> Element.column
-            [ Background.color palette.highlightBackground
+            [ Background.color palette.light
             , Element.height (Element.px 300)
             , Element.width Element.fill
             ]
