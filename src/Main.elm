@@ -81,17 +81,7 @@ mainView model =
                 , Element.Font.size 55
                 , fonts.body
                 ]
-
-      -- , model.dimensions
-      --       |> Debug.toString
-      --       |> Element.text
-      --       |> Element.el
-      --           [ Element.Font.color (Element.rgb 255 255 255)
-      --           , Element.centerX
-      --           , Element.centerY
-      --           , Element.Font.size 55
-      --           , fonts.body
-      --           ]
+      , dimensionsView model
       ]
         |> Element.column
             [ Background.color palette.light
@@ -105,6 +95,19 @@ mainView model =
             , Element.width Element.fill
             ]
         |> Element.layout []
+
+
+dimensionsView model =
+    model.dimensions
+        |> Debug.toString
+        |> Element.text
+        |> Element.el
+            [ Element.Font.color (Element.rgb 255 255 255)
+            , Element.centerX
+            , Element.centerY
+            , Element.Font.size 55
+            , fonts.body
+            ]
 
 
 logoText =
