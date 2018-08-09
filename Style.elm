@@ -16,6 +16,27 @@ type alias Palette =
 palette : Palette
 palette =
     { main = Color.rgb 216 219 226
+    , bold = Color.rgb 0 23 31
+    , light = Color.rgb 0 126 167
+    , highlight = Color.rgb 0 168 232
+    , mainBackground = Color.rgb 255 255 255
+    , highlightBackground = Color.rgb 0 52 89
+    }
+
+
+
+{-
+   Color.rgb 255 255 255
+   Color.rgb 0 23 31
+   Color.rgb 0 52 89
+   Color.rgb 0 126 167
+   Color.rgb 0 168 232
+-}
+
+
+originalPalette : Palette
+originalPalette =
+    { main = Color.rgb 216 219 226
     , bold = Color.rgb 27 27 30
     , light = Color.rgb 169 188 208
     , highlight = Color.rgb 88 164 176
