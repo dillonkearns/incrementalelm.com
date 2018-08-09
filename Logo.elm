@@ -1,7 +1,10 @@
 module Main exposing (..)
 
 import Animation exposing (px)
-import Color exposing (green, purple, rgb)
+import Color exposing (blue, darkBlue, green, purple, rgb)
+import Element exposing (Element, alignRight, el, row, text)
+import Element.Background as Background
+import Element.Border as Border
 import Html exposing (Html, div, h1)
 import Html.Attributes as Attr
 import Svg exposing (..)
@@ -115,6 +118,11 @@ updateStyles model =
 
 view : Model -> Html Msg
 view model =
+    animationView model
+        |> Element.layout []
+
+
+animationView model =
     div
         [ Attr.style [ ( "margin", "200px auto" ), ( "width", "500px" ), ( "height", "500px" ), ( "cursor", "pointer" ) ]
         ]
@@ -138,6 +146,7 @@ view model =
                 (List.map (\poly -> polygon (Animation.render poly) []) model.styles)
             ]
         ]
+        |> Element.html
 
 
 translate n =
