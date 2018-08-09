@@ -14,7 +14,6 @@ import Time exposing (second)
 
 type alias Model =
     { styles : List Animation.State
-    , index : Int
     }
 
 
@@ -106,7 +105,6 @@ makeTranslated i polygon =
 init : ( Model, Cmd Msg )
 init =
     ( { styles = ElmLogo.polygons |> List.map Animation.style
-      , index = 1
       }
         |> updateStyles
     , Cmd.none
