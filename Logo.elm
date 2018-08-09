@@ -1,12 +1,12 @@
 module Main exposing (..)
 
-import Animation exposing (px)
-import Color exposing (blue, darkBlue, green, purple, rgb)
-import Element exposing (Element, alignRight, el, row, text)
+import Animation
+import Color
+import Element exposing (Element)
 import Element.Background as Background
 import Element.Font
 import ElmLogo
-import Html exposing (Html, div, h1)
+import Html exposing (Html)
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
 import Time exposing (second)
