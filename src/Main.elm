@@ -88,13 +88,18 @@ mainView model =
         , Element.width Element.fill
         ]
         [ navbar model
-        , [ [ "Want a highly reliable and maintainble frontend?"
-                |> Element.text
-                |> Element.el [ fonts.title ]
-            , bulletPoint "Zero runtime exceptions"
-            , bulletPoint "Rely on language guarantees instead of discipline"
-            , bulletPoint "Predictable code - no globals or hidden side-effects"
+        , Element.column
+            [ Background.color palette.highlightBackground
+            , Element.height (Element.px 300)
+            , Element.width Element.fill
             ]
+            [ [ "Want a highly reliable and maintainble frontend?"
+                    |> Element.text
+                    |> Element.el [ fonts.title ]
+              , bulletPoint "Zero runtime exceptions"
+              , bulletPoint "Rely on language guarantees instead of discipline"
+              , bulletPoint "Predictable code - no globals or hidden side-effects"
+              ]
                 |> Element.column
                     [ Element.Font.color (Element.rgb 255 255 255)
                     , Element.centerX
@@ -103,30 +108,26 @@ mainView model =
                     , fonts.body
                     , Element.spacing 25
                     ]
-          ]
-            |> Element.column
-                [ Background.color palette.highlightBackground
-                , Element.height (Element.px 300)
-                , Element.width Element.fill
-                ]
+            ]
         , Element.column
             [ Element.height (Element.px 300)
             , Element.width Element.fill
             ]
-            [ [ "How do I start?"
+            [ Element.column
+                [ Element.Font.color palette.bold
+                , Element.centerX
+                , Element.centerY
+                , Element.Font.size 55
+                , fonts.body
+                , Element.spacing 25
+                , Element.Border.width 2
+                , Element.width Element.fill
+                ]
+                [ "How do I start?"
                     |> Element.text
                     |> Element.el [ fonts.title ]
-              , bulletPoint "One step at a time!"
-              ]
-                |> Element.column
-                    [ Element.Font.color palette.bold
-                    , Element.centerX
-                    , Element.centerY
-                    , Element.Font.size 55
-                    , fonts.body
-                    , Element.spacing 25
-                    , Element.Border.width 2
-                    ]
+                , bulletPoint "One step at a time!"
+                ]
             ]
         ]
         |> Element.layout []
