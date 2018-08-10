@@ -77,7 +77,7 @@ bulletPoint content =
         |> Element.text
         |> Element.el
             [ fonts.body
-            , Element.Font.size 30
+            , Element.Font.size 25
             ]
 
 
