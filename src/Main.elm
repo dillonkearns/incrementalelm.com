@@ -102,15 +102,19 @@ whyElmSection =
         ]
         [ Element.column
             [ Element.Font.color (Element.rgb 255 255 255)
-            , Element.centerX
             , Element.centerY
+            , Element.width Element.fill
             , Element.Font.size 55
             , fonts.body
             , Element.spacing 25
+            , Element.padding 30
             ]
             [ "Want a highly reliable & maintainble frontend?"
                 |> Element.text
-                |> Element.el [ fonts.title ]
+                |> Element.el
+                    [ fonts.title
+                    , Element.centerX
+                    ]
             , bulletPoint "Zero runtime exceptions"
             , bulletPoint "Rely on language guarantees instead of discipline"
             , bulletPoint "Predictable code - no globals or hidden side-effects"
