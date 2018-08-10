@@ -1,6 +1,6 @@
 module Main exposing (..)
 
-import Animation
+import Animation exposing (backgroundColor)
 import Browser
 import Browser.Dom
 import Element exposing (Element)
@@ -95,13 +95,26 @@ mainView model =
 
 
 whyElmSection =
+    bulletSection
+        { backgroundColor = palette.highlightBackground
+        , fontColor = Element.rgb 255 255 255
+        , headingText = "Want a highly reliable & maintainble frontend?"
+        , bulletContents =
+            [ "Zero runtime exceptions"
+            , "Rely on language guarantees instead of discipline"
+            , "Predictable code - no globals or hidden side-effects"
+            ]
+        }
+
+
+bulletSection { backgroundColor, fontColor, headingText, bulletContents } =
     Element.column
-        [ Background.color palette.highlightBackground
+        [ Background.color backgroundColor
         , Element.height (Element.px 300)
         , Element.width Element.fill
         ]
         [ Element.column
-            [ Element.Font.color (Element.rgb 255 255 255)
+            [ Element.Font.color fontColor
             , Element.centerY
             , Element.width Element.fill
             , Element.Font.size 55
@@ -109,38 +122,47 @@ whyElmSection =
             , Element.spacing 25
             , Element.padding 30
             ]
-            [ "Want a highly reliable & maintainble frontend?"
+            ((headingText
                 |> Element.text
                 |> Element.el
                     [ fonts.title
                     , Element.centerX
                     ]
-            , bulletPoint "Zero runtime exceptions"
-            , bulletPoint "Rely on language guarantees instead of discipline"
-            , bulletPoint "Predictable code - no globals or hidden side-effects"
-            ]
+             )
+                :: List.map bulletPoint bulletContents
+            )
         ]
 
 
 whyIncrementalSection =
-    Element.column
-        [ Element.height (Element.px 300)
-        , Element.width Element.fill
-        ]
-        [ Element.column
-            [ Element.Font.color palette.bold
-            , Element.centerX
-            , Element.centerY
-            , Element.Font.size 55
-            , fonts.body
-            , Element.spacing 25
-            ]
-            [ "How do I start?"
-                |> Element.text
-                |> Element.el [ fonts.title ]
-            , bulletPoint "One step at a time!"
-            ]
-        ]
+    bulletSection
+        { backgroundColor = palette.mainBackground
+        , fontColor = palette.bold
+        , headingText = "How do I start?"
+        , bulletContents =
+            [ "One step at a time!" ]
+        }
+
+
+
+-- Element.column
+--     [ Element.height (Element.px 300)
+--     , Element.width Element.fill
+--     ]
+--     [ Element.column
+--         [ Element.Font.color palette.bold
+--         , Element.centerX
+--         , Element.centerY
+--         , Element.Font.size 55
+--         , fonts.body
+--         , Element.spacing 25
+--         ]
+--         [ "How do I start?"
+--             |> Element.text
+--             |> Element.el [ fonts.title ]
+--         , bulletPoint "One step at a time!"
+--         ]
+--     ]
 
 
 dimensionsView model =
