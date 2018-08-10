@@ -82,11 +82,11 @@ bulletPoint content =
 
 mainView model =
     [ navbar model
-    , [ [ "Build highly reliable, maintainble frontends"
+    , [ [ "Want a highly reliable and maintainble frontend?"
             |> Element.text
             |> Element.el [ fonts.title ]
         , bulletPoint "Zero runtime exceptions"
-        , bulletPoint "Language guarantees instead of discipline"
+        , bulletPoint "Rely on language guarantees instead of discipline"
         , bulletPoint "Predictable code - no globals or hidden side-effects"
         ]
             |> Element.column
