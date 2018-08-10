@@ -5,6 +5,7 @@ import Browser
 import Browser.Dom
 import Element exposing (Element)
 import Element.Background as Background
+import Element.Border
 import Element.Font
 import ElmLogo
 import Html exposing (Html)
@@ -101,9 +102,30 @@ mainView model =
       -- , dimensionsView model
       ]
         |> Element.column
-            [ Background.color palette.light
+            [ Background.color palette.highlightBackground
             , Element.height (Element.px 300)
             , Element.width Element.fill
+            ]
+    , [ [ "How do I start?"
+            |> Element.text
+            |> Element.el [ fonts.title ]
+        , bulletPoint "One step at a time!"
+        ]
+            |> Element.column
+                [ Element.Font.color palette.bold
+                , Element.centerX
+                , Element.centerY
+                , Element.Font.size 55
+                , fonts.body
+                , Element.spacing 25
+                , Element.Border.width 2
+                ]
+      ]
+        |> Element.column
+            [ Element.height (Element.px 300)
+            , Element.width Element.fill
+
+            -- , Background.color palette.highlightBackground
             ]
     ]
         |> Element.column
