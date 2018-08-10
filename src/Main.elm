@@ -108,7 +108,7 @@ whyElmSection =
             , fonts.body
             , Element.spacing 25
             ]
-            [ "Want a highly reliable and maintainble frontend?"
+            [ "Want a highly reliable & maintainble frontend?"
                 |> Element.text
                 |> Element.el [ fonts.title ]
             , bulletPoint "Zero runtime exceptions"
