@@ -144,27 +144,6 @@ whyIncrementalSection =
         }
 
 
-
--- Element.column
---     [ Element.height (Element.px 300)
---     , Element.width Element.fill
---     ]
---     [ Element.column
---         [ Element.Font.color palette.bold
---         , Element.centerX
---         , Element.centerY
---         , Element.Font.size 55
---         , fonts.body
---         , Element.spacing 25
---         ]
---         [ "How do I start?"
---             |> Element.text
---             |> Element.el [ fonts.title ]
---         , bulletPoint "One step at a time!"
---         ]
---     ]
-
-
 dimensionsView model =
     model.dimensions
         |> Debug.toString
@@ -238,18 +217,16 @@ animationView model =
         ]
         |> Element.html
         |> Element.el
-            ([ Element.padding 20
-             , Element.height Element.shrink
-             , Element.alignTop
-             , Element.alignLeft
-             , if isMobile model then
+            [ Element.padding 20
+            , Element.height Element.shrink
+            , Element.alignTop
+            , Element.alignLeft
+            , if isMobile model then
                 Element.width Element.fill
 
-               else
+              else
                 Element.width (Element.px 100)
-             ]
-             -- |> ifIsNotMobile model (Element.width (Element.px 100))
-            )
+            ]
 
 
 ifIsNotMobile model attribute attributes =
