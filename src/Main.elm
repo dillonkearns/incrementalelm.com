@@ -88,49 +88,55 @@ mainView model =
         , Element.width Element.fill
         ]
         [ navbar model
-        , Element.column
-            [ Background.color palette.highlightBackground
-            , Element.height (Element.px 300)
-            , Element.width Element.fill
-            ]
-            [ Element.column
-                [ Element.Font.color (Element.rgb 255 255 255)
-                , Element.centerX
-                , Element.centerY
-                , Element.Font.size 55
-                , fonts.body
-                , Element.spacing 25
-                ]
-                [ "Want a highly reliable and maintainble frontend?"
-                    |> Element.text
-                    |> Element.el [ fonts.title ]
-                , bulletPoint "Zero runtime exceptions"
-                , bulletPoint "Rely on language guarantees instead of discipline"
-                , bulletPoint "Predictable code - no globals or hidden side-effects"
-                ]
-            ]
-        , Element.column
-            [ Element.height (Element.px 300)
-            , Element.width Element.fill
-            ]
-            [ Element.column
-                [ Element.Font.color palette.bold
-                , Element.centerX
-                , Element.centerY
-                , Element.Font.size 55
-                , fonts.body
-                , Element.spacing 25
-                , Element.Border.width 2
-                , Element.width Element.fill
-                ]
-                [ "How do I start?"
-                    |> Element.text
-                    |> Element.el [ fonts.title ]
-                , bulletPoint "One step at a time!"
-                ]
-            ]
+        , whyElmSection
+        , whyIncrementalSection
         ]
         |> Element.layout []
+
+
+whyElmSection =
+    Element.column
+        [ Background.color palette.highlightBackground
+        , Element.height (Element.px 300)
+        , Element.width Element.fill
+        ]
+        [ Element.column
+            [ Element.Font.color (Element.rgb 255 255 255)
+            , Element.centerX
+            , Element.centerY
+            , Element.Font.size 55
+            , fonts.body
+            , Element.spacing 25
+            ]
+            [ "Want a highly reliable and maintainble frontend?"
+                |> Element.text
+                |> Element.el [ fonts.title ]
+            , bulletPoint "Zero runtime exceptions"
+            , bulletPoint "Rely on language guarantees instead of discipline"
+            , bulletPoint "Predictable code - no globals or hidden side-effects"
+            ]
+        ]
+
+
+whyIncrementalSection =
+    Element.column
+        [ Element.height (Element.px 300)
+        , Element.width Element.fill
+        ]
+        [ Element.column
+            [ Element.Font.color palette.bold
+            , Element.centerX
+            , Element.centerY
+            , Element.Font.size 55
+            , fonts.body
+            , Element.spacing 25
+            ]
+            [ "How do I start?"
+                |> Element.text
+                |> Element.el [ fonts.title ]
+            , bulletPoint "One step at a time!"
+            ]
+        ]
 
 
 dimensionsView model =
