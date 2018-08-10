@@ -70,18 +70,35 @@ view model =
     }
 
 
+bulletPoint content =
+    "→ "
+        ++ content
+        |> Element.text
+        |> Element.el
+            [ fonts.body
+            , Element.Font.size 30
+            ]
+
+
 mainView model =
     [ navbar model
-    , [ "Build safer frontends"
+    , [ [ "Build highly reliable, maintainble frontends"
             |> Element.text
-            |> Element.el
+            |> Element.el [ fonts.title ]
+        , bulletPoint "Zero runtime exceptions"
+        , bulletPoint "Language guarantees instead of discipline"
+        , bulletPoint "Predictable code - no globals or hidden side-effects"
+        ]
+            |> Element.column
                 [ Element.Font.color (Element.rgb 255 255 255)
                 , Element.centerX
                 , Element.centerY
                 , Element.Font.size 55
                 , fonts.body
+                , Element.spacing 25
                 ]
-      , dimensionsView model
+
+      -- , dimensionsView model
       ]
         |> Element.column
             [ Background.color palette.light
@@ -140,6 +157,8 @@ navbar model =
         Element.column
             [ Background.color palette.mainBackground
             , Element.alignTop
+            , Element.centerX
+            , Element.padding 25
             ]
             [ animationView model
             , logoText
@@ -168,12 +187,26 @@ animationView model =
         ]
         |> Element.html
         |> Element.el
-            [ Element.padding 20
-            , Element.height Element.shrink
-            , Element.width (Element.px 100)
-            , Element.alignTop
-            , Element.alignLeft
-            ]
+            ([ Element.padding 20
+             , Element.height Element.shrink
+             , Element.alignTop
+             , Element.alignLeft
+             , if isMobile model then
+                Element.width Element.fill
+
+               else
+                Element.width (Element.px 100)
+             ]
+             -- |> ifIsNotMobile model (Element.width (Element.px 100))
+            )
+
+
+ifIsNotMobile model attribute attributes =
+    if isMobile model then
+        attributes
+
+    else
+        attributes ++ [ attribute ]
 
 
 translate n =
