@@ -71,11 +71,15 @@ view model =
     }
 
 
+singleItemParagraph attributes element =
+    Element.paragraph attributes [ element ]
+
+
 bulletPoint content =
     "→ "
         ++ content
         |> Element.text
-        |> Element.el
+        |> singleItemParagraph
             [ fonts.body
             , Element.Font.size 25
             ]
@@ -110,7 +114,7 @@ whyElmSection =
 bulletSection { backgroundColor, fontColor, headingText, bulletContents } =
     Element.column
         [ Background.color backgroundColor
-        , Element.height (Element.px 300)
+        , Element.height (Element.shrink |> Element.minimum 300)
         , Element.width Element.fill
         ]
         [ Element.column
@@ -124,7 +128,7 @@ bulletSection { backgroundColor, fontColor, headingText, bulletContents } =
             ]
             ((headingText
                 |> Element.text
-                |> Element.el
+                |> singleItemParagraph
                     [ fonts.title
                     , Element.centerX
                     ]
