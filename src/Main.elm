@@ -71,15 +71,15 @@ view model =
     }
 
 
-singleItemParagraph attributes element =
-    Element.paragraph attributes [ element ]
+wrappedText contents =
+    Element.paragraph [] [ Element.text contents ]
 
 
 bulletPoint content =
     "→ "
         ++ content
-        |> Element.text
-        |> singleItemParagraph
+        |> wrappedText
+        |> Element.el
             [ fonts.body
             , Element.Font.size 25
             ]
@@ -127,8 +127,8 @@ bulletSection { backgroundColor, fontColor, headingText, bulletContents } =
             , Element.padding 30
             ]
             ((headingText
-                |> Element.text
-                |> singleItemParagraph
+                |> wrappedText
+                |> Element.el
                     [ fonts.title
                     , Element.centerX
                     ]
@@ -146,19 +146,6 @@ whyIncrementalSection =
         , bulletContents =
             [ "One step at a time!" ]
         }
-
-
-dimensionsView model =
-    model.dimensions
-        |> Debug.toString
-        |> Element.text
-        |> Element.el
-            [ Element.Font.color (Element.rgb 255 255 255)
-            , Element.centerX
-            , Element.centerY
-            , Element.Font.size 55
-            , fonts.body
-            ]
 
 
 logoText =
