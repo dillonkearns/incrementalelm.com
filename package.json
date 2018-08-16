@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "elm-live src/Main.elm --open --output elm.js"
+    "start": "elm-live src/Main.elm --open --output elm.js",
+    "build": "cp index.html dist/index.html && elm make src/Main.elm --output dist/elm.js"
   },
   "keywords": [],
   "author": "",
