@@ -220,14 +220,6 @@ animationView model =
             ]
 
 
-ifIsNotMobile model attribute attributes =
-    if isMobile model then
-        attributes
-
-    else
-        attributes ++ [ attribute ]
-
-
 translate n =
     Animation.translate (Animation.px n) (Animation.px n)
 
