@@ -144,7 +144,10 @@ whyIncrementalSection =
         , fontColor = palette.bold
         , headingText = "How do I start?"
         , bulletContents =
-            [ "One step at a time!" ]
+            [ "One tiny step at a time!"
+            , "See how Elm fits in your environment: learn the fundamentals and ship something in less than a week!"
+            , "Elm is all about reliability. Incremental Elm Consulting gets you there reliably"
+            ]
         }
 
 
