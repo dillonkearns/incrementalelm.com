@@ -121,21 +121,29 @@ whyElmSection =
             , "Predictable code - no globals or hidden side-effects"
             ]
         , append =
-            [ "Read About " |> Element.text
-            , "Why Elm?"
-                |> Element.text
-                |> Element.el
-                    [ Element.Font.underline
-                    ]
-            ]
-                |> Element.paragraph
-                    [ fonts.body
-                    , Element.Font.size 15
-                    ]
+            "Read About Why Elm?"
+                |> wrappedText
                 |> Element.el
                     [ Element.centerX
+                    , Element.Border.rounded 10
+                    , Background.color palette.light
+                    , Element.Font.color white
+                    , Element.padding 15
+                    , Element.Font.size 18
+                    , Element.pointer
+                    , Element.mouseOver
+                        [ Background.color (elementRgb 25 151 192)
+                        ]
                     ]
         }
+
+
+elementRgb red green blue =
+    Element.rgb (red / 255) (green / 255) (blue / 255)
+
+
+white =
+    elementRgb 255 255 255
 
 
 bulletSection { backgroundColor, fontColor, headingText, bulletContents, append } =
