@@ -120,7 +120,21 @@ whyElmSection =
             , "Rely on language guarantees instead of discipline"
             , "Predictable code - no globals or hidden side-effects"
             ]
-        , append = Element.none
+        , append =
+            [ "Read About " |> Element.text
+            , "Why Elm?"
+                |> Element.text
+                |> Element.el
+                    [ Element.Font.underline
+                    ]
+            ]
+                |> Element.paragraph
+                    [ fonts.body
+                    , Element.Font.size 15
+                    ]
+                |> Element.el
+                    [ Element.centerX
+                    ]
         }
 
 
