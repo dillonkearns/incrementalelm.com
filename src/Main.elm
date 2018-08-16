@@ -3,6 +3,7 @@ module Main exposing (main)
 import Animation exposing (backgroundColor)
 import Browser
 import Browser.Dom
+import Browser.Events
 import Element exposing (Element)
 import Element.Background as Background
 import Element.Border
@@ -28,6 +29,7 @@ type alias Model =
 type Msg
     = Animate Animation.Msg
     | InitialViewport Browser.Dom.Viewport
+    | WindowResized Int Int
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -49,6 +51,16 @@ update action model =
                 | dimensions =
                     { width = viewport.width
                     , height = viewport.height
+                    }
+              }
+            , Cmd.none
+            )
+
+        WindowResized width height ->
+            ( { model
+                | dimensions =
+                    { width = toFloat width
+                    , height = toFloat height
                     }
               }
             , Cmd.none
@@ -269,7 +281,10 @@ init () =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Animation.subscription Animate model.styles
+    Sub.batch
+        [ Animation.subscription Animate model.styles
+        , Browser.Events.onResize WindowResized
+        ]
 
 
 main : Program () Model Msg
