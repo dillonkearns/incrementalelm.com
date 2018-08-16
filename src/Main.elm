@@ -120,10 +120,11 @@ whyElmSection =
             , "Rely on language guarantees instead of discipline"
             , "Predictable code - no globals or hidden side-effects"
             ]
+        , append = Element.none
         }
 
 
-bulletSection { backgroundColor, fontColor, headingText, bulletContents } =
+bulletSection { backgroundColor, fontColor, headingText, bulletContents, append } =
     Element.column
         [ Background.color backgroundColor
         , Element.height (Element.shrink |> Element.minimum 300)
@@ -138,14 +139,17 @@ bulletSection { backgroundColor, fontColor, headingText, bulletContents } =
             , Element.spacing 25
             , Element.padding 30
             ]
-            ((headingText
-                |> wrappedText
-                |> Element.el
-                    [ fonts.title
-                    , Element.centerX
-                    ]
-             )
-                :: List.map bulletPoint bulletContents
+            (List.concat
+                [ [ headingText
+                        |> wrappedText
+                        |> Element.el
+                            [ fonts.title
+                            , Element.centerX
+                            ]
+                  ]
+                , List.map bulletPoint bulletContents
+                , [ append ]
+                ]
             )
         ]
 
@@ -160,6 +164,7 @@ whyIncrementalSection =
             , "See how Elm fits in your environment: learn the fundamentals and ship something in less than a week!"
             , "Elm is all about reliability. Incremental Elm Consulting gets you there reliably"
             ]
+        , append = Element.none
         }
 
 
