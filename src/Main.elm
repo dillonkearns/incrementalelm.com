@@ -4,6 +4,7 @@ import Animation exposing (backgroundColor)
 import Browser
 import Browser.Dom
 import Browser.Events
+import Browser.Navigation
 import Element exposing (Element)
 import Element.Background as Background
 import Element.Border
@@ -15,6 +16,7 @@ import Svg exposing (..)
 import Svg.Attributes exposing (..)
 import Task
 import Time
+import Url exposing (Url)
 
 
 type alias Model =
@@ -30,6 +32,8 @@ type Msg
     = Animate Animation.Msg
     | InitialViewport Browser.Dom.Viewport
     | WindowResized Int Int
+    | UrlChanged Url
+    | UrlRequest Browser.UrlRequest
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -65,6 +69,12 @@ update action model =
               }
             , Cmd.none
             )
+
+        UrlChanged url ->
+            ( model, Cmd.none )
+
+        UrlRequest urlRequest ->
+            ( model, Cmd.none )
 
 
 updateStyles : Model -> Model
@@ -292,8 +302,8 @@ makeTranslated i polygon =
             ]
 
 
-init : () -> ( Model, Cmd Msg )
-init () =
+init : () -> Url.Url -> Browser.Navigation.Key -> ( Model, Cmd Msg )
+init _ url navigationKey =
     ( { styles = ElmLogo.polygons |> List.map Animation.style
       , dimensions =
             { width = 0
@@ -316,8 +326,10 @@ subscriptions model =
 
 main : Program () Model Msg
 main =
-    Browser.document
+    Browser.application
         { init = init
+        , onUrlChange = UrlChanged
+        , onUrlRequest = UrlRequest
         , view = view
         , update = update
         , subscriptions = subscriptions
