@@ -4,6 +4,8 @@ import Element exposing (Element)
 import Element.Background as Background
 import Element.Border
 import Element.Font
+import Html
+import Html.Attributes exposing (attribute, class, style)
 import Style exposing (fonts, palette)
 
 
@@ -43,7 +45,7 @@ servicesSection =
             , Element.spacing 25
             , Element.padding 30
             ]
-            [ "Service Iterations"
+            [ "Services"
                 |> wrappedText
                 |> Element.el
                     [ fonts.title
@@ -64,25 +66,27 @@ servicesSection =
 
 
 iterationBubble iterationNumber =
-    Element.none
-        |> Element.el
-            [ Background.color palette.highlight
-            , Element.paddingXY 70 70
-            , Element.Border.rounded 10000
-            , Element.inFront
-                ([ Element.text "Iteration "
-                 , Element.text (String.fromInt iterationNumber)
-                 ]
-                    |> Element.paragraph
-                        [ Element.Font.color white
-                        , fonts.title
-                        , Element.centerX
-                        , Element.centerY
-                        , Element.Font.center
-                        , Element.Font.size 26
-                        ]
-                )
+    Html.div [ class "fa-4x" ]
+        [ Html.span [ class "fa-layers fa-fw" ]
+            [ Html.i [ class "fas fa-circle", style "color" "rgba(0,168,232,1)" ] []
+            , Html.i
+                [ class "fas fa-redo fa-inverse"
+                , attribute "data-fa-transform" "shrink-10 left-2.5"
+                ]
+                []
+            , Html.span
+                [ class "fa-layers-text fa-inverse"
+                , attribute "data-fa-transform" "shrink-11.5 right-3.5"
+                , style "font-family" "'Open Sans'"
+                , style "font-weight" "bolder"
+                ]
+                [ iterationNumber
+                    |> String.fromInt
+                    |> Html.text
+                ]
             ]
+        ]
+        |> Element.html
 
 
 whyElmSection =
