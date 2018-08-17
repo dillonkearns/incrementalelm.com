@@ -1,23 +1,10 @@
 module Page.Home exposing (view)
 
-import Animation exposing (backgroundColor)
-import Browser
-import Browser.Dom
-import Browser.Events
-import Browser.Navigation
 import Element exposing (Element)
 import Element.Background as Background
 import Element.Border
 import Element.Font
-import ElmLogo
-import Html exposing (Html)
 import Style exposing (fonts, palette)
-import Svg exposing (..)
-import Svg.Attributes exposing (..)
-import Task
-import Time
-import Url exposing (Url)
-import Url.Builder
 
 
 wrappedText contents =
