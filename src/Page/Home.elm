@@ -24,7 +24,65 @@ bulletPoint content =
 view =
     [ whyElmSection
     , whyIncrementalSection
+    , servicesSection
     ]
+
+
+servicesSection =
+    Element.column
+        [ Background.color palette.main
+        , Element.height (Element.shrink |> Element.minimum 300)
+        , Element.width Element.fill
+        ]
+        [ Element.column
+            [ Element.Font.color palette.bold
+            , Element.centerY
+            , Element.width Element.fill
+            , Element.Font.size 55
+            , fonts.body
+            , Element.spacing 25
+            , Element.padding 30
+            ]
+            [ "Service Iterations"
+                |> wrappedText
+                |> Element.el
+                    [ fonts.title
+                    , Element.centerX
+                    , Element.Font.center
+                    ]
+            , Element.row
+                [ Element.spaceEvenly
+                , Element.width Element.fill
+                , Element.padding 50
+                ]
+                [ iterationBubble 0
+                , iterationBubble 1
+                , iterationBubble 2
+                ]
+            ]
+        ]
+
+
+iterationBubble iterationNumber =
+    Element.none
+        |> Element.el
+            [ Background.color palette.highlight
+            , Element.paddingXY 70 70
+            , Element.Border.rounded 10000
+            , Element.inFront
+                ([ Element.text "Iteration "
+                 , Element.text (String.fromInt iterationNumber)
+                 ]
+                    |> Element.paragraph
+                        [ Element.Font.color white
+                        , fonts.title
+                        , Element.centerX
+                        , Element.centerY
+                        , Element.Font.center
+                        , Element.Font.size 26
+                        ]
+                )
+            ]
 
 
 whyElmSection =
