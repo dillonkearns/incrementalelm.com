@@ -79,11 +79,8 @@ update action model =
             )
 
         UrlChanged url ->
-            ( model, Cmd.none )
-
-        UrlRequest urlRequest ->
-            case urlRequest of
-                Browser.Internal url ->
+            let
+                newPage =
                     case url.fragment of
                         Nothing ->
                             -- If we got a link that didn't include a fragment,
@@ -94,14 +91,24 @@ update action model =
                             -- fragment-based routing, this entire
                             -- `case url.fragment of` expression this comment
                             -- is inside would be unnecessary.
-                            ( model, Cmd.none )
+                            Home
 
-                        Just _ ->
-                            -- ( model, Cmd.none )
-                            ( { model | page = WhyElm }
-                            , -- Cmd.none
-                              Browser.Navigation.pushUrl model.key (Url.toString url)
-                            )
+                        Just fragment ->
+                            case fragment of
+                                "why-elm" ->
+                                    WhyElm
+
+                                _ ->
+                                    Home
+            in
+            ( { model | page = newPage }, Cmd.none )
+
+        UrlRequest urlRequest ->
+            case urlRequest of
+                Browser.Internal url ->
+                    ( model
+                    , Browser.Navigation.pushUrl model.key (Url.toString url)
+                    )
 
                 Browser.External href ->
                     -- ( model
