@@ -57,12 +57,29 @@ servicesSection =
                 , Element.width Element.fill
                 , Element.padding 50
                 ]
-                [ iterationBubble 0
-                , iterationBubble 1
-                , iterationBubble 2
+                [ iteration 0
+                , iteration 1
+                , iteration 2
                 ]
             ]
         ]
+
+
+iteration iterationNumber =
+    [ iterationBubble iterationNumber
+    , Element.text ("Iteration " ++ String.fromInt iterationNumber)
+        |> Element.el
+            [ fonts.title
+            ]
+    , bulletPoint "Fundamentals - training & delivery in 1 week"
+    ]
+        |> Element.column
+            [ Element.spacing 50
+            ]
+
+
+faTransform =
+    attribute "data-fa-transform"
 
 
 iterationBubble iterationNumber =
@@ -71,12 +88,12 @@ iterationBubble iterationNumber =
             [ Html.i [ class "fas fa-circle", style "color" "rgba(0,168,232,1)" ] []
             , Html.i
                 [ class "fas fa-redo fa-inverse"
-                , attribute "data-fa-transform" "shrink-10 left-2.5"
+                , faTransform "shrink-10 left-2.5"
                 ]
                 []
             , Html.span
                 [ class "fa-layers-text fa-inverse"
-                , attribute "data-fa-transform" "shrink-11.5 right-3.5"
+                , faTransform "shrink-11.5 right-3.5"
                 , style "font-family" "'Open Sans'"
                 , style "font-weight" "bolder"
                 ]
@@ -87,6 +104,7 @@ iterationBubble iterationNumber =
             ]
         ]
         |> Element.html
+        |> Element.el []
 
 
 whyElmSection =
