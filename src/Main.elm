@@ -304,13 +304,17 @@ navbar model =
             ]
 
     else
-        Element.row
-            [ Background.color palette.mainBackground
-            , Element.alignTop
-            ]
-            [ animationView model
-            , logoText
-            ]
+        Element.link []
+            { label =
+                Element.row
+                    [ Background.color palette.mainBackground
+                    , Element.alignTop
+                    ]
+                    [ animationView model
+                    , logoText
+                    ]
+            , url = "/"
+            }
 
 
 animationView model =
