@@ -242,6 +242,7 @@ bulletSection { backgroundColor, fontColor, headingText, bulletContents, append 
                         |> Element.el
                             [ fonts.title
                             , Element.centerX
+                            , Element.Font.center
                             ]
                   ]
                 , List.map bulletPoint bulletContents
