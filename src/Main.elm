@@ -130,7 +130,7 @@ view : Model -> Browser.Document Msg
 view ({ page } as model) =
     case page of
         Home ->
-            { title = "Incremental Elm"
+            { title = "Incremental Elm Consulting"
             , body = [ mainView model ]
             }
 
