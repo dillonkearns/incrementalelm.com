@@ -272,7 +272,7 @@ logoText =
             ]
     ]
         |> Element.column
-            [ Element.Font.family []
+            [ fonts.title
             , Element.width Element.shrink
             , Element.height Element.shrink
             , Element.spacing 5

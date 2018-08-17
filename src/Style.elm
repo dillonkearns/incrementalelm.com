@@ -6,7 +6,7 @@ import Element.Font
 
 
 fonts =
-    { title = Element.Font.family [ Element.Font.typeface "Lato" ]
+    { title = Element.Font.family [ Element.Font.typeface "Open Sans" ]
     , body = Element.Font.family [ Element.Font.typeface "Raleway" ]
     }
 
