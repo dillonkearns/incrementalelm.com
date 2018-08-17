@@ -17,6 +17,7 @@ import Svg.Attributes exposing (..)
 import Task
 import Time
 import Url exposing (Url)
+import Url.Builder
 
 
 type alias Model =
@@ -25,7 +26,14 @@ type alias Model =
         { width : Float
         , height : Float
         }
+    , page : Page
+    , key : Browser.Navigation.Key
     }
+
+
+type Page
+    = Home
+    | WhyElm
 
 
 type Msg
@@ -74,7 +82,32 @@ update action model =
             ( model, Cmd.none )
 
         UrlRequest urlRequest ->
-            ( model, Cmd.none )
+            case urlRequest of
+                Browser.Internal url ->
+                    case url.fragment of
+                        Nothing ->
+                            -- If we got a link that didn't include a fragment,
+                            -- it's from one of those (href "") attributes that
+                            -- we have to include to make the RealWorld CSS work.
+                            --
+                            -- In an application doing path routing instead of
+                            -- fragment-based routing, this entire
+                            -- `case url.fragment of` expression this comment
+                            -- is inside would be unnecessary.
+                            ( model, Cmd.none )
+
+                        Just _ ->
+                            -- ( model, Cmd.none )
+                            ( { model | page = WhyElm }
+                            , -- Cmd.none
+                              Browser.Navigation.pushUrl model.key (Url.toString url)
+                            )
+
+                Browser.External href ->
+                    -- ( model
+                    -- , Nav.load href
+                    -- )
+                    ( model, Cmd.none )
 
 
 updateStyles : Model -> Model
@@ -87,10 +120,17 @@ updateStyles model =
 
 
 view : Model -> Browser.Document Msg
-view model =
-    { title = "Incremental Elm"
-    , body = [ mainView model ]
-    }
+view ({ page } as model) =
+    case page of
+        Home ->
+            { title = "Incremental Elm"
+            , body = [ mainView model ]
+            }
+
+        WhyElm ->
+            { title = "Incremental Elm - Why Elm?"
+            , body = [ mainView model ]
+            }
 
 
 wrappedText contents =
@@ -107,44 +147,62 @@ bulletPoint content =
             ]
 
 
-mainView model =
-    Element.column
-        [ Element.height Element.shrink
-        , Element.alignTop
-        , Element.width Element.fill
-        ]
-        [ navbar model
-        , whyElmSection
-        , whyIncrementalSection
-        ]
-        |> Element.layout []
+mainView ({ page } as model) =
+    case page of
+        WhyElm ->
+            Element.column
+                [ Element.height Element.shrink
+                , Element.alignTop
+                , Element.width Element.fill
+                ]
+                [ navbar model
+                , Element.text "Why Elm Contents..."
+                ]
+                |> Element.layout []
+
+        Home ->
+            Element.column
+                [ Element.height Element.shrink
+                , Element.alignTop
+                , Element.width Element.fill
+                ]
+                [ navbar model
+                , whyElmSection
+                , whyIncrementalSection
+                ]
+                |> Element.layout []
 
 
 whyElmSection =
     bulletSection
         { backgroundColor = palette.highlightBackground
         , fontColor = Element.rgb 255 255 255
-        , headingText = "Want a highly reliable & maintainble frontend?"
+        , headingText = "Want a highly reliable & maintainable frontend?"
         , bulletContents =
             [ "Zero runtime exceptions"
             , "Rely on language guarantees instead of discipline"
             , "Predictable code - no globals or hidden side-effects"
             ]
         , append =
-            "Read About Why Elm?"
-                |> wrappedText
-                |> Element.el
-                    [ Element.centerX
-                    , Element.Border.rounded 10
-                    , Background.color palette.light
-                    , Element.Font.color white
-                    , Element.padding 15
-                    , Element.Font.size 18
-                    , Element.pointer
-                    , Element.mouseOver
-                        [ Background.color (elementRgb 25 151 192)
-                        ]
-                    ]
+            Element.link
+                [ Element.centerX
+                ]
+                { url = "/#why-elm"
+                , label =
+                    "Read About Why Elm?"
+                        |> wrappedText
+                        |> Element.el
+                            [ Element.Border.rounded 10
+                            , Background.color palette.light
+                            , Element.Font.color white
+                            , Element.padding 15
+                            , Element.Font.size 18
+                            , Element.pointer
+                            , Element.mouseOver
+                                [ Background.color (elementRgb 25 151 192)
+                                ]
+                            ]
+                }
         }
 
 
@@ -309,6 +367,13 @@ init _ url navigationKey =
             { width = 0
             , height = 0
             }
+      , page =
+            if url.fragment == Just "why-elm" then
+                WhyElm
+
+            else
+                Home
+      , key = navigationKey
       }
         |> updateStyles
     , Browser.Dom.getViewport
