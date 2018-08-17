@@ -98,14 +98,13 @@ iterationBubble iterationNumber =
             [ Html.i [ class "fas fa-circle", style "color" "rgba(0,168,232,1)" ] []
             , Html.i
                 [ class "fas fa-redo fa-inverse"
-                , faTransform "shrink-10 left-2.5"
+                , faTransform "shrink-10 left-2"
                 ]
                 []
             , Html.span
                 [ class "fa-layers-text fa-inverse"
-                , faTransform "shrink-11.5 right-3.5"
+                , faTransform "shrink-12 right-3"
                 , style "font-family" "'Open Sans'"
-                , style "font-weight" "bolder"
                 ]
                 [ iterationNumber
                     |> String.fromInt
