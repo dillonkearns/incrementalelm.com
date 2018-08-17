@@ -58,23 +58,33 @@ servicesSection =
                 , Element.padding 50
                 ]
                 [ iteration 0
-                , iteration 1
-                , iteration 2
+                    [ "Elm Fundamentals training for your team"
+                    , "Ship Elm code to production in under a week"
+                    ]
+                , iteration 1 []
+                , iteration 2 []
                 ]
             ]
         ]
 
 
-iteration iterationNumber =
+iteration iterationNumber bulletPoints =
     [ iterationBubble iterationNumber
     , Element.text ("Iteration " ++ String.fromInt iterationNumber)
         |> Element.el
             [ fonts.title
+            , Element.centerX
             ]
-    , bulletPoint "Fundamentals - training & delivery in 1 week"
+    , List.map bulletPoint bulletPoints
+        |> Element.column
+            [ Element.centerX
+            , Element.spacing 30
+            ]
     ]
         |> Element.column
             [ Element.spacing 50
+            , Element.alignTop
+            , Element.width Element.fill
             ]
 
 
@@ -104,7 +114,9 @@ iterationBubble iterationNumber =
             ]
         ]
         |> Element.html
-        |> Element.el []
+        |> Element.el
+            [ Element.centerX
+            ]
 
 
 whyElmSection =
