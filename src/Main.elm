@@ -19,6 +19,7 @@ import Task
 import Time
 import Url exposing (Url)
 import Url.Builder
+import View.Navbar
 
 
 type alias Model =
@@ -156,7 +157,7 @@ mainView ({ page } as model) =
                 , Element.alignTop
                 , Element.width Element.fill
                 ]
-                [ navbar model
+                [ View.Navbar.view model animationView
                 , Element.text "Why Elm Contents..."
                 ]
                 |> Element.layout []
@@ -167,61 +168,14 @@ mainView ({ page } as model) =
                 , Element.alignTop
                 , Element.width Element.fill
                 ]
-                (navbar model
+                (View.Navbar.view model animationView
                     :: Page.Home.view model.dimensions
                 )
                 |> Element.layout []
 
 
-logoText =
-    [ Element.text "Incremental Elm"
-        |> Element.el
-            [ Element.Font.color palette.bold
-            , Element.Font.size 50
-            ]
-    , Element.text "Consulting"
-        |> Element.el
-            [ Element.Font.color palette.bold
-            , Element.Font.size 17
-            , Element.alignRight
-            ]
-    ]
-        |> Element.column
-            [ fonts.title
-            , Element.width Element.shrink
-            , Element.height Element.shrink
-            , Element.spacing 5
-            ]
-
-
 isMobile { dimensions } =
     dimensions.width < 1000
-
-
-navbar model =
-    if isMobile model then
-        Element.column
-            [ Background.color palette.mainBackground
-            , Element.alignTop
-            , Element.centerX
-            , Element.padding 25
-            ]
-            [ animationView model
-            , logoText
-            ]
-
-    else
-        Element.link []
-            { label =
-                Element.row
-                    [ Background.color palette.mainBackground
-                    , Element.alignTop
-                    ]
-                    [ animationView model
-                    , logoText
-                    ]
-            , url = "/"
-            }
 
 
 animationView model =
