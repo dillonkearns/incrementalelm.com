@@ -26,6 +26,7 @@ type alias Model =
     , dimensions :
         { width : Float
         , height : Float
+        , device : Element.Device
         }
     , page : Page
     , key : Browser.Navigation.Key
@@ -64,6 +65,11 @@ update action model =
                 | dimensions =
                     { width = viewport.width
                     , height = viewport.height
+                    , device =
+                        Element.classifyDevice
+                            { height = round viewport.height
+                            , width = round viewport.width
+                            }
                     }
               }
             , Cmd.none
@@ -74,6 +80,7 @@ update action model =
                 | dimensions =
                     { width = toFloat width
                     , height = toFloat height
+                    , device = Element.classifyDevice { height = height, width = width }
                     }
               }
             , Cmd.none
@@ -278,6 +285,7 @@ init _ url navigationKey =
       , dimensions =
             { width = 0
             , height = 0
+            , device = Element.classifyDevice { height = 0, width = 0 }
             }
       , page =
             if url.fragment == Just "why-elm" then
