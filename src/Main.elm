@@ -168,7 +168,7 @@ mainView ({ page } as model) =
                 , Element.width Element.fill
                 ]
                 (navbar model
-                    :: Page.Home.view
+                    :: Page.Home.view model.dimensions
                 )
                 |> Element.layout []
 

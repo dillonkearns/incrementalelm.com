@@ -23,7 +23,13 @@ bulletPoint content =
             ]
 
 
-view =
+view :
+    { width : Float
+    , height : Float
+    , device : Element.Device
+    }
+    -> List (Element.Element msg)
+view model =
     [ whyElmSection
     , whyIncrementalSection
     , servicesSection
