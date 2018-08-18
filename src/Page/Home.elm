@@ -62,7 +62,10 @@ servicesSection =
                     , "Ship Elm code to production in under a week"
                     ]
                 , iteration 1 []
-                , iteration 2 []
+                , iteration 2
+                    [ "Advanced architecture"
+                    , "Transition your codebase to a full Single-Page Elm App"
+                    ]
                 ]
             ]
         ]
@@ -70,11 +73,6 @@ servicesSection =
 
 iteration iterationNumber bulletPoints =
     [ iterationBubble iterationNumber
-    , Element.text ("Iteration " ++ String.fromInt iterationNumber)
-        |> Element.el
-            [ fonts.title
-            , Element.centerX
-            ]
     , List.map bulletPoint bulletPoints
         |> Element.column
             [ Element.centerX
@@ -93,26 +91,25 @@ faTransform =
 
 
 iterationBubble iterationNumber =
-    Html.div [ class "fa-4x" ]
-        [ Html.span [ class "fa-layers fa-fw" ]
-            [ Html.i [ class "fas fa-circle", style "color" "rgba(0,168,232,1)" ] []
-            , Html.i
-                [ class "fas fa-redo fa-inverse"
-                , faTransform "shrink-10 left-2"
-                ]
-                []
-            , Html.span
-                [ class "fa-layers-text fa-inverse"
-                , faTransform "shrink-12 right-3"
-                , style "font-family" "'Open Sans'"
-                ]
-                [ iterationNumber
-                    |> String.fromInt
-                    |> Html.text
-                ]
+    Element.none
+        |> Element.el
+            [ Background.color palette.highlight
+            , Element.paddingXY 130 130
+            , Element.Border.rounded 10000
+            , Element.inFront
+                ([ Element.text "Iteration "
+                 , Element.text (String.fromInt iterationNumber)
+                 ]
+                    |> Element.paragraph
+                        [ Element.Font.color white
+                        , fonts.title
+                        , Element.centerX
+                        , Element.centerY
+                        , Element.Font.center
+                        , Element.Font.size 36
+                        ]
+                )
             ]
-        ]
-        |> Element.html
         |> Element.el
             [ Element.centerX
             ]
