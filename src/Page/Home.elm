@@ -107,6 +107,7 @@ iterationBubble iterationNumber =
                         , Element.centerY
                         , Element.Font.center
                         , Element.Font.size 36
+                        , Element.Font.bold
                         ]
                 )
             ]
