@@ -60,11 +60,17 @@ servicesSection =
                 [ iteration 0
                     [ "Elm Fundamentals training for your team"
                     , "Ship Elm code to production in under a week"
+                    , "Master The Elm Architecture"
+                    , "Fundamentals of Test-Driven Development in Elm"
                     ]
-                , iteration 1 []
+                , iteration 1
+                    [ "Reuse and scaling patterns"
+                    , "Advanced JavaScript interop techniques"
+                    , "Choose the right Elm styling approach for your environment"
+                    ]
                 , iteration 2
-                    [ "Advanced architecture"
-                    , "Transition your codebase to a full Single-Page Elm App"
+                    [ "Transition your codebase to a full Single-Page Elm App"
+                    , "Master Elm architectural patterns"
                     ]
                 ]
             ]
