@@ -22,29 +22,29 @@ import Url.Builder
 
 
 view model animationView =
-    if isMobile model then
-        Element.column
-            [ Background.color palette.mainBackground
-            , Element.alignTop
-            , Element.centerX
-            , Element.padding 25
-            ]
-            [ animationView model
-            , logoText
-            ]
-
-    else
-        Element.link []
-            { label =
-                Element.row
-                    [ Background.color palette.mainBackground
-                    , Element.alignTop
-                    ]
-                    [ animationView model
-                    , logoText
-                    ]
-            , url = "/"
-            }
+    -- if isMobile model then
+    --     Element.column
+    --         [ Background.color palette.mainBackground
+    --         , Element.alignTop
+    --         , Element.centerX
+    --         , Element.padding 25
+    --         ]
+    --         [ animationView model
+    --         , logoText
+    --         ]
+    --
+    -- else
+    Element.link []
+        { label =
+            Element.row
+                [ Background.color palette.mainBackground
+                , Element.alignTop
+                ]
+                [ animationView model
+                , logoText
+                ]
+        , url = "/"
+        }
 
 
 isMobile { dimensions } =

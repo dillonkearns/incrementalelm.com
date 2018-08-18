@@ -195,11 +195,7 @@ animationView model =
             , Element.height Element.shrink
             , Element.alignTop
             , Element.alignLeft
-            , if isMobile model then
-                Element.width Element.fill
-
-              else
-                Element.width (Element.px 100)
+            , Element.width (Element.px 100)
             ]
 
 
