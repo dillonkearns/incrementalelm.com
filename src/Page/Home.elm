@@ -29,14 +29,14 @@ view :
     , device : Element.Device
     }
     -> List (Element.Element msg)
-view model =
+view dimensions =
     [ whyElmSection
     , whyIncrementalSection
-    , servicesSection
+    , servicesSection dimensions
     ]
 
 
-servicesSection =
+servicesSection dimensions =
     Element.column
         [ Background.color palette.main
         , Element.height (Element.shrink |> Element.minimum 300)
@@ -58,27 +58,39 @@ servicesSection =
                     , Element.centerX
                     , Element.Font.center
                     ]
-            , Element.row
-                [ Element.spaceEvenly
-                , Element.width Element.fill
-                , Element.padding 50
-                ]
-                [ iteration 0
-                    [ "Elm Fundamentals training for your team"
-                    , "Ship Elm code to production in under a week"
-                    , "Master The Elm Architecture"
-                    , "Fundamentals of Test-Driven Development in Elm"
-                    ]
-                , iteration 1
-                    [ "Reuse and scaling patterns"
-                    , "Advanced JavaScript interop techniques"
-                    , "Choose the right Elm styling approach for your environment"
-                    ]
-                , iteration 2
-                    [ "Transition your codebase to a full Single-Page Elm App"
-                    , "Master Elm architectural patterns"
-                    ]
-                ]
+            , iterations dimensions
+            ]
+        ]
+
+
+iterations dimensions =
+    (if dimensions.width > 1000 then
+        Element.row
+            [ Element.spaceEvenly
+            , Element.width Element.fill
+            , Element.padding 50
+            ]
+
+     else
+        Element.column
+            [ Element.width Element.fill
+            , Element.padding 20
+            ]
+    )
+        [ iteration 0
+            [ "Elm Fundamentals training for your team"
+            , "Ship Elm code to production in under a week"
+            , "Master The Elm Architecture"
+            , "Fundamentals of Test-Driven Development in Elm"
+            ]
+        , iteration 1
+            [ "Reuse and scaling patterns"
+            , "Advanced JavaScript interop techniques"
+            , "Choose the right Elm styling approach for your environment"
+            ]
+        , iteration 2
+            [ "Transition your codebase to a full Single-Page Elm App"
+            , "Master Elm architectural patterns"
             ]
         ]
 
