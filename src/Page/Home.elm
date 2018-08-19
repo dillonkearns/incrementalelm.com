@@ -33,7 +33,46 @@ view dimensions =
     [ whyElmSection
     , whyIncrementalSection
     , servicesSection dimensions
+    , contactSection
     ]
+
+
+contactSection =
+    Element.column
+        [ Background.color palette.highlight
+        , Element.height (Element.shrink |> Element.minimum 300)
+        , Element.width Element.fill
+        ]
+        [ Element.el
+            [ Element.Font.color palette.bold
+            , Element.centerX
+            , Element.Font.size 55
+            , fonts.body
+            , Element.padding 30
+            ]
+            ("Get in touch"
+                |> wrappedText
+                |> Element.el
+                    [ fonts.title
+                    , Element.centerX
+                    , Element.Font.center
+                    , Element.Font.color palette.mainBackground
+                    ]
+            )
+        , Element.row
+            [ Element.centerX
+            , Element.spacing 20
+            , Element.Font.color palette.bold
+            ]
+            [ envelopeIcon |> Element.el []
+            , Element.text "info@incrementalelm.com"
+            ]
+        ]
+
+
+envelopeIcon =
+    Html.i [ Html.Attributes.class "far fa-envelope" ] []
+        |> Element.html
 
 
 servicesSection dimensions =
