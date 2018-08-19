@@ -11,6 +11,15 @@ fonts =
     }
 
 
+fontSize =
+    { body = Element.Font.size 25
+    , title = Element.Font.size 55
+    , medium = Element.Font.size 36
+    , small = Element.Font.size 18
+    , logo = Element.Font.size 50
+    }
+
+
 palette =
     { main = elementRgb 216 219 226
     , bold = elementRgb 0 23 31

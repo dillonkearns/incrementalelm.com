@@ -6,7 +6,7 @@ import Element.Border
 import Element.Font
 import Html
 import Html.Attributes exposing (attribute, class, style)
-import Style exposing (fonts, palette)
+import Style exposing (fontSize, fonts, palette)
 
 
 wrappedText contents =
@@ -19,7 +19,7 @@ bulletPoint content =
         |> wrappedText
         |> Element.el
             [ fonts.body
-            , Element.Font.size 25
+            , fontSize.body
             ]
 
 
@@ -46,7 +46,7 @@ contactSection =
         [ Element.el
             [ Element.Font.color palette.bold
             , Element.centerX
-            , Element.Font.size 55
+            , fontSize.title
             , fonts.body
             , Element.padding 30
             ]
@@ -98,7 +98,7 @@ servicesSection dimensions =
             [ Element.Font.color palette.bold
             , Element.centerY
             , Element.width Element.fill
-            , Element.Font.size 55
+            , fontSize.title
             , fonts.body
             , Element.spacing 25
             , Element.padding 30
@@ -182,7 +182,7 @@ iterationBubble iterationNumber =
                         , Element.centerX
                         , Element.centerY
                         , Element.Font.center
-                        , Element.Font.size 36
+                        , fontSize.medium
                         , Element.Font.bold
                         ]
                 )
@@ -215,7 +215,7 @@ whyElmSection =
                             , Background.color palette.light
                             , Element.Font.color white
                             , Element.padding 15
-                            , Element.Font.size 18
+                            , fontSize.small
                             , Element.pointer
                             , Element.mouseOver
                                 [ Background.color (elementRgb 25 151 192)
@@ -243,7 +243,7 @@ bulletSection { backgroundColor, fontColor, headingText, bulletContents, append 
             [ Element.Font.color fontColor
             , Element.centerY
             , Element.width Element.fill
-            , Element.Font.size 55
+            , fontSize.title
             , fonts.body
             , Element.spacing 25
             , Element.padding 30

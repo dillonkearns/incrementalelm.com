@@ -12,9 +12,7 @@ import Element.Font
 import ElmLogo
 import Html exposing (Html)
 import Page.Home
-import Style exposing (fonts, palette)
-import Svg exposing (..)
-import Svg.Attributes exposing (..)
+import Style exposing (fontSize, fonts, palette)
 import Task
 import Time
 import Url exposing (Url)
@@ -55,12 +53,12 @@ logoText =
     [ Element.text "Incremental Elm"
         |> Element.el
             [ Element.Font.color palette.bold
-            , Element.Font.size 50
+            , fontSize.logo
             ]
     , Element.text "Consulting"
         |> Element.el
             [ Element.Font.color palette.bold
-            , Element.Font.size 17
+            , fontSize.small
             , Element.alignRight
             ]
     ]
