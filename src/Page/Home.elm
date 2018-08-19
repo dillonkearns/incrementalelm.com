@@ -7,6 +7,7 @@ import Element.Font
 import Html
 import Html.Attributes exposing (attribute, class, style)
 import Style exposing (fontSize, fonts, palette)
+import Style.Helpers
 
 
 wrappedText contents =
@@ -70,7 +71,7 @@ contactButton =
         { url =
             "mailto:info@incrementalelm.com"
         , label =
-            button
+            Style.Helpers.button
                 { fontColor = .mainBackground
                 , backgroundColor = .bold
                 , size = fontSize.body
@@ -79,22 +80,6 @@ contactButton =
                 , Element.text "info@incrementalelm.com"
                 ]
         }
-
-
-button { fontColor, backgroundColor, size } children =
-    Element.row
-        [ Element.spacing 20
-        , Element.Font.color (fontColor palette)
-        , Element.mouseOver
-            [ Background.color (backgroundColor Style.hoverPalette)
-            ]
-        , Background.color (backgroundColor palette)
-        , Element.padding 15
-        , Element.Border.rounded 10
-        , fontSize.body
-        , size
-        ]
-        children
 
 
 envelopeIcon =
@@ -222,7 +207,7 @@ whyElmSection =
                 ]
                 { url = "/#why-elm"
                 , label =
-                    button
+                    Style.Helpers.button
                         { fontColor = .mainBackground
                         , backgroundColor = .light
                         , size = fontSize.small
