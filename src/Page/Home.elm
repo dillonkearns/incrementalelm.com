@@ -59,18 +59,28 @@ contactSection =
                     , Element.Font.color palette.mainBackground
                     ]
             )
-        , Element.row
-            [ Element.centerX
-            , Element.spacing 20
-            , Element.Font.color palette.mainBackground
-            , Background.color palette.bold
-            , Element.padding 15
-            , Element.Border.rounded 10
-            ]
-            [ envelopeIcon |> Element.el []
-            , Element.text "info@incrementalelm.com"
-            ]
+        , contactButton
         ]
+
+
+contactButton =
+    Element.link
+        [ Element.centerX
+        ]
+        { url =
+            "mailto:info@incrementalelm.com"
+        , label =
+            Element.row
+                [ Element.spacing 20
+                , Element.Font.color palette.mainBackground
+                , Background.color palette.bold
+                , Element.padding 15
+                , Element.Border.rounded 10
+                ]
+                [ envelopeIcon |> Element.el []
+                , Element.text "info@incrementalelm.com"
+                ]
+        }
 
 
 envelopeIcon =

@@ -120,10 +120,7 @@ update action model =
                     )
 
                 Browser.External href ->
-                    -- ( model
-                    -- , Nav.load href
-                    -- )
-                    ( model, Cmd.none )
+                    ( model, Browser.Navigation.load href )
 
 
 updateStyles : Model -> Model
