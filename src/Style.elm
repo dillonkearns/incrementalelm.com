@@ -20,6 +20,15 @@ fontSize =
     }
 
 
+mobileFontSize =
+    { body = Element.Font.size 65
+    , title = Element.Font.size 95
+    , medium = Element.Font.size 76
+    , small = Element.Font.size 58
+    , logo = Element.Font.size 90
+    }
+
+
 palette =
     { main = elementRgb 216 219 226
     , bold = elementRgb 0 23 31
@@ -28,6 +37,24 @@ palette =
     , mainBackground = elementRgb 255 255 255
     , highlightBackground = elementRgb 0 52 89
     }
+
+
+hoverPalette =
+    { main = highlightRgb 216 219 226
+    , bold = highlightRgb 0 23 31
+    , light = highlightRgb 0 126 167
+    , highlight = highlightRgb 0 168 232
+    , mainBackground = highlightRgb 255 255 255
+    , highlightBackground = highlightRgb 0 52 89
+    }
+
+
+highlightFactor =
+    25
+
+
+highlightRgb red green blue =
+    elementRgb (red + highlightFactor) (green + highlightFactor) (blue + highlightFactor)
 
 
 elementRgb red green blue =

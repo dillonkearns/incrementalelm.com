@@ -71,8 +71,8 @@ contactButton =
             "mailto:info@incrementalelm.com"
         , label =
             button
-                { fontColor = palette.mainBackground
-                , backgroundColor = palette.bold
+                { fontColor = .mainBackground
+                , backgroundColor = .bold
                 , size = fontSize.body
                 }
                 [ envelopeIcon |> Element.el []
@@ -84,8 +84,11 @@ contactButton =
 button { fontColor, backgroundColor, size } children =
     Element.row
         [ Element.spacing 20
-        , Element.Font.color fontColor
-        , Background.color backgroundColor
+        , Element.Font.color (fontColor palette)
+        , Element.mouseOver
+            [ Background.color (backgroundColor Style.hoverPalette)
+            ]
+        , Background.color (backgroundColor palette)
         , Element.padding 15
         , Element.Border.rounded 10
         , fontSize.body
@@ -220,8 +223,8 @@ whyElmSection =
                 { url = "/#why-elm"
                 , label =
                     button
-                        { fontColor = white
-                        , backgroundColor = palette.light
+                        { fontColor = .mainBackground
+                        , backgroundColor = .light
                         , size = fontSize.small
                         }
                         [ "Read About Why Elm?" |> wrappedText
