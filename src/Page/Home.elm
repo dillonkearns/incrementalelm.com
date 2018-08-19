@@ -62,7 +62,10 @@ contactSection =
         , Element.row
             [ Element.centerX
             , Element.spacing 20
-            , Element.Font.color palette.bold
+            , Element.Font.color palette.mainBackground
+            , Background.color palette.bold
+            , Element.padding 15
+            , Element.Border.rounded 10
             ]
             [ envelopeIcon |> Element.el []
             , Element.text "info@incrementalelm.com"
