@@ -70,17 +70,26 @@ contactButton =
         { url =
             "mailto:info@incrementalelm.com"
         , label =
-            Element.row
-                [ Element.spacing 20
-                , Element.Font.color palette.mainBackground
-                , Background.color palette.bold
-                , Element.padding 15
-                , Element.Border.rounded 10
-                ]
+            button
+                { fontColor = palette.mainBackground
+                , backgroundColor = palette.bold
+                }
                 [ envelopeIcon |> Element.el []
                 , Element.text "info@incrementalelm.com"
                 ]
         }
+
+
+button { fontColor, backgroundColor } children =
+    Element.row
+        [ Element.spacing 20
+        , Element.Font.color fontColor
+        , Background.color backgroundColor
+        , Element.padding 15
+        , Element.Border.rounded 10
+        , fontSize.body
+        ]
+        children
 
 
 envelopeIcon =
