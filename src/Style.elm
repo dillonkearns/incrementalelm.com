@@ -12,20 +12,11 @@ fonts =
 
 
 fontSize =
-    { body = Element.Font.size 25
-    , title = Element.Font.size 55
-    , medium = Element.Font.size 36
-    , small = Element.Font.size 18
-    , logo = Element.Font.size 50
-    }
-
-
-mobileFontSize =
-    { body = Element.Font.size 65
-    , title = Element.Font.size 95
-    , medium = Element.Font.size 76
-    , small = Element.Font.size 58
-    , logo = Element.Font.size 90
+    { body = Element.Font.size 20
+    , title = Element.Font.size 40
+    , medium = Element.Font.size 20
+    , small = Element.Font.size 14
+    , logo = Element.Font.size 24
     }
 
 

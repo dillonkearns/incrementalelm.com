@@ -169,7 +169,7 @@ iterationBubble iterationNumber =
     Element.none
         |> Element.el
             [ Background.color palette.highlight
-            , Element.paddingXY 130 130
+            , Element.padding 80
             , Element.Border.rounded 10000
             , Element.inFront
                 ([ Element.text "Iteration "
