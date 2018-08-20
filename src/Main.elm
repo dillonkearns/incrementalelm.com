@@ -58,10 +58,6 @@ update action model =
             )
 
         InitialViewport { viewport } ->
-            let
-                _ =
-                    Debug.log "viewport" viewport
-            in
             ( { model
                 | dimensions =
                     { width = viewport.width
