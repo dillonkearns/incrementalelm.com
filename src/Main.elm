@@ -24,6 +24,7 @@ import View.Navbar
 
 type alias Model =
     { styles : List Animation.State
+    , menuBarAnimation : Animation.State
     , dimensions :
         { width : Float
         , height : Float
@@ -53,6 +54,7 @@ update action model =
         Animate time ->
             ( { model
                 | styles = List.map (Animation.update time) model.styles
+                , menuBarAnimation = Animation.update time model.menuBarAnimation
               }
             , Cmd.none
             )
@@ -137,9 +139,23 @@ bar =
         Element.none
 
 
+animatedBar model =
+    Element.el
+        ([ 22 |> Element.px |> Element.width
+         , 2 |> Element.px |> Element.height
+         , Background.color palette.bold
+         ]
+            ++ (model.menuBarAnimation
+                    |> Animation.render
+                    |> List.map Element.htmlAttribute
+               )
+        )
+        Element.none
+
+
 menuBar model =
     Element.column [ Element.spacing 5, Element.height (Element.px 100), Element.centerX, Element.centerY ]
-        [ bar
+        [ animatedBar model
         , bar
         , bar
         ]
@@ -244,6 +260,20 @@ makeTranslated i polygon =
 init : () -> Url.Url -> Browser.Navigation.Key -> ( Model, Cmd Msg )
 init _ url navigationKey =
     ( { styles = ElmLogo.polygons |> List.map Animation.style
+      , menuBarAnimation =
+            Animation.style []
+                |> Animation.interrupt
+                    [ Animation.set
+                        [ translate -10
+                        , Animation.scale 0.5
+                        ]
+                    , Animation.wait
+                        (1 |> Time.millisToPosix)
+                    , Animation.to
+                        [ translate 0
+                        , Animation.scale 1
+                        ]
+                    ]
       , dimensions =
             { width = 0
             , height = 0
