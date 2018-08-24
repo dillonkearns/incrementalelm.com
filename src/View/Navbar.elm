@@ -17,14 +17,40 @@ import Task
 import Time
 import Url exposing (Url)
 import Url.Builder
+import View.FontAwesome
 
 
 view model animationView =
-    logoView model animationView
+    Element.row
+        [ Element.spaceEvenly
+        , Element.width Element.fill
+        ]
+        [ logoView model animationView
+        , links model
+        ]
+
+
+links model =
+    Element.row
+        [ Element.spacing 20
+        , Element.padding 20
+        , fonts.body
+        , Element.Font.color palette.bold
+        ]
+        (if isMobile model then
+            [ View.FontAwesome.icon "fas fa-bars" ]
+
+         else
+            [ Element.text "Learn Elm"
+            , Element.text "Articles"
+            , Element.text "Contact"
+            ]
+        )
 
 
 logoView model animationView =
-    Element.link []
+    Element.link
+        []
         { label =
             Element.row
                 [ Background.color palette.mainBackground

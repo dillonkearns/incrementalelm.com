@@ -8,6 +8,7 @@ import Html
 import Html.Attributes exposing (attribute, class, style)
 import Style exposing (fontSize, fonts, palette)
 import Style.Helpers
+import View.FontAwesome
 
 
 wrappedText contents =
@@ -83,8 +84,7 @@ contactButton =
 
 
 envelopeIcon =
-    Html.i [ Html.Attributes.class "far fa-envelope" ] []
-        |> Element.html
+    View.FontAwesome.icon "far fa-envelope"
 
 
 servicesSection dimensions =
