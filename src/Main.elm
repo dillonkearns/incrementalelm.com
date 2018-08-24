@@ -128,12 +128,31 @@ updateStyles model =
     }
 
 
+bar =
+    Element.el
+        [ 22 |> Element.px |> Element.width
+        , 2 |> Element.px |> Element.height
+        , Background.color palette.bold
+        ]
+        Element.none
+
+
+menuBar model =
+    Element.column [ Element.spacing 5, Element.height (Element.px 100), Element.centerX, Element.centerY ]
+        [ bar
+        , bar
+        , bar
+        ]
+
+
 view : Model -> Browser.Document Msg
 view ({ page } as model) =
     case page of
         Home ->
             { title = "Incremental Elm Consulting"
-            , body = [ mainView model ]
+            , body =
+                [ mainView model
+                ]
             }
 
         WhyElm ->
