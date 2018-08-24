@@ -20,6 +20,10 @@ import Url.Builder
 
 
 view model animationView =
+    logoView model animationView
+
+
+logoView model animationView =
     Element.link []
         { label =
             Element.row
