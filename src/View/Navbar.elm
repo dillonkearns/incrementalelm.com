@@ -20,18 +20,6 @@ import Url.Builder
 
 
 view model animationView =
-    -- if isMobile model then
-    --     Element.column
-    --         [ Background.color palette.mainBackground
-    --         , Element.alignTop
-    --         , Element.centerX
-    --         , Element.padding 25
-    --         ]
-    --         [ animationView model
-    --         , logoText
-    --         ]
-    --
-    -- else
     Element.link []
         { label =
             Element.row
