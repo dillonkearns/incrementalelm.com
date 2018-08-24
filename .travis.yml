@@ -1,25 +1,23 @@
-os:
-  - osx
+sudo: false
+os: linux
 language: node_js
-node_js:
-  - node
+node_js: node
 
-jobs:
-  include:
-    # - before_script:
-    #     - wget https://44a95588fe4cc47efd96-ec3c2a753a12d2be9f23ba16873acc23.ssl.cf2.rackcdn.com/mac-64.tar.gz -O /tmp/elm19.tar.gz
-    #     - mkdir elm19
-    #     - tar -xvf /tmp/elm19.tar.gz
-    #     - mv elm elm19
-    #     - export PATH=$PATH:$PWD/elm19
-    #     - elm --version
-    # 
-      script:
-        - travis_retry npm run build
-      deploy:
-        provider: pages
-        skip_cleanup: true
-        github_token: $GITHUB_TOKEN
-        local_dir: dist
-        on:
-          branch: master
+cache:
+  directories:
+    - node_modules
+
+env: ELM_VERSION=0.19.0
+
+install:
+  - npm install
+
+script:
+  - travis_retry npm run build
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN
+  local_dir: dist
+  on:
+    branch: master
