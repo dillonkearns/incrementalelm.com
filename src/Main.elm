@@ -50,20 +50,13 @@ type Msg
     | UrlRequest Browser.UrlRequest
 
 
-updateMenuBarAnimation time menuBarAnimation =
-    { upper = Animation.update time menuBarAnimation.upper
-    , middle = Animation.update time menuBarAnimation.middle
-    , lower = Animation.update time menuBarAnimation.lower
-    }
-
-
 update : Msg -> Model -> ( Model, Cmd Msg )
 update action model =
     case action of
         Animate time ->
             ( { model
                 | styles = List.map (Animation.update time) model.styles
-                , menuBarAnimation = updateMenuBarAnimation time model.menuBarAnimation
+                , menuBarAnimation = View.MenuBar.update time model.menuBarAnimation
               }
             , Cmd.none
             )
@@ -139,10 +132,6 @@ updateStyles model =
     }
 
 
-menuBar model =
-    View.MenuBar.view model
-
-
 view : Model -> Browser.Document Msg
 view ({ page } as model) =
     case page of
@@ -178,8 +167,7 @@ mainView ({ page } as model) =
                 , Element.alignTop
                 , Element.width Element.fill
                 ]
-                (menuBar model
-                    :: View.Navbar.view model animationView
+                (View.Navbar.view model animationView
                     :: Page.Home.view model.dimensions
                 )
                 |> Element.layout []

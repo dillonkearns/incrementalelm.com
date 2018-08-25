@@ -1,4 +1,4 @@
-module View.MenuBar exposing (Model, init, view)
+module View.MenuBar exposing (Model, init, update, view)
 
 import Animation
 import Ease
@@ -11,6 +11,13 @@ type alias Model =
     { upper : Animation.State
     , middle : Animation.State
     , lower : Animation.State
+    }
+
+
+update time menuBarAnimation =
+    { upper = Animation.update time menuBarAnimation.upper
+    , middle = Animation.update time menuBarAnimation.middle
+    , lower = Animation.update time menuBarAnimation.lower
     }
 
 
