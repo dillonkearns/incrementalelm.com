@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "elm-live src/Main.elm --open --output elm.js",
-    "build": "cp index.html CNAME dist",
-    "build-local": "elm make src/Main.elm --output dist/elm.js"
+    "build": "elm make src/Main.elm --output dist/elm.js && cp index.html CNAME dist"
   },
   "keywords": [],
   "author": "",
