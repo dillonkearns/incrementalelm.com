@@ -273,13 +273,12 @@ init _ url navigationKey =
     ( { styles = ElmLogo.polygons |> List.map Animation.style
       , menuBarAnimation =
             { upper =
-                Animation.styleWith interpolation []
+                Animation.styleWith interpolation
+                    [ Animation.translate (Animation.px 0) (Animation.px 0)
+                    , Animation.rotate (Animation.deg 0)
+                    ]
                     |> Animation.interrupt
-                        [ Animation.set
-                            [ Animation.translate (Animation.px 0) (Animation.px 0)
-                            , Animation.rotate (Animation.deg 0)
-                            ]
-                        , Animation.toWith interpolation
+                        [ Animation.toWith interpolation
                             [ Animation.translate (Animation.px 0) (Animation.px 7)
                             , Animation.rotate (Animation.deg 0)
                             ]
@@ -289,15 +288,16 @@ init _ url navigationKey =
                             ]
                         ]
             , middle =
-                Animation.styleWith interpolation []
+                Animation.styleWith interpolation
+                    [ Animation.translate (Animation.px 0) (Animation.px 0)
+                    , Animation.rotate (Animation.deg 0)
+                    , Animation.opacity 99
+                    ]
                     |> Animation.interrupt
-                        [ Animation.set
+                        [ Animation.toWith interpolation
                             [ Animation.translate (Animation.px 0) (Animation.px 0)
                             , Animation.rotate (Animation.deg 0)
-                            ]
-                        , Animation.toWith interpolation
-                            [ Animation.translate (Animation.px 0) (Animation.px 0)
-                            , Animation.rotate (Animation.deg 0)
+                            , Animation.opacity 100
                             ]
                         , Animation.toWith interpolation
                             [ Animation.rotate (Animation.deg -45)
@@ -305,13 +305,12 @@ init _ url navigationKey =
                             ]
                         ]
             , lower =
-                Animation.styleWith interpolation []
+                Animation.styleWith interpolation
+                    [ Animation.translate (Animation.px 0) (Animation.px 0)
+                    , Animation.rotate (Animation.deg 0)
+                    ]
                     |> Animation.interrupt
-                        [ Animation.set
-                            [ Animation.translate (Animation.px 0) (Animation.px 0)
-                            , Animation.rotate (Animation.deg 0)
-                            ]
-                        , Animation.toWith interpolation
+                        [ Animation.toWith interpolation
                             [ Animation.translate (Animation.px 0) (Animation.px -7)
                             , Animation.rotate (Animation.deg 0)
                             ]
