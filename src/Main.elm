@@ -26,11 +26,7 @@ import View.Navbar
 
 type alias Model =
     { styles : List Animation.State
-    , menuBarAnimation :
-        { upper : Animation.State
-        , middle : Animation.State
-        , lower : Animation.State
-        }
+    , menuBarAnimation : View.MenuBar.Model
     , dimensions :
         { width : Float
         , height : Float
@@ -182,7 +178,8 @@ mainView ({ page } as model) =
                 , Element.alignTop
                 , Element.width Element.fill
                 ]
-                (View.Navbar.view model animationView
+                (menuBar model
+                    :: View.Navbar.view model animationView
                     :: Page.Home.view model.dimensions
                 )
                 |> Element.layout []
@@ -243,65 +240,10 @@ makeTranslated i polygon =
             ]
 
 
-interpolation =
-    Animation.easing
-        { duration = second * 0.2
-        , ease = Ease.inOutCubic
-        }
-
-
 init : () -> Url.Url -> Browser.Navigation.Key -> ( Model, Cmd Msg )
 init _ url navigationKey =
     ( { styles = ElmLogo.polygons |> List.map Animation.style
-      , menuBarAnimation =
-            { upper =
-                Animation.styleWith interpolation
-                    [ Animation.translate (Animation.px 0) (Animation.px 0)
-                    , Animation.rotate (Animation.deg 0)
-                    ]
-                    |> Animation.interrupt
-                        [ Animation.toWith interpolation
-                            [ Animation.translate (Animation.px 0) (Animation.px 7)
-                            , Animation.rotate (Animation.deg 0)
-                            ]
-                        , Animation.toWith interpolation
-                            [ Animation.rotate (Animation.deg 45)
-                            , Animation.translate (Animation.px 0) (Animation.px 7)
-                            ]
-                        ]
-            , middle =
-                Animation.styleWith interpolation
-                    [ Animation.translate (Animation.px 0) (Animation.px 0)
-                    , Animation.rotate (Animation.deg 0)
-                    , Animation.opacity 99
-                    ]
-                    |> Animation.interrupt
-                        [ Animation.toWith interpolation
-                            [ Animation.translate (Animation.px 0) (Animation.px 0)
-                            , Animation.rotate (Animation.deg 0)
-                            , Animation.opacity 100
-                            ]
-                        , Animation.toWith interpolation
-                            [ Animation.rotate (Animation.deg -45)
-                            , Animation.translate (Animation.px 0) (Animation.px 0)
-                            ]
-                        ]
-            , lower =
-                Animation.styleWith interpolation
-                    [ Animation.translate (Animation.px 0) (Animation.px 0)
-                    , Animation.rotate (Animation.deg 0)
-                    ]
-                    |> Animation.interrupt
-                        [ Animation.toWith interpolation
-                            [ Animation.translate (Animation.px 0) (Animation.px -7)
-                            , Animation.rotate (Animation.deg 0)
-                            ]
-                        , Animation.toWith interpolation
-                            [ Animation.rotate (Animation.deg -45)
-                            , Animation.translate (Animation.px 0) (Animation.px -7)
-                            ]
-                        ]
-            }
+      , menuBarAnimation = View.MenuBar.init
       , dimensions =
             { width = 0
             , height = 0
