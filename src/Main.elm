@@ -25,7 +25,11 @@ import View.Navbar
 
 type alias Model =
     { styles : List Animation.State
-    , menuBarAnimation : { upper : Animation.State, lower : Animation.State }
+    , menuBarAnimation :
+        { upper : Animation.State
+        , middle : Animation.State
+        , lower : Animation.State
+        }
     , dimensions :
         { width : Float
         , height : Float
@@ -51,6 +55,7 @@ type Msg
 
 updateMenuBarAnimation time menuBarAnimation =
     { upper = Animation.update time menuBarAnimation.upper
+    , middle = Animation.update time menuBarAnimation.middle
     , lower = Animation.update time menuBarAnimation.lower
     }
 
@@ -137,15 +142,6 @@ updateStyles model =
     }
 
 
-bar =
-    Element.el
-        [ 22 |> Element.px |> Element.width
-        , 2 |> Element.px |> Element.height
-        , Background.color palette.bold
-        ]
-        Element.none
-
-
 animatedBar model getTupleItem =
     Element.el
         ([ 22 |> Element.px |> Element.width
@@ -164,7 +160,7 @@ animatedBar model getTupleItem =
 menuBar model =
     Element.column [ Element.spacing 5, Element.height (Element.px 100), Element.centerX, Element.centerY ]
         [ animatedBar model .upper
-        , bar
+        , animatedBar model .middle
         , animatedBar model .lower
         ]
 
@@ -290,6 +286,22 @@ init _ url navigationKey =
                         , Animation.toWith interpolation
                             [ Animation.rotate (Animation.deg 45)
                             , Animation.translate (Animation.px 0) (Animation.px 7)
+                            ]
+                        ]
+            , middle =
+                Animation.styleWith interpolation []
+                    |> Animation.interrupt
+                        [ Animation.set
+                            [ Animation.translate (Animation.px 0) (Animation.px 0)
+                            , Animation.rotate (Animation.deg 0)
+                            ]
+                        , Animation.toWith interpolation
+                            [ Animation.translate (Animation.px 0) (Animation.px 0)
+                            , Animation.rotate (Animation.deg 0)
+                            ]
+                        , Animation.toWith interpolation
+                            [ Animation.rotate (Animation.deg -45)
+                            , Animation.translate (Animation.px 0) (Animation.px 0)
                             ]
                         ]
             , lower =
