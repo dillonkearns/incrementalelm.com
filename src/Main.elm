@@ -20,6 +20,7 @@ import Task
 import Time
 import Url exposing (Url)
 import Url.Builder
+import View.MenuBar
 import View.Navbar
 
 
@@ -142,27 +143,8 @@ updateStyles model =
     }
 
 
-animatedBar model getTupleItem =
-    Element.el
-        ([ 22 |> Element.px |> Element.width
-         , 2 |> Element.px |> Element.height
-         , Background.color palette.bold
-         ]
-            ++ (model.menuBarAnimation
-                    |> getTupleItem
-                    |> Animation.render
-                    |> List.map Element.htmlAttribute
-               )
-        )
-        Element.none
-
-
 menuBar model =
-    Element.column [ Element.spacing 5, Element.height (Element.px 100), Element.centerX, Element.centerY ]
-        [ animatedBar model .upper
-        , animatedBar model .middle
-        , animatedBar model .lower
-        ]
+    View.MenuBar.view model
 
 
 view : Model -> Browser.Document Msg
