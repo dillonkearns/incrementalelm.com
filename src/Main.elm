@@ -25,7 +25,7 @@ import View.Navbar
 
 type alias Model =
     { styles : List Animation.State
-    , menuBarAnimation : ( Animation.State, Animation.State )
+    , menuBarAnimation : { upper : Animation.State, lower : Animation.State }
     , dimensions :
         { width : Float
         , height : Float
@@ -49,13 +49,19 @@ type Msg
     | UrlRequest Browser.UrlRequest
 
 
+updateMenuBarAnimation time menuBarAnimation =
+    { upper = Animation.update time menuBarAnimation.upper
+    , lower = Animation.update time menuBarAnimation.lower
+    }
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update action model =
     case action of
         Animate time ->
             ( { model
                 | styles = List.map (Animation.update time) model.styles
-                , menuBarAnimation = Tuple.mapBoth (Animation.update time) (Animation.update time) model.menuBarAnimation
+                , menuBarAnimation = updateMenuBarAnimation time model.menuBarAnimation
               }
             , Cmd.none
             )
@@ -157,9 +163,9 @@ animatedBar model getTupleItem =
 
 menuBar model =
     Element.column [ Element.spacing 5, Element.height (Element.px 100), Element.centerX, Element.centerY ]
-        [ animatedBar model Tuple.first
+        [ animatedBar model .upper
         , bar
-        , animatedBar model Tuple.second
+        , animatedBar model .lower
         ]
 
 
@@ -261,8 +267,8 @@ makeTranslated i polygon =
 
 interpolation =
     Animation.easing
-        { duration = second * 0.1
-        , ease = Ease.inOutCirc
+        { duration = second * 0.2
+        , ease = Ease.inOutCubic
         }
 
 
@@ -270,37 +276,39 @@ init : () -> Url.Url -> Browser.Navigation.Key -> ( Model, Cmd Msg )
 init _ url navigationKey =
     ( { styles = ElmLogo.polygons |> List.map Animation.style
       , menuBarAnimation =
-            ( Animation.styleWith interpolation []
-                |> Animation.interrupt
-                    [ Animation.set
-                        [ Animation.translate (Animation.px 0) (Animation.px 0)
-                        , Animation.rotate (Animation.deg 0)
+            { upper =
+                Animation.styleWith interpolation []
+                    |> Animation.interrupt
+                        [ Animation.set
+                            [ Animation.translate (Animation.px 0) (Animation.px 0)
+                            , Animation.rotate (Animation.deg 0)
+                            ]
+                        , Animation.toWith interpolation
+                            [ Animation.translate (Animation.px 0) (Animation.px 7)
+                            , Animation.rotate (Animation.deg 0)
+                            ]
+                        , Animation.toWith interpolation
+                            [ Animation.rotate (Animation.deg 45)
+                            , Animation.translate (Animation.px 0) (Animation.px 7)
+                            ]
                         ]
-                    , Animation.toWith interpolation
-                        [ Animation.translate (Animation.px 0) (Animation.px 7)
-                        , Animation.rotate (Animation.deg 0)
+            , lower =
+                Animation.styleWith interpolation []
+                    |> Animation.interrupt
+                        [ Animation.set
+                            [ Animation.translate (Animation.px 0) (Animation.px 0)
+                            , Animation.rotate (Animation.deg 0)
+                            ]
+                        , Animation.toWith interpolation
+                            [ Animation.translate (Animation.px 0) (Animation.px -7)
+                            , Animation.rotate (Animation.deg 0)
+                            ]
+                        , Animation.toWith interpolation
+                            [ Animation.rotate (Animation.deg -45)
+                            , Animation.translate (Animation.px 0) (Animation.px -7)
+                            ]
                         ]
-                    , Animation.toWith interpolation
-                        [ Animation.rotate (Animation.deg 45)
-                        , Animation.translate (Animation.px 0) (Animation.px 7)
-                        ]
-                    ]
-            , Animation.styleWith interpolation []
-                |> Animation.interrupt
-                    [ Animation.set
-                        [ Animation.translate (Animation.px 0) (Animation.px 0)
-                        , Animation.rotate (Animation.deg 0)
-                        ]
-                    , Animation.toWith interpolation
-                        [ Animation.translate (Animation.px 0) (Animation.px -7)
-                        , Animation.rotate (Animation.deg 0)
-                        ]
-                    , Animation.toWith interpolation
-                        [ Animation.rotate (Animation.deg -45)
-                        , Animation.translate (Animation.px 0) (Animation.px -7)
-                        ]
-                    ]
-            )
+            }
       , dimensions =
             { width = 0
             , height = 0
