@@ -5,6 +5,7 @@ import Browser
 import Browser.Dom
 import Browser.Events
 import Browser.Navigation
+import Ease
 import Element exposing (Element)
 import Element.Background as Background
 import Element.Border
@@ -24,7 +25,7 @@ import View.Navbar
 
 type alias Model =
     { styles : List Animation.State
-    , menuBarAnimation : Animation.State
+    , menuBarAnimation : ( Animation.State, Animation.State )
     , dimensions :
         { width : Float
         , height : Float
@@ -54,7 +55,7 @@ update action model =
         Animate time ->
             ( { model
                 | styles = List.map (Animation.update time) model.styles
-                , menuBarAnimation = Animation.update time model.menuBarAnimation
+                , menuBarAnimation = Tuple.mapBoth (Animation.update time) (Animation.update time) model.menuBarAnimation
               }
             , Cmd.none
             )
@@ -139,13 +140,14 @@ bar =
         Element.none
 
 
-animatedBar model =
+animatedBar model getTupleItem =
     Element.el
         ([ 22 |> Element.px |> Element.width
          , 2 |> Element.px |> Element.height
          , Background.color palette.bold
          ]
             ++ (model.menuBarAnimation
+                    |> getTupleItem
                     |> Animation.render
                     |> List.map Element.htmlAttribute
                )
@@ -155,9 +157,9 @@ animatedBar model =
 
 menuBar model =
     Element.column [ Element.spacing 5, Element.height (Element.px 100), Element.centerX, Element.centerY ]
-        [ animatedBar model
+        [ animatedBar model Tuple.first
         , bar
-        , bar
+        , animatedBar model Tuple.second
         ]
 
 
@@ -257,23 +259,48 @@ makeTranslated i polygon =
             ]
 
 
+interpolation =
+    Animation.easing
+        { duration = second * 0.1
+        , ease = Ease.inOutCirc
+        }
+
+
 init : () -> Url.Url -> Browser.Navigation.Key -> ( Model, Cmd Msg )
 init _ url navigationKey =
     ( { styles = ElmLogo.polygons |> List.map Animation.style
       , menuBarAnimation =
-            Animation.style []
+            ( Animation.styleWith interpolation []
                 |> Animation.interrupt
                     [ Animation.set
-                        [ translate -10
-                        , Animation.scale 0.5
+                        [ Animation.translate (Animation.px 0) (Animation.px 0)
+                        , Animation.rotate (Animation.deg 0)
                         ]
-                    , Animation.wait
-                        (1 |> Time.millisToPosix)
-                    , Animation.to
-                        [ translate 0
-                        , Animation.scale 1
+                    , Animation.toWith interpolation
+                        [ Animation.translate (Animation.px 0) (Animation.px 7)
+                        , Animation.rotate (Animation.deg 0)
+                        ]
+                    , Animation.toWith interpolation
+                        [ Animation.rotate (Animation.deg 45)
+                        , Animation.translate (Animation.px 0) (Animation.px 7)
                         ]
                     ]
+            , Animation.styleWith interpolation []
+                |> Animation.interrupt
+                    [ Animation.set
+                        [ Animation.translate (Animation.px 0) (Animation.px 0)
+                        , Animation.rotate (Animation.deg 0)
+                        ]
+                    , Animation.toWith interpolation
+                        [ Animation.translate (Animation.px 0) (Animation.px -7)
+                        , Animation.rotate (Animation.deg 0)
+                        ]
+                    , Animation.toWith interpolation
+                        [ Animation.rotate (Animation.deg -45)
+                        , Animation.translate (Animation.px 0) (Animation.px -7)
+                        ]
+                    ]
+            )
       , dimensions =
             { width = 0
             , height = 0
