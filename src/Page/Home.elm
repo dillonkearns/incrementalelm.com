@@ -166,29 +166,25 @@ faTransform =
 
 
 iterationBubble iterationNumber =
-    Element.none
+    (Element.paragraph [ Element.height Element.shrink, Element.centerY ]
+        [ Element.text "Iteration "
+        , Element.text (String.fromInt iterationNumber)
+        ]
         |> Element.el
-            [ Background.color palette.highlight
-            , Element.padding 80
+            [ Element.Font.color white
+            , fonts.title
+            , Element.centerX
+            , Element.centerY
+            , Element.Font.center
+            , fontSize.medium
+            , Element.Font.bold
+            , Background.color palette.highlight
+            , Element.width (Element.px 150)
+            , Element.height (Element.px 150)
             , Element.Border.rounded 10000
-            , Element.inFront
-                ([ Element.text "Iteration "
-                 , Element.text (String.fromInt iterationNumber)
-                 ]
-                    |> Element.paragraph
-                        [ Element.Font.color white
-                        , fonts.title
-                        , Element.centerX
-                        , Element.centerY
-                        , Element.Font.center
-                        , fontSize.medium
-                        , Element.Font.bold
-                        ]
-                )
             ]
-        |> Element.el
-            [ Element.centerX
-            ]
+    )
+        |> Element.el [ Element.centerX ]
 
 
 whyElmSection =

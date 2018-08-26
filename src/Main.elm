@@ -34,6 +34,7 @@ type alias Model =
         }
     , page : Page
     , key : Browser.Navigation.Key
+    , showMenu : Bool
     }
 
 
@@ -124,7 +125,12 @@ update action model =
                     ( model, Browser.Navigation.load href )
 
         StartAnimation ->
-            ( { model | menuBarAnimation = View.MenuBar.startAnimation model.menuBarAnimation }, Cmd.none )
+            ( { model
+                | showMenu = True
+                , menuBarAnimation = View.MenuBar.startAnimation model.menuBarAnimation
+              }
+            , Cmd.none
+            )
 
 
 updateStyles : Model -> Model
@@ -163,7 +169,7 @@ mainView ({ page } as model) =
                 [ View.Navbar.view model animationView StartAnimation
                 , Element.text "Why Elm Contents..."
                 ]
-                |> Element.layout []
+                |> layout model
 
         Home ->
             Element.column
@@ -174,7 +180,27 @@ mainView ({ page } as model) =
                 (View.Navbar.view model animationView StartAnimation
                     :: Page.Home.view model.dimensions
                 )
-                |> Element.layout []
+                |> layout model
+
+
+menu =
+    Element.el
+        [ Background.color palette.main
+        , Element.height Element.fill
+        , Element.width Element.fill
+        ]
+        Element.none
+        |> Element.inFront
+
+
+layout model =
+    Element.layout
+        (if False then
+            [ menu ]
+
+         else
+            []
+        )
 
 
 isMobile { dimensions } =
@@ -248,6 +274,7 @@ init _ url navigationKey =
             else
                 Home
       , key = navigationKey
+      , showMenu = False
       }
         |> updateStyles
     , Browser.Dom.getViewport
