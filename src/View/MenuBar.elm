@@ -40,7 +40,7 @@ view model animationMsg =
 
 init =
     { upper =
-        Animation.styleWith interpolation
+        Animation.style
             [ Animation.translate (Animation.px 0) (Animation.px 0)
             , Animation.rotate (Animation.deg 0)
             ]
@@ -56,7 +56,7 @@ init =
     --         ]
     -- ]
     , middle =
-        Animation.styleWith interpolation
+        Animation.style
             [ Animation.translate (Animation.px 0) (Animation.px 0)
             , Animation.rotate (Animation.deg 0)
             , Animation.opacity 99
@@ -74,7 +74,7 @@ init =
     --         ]
     --     ]
     , lower =
-        Animation.styleWith interpolation
+        Animation.style
             [ Animation.translate (Animation.px 0) (Animation.px 0)
             , Animation.rotate (Animation.deg 0)
             ]
