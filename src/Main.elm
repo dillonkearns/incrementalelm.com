@@ -48,6 +48,7 @@ type Msg
     | WindowResized Int Int
     | UrlChanged Url
     | UrlRequest Browser.UrlRequest
+    | StartAnimation
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -122,6 +123,9 @@ update action model =
                 Browser.External href ->
                     ( model, Browser.Navigation.load href )
 
+        StartAnimation ->
+            ( { model | menuBarAnimation = View.MenuBar.startAnimation model.menuBarAnimation }, Cmd.none )
+
 
 updateStyles : Model -> Model
 updateStyles model =
@@ -156,7 +160,7 @@ mainView ({ page } as model) =
                 , Element.alignTop
                 , Element.width Element.fill
                 ]
-                [ View.Navbar.view model animationView
+                [ View.Navbar.view model animationView StartAnimation
                 , Element.text "Why Elm Contents..."
                 ]
                 |> Element.layout []
@@ -167,7 +171,7 @@ mainView ({ page } as model) =
                 , Element.alignTop
                 , Element.width Element.fill
                 ]
-                (View.Navbar.view model animationView
+                (View.Navbar.view model animationView StartAnimation
                     :: Page.Home.view model.dimensions
                 )
                 |> Element.layout []

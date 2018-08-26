@@ -21,17 +21,17 @@ import View.FontAwesome
 import View.MenuBar
 
 
-view model animationView =
+view model animationView startAnimationMsg =
     Element.row
         [ Element.spaceEvenly
         , Element.width Element.fill
         ]
         [ logoView model animationView
-        , links model
+        , links model startAnimationMsg
         ]
 
 
-links model =
+links model startAnimationMsg =
     Element.row
         [ Element.spacing 20
         , Element.padding 20
@@ -39,7 +39,7 @@ links model =
         , Element.Font.color palette.bold
         ]
         (if isMobile model then
-            [ View.MenuBar.view model ]
+            [ View.MenuBar.view model startAnimationMsg ]
 
          else
             [ Element.text "Learn Elm"

@@ -1,9 +1,10 @@
-module View.MenuBar exposing (Model, init, update, view)
+module View.MenuBar exposing (Model, init, startAnimation, update, view)
 
 import Animation
 import Ease
 import Element exposing (Element)
 import Element.Background as Background
+import Element.Events
 import Style exposing (fonts, palette)
 
 
@@ -21,14 +22,15 @@ update time menuBarAnimation =
     }
 
 
-view : { model | menuBarAnimation : Model } -> Element msg
-view model =
+view : { model | menuBarAnimation : Model } -> msg -> Element msg
+view model animationMsg =
     Element.column
         [ Element.spacing 5
         , Element.height (Element.px 100)
         , Element.centerX
         , Element.centerY
         , Element.height Element.shrink
+        , Element.Events.onClick animationMsg
         ]
         [ animatedBar model .upper
         , animatedBar model .middle
@@ -104,6 +106,47 @@ animatedBar model getTupleItem =
                )
         )
         Element.none
+
+
+startAnimation menuBarModel =
+    { upper =
+        menuBarModel.upper
+            |> Animation.interrupt
+                [ Animation.toWith interpolation
+                    [ Animation.translate (Animation.px 0) (Animation.px 7)
+                    , Animation.rotate (Animation.deg 0)
+                    ]
+                , Animation.toWith interpolation
+                    [ Animation.rotate (Animation.deg 45)
+                    , Animation.translate (Animation.px 0) (Animation.px 7)
+                    ]
+                ]
+    , middle =
+        menuBarModel.middle
+            |> Animation.interrupt
+                [ Animation.toWith interpolation
+                    [ Animation.translate (Animation.px 0) (Animation.px 0)
+                    , Animation.rotate (Animation.deg 0)
+                    , Animation.opacity 100
+                    ]
+                , Animation.toWith interpolation
+                    [ Animation.rotate (Animation.deg -45)
+                    , Animation.translate (Animation.px 0) (Animation.px 0)
+                    ]
+                ]
+    , lower =
+        menuBarModel.lower
+            |> Animation.interrupt
+                [ Animation.toWith interpolation
+                    [ Animation.translate (Animation.px 0) (Animation.px -7)
+                    , Animation.rotate (Animation.deg 0)
+                    ]
+                , Animation.toWith interpolation
+                    [ Animation.rotate (Animation.deg -45)
+                    , Animation.translate (Animation.px 0) (Animation.px -7)
+                    ]
+                ]
+    }
 
 
 second =
