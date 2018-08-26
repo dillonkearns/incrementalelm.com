@@ -23,7 +23,13 @@ update time menuBarAnimation =
 
 view : { model | menuBarAnimation : Model } -> Element msg
 view model =
-    Element.column [ Element.spacing 5, Element.height (Element.px 100), Element.centerX, Element.centerY ]
+    Element.column
+        [ Element.spacing 5
+        , Element.height (Element.px 100)
+        , Element.centerX
+        , Element.centerY
+        , Element.height Element.shrink
+        ]
         [ animatedBar model .upper
         , animatedBar model .middle
         , animatedBar model .lower
@@ -36,48 +42,51 @@ init =
             [ Animation.translate (Animation.px 0) (Animation.px 0)
             , Animation.rotate (Animation.deg 0)
             ]
-            |> Animation.interrupt
-                [ Animation.toWith interpolation
-                    [ Animation.translate (Animation.px 0) (Animation.px 7)
-                    , Animation.rotate (Animation.deg 0)
-                    ]
-                , Animation.toWith interpolation
-                    [ Animation.rotate (Animation.deg 45)
-                    , Animation.translate (Animation.px 0) (Animation.px 7)
-                    ]
-                ]
+
+    -- |> Animation.interrupt
+    --     [ Animation.toWith interpolation
+    --         [ Animation.translate (Animation.px 0) (Animation.px 7)
+    --         , Animation.rotate (Animation.deg 0)
+    --         ]
+    --     , Animation.toWith interpolation
+    --         [ Animation.rotate (Animation.deg 45)
+    --         , Animation.translate (Animation.px 0) (Animation.px 7)
+    --         ]
+    -- ]
     , middle =
         Animation.styleWith interpolation
             [ Animation.translate (Animation.px 0) (Animation.px 0)
             , Animation.rotate (Animation.deg 0)
             , Animation.opacity 99
             ]
-            |> Animation.interrupt
-                [ Animation.toWith interpolation
-                    [ Animation.translate (Animation.px 0) (Animation.px 0)
-                    , Animation.rotate (Animation.deg 0)
-                    , Animation.opacity 100
-                    ]
-                , Animation.toWith interpolation
-                    [ Animation.rotate (Animation.deg -45)
-                    , Animation.translate (Animation.px 0) (Animation.px 0)
-                    ]
-                ]
+
+    -- |> Animation.interrupt
+    --     [ Animation.toWith interpolation
+    --         [ Animation.translate (Animation.px 0) (Animation.px 0)
+    --         , Animation.rotate (Animation.deg 0)
+    --         , Animation.opacity 100
+    --         ]
+    --     , Animation.toWith interpolation
+    --         [ Animation.rotate (Animation.deg -45)
+    --         , Animation.translate (Animation.px 0) (Animation.px 0)
+    --         ]
+    --     ]
     , lower =
         Animation.styleWith interpolation
             [ Animation.translate (Animation.px 0) (Animation.px 0)
             , Animation.rotate (Animation.deg 0)
             ]
-            |> Animation.interrupt
-                [ Animation.toWith interpolation
-                    [ Animation.translate (Animation.px 0) (Animation.px -7)
-                    , Animation.rotate (Animation.deg 0)
-                    ]
-                , Animation.toWith interpolation
-                    [ Animation.rotate (Animation.deg -45)
-                    , Animation.translate (Animation.px 0) (Animation.px -7)
-                    ]
-                ]
+
+    -- |> Animation.interrupt
+    --     [ Animation.toWith interpolation
+    --         [ Animation.translate (Animation.px 0) (Animation.px -7)
+    --         , Animation.rotate (Animation.deg 0)
+    --         ]
+    --     , Animation.toWith interpolation
+    --         [ Animation.rotate (Animation.deg -45)
+    --         , Animation.translate (Animation.px 0) (Animation.px -7)
+    --         ]
+    --     ]
     }
 
 

@@ -18,6 +18,7 @@ import Time
 import Url exposing (Url)
 import Url.Builder
 import View.FontAwesome
+import View.MenuBar
 
 
 view model animationView =
@@ -38,7 +39,7 @@ links model =
         , Element.Font.color palette.bold
         ]
         (if isMobile model then
-            [ View.FontAwesome.icon "fas fa-bars" ]
+            [ View.MenuBar.view model ]
 
          else
             [ Element.text "Learn Elm"
