@@ -168,28 +168,40 @@ view ({ page } as model) =
 
 
 mainView ({ page } as model) =
-    case page of
-        WhyElm ->
-            Element.column
-                [ Element.height Element.shrink
-                , Element.alignTop
-                , Element.width Element.fill
-                ]
-                [ View.Navbar.view model animationView StartAnimation
-                , Element.text "Why Elm Contents..."
-                ]
-                |> layout model
+    if model.showMenu then
+        Element.column
+            [ Element.height Element.fill
+            , Element.alignTop
+            , Element.width Element.fill
+            ]
+            [ View.Navbar.view model animationView StartAnimation
+            , menu model.menuAnimation
+            ]
+            |> layout model
 
-        Home ->
-            Element.column
-                [ Element.height Element.shrink
-                , Element.alignTop
-                , Element.width Element.fill
-                ]
-                (View.Navbar.view model animationView StartAnimation
-                    :: Page.Home.view model.dimensions
-                )
-                |> layout model
+    else
+        case page of
+            WhyElm ->
+                Element.column
+                    [ Element.height Element.shrink
+                    , Element.alignTop
+                    , Element.width Element.fill
+                    ]
+                    [ View.Navbar.view model animationView StartAnimation
+                    , Element.text "Why Elm Contents..."
+                    ]
+                    |> layout model
+
+            Home ->
+                Element.column
+                    [ Element.height Element.shrink
+                    , Element.alignTop
+                    , Element.width Element.fill
+                    ]
+                    (View.Navbar.view model animationView StartAnimation
+                        :: Page.Home.view model.dimensions
+                    )
+                    |> layout model
 
 
 interpolation =
@@ -200,24 +212,30 @@ interpolation =
 
 
 menu menuAnimation =
-    Element.el
+    Element.column
         ([ Background.color palette.main
          , Element.height Element.fill
          , Element.width Element.fill
+         , Element.spacing 20
+         , Element.padding 20
+         , fonts.body
+         , Element.Font.color palette.bold
          ]
             ++ (menuAnimation
                     |> Animation.render
                     |> List.map Element.htmlAttribute
                )
         )
-        Element.none
-        |> Element.inFront
+        [ Element.text "Learn Elm"
+        , Element.text "Articles"
+        , Element.text "Contact"
+        ]
 
 
 layout model =
     Element.layout
         (if model.showMenu then
-            [ menu model.menuAnimation ]
+            []
 
          else
             []
@@ -310,7 +328,11 @@ init _ url navigationKey =
 subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.batch
-        [ Animation.subscription Animate model.styles
+        [ Animation.subscription Animate
+            (model.styles
+                ++ View.MenuBar.animationStates model.menuBarAnimation
+                ++ [ model.menuAnimation ]
+            )
         , Browser.Events.onResize WindowResized
         ]
 
