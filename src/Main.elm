@@ -27,6 +27,7 @@ import View.Navbar
 type alias Model =
     { styles : List Animation.State
     , menuBarAnimation : View.MenuBar.Model
+    , menuAnimation : Animation.State
     , dimensions :
         { width : Float
         , height : Float
@@ -59,6 +60,7 @@ update action model =
             ( { model
                 | styles = List.map (Animation.update time) model.styles
                 , menuBarAnimation = View.MenuBar.update time model.menuBarAnimation
+                , menuAnimation = Animation.update time model.menuAnimation
               }
             , Cmd.none
             )
@@ -128,6 +130,13 @@ update action model =
             ( { model
                 | showMenu = True
                 , menuBarAnimation = View.MenuBar.startAnimation model.menuBarAnimation
+                , menuAnimation =
+                    model.menuAnimation
+                        |> Animation.interrupt
+                            [ Animation.toWith interpolation
+                                [ Animation.opacity 100
+                                ]
+                            ]
               }
             , Cmd.none
             )
@@ -183,20 +192,32 @@ mainView ({ page } as model) =
                 |> layout model
 
 
-menu =
+interpolation =
+    Animation.easing
+        { duration = second * 3.8
+        , ease = Ease.inOutCubic
+        }
+
+
+menu menuAnimation =
     Element.el
-        [ Background.color palette.main
-        , Element.height Element.fill
-        , Element.width Element.fill
-        ]
+        ([ Background.color palette.main
+         , Element.height Element.fill
+         , Element.width Element.fill
+         ]
+            ++ (menuAnimation
+                    |> Animation.render
+                    |> List.map Element.htmlAttribute
+               )
+        )
         Element.none
         |> Element.inFront
 
 
 layout model =
     Element.layout
-        (if False then
-            [ menu ]
+        (if model.showMenu then
+            [ menu model.menuAnimation ]
 
          else
             []
@@ -262,6 +283,10 @@ init : () -> Url.Url -> Browser.Navigation.Key -> ( Model, Cmd Msg )
 init _ url navigationKey =
     ( { styles = ElmLogo.polygons |> List.map Animation.style
       , menuBarAnimation = View.MenuBar.init
+      , menuAnimation =
+            Animation.style
+                [ Animation.opacity 0
+                ]
       , dimensions =
             { width = 0
             , height = 0
