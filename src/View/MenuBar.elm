@@ -113,45 +113,99 @@ animatedBar model getTupleItem =
         Element.none
 
 
-startAnimation menuBarModel =
-    { upper =
-        menuBarModel.upper
-            |> Animation.interrupt
-                [ Animation.toWith interpolation
-                    [ Animation.translate (Animation.px 0) (Animation.px 7)
-                    , Animation.rotate (Animation.deg 0)
-                    ]
-                , Animation.toWith interpolation
-                    [ Animation.rotate (Animation.deg 45)
-                    , Animation.translate (Animation.px 0) (Animation.px 7)
-                    ]
-                ]
-    , middle =
-        menuBarModel.middle
-            |> Animation.interrupt
-                [ Animation.toWith interpolation
-                    [ Animation.translate (Animation.px 0) (Animation.px 0)
-                    , Animation.rotate (Animation.deg 0)
-                    , Animation.opacity 100
-                    ]
-                , Animation.toWith interpolation
-                    [ Animation.rotate (Animation.deg -45)
-                    , Animation.translate (Animation.px 0) (Animation.px 0)
-                    ]
-                ]
-    , lower =
-        menuBarModel.lower
-            |> Animation.interrupt
-                [ Animation.toWith interpolation
-                    [ Animation.translate (Animation.px 0) (Animation.px -7)
-                    , Animation.rotate (Animation.deg 0)
-                    ]
-                , Animation.toWith interpolation
-                    [ Animation.rotate (Animation.deg -45)
-                    , Animation.translate (Animation.px 0) (Animation.px -7)
-                    ]
-                ]
-    }
+startAnimation { menuBarAnimation, showMenu } =
+    case showMenu of
+        True ->
+            { upper =
+                menuBarAnimation.upper
+                    |> Animation.interrupt
+                        [ Animation.toWith interpolation
+                            [ Animation.rotate (Animation.deg 45)
+                            , Animation.translate (Animation.px 0) (Animation.px 7)
+                            ]
+                        , Animation.toWith interpolation
+                            [ Animation.translate (Animation.px 0) (Animation.px 7)
+                            , Animation.rotate (Animation.deg 0)
+                            ]
+                        , Animation.toWith interpolation
+                            [ Animation.translate (Animation.px 0) (Animation.px 0)
+                            , Animation.rotate (Animation.deg 0)
+                            ]
+                        ]
+            , middle =
+                menuBarAnimation.middle
+                    |> Animation.interrupt
+                        [ Animation.toWith interpolation
+                            [ Animation.rotate (Animation.deg -45)
+                            , Animation.translate (Animation.px 0) (Animation.px 0)
+                            ]
+                        , Animation.toWith interpolation
+                            [ Animation.translate (Animation.px 0) (Animation.px 0)
+                            , Animation.rotate (Animation.deg 0)
+                            , Animation.opacity 100
+                            ]
+                        , Animation.toWith interpolation
+                            [ Animation.translate (Animation.px 0) (Animation.px 0)
+                            , Animation.rotate (Animation.deg 0)
+                            ]
+                        ]
+            , lower =
+                menuBarAnimation.lower
+                    |> Animation.interrupt
+                        [ Animation.toWith interpolation
+                            [ Animation.rotate (Animation.deg -45)
+                            , Animation.translate (Animation.px 0) (Animation.px -7)
+                            ]
+                        , Animation.toWith interpolation
+                            [ Animation.translate (Animation.px 0) (Animation.px -7)
+                            , Animation.rotate (Animation.deg 0)
+                            ]
+                        , Animation.toWith interpolation
+                            [ Animation.translate (Animation.px 0) (Animation.px 0)
+                            , Animation.rotate (Animation.deg 0)
+                            ]
+                        ]
+            }
+
+        False ->
+            { upper =
+                menuBarAnimation.upper
+                    |> Animation.interrupt
+                        [ Animation.toWith interpolation
+                            [ Animation.translate (Animation.px 0) (Animation.px 7)
+                            , Animation.rotate (Animation.deg 0)
+                            ]
+                        , Animation.toWith interpolation
+                            [ Animation.rotate (Animation.deg 45)
+                            , Animation.translate (Animation.px 0) (Animation.px 7)
+                            ]
+                        ]
+            , middle =
+                menuBarAnimation.middle
+                    |> Animation.interrupt
+                        [ Animation.toWith interpolation
+                            [ Animation.translate (Animation.px 0) (Animation.px 0)
+                            , Animation.rotate (Animation.deg 0)
+                            , Animation.opacity 100
+                            ]
+                        , Animation.toWith interpolation
+                            [ Animation.rotate (Animation.deg -45)
+                            , Animation.translate (Animation.px 0) (Animation.px 0)
+                            ]
+                        ]
+            , lower =
+                menuBarAnimation.lower
+                    |> Animation.interrupt
+                        [ Animation.toWith interpolation
+                            [ Animation.translate (Animation.px 0) (Animation.px -7)
+                            , Animation.rotate (Animation.deg 0)
+                            ]
+                        , Animation.toWith interpolation
+                            [ Animation.rotate (Animation.deg -45)
+                            , Animation.translate (Animation.px 0) (Animation.px -7)
+                            ]
+                        ]
+            }
 
 
 second =

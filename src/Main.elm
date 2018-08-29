@@ -127,19 +127,36 @@ update action model =
                     ( model, Browser.Navigation.load href )
 
         StartAnimation ->
-            ( { model
-                | showMenu = True
-                , menuBarAnimation = View.MenuBar.startAnimation model.menuBarAnimation
-                , menuAnimation =
-                    model.menuAnimation
-                        |> Animation.interrupt
-                            [ Animation.toWith interpolation
-                                [ Animation.opacity 100
-                                ]
-                            ]
-              }
-            , Cmd.none
-            )
+            case model.showMenu of
+                True ->
+                    ( { model
+                        | showMenu = False
+                        , menuBarAnimation = View.MenuBar.startAnimation model
+                        , menuAnimation =
+                            model.menuAnimation
+                                |> Animation.interrupt
+                                    [ Animation.toWith interpolation
+                                        [ Animation.opacity 100
+                                        ]
+                                    ]
+                      }
+                    , Cmd.none
+                    )
+
+                False ->
+                    ( { model
+                        | showMenu = True
+                        , menuBarAnimation = View.MenuBar.startAnimation model
+                        , menuAnimation =
+                            model.menuAnimation
+                                |> Animation.interrupt
+                                    [ Animation.toWith interpolation
+                                        [ Animation.opacity 100
+                                        ]
+                                    ]
+                      }
+                    , Cmd.none
+                    )
 
 
 updateStyles : Model -> Model
@@ -206,7 +223,7 @@ mainView ({ page } as model) =
 
 interpolation =
     Animation.easing
-        { duration = second * 3.8
+        { duration = second * 1
         , ease = Ease.inOutCubic
         }
 
@@ -220,6 +237,7 @@ menu menuAnimation =
          , Element.padding 20
          , fonts.body
          , Element.Font.color palette.bold
+         , Element.centerX
          ]
             ++ (menuAnimation
                     |> Animation.render
