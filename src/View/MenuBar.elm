@@ -30,7 +30,7 @@ update time menuBarAnimation =
 view : { model | menuBarAnimation : Model } -> msg -> Element msg
 view model animationMsg =
     Element.column
-        [ Element.spacing 5
+        [ Element.spacing spacing
         , Element.height (Element.px 100)
         , Element.centerX
         , Element.centerY
@@ -52,12 +52,12 @@ init =
 
     -- |> Animation.interrupt
     --     [ Animation.toWith interpolation
-    --         [ Animation.translate (Animation.px 0) (Animation.px 7)
+    --         [ Animation.translate (Animation.px 0) (Animation.px separationLength)
     --         , Animation.rotate (Animation.deg 0)
     --         ]
     --     , Animation.toWith interpolation
     --         [ Animation.rotate (Animation.deg 45)
-    --         , Animation.translate (Animation.px 0) (Animation.px 7)
+    --         , Animation.translate (Animation.px 0) (Animation.px separationLength)
     --         ]
     -- ]
     , middle =
@@ -86,22 +86,34 @@ init =
 
     -- |> Animation.interrupt
     --     [ Animation.toWith interpolation
-    --         [ Animation.translate (Animation.px 0) (Animation.px -7)
+    --         [ Animation.translate (Animation.px 0) (Animation.px -separationLength)
     --         , Animation.rotate (Animation.deg 0)
     --         ]
     --     , Animation.toWith interpolation
     --         [ Animation.rotate (Animation.deg -45)
-    --         , Animation.translate (Animation.px 0) (Animation.px -7)
+    --         , Animation.translate (Animation.px 0) (Animation.px -separationLength)
     --         ]
     --     ]
     }
 
 
+barHeight =
+    2
+
+
+spacing =
+    6
+
+
+barWidth =
+    30
+
+
 animatedBar : { model | menuBarAnimation : Model } -> (Model -> Animation.State) -> Element msg
 animatedBar model getTupleItem =
     Element.el
-        ([ 22 |> Element.px |> Element.width
-         , 2 |> Element.px |> Element.height
+        ([ barWidth |> Element.px |> Element.width
+         , barHeight |> Element.px |> Element.height
          , Background.color palette.bold
          ]
             ++ (model.menuBarAnimation
@@ -121,10 +133,10 @@ startAnimation { menuBarAnimation, showMenu } =
                     |> Animation.interrupt
                         [ Animation.toWith interpolation
                             [ Animation.rotate (Animation.deg 45)
-                            , Animation.translate (Animation.px 0) (Animation.px 7)
+                            , Animation.translate (Animation.px 0) (Animation.px separationLength)
                             ]
                         , Animation.toWith interpolation
-                            [ Animation.translate (Animation.px 0) (Animation.px 7)
+                            [ Animation.translate (Animation.px 0) (Animation.px separationLength)
                             , Animation.rotate (Animation.deg 0)
                             ]
                         , Animation.toWith interpolation
@@ -154,10 +166,10 @@ startAnimation { menuBarAnimation, showMenu } =
                     |> Animation.interrupt
                         [ Animation.toWith interpolation
                             [ Animation.rotate (Animation.deg -45)
-                            , Animation.translate (Animation.px 0) (Animation.px -7)
+                            , Animation.translate (Animation.px 0) (Animation.px -separationLength)
                             ]
                         , Animation.toWith interpolation
-                            [ Animation.translate (Animation.px 0) (Animation.px -7)
+                            [ Animation.translate (Animation.px 0) (Animation.px -separationLength)
                             , Animation.rotate (Animation.deg 0)
                             ]
                         , Animation.toWith interpolation
@@ -172,12 +184,12 @@ startAnimation { menuBarAnimation, showMenu } =
                 menuBarAnimation.upper
                     |> Animation.interrupt
                         [ Animation.toWith interpolation
-                            [ Animation.translate (Animation.px 0) (Animation.px 7)
+                            [ Animation.translate (Animation.px 0) (Animation.px separationLength)
                             , Animation.rotate (Animation.deg 0)
                             ]
                         , Animation.toWith interpolation
                             [ Animation.rotate (Animation.deg 45)
-                            , Animation.translate (Animation.px 0) (Animation.px 7)
+                            , Animation.translate (Animation.px 0) (Animation.px separationLength)
                             ]
                         ]
             , middle =
@@ -197,15 +209,19 @@ startAnimation { menuBarAnimation, showMenu } =
                 menuBarAnimation.lower
                     |> Animation.interrupt
                         [ Animation.toWith interpolation
-                            [ Animation.translate (Animation.px 0) (Animation.px -7)
+                            [ Animation.translate (Animation.px 0) (Animation.px -separationLength)
                             , Animation.rotate (Animation.deg 0)
                             ]
                         , Animation.toWith interpolation
                             [ Animation.rotate (Animation.deg -45)
-                            , Animation.translate (Animation.px 0) (Animation.px -7)
+                            , Animation.translate (Animation.px 0) (Animation.px -separationLength)
                             ]
                         ]
             }
+
+
+separationLength =
+    barHeight + spacing
 
 
 second =
