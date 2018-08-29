@@ -233,20 +233,25 @@ menu menuAnimation =
         ([ Background.color palette.main
          , Element.height Element.fill
          , Element.width Element.fill
-         , Element.spacing 20
-         , Element.padding 20
-         , fonts.body
-         , Element.Font.color palette.bold
-         , Element.centerX
+         , Element.padding 80
          ]
             ++ (menuAnimation
                     |> Animation.render
                     |> List.map Element.htmlAttribute
                )
         )
-        [ Element.text "Learn Elm"
-        , Element.text "Articles"
-        , Element.text "Contact"
+        [ Element.column
+            [ Element.centerX
+            , Element.width Element.shrink
+            , Element.spacing 25
+            , fonts.body
+            , Style.fontSize.title
+            , Element.Font.color palette.bold
+            ]
+            [ Element.text "Learn Elm"
+            , Element.text "Articles"
+            , Element.text "Contact"
+            ]
         ]
 
 
