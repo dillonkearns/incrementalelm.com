@@ -201,7 +201,7 @@ whyElmSection =
             Element.link
                 [ Element.centerX
                 ]
-                { url = "/#why-elm"
+                { url = "/why-elm"
                 , label =
                     Style.Helpers.button
                         { fontColor = .mainBackground

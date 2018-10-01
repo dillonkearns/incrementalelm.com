@@ -20,8 +20,27 @@ import Task
 import Time
 import Url exposing (Url)
 import Url.Builder
+import Url.Parser exposing (Parser)
 import View.MenuBar
 import View.Navbar
+
+
+route : Url.Parser.Parser (Page -> a) a
+route =
+    Url.Parser.oneOf
+        [ Url.Parser.map Home Url.Parser.top
+        , Url.Parser.map WhyElm (Url.Parser.s "why-elm")
+        ]
+
+
+toRoute : String -> Page
+toRoute string =
+    case Url.fromString string of
+        Nothing ->
+            NotFound
+
+        Just url ->
+            Maybe.withDefault NotFound (Url.Parser.parse route url)
 
 
 type alias Model =
@@ -42,6 +61,7 @@ type alias Model =
 type Page
     = Home
     | WhyElm
+    | NotFound
 
 
 type Msg
@@ -92,29 +112,7 @@ update action model =
             )
 
         UrlChanged url ->
-            let
-                newPage =
-                    case url.fragment of
-                        Nothing ->
-                            -- If we got a link that didn't include a fragment,
-                            -- it's from one of those (href "") attributes that
-                            -- we have to include to make the RealWorld CSS work.
-                            --
-                            -- In an application doing path routing instead of
-                            -- fragment-based routing, this entire
-                            -- `case url.fragment of` expression this comment
-                            -- is inside would be unnecessary.
-                            Home
-
-                        Just fragment ->
-                            case fragment of
-                                "why-elm" ->
-                                    WhyElm
-
-                                _ ->
-                                    Home
-            in
-            ( { model | page = newPage }, Cmd.none )
+            ( { model | page = urlToPage url }, Cmd.none )
 
         UrlRequest urlRequest ->
             case urlRequest of
@@ -183,6 +181,12 @@ view ({ page } as model) =
             , body = [ mainView model ]
             }
 
+        NotFound ->
+            { title = "Incremental Elm Consulting"
+            , body =
+                [ mainView model ]
+            }
+
 
 mainView ({ page } as model) =
     if model.showMenu then
@@ -218,6 +222,10 @@ mainView ({ page } as model) =
                     (View.Navbar.view model animationView StartAnimation
                         :: Page.Home.view model.dimensions
                     )
+                    |> layout model
+
+            NotFound ->
+                Element.text "Page not found!"
                     |> layout model
 
 
@@ -333,12 +341,7 @@ init _ url navigationKey =
             , height = 0
             , device = Element.classifyDevice { height = 0, width = 0 }
             }
-      , page =
-            if url.fragment == Just "why-elm" then
-                WhyElm
-
-            else
-                Home
+      , page = urlToPage url
       , key = navigationKey
       , showMenu = False
       }
@@ -346,6 +349,12 @@ init _ url navigationKey =
     , Browser.Dom.getViewport
         |> Task.perform InitialViewport
     )
+
+
+urlToPage url =
+    url
+        |> Url.Parser.parse route
+        |> Maybe.withDefault NotFound
 
 
 subscriptions : Model -> Sub Msg
