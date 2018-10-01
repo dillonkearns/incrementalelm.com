@@ -16,6 +16,15 @@
   <meta name="theme-color" content="#ffffff">
 </head>
 <body>
+  <script>
+  (function(){
+      let redirect = sessionStorage.redirect;
+      delete sessionStorage.redirect;
+      if (redirect && redirect != location.href) {
+        history.replaceState(null, null, redirect);
+      }
+    })();
+  </script>
   <script src="./elm.js"></script>
   <script>
   let app = Elm.Main.init()
