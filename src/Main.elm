@@ -13,6 +13,7 @@ import Element.Font
 import ElmLogo
 import Html exposing (Html)
 import Page.Home
+import Route exposing (Route)
 import Style exposing (fonts, palette)
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
@@ -25,24 +26,6 @@ import View.MenuBar
 import View.Navbar
 
 
-route : Url.Parser.Parser (Page -> a) a
-route =
-    Url.Parser.oneOf
-        [ Url.Parser.map Home Url.Parser.top
-        , Url.Parser.map WhyElm (Url.Parser.s "why-elm")
-        ]
-
-
-toRoute : String -> Page
-toRoute string =
-    case Url.fromString string of
-        Nothing ->
-            NotFound
-
-        Just url ->
-            Maybe.withDefault NotFound (Url.Parser.parse route url)
-
-
 type alias Model =
     { styles : List Animation.State
     , menuBarAnimation : View.MenuBar.Model
@@ -52,16 +35,10 @@ type alias Model =
         , height : Float
         , device : Element.Device
         }
-    , page : Page
+    , page : Route
     , key : Browser.Navigation.Key
     , showMenu : Bool
     }
-
-
-type Page
-    = Home
-    | WhyElm
-    | NotFound
 
 
 type Msg
@@ -112,7 +89,7 @@ update action model =
             )
 
         UrlChanged url ->
-            ( { model | page = urlToPage url }, Cmd.none )
+            ( { model | page = Route.parse url }, Cmd.none )
 
         UrlRequest urlRequest ->
             case urlRequest of
@@ -169,19 +146,19 @@ updateStyles model =
 view : Model -> Browser.Document Msg
 view ({ page } as model) =
     case page of
-        Home ->
+        Route.Home ->
             { title = "Incremental Elm Consulting"
             , body =
                 [ mainView model
                 ]
             }
 
-        WhyElm ->
+        Route.WhyElm ->
             { title = "Incremental Elm - Why Elm?"
             , body = [ mainView model ]
             }
 
-        NotFound ->
+        Route.NotFound ->
             { title = "Incremental Elm Consulting"
             , body =
                 [ mainView model ]
@@ -202,7 +179,7 @@ mainView ({ page } as model) =
 
     else
         case page of
-            WhyElm ->
+            Route.WhyElm ->
                 Element.column
                     [ Element.height Element.shrink
                     , Element.alignTop
@@ -213,7 +190,7 @@ mainView ({ page } as model) =
                     ]
                     |> layout model
 
-            Home ->
+            Route.Home ->
                 Element.column
                     [ Element.height Element.shrink
                     , Element.alignTop
@@ -224,7 +201,7 @@ mainView ({ page } as model) =
                     )
                     |> layout model
 
-            NotFound ->
+            Route.NotFound ->
                 Element.text "Page not found!"
                     |> layout model
 
@@ -341,7 +318,7 @@ init _ url navigationKey =
             , height = 0
             , device = Element.classifyDevice { height = 0, width = 0 }
             }
-      , page = urlToPage url
+      , page = Route.parse url
       , key = navigationKey
       , showMenu = False
       }
@@ -349,12 +326,6 @@ init _ url navigationKey =
     , Browser.Dom.getViewport
         |> Task.perform InitialViewport
     )
-
-
-urlToPage url =
-    url
-        |> Url.Parser.parse route
-        |> Maybe.withDefault NotFound
 
 
 subscriptions : Model -> Sub Msg
