@@ -1,4 +1,4 @@
-module Route exposing (Route(..), parse)
+module Route exposing (Route(..), parse, title)
 
 import Url.Builder
 import Url.Parser exposing (Parser)
@@ -10,6 +10,19 @@ type Route
     = Home
     | WhyElm
     | NotFound
+
+
+title : Route -> String
+title route =
+    case route of
+        Home ->
+            "Incremental Elm Consulting"
+
+        WhyElm ->
+            "Incremental Elm - Why Elm?"
+
+        NotFound ->
+            "Incremental Elm Consulting"
 
 
 parse url =

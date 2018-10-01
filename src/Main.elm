@@ -145,24 +145,9 @@ updateStyles model =
 
 view : Model -> Browser.Document Msg
 view ({ page } as model) =
-    case page of
-        Route.Home ->
-            { title = "Incremental Elm Consulting"
-            , body =
-                [ mainView model
-                ]
-            }
-
-        Route.WhyElm ->
-            { title = "Incremental Elm - Why Elm?"
-            , body = [ mainView model ]
-            }
-
-        Route.NotFound ->
-            { title = "Incremental Elm Consulting"
-            , body =
-                [ mainView model ]
-            }
+    { title = Route.title page
+    , body = [ mainView model ]
+    }
 
 
 mainView ({ page } as model) =
