@@ -34,10 +34,11 @@ aboutDillon =
     Element.row
         [ Element.height (Element.fill |> Element.maximum 300)
         , Element.spacing 30
-        , Element.padding 20
+        , Element.padding 50
         , Element.Border.shadow { offset = ( 2, 1 ), size = 1, blur = 4, color = Element.rgb 0.8 0.8 0.8 }
         , Background.color (Element.rgb255 255 255 255)
         , Element.centerX
+        , Element.width (Element.fill |> Element.maximum 1200)
         ]
         [ avatar
         , Element.column [ Element.spacing 15, Element.width Element.fill ]
