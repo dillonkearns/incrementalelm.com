@@ -151,7 +151,7 @@ view ({ page } as model) =
 
 
 mainView ({ page } as model) =
-    if model.showMenu then
+    (if model.showMenu then
         Element.column
             [ Element.height Element.fill
             , Element.alignTop
@@ -160,9 +160,8 @@ mainView ({ page } as model) =
             [ View.Navbar.view model animationView StartAnimation
             , menu model.menuAnimation
             ]
-            |> layout model
 
-    else
+     else
         case page of
             Route.WhyElm ->
                 Element.column
@@ -173,7 +172,6 @@ mainView ({ page } as model) =
                     [ View.Navbar.view model animationView StartAnimation
                     , Element.text "Why Elm Contents..."
                     ]
-                    |> layout model
 
             Route.Home ->
                 Element.column
@@ -184,11 +182,11 @@ mainView ({ page } as model) =
                     (View.Navbar.view model animationView StartAnimation
                         :: Page.Home.view model.dimensions
                     )
-                    |> layout model
 
             Route.NotFound ->
                 Element.text "Page not found!"
-                    |> layout model
+    )
+        |> layout model
 
 
 interpolation =
