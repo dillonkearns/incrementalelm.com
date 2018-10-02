@@ -33,7 +33,10 @@ view :
     -> Element.Element msg
 view dimensions =
     Element.column
-        [ Background.color (Element.rgba255 0 168 232 0.3)
+        [ Background.gradient
+            { angle = -180
+            , steps = [ Element.rgba255 0 52 89 0.7, Element.rgba255 0 126 167 0.7 ]
+            }
         , Element.width Element.fill
         , Element.height Element.fill
         , Element.padding 30
