@@ -163,6 +163,16 @@ mainView ({ page } as model) =
 
      else
         case page of
+            Route.Team ->
+                Element.column
+                    [ Element.height Element.shrink
+                    , Element.alignTop
+                    , Element.width Element.fill
+                    ]
+                    [ View.Navbar.view model animationView StartAnimation
+                    , Element.text "Team contents..."
+                    ]
+
             Route.WhyElm ->
                 Element.column
                     [ Element.height Element.shrink
@@ -217,6 +227,7 @@ menu menuAnimation =
             , Element.Font.color palette.bold
             ]
             [ Element.text "Learn Elm"
+            , Element.text "Team"
             , Element.text "Articles"
             , Element.text "Contact"
             ]
