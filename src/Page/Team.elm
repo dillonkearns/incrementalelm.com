@@ -53,11 +53,18 @@ aboutDillon =
         , Background.color (Element.rgb255 255 255 255)
         , Element.centerX
         ]
-        [ Element.column [ Element.spacing 15 ]
+        [ avatar
+
+        -- , wrappedText dillonBio
+        , Element.column [ Element.spacing 15, Element.width Element.fill ]
             [ name
-            , avatar
+
+            -- , wrappedText dillonBio
+            , Element.paragraph
+                [ Element.width Element.fill
+                ]
+                [ Element.text dillonBio ]
             ]
-        , wrappedText dillonBio
         ]
 
 
@@ -71,7 +78,6 @@ avatar =
 name =
     Element.paragraph
         [ fontSize.title
-        , Element.Font.center
         , Element.width Element.fill
         ]
         [ Element.text "Dillon Kearns" ]
