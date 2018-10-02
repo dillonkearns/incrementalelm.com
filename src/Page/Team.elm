@@ -32,20 +32,36 @@ view :
     }
     -> Element.Element msg
 view dimensions =
-    aboutDillon
+    Element.column
+        [ Background.color (Element.rgba255 0 168 232 0.3)
+        , Element.width Element.fill
+        , Element.height Element.fill
+        , Element.padding 30
+        ]
+        [ aboutDillon ]
 
 
 aboutDillon =
-    Element.column
-        [ Element.width (Element.fill |> Element.maximum 300)
+    Element.row
+        [ Element.height (Element.fill |> Element.maximum 300)
         , Element.spacing 30
+        , Element.padding 20
         , Element.Border.shadow { offset = ( 2, 1 ), size = 1, blur = 4, color = Element.rgb 0.8 0.8 0.8 }
+        , Background.color (Element.rgb255 255 255 255)
+        , Element.centerX
         ]
-        [ wrappedText "Dillon Kearns" |> Element.el [ fontSize.title ]
-        , Element.image [ Element.width Element.fill ]
-            { src = "/assets/dillon.jpg"
-            , description = "Dillon Kearns"
-            }
+        [ Element.column [ Element.spacing 15 ]
+            [ Element.paragraph
+                [ fontSize.title
+                , Element.Font.center
+                , Element.width Element.fill
+                ]
+                [ Element.text "Dillon Kearns" ]
+            , Element.image [ Element.height (Element.px 150) ]
+                { src = "/assets/dillon.jpg"
+                , description = "Dillon Kearns"
+                }
+            ]
         , wrappedText dillonBio
         ]
 

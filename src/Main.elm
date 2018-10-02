@@ -166,7 +166,7 @@ mainView ({ page } as model) =
         case page of
             Route.Team ->
                 Element.column
-                    [ Element.height Element.shrink
+                    [ Element.height Element.fill
                     , Element.alignTop
                     , Element.width Element.fill
                     ]

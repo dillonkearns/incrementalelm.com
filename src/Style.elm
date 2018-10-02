@@ -1,4 +1,4 @@
-module Style exposing (..)
+module Style exposing (animationPalette, elementRgb, fontSize, fonts, highlightFactor, highlightRgb, hoverPalette, palette, rgb)
 
 import Animation
 import Element
