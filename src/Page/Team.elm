@@ -54,19 +54,27 @@ aboutDillon =
         , Element.centerX
         ]
         [ Element.column [ Element.spacing 15 ]
-            [ Element.paragraph
-                [ fontSize.title
-                , Element.Font.center
-                , Element.width Element.fill
-                ]
-                [ Element.text "Dillon Kearns" ]
-            , Element.image [ Element.height (Element.px 150) ]
-                { src = "/assets/dillon.jpg"
-                , description = "Dillon Kearns"
-                }
+            [ name
+            , avatar
             ]
         , wrappedText dillonBio
         ]
+
+
+avatar =
+    Element.image [ Element.height (Element.px 150) ]
+        { src = "/assets/dillon.jpg"
+        , description = "Dillon Kearns"
+        }
+
+
+name =
+    Element.paragraph
+        [ fontSize.title
+        , Element.Font.center
+        , Element.width Element.fill
+        ]
+        [ Element.text "Dillon Kearns" ]
 
 
 dillonBio =
