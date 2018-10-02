@@ -13,6 +13,7 @@ import Element.Font
 import ElmLogo
 import Html exposing (Html)
 import Page.Home
+import Page.Team
 import Route exposing (Route)
 import Style exposing (fonts, palette)
 import Svg exposing (..)
@@ -170,7 +171,7 @@ mainView ({ page } as model) =
                     , Element.width Element.fill
                     ]
                     [ View.Navbar.view model animationView StartAnimation
-                    , Element.text "Team contents..."
+                    , Page.Team.view model.dimensions
                     ]
 
             Route.WhyElm ->
