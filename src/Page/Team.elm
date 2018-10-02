@@ -19,29 +19,31 @@ view :
     -> Element.Element msg
 view dimensions =
     Element.column
-        [ Background.gradient
-            { angle = -180
-            , steps = [ Element.rgba255 0 52 89 0.7, Element.rgba255 0 126 167 0.7 ]
-            }
-        , Element.width Element.fill
+        [ Element.width Element.fill
         , Element.height Element.fill
-        , Element.padding 30
+        , Element.padding 50
         ]
         [ aboutDillon ]
 
 
 aboutDillon =
     Element.row
-        [ Element.height (Element.fill |> Element.maximum 300)
+        [ Element.height (Element.px 200)
         , Element.spacing 30
-        , Element.padding 50
+
+        -- , Element.padding 50
         , Element.Border.shadow { offset = ( 2, 1 ), size = 1, blur = 4, color = Element.rgb 0.8 0.8 0.8 }
         , Background.color (Element.rgb255 255 255 255)
         , Element.centerX
         , Element.width (Element.fill |> Element.maximum 1200)
         ]
         [ avatar
-        , Element.column [ Element.spacing 15, Element.width Element.fill ]
+        , Element.column
+            [ Element.spacing 15
+            , Element.width (Element.fill |> Element.maximum 800)
+            , Element.padding 30
+            , Element.centerX
+            ]
             [ name
             , Element.paragraph
                 [ Element.width Element.fill
@@ -54,10 +56,14 @@ aboutDillon =
 
 
 avatar =
-    Element.image [ Element.height (Element.px 150) ]
-        { src = "/assets/dillon.jpg"
-        , description = "Dillon Kearns"
-        }
+    Html.img
+        [ Html.Attributes.src "/assets/dillon2.jpg"
+        , Html.Attributes.style "object-fit" "contain"
+        , Html.Attributes.style "max-width" "100%"
+        , Html.Attributes.style "max-height" "100%"
+        ]
+        []
+        |> Element.html
 
 
 name =
