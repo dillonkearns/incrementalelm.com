@@ -60,18 +60,34 @@ aboutDillon =
 
 
 authorResources =
-    Element.paragraph []
-        [ codeResourceView ]
+    Element.column [ Element.spacing 8, Element.width Element.fill ]
+        [ Element.row [ Element.spaceEvenly, Element.width Element.fill ]
+            [ codeResourceView "elm-graphql" "https://github.com/dillonkearns/elm-graphql"
+            , codeResourceView "elm-typescript-interop" "https://github.com/dillonkearns/elm-typescript-interop"
+            ]
+        , videoResource
+        ]
 
 
-codeResourceView =
+codeResourceView resourceName url =
     Element.newTabLink []
         { label =
             Element.row [ Element.spacing 5 ]
                 [ View.FontAwesome.styledIcon "fa fa-code" [ Element.Font.color palette.highlight ]
-                , Element.text "elm-graphql" |> Element.el [ Style.fonts.code ]
+                , Element.text resourceName |> Element.el [ Style.fonts.code ]
                 ]
-        , url = "https://github.com/dillonkearns/elm-graphql"
+        , url = url
+        }
+
+
+videoResource =
+    Element.newTabLink []
+        { label =
+            Element.row [ Element.spacing 5 ]
+                [ View.FontAwesome.styledIcon "fab fa-youtube" [ Element.Font.color (Element.rgb255 255 0 0) ]
+                , Element.text "Developing for the Web with Extreme Safety" |> Element.el [ Style.fonts.title ]
+                ]
+        , url = "https://www.youtube.com/watch?v=t-2GiOuLRZc"
         }
 
 
