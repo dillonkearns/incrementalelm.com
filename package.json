@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "elm-live src/Main.elm --open --output elm.js --pushstate",
-    "build": "elm make src/Main.elm --output dist/elm.js && cp index.html 404.html CNAME dist"
+    "build": "elm make src/Main.elm --output dist/elm.js && cp -r index.html 404.html CNAME assets dist"
   },
   "keywords": [],
   "author": "",
