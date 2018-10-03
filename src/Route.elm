@@ -9,7 +9,7 @@ import View.Navbar
 type Route
     = Home
     | WhyElm
-    | Team
+    | Coaches
     | NotFound
 
 
@@ -22,8 +22,8 @@ title route =
         WhyElm ->
             "Incremental Elm - Why Elm?"
 
-        Team ->
-            "Incremental Elm Team"
+        Coaches ->
+            "Incremental Elm Coaches"
 
         NotFound ->
             "Incremental Elm Consulting"
@@ -40,5 +40,5 @@ parser =
     Url.Parser.oneOf
         [ Url.Parser.map Home Url.Parser.top
         , Url.Parser.map WhyElm (Url.Parser.s "why-elm")
-        , Url.Parser.map Team (Url.Parser.s "team")
+        , Url.Parser.map Coaches (Url.Parser.s "coaches")
         ]

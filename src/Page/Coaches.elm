@@ -1,4 +1,4 @@
-module Page.Team exposing (view)
+module Page.Coaches exposing (view)
 
 import Element exposing (Element)
 import Element.Background as Background

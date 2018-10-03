@@ -12,8 +12,8 @@ import Element.Border
 import Element.Font
 import ElmLogo
 import Html exposing (Html)
+import Page.Coaches
 import Page.Home
-import Page.Team
 import Route exposing (Route)
 import Style exposing (fonts, palette)
 import Svg exposing (..)
@@ -164,14 +164,14 @@ mainView ({ page } as model) =
 
      else
         case page of
-            Route.Team ->
+            Route.Coaches ->
                 Element.column
                     [ Element.height Element.fill
                     , Element.alignTop
                     , Element.width Element.fill
                     ]
                     [ View.Navbar.view model animationView StartAnimation
-                    , Page.Team.view model.dimensions
+                    , Page.Coaches.view model.dimensions
                     ]
 
             Route.WhyElm ->
@@ -228,7 +228,7 @@ menu menuAnimation =
             , Element.Font.color palette.bold
             ]
             [ Element.text "Learn Elm"
-            , Element.text "Team"
+            , Element.text "Coaches"
             , Element.text "Articles"
             , Element.text "Contact"
             ]

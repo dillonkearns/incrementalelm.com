@@ -43,7 +43,7 @@ links model startAnimationMsg =
 
          else
             [ Element.text "Learn Elm"
-            , Element.link [] { label = Element.text "Team", url = "/team" }
+            , Element.link [] { label = Element.text "Coaches", url = "/coaches" }
             , Element.text "Articles"
             , Element.text "Contact"
             ]
