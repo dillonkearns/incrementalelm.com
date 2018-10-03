@@ -54,7 +54,13 @@ aboutDillon dimensions =
                 , Element.width Element.fill
                 ]
                 [ avatar
-                , name
+                , Element.paragraph
+                    [ fontSize.title
+                    , Element.Font.size 32
+                    , Element.width Element.fill
+                    , Element.Font.center
+                    ]
+                    [ Element.text "Dillon Kearns" ]
                 , bioView
                 , authorResources dimensions
                 ]
@@ -76,7 +82,11 @@ aboutDillon dimensions =
                     [ Element.spacing 25
                     , Element.centerX
                     ]
-                    [ name
+                    [ Element.paragraph
+                        [ fontSize.title
+                        , Element.Font.size 32
+                        ]
+                        [ Element.text "Dillon Kearns" ]
                     , bioView
                     , authorResources dimensions
                     ]
@@ -157,14 +167,6 @@ avatar =
         { src = "/assets/dillon2.jpg"
         , description = "Dillon Kearns"
         }
-
-
-name =
-    Element.paragraph
-        [ fontSize.title
-        , Element.Font.size 32
-        ]
-        [ Element.text "Dillon Kearns" ]
 
 
 dillonBio =
