@@ -8,7 +8,7 @@ import Element.Font
 fonts =
     { title = Element.Font.family [ Element.Font.typeface "Open Sans" ]
     , body = Element.Font.family [ Element.Font.typeface "Raleway" ]
-    , code = Element.Font.family [ Element.Font.typeface "Hasklig" ]
+    , code = Element.Font.family [ Element.Font.typeface "Roboto Mono" ]
     }
 
 
