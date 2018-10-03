@@ -87,12 +87,19 @@ aboutDillon dimensions =
 authorResources dimensions =
     if dimensions.width > 1000 then
         Element.column [ Element.spacing 8, Element.width Element.fill ]
-            [ Element.row [ Element.spaceEvenly, Element.width Element.fill ]
+            [ Element.row
+                [ Element.spaceEvenly
+                , Element.width Element.fill
+                , Element.spacing 10
+                ]
                 [ resource "elm-graphql" "https://github.com/dillonkearns/elm-graphql" Library
                 , resource "elm-typescript-interop" "https://github.com/dillonkearns/elm-typescript-interop" Library
                 ]
             , Element.row
-                [ Element.spaceEvenly, Element.width Element.fill ]
+                [ Element.spaceEvenly
+                , Element.width Element.fill
+                , Element.spacing 10
+                ]
                 [ resource "Developing for the Web with Extreme Safety" "https://www.youtube.com/watch?v=t-2GiOuLRZc" Video
                 , resource "Mobster" "http://mobster.cc" App
                 ]
@@ -126,7 +133,7 @@ resource resourceName url resourceType =
                 App ->
                     ( "fas fa-desktop", Element.rgb255 0 122 255, Style.fonts.title )
     in
-    Element.newTabLink []
+    Element.newTabLink [ Element.width Element.fill ]
         { label =
             Element.row [ Element.spacing 5 ]
                 [ View.FontAwesome.styledIcon iconClasses [ Element.Font.color color ]
