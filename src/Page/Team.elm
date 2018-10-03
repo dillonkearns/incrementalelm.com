@@ -106,7 +106,7 @@ authorResources dimensions =
             ]
 
     else
-        Element.column [ Element.spacing 8 ]
+        Element.column [ Element.spacing 8, Element.centerX ]
             [ resource "elm-graphql" "https://github.com/dillonkearns/elm-graphql" Library
             , resource "elm-typescript-interop" "https://github.com/dillonkearns/elm-typescript-interop" Library
             , resource "Developing for the Web with Extreme Safety" "https://www.youtube.com/watch?v=t-2GiOuLRZc" Video
