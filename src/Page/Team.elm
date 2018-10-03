@@ -22,8 +22,17 @@ view dimensions =
         [ Element.width Element.fill
         , Element.height Element.fill
         , Element.padding 50
+        , Element.spacing 30
         ]
-        [ aboutDillon ]
+        [ Element.text "Our Elm Coaches"
+            |> Element.el
+                [ Style.fontSize.title
+                , Style.fonts.title
+                , Element.Font.center
+                , Element.width Element.fill
+                ]
+        , aboutDillon
+        ]
 
 
 aboutDillon =
