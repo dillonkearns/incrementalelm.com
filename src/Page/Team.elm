@@ -36,27 +36,50 @@ view dimensions =
 
 
 aboutDillon dimensions =
-    Element.row
-        [ Element.height (Element.shrink |> Element.minimum 200)
-        , Element.Border.shadow { offset = ( 2, 1 ), size = 1, blur = 4, color = Element.rgb 0.8 0.8 0.8 }
-        , Element.centerX
-        , Element.width (Element.fill |> Element.maximum 1200)
-        ]
-        [ avatar
-        , Element.el
-            [ Element.width (Element.fill |> Element.maximum 1000)
-            , Element.padding 30
+    if dimensions.width <= 1000 then
+        Element.row
+            [ Element.Border.shadow { offset = ( 2, 1 ), size = 1, blur = 4, color = Element.rgb 0.8 0.8 0.8 }
+            , Element.centerX
+            , Element.width Element.fill
             ]
-            (Element.column
-                [ Element.spacing 25
-                , Element.centerX
+            [ Element.el
+                [ Element.width (Element.fill |> Element.maximum 1000)
+                , Element.padding 30
                 ]
-                [ name
-                , bioView
-                , authorResources dimensions
+                (Element.column
+                    [ Element.spacing 25
+                    , Element.centerX
+                    ]
+                    [ avatar
+                    , name |> Element.el [ Element.centerX ]
+                    , bioView
+                    , authorResources dimensions |> Element.el [ Element.centerX ]
+                    ]
+                )
+            ]
+
+    else
+        Element.row
+            [ Element.height (Element.shrink |> Element.minimum 200)
+            , Element.Border.shadow { offset = ( 2, 1 ), size = 1, blur = 4, color = Element.rgb 0.8 0.8 0.8 }
+            , Element.centerX
+            , Element.width (Element.fill |> Element.maximum 1200)
+            ]
+            [ avatar
+            , Element.el
+                [ Element.width (Element.fill |> Element.maximum 1000)
+                , Element.padding 30
                 ]
-            )
-        ]
+                (Element.column
+                    [ Element.spacing 25
+                    , Element.centerX
+                    ]
+                    [ name
+                    , bioView
+                    , authorResources dimensions
+                    ]
+                )
+            ]
 
 
 authorResources dimensions =
@@ -113,8 +136,7 @@ resource resourceName url resourceType =
 
 bioView =
     Element.paragraph
-        [ Element.width Element.fill
-        , Element.Font.size 16
+        [ Element.Font.size 16
         , Style.fonts.body
         ]
         [ Element.text dillonBio ]
@@ -131,7 +153,6 @@ name =
     Element.paragraph
         [ fontSize.title
         , Element.Font.size 32
-        , Element.width Element.fill
         ]
         [ Element.text "Dillon Kearns" ]
 
