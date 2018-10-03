@@ -30,7 +30,7 @@ view dimensions =
             )
         , Element.spacing 30
         ]
-        [ Element.text "Our Elm Coaches"
+        [ Element.text "Incremental Elm Coaches"
             |> Element.el
                 [ Style.fontSize.title
                 , Style.fonts.title
