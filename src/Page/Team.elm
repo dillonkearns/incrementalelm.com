@@ -62,51 +62,43 @@ aboutDillon =
 authorResources =
     Element.column [ Element.spacing 8, Element.width Element.fill ]
         [ Element.row [ Element.spaceEvenly, Element.width Element.fill ]
-            [ codeResourceView "elm-graphql" "https://github.com/dillonkearns/elm-graphql"
-            , codeResourceView "elm-typescript-interop" "https://github.com/dillonkearns/elm-typescript-interop"
+            [ resource "elm-graphql" "https://github.com/dillonkearns/elm-graphql" Library
+            , resource "elm-typescript-interop" "https://github.com/dillonkearns/elm-typescript-interop" Library
             ]
         , Element.row
             [ Element.spaceEvenly, Element.width Element.fill ]
-            [ videoResource
-            , appResource "Mobster" "http://mobster.cc"
+            [ resource "Developing for the Web with Extreme Safety" "https://www.youtube.com/watch?v=t-2GiOuLRZc" Video
+            , resource "Mobster" "http://mobster.cc" App
             ]
         ]
 
 
-codeResourceView resourceName url =
+type Resource
+    = Library
+    | Video
+    | App
+
+
+resource resourceName url resourceType =
+    let
+        ( iconClasses, color ) =
+            case resourceType of
+                Library ->
+                    ( "fa fa-code", palette.highlight )
+
+                Video ->
+                    ( "fab fa-youtube", Element.rgb255 255 0 0 )
+
+                App ->
+                    ( "fas fa-desktop", Element.rgb255 0 122 255 )
+    in
     Element.newTabLink []
         { label =
             Element.row [ Element.spacing 5 ]
-                [ View.FontAwesome.styledIcon "fa fa-code" [ Element.Font.color palette.highlight ]
+                [ View.FontAwesome.styledIcon iconClasses [ Element.Font.color color ]
                 , Element.text resourceName |> Element.el [ Style.fonts.code ]
                 ]
         , url = url
-        }
-
-
-appResource resourceName url =
-    Element.newTabLink []
-        { label =
-            Element.row [ Element.spacing 5 ]
-                [ View.FontAwesome.styledIcon "fas fa-desktop" [ Element.Font.color (Element.rgb255 0 122 255) ]
-                , Element.text resourceName |> Element.el [ Style.fonts.code ]
-                ]
-        , url = url
-        }
-
-
-
---<i class="fas fa-desktop"></i>
-
-
-videoResource =
-    Element.newTabLink []
-        { label =
-            Element.row [ Element.spacing 5 ]
-                [ View.FontAwesome.styledIcon "fab fa-youtube" [ Element.Font.color (Element.rgb255 255 0 0) ]
-                , Element.text "Developing for the Web with Extreme Safety" |> Element.el [ Style.fonts.title ]
-                ]
-        , url = "https://www.youtube.com/watch?v=t-2GiOuLRZc"
         }
 
 
