@@ -28,7 +28,7 @@ view dimensions =
 
 aboutDillon =
     Element.row
-        [ Element.height (Element.px 200)
+        [ Element.height (Element.shrink |> Element.minimum 200)
         , Element.spacing 30
 
         -- , Element.padding 50
@@ -56,14 +56,10 @@ aboutDillon =
 
 
 avatar =
-    Html.img
-        [ Html.Attributes.src "/assets/dillon2.jpg"
-        , Html.Attributes.style "object-fit" "contain"
-        , Html.Attributes.style "max-width" "100%"
-        , Html.Attributes.style "max-height" "100%"
-        ]
-        []
-        |> Element.html
+    Element.image [ Element.width Element.fill ]
+        { src = "/assets/dillon2.jpg"
+        , description = "Dillon Kearns"
+        }
 
 
 name =
