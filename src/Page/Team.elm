@@ -52,15 +52,36 @@ aboutDillon =
                 , Element.centerX
                 ]
                 [ name
-                , Element.paragraph
-                    [ Element.width Element.fill
-                    , Element.Font.size 16
-                    , Style.fonts.body
-                    ]
-                    [ Element.text dillonBio ]
+                , bioView
+                , authorResources
                 ]
             )
         ]
+
+
+authorResources =
+    Element.paragraph []
+        [ codeResourceView ]
+
+
+codeResourceView =
+    Element.newTabLink []
+        { label =
+            Element.row [ Element.spacing 5 ]
+                [ View.FontAwesome.styledIcon "fa fa-code" [ Element.Font.color palette.highlight ]
+                , Element.text "elm-graphql" |> Element.el [ Style.fonts.code ]
+                ]
+        , url = "https://github.com/dillonkearns/elm-graphql"
+        }
+
+
+bioView =
+    Element.paragraph
+        [ Element.width Element.fill
+        , Element.Font.size 16
+        , Style.fonts.body
+        ]
+        [ Element.text dillonBio ]
 
 
 avatar =
