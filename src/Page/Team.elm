@@ -81,22 +81,22 @@ type Resource
 
 resource resourceName url resourceType =
     let
-        ( iconClasses, color ) =
+        ( iconClasses, color, font ) =
             case resourceType of
                 Library ->
-                    ( "fa fa-code", palette.highlight )
+                    ( "fa fa-code", palette.highlight, Style.fonts.code )
 
                 Video ->
-                    ( "fab fa-youtube", Element.rgb255 255 0 0 )
+                    ( "fab fa-youtube", Element.rgb255 255 0 0, Style.fonts.title )
 
                 App ->
-                    ( "fas fa-desktop", Element.rgb255 0 122 255 )
+                    ( "fas fa-desktop", Element.rgb255 0 122 255, Style.fonts.title )
     in
     Element.newTabLink []
         { label =
             Element.row [ Element.spacing 5 ]
                 [ View.FontAwesome.styledIcon iconClasses [ Element.Font.color color ]
-                , Element.text resourceName |> Element.el [ Style.fonts.code ]
+                , Element.text resourceName |> Element.el [ font ]
                 ]
         , url = url
         }
