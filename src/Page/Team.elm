@@ -65,7 +65,11 @@ authorResources =
             [ codeResourceView "elm-graphql" "https://github.com/dillonkearns/elm-graphql"
             , codeResourceView "elm-typescript-interop" "https://github.com/dillonkearns/elm-typescript-interop"
             ]
-        , videoResource
+        , Element.row
+            [ Element.spaceEvenly, Element.width Element.fill ]
+            [ videoResource
+            , appResource "Mobster" "http://mobster.cc"
+            ]
         ]
 
 
@@ -78,6 +82,21 @@ codeResourceView resourceName url =
                 ]
         , url = url
         }
+
+
+appResource resourceName url =
+    Element.newTabLink []
+        { label =
+            Element.row [ Element.spacing 5 ]
+                [ View.FontAwesome.styledIcon "fas fa-desktop" [ Element.Font.color (Element.rgb255 0 122 255) ]
+                , Element.text resourceName |> Element.el [ Style.fonts.code ]
+                ]
+        , url = url
+        }
+
+
+
+--<i class="fas fa-desktop"></i>
 
 
 videoResource =
