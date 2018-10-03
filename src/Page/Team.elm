@@ -21,7 +21,13 @@ view dimensions =
     Element.column
         [ Element.width Element.fill
         , Element.height Element.fill
-        , Element.padding 50
+        , Element.padding
+            (if dimensions.width <= 1000 then
+                20
+
+             else
+                50
+            )
         , Element.spacing 30
         ]
         [ Element.text "Our Elm Coaches"
@@ -39,23 +45,19 @@ aboutDillon dimensions =
     if dimensions.width <= 1000 then
         Element.row
             [ Element.Border.shadow { offset = ( 2, 1 ), size = 1, blur = 4, color = Element.rgb 0.8 0.8 0.8 }
-            , Element.centerX
             , Element.width Element.fill
+            , Element.padding 30
             ]
-            [ Element.el
-                [ Element.width (Element.fill |> Element.maximum 1000)
-                , Element.padding 30
+            [ Element.column
+                [ Element.spacing 25
+                , Element.centerX
+                , Element.width Element.fill
                 ]
-                (Element.column
-                    [ Element.spacing 25
-                    , Element.centerX
-                    ]
-                    [ avatar
-                    , name |> Element.el [ Element.centerX ]
-                    , bioView
-                    , authorResources dimensions |> Element.el [ Element.centerX ]
-                    ]
-                )
+                [ avatar
+                , name
+                , bioView
+                , authorResources dimensions
+                ]
             ]
 
     else
@@ -128,7 +130,7 @@ resource resourceName url resourceType =
         { label =
             Element.row [ Element.spacing 5 ]
                 [ View.FontAwesome.styledIcon iconClasses [ Element.Font.color color ]
-                , Element.text resourceName |> Element.el [ font ]
+                , [ Element.text resourceName ] |> Element.paragraph [ font ]
                 ]
         , url = url
         }
@@ -138,6 +140,7 @@ bioView =
     Element.paragraph
         [ Element.Font.size 16
         , Style.fonts.body
+        , Element.width Element.fill
         ]
         [ Element.text dillonBio ]
 
