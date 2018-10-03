@@ -31,11 +31,11 @@ view dimensions =
                 , Element.Font.center
                 , Element.width Element.fill
                 ]
-        , aboutDillon
+        , aboutDillon dimensions
         ]
 
 
-aboutDillon =
+aboutDillon dimensions =
     Element.row
         [ Element.height (Element.shrink |> Element.minimum 200)
         , Element.Border.shadow { offset = ( 2, 1 ), size = 1, blur = 4, color = Element.rgb 0.8 0.8 0.8 }
@@ -53,24 +53,33 @@ aboutDillon =
                 ]
                 [ name
                 , bioView
-                , authorResources
+                , authorResources dimensions
                 ]
             )
         ]
 
 
-authorResources =
-    Element.column [ Element.spacing 8, Element.width Element.fill ]
-        [ Element.row [ Element.spaceEvenly, Element.width Element.fill ]
+authorResources dimensions =
+    if dimensions.width > 1000 then
+        Element.column [ Element.spacing 8, Element.width Element.fill ]
+            [ Element.row [ Element.spaceEvenly, Element.width Element.fill ]
+                [ resource "elm-graphql" "https://github.com/dillonkearns/elm-graphql" Library
+                , resource "elm-typescript-interop" "https://github.com/dillonkearns/elm-typescript-interop" Library
+                ]
+            , Element.row
+                [ Element.spaceEvenly, Element.width Element.fill ]
+                [ resource "Developing for the Web with Extreme Safety" "https://www.youtube.com/watch?v=t-2GiOuLRZc" Video
+                , resource "Mobster" "http://mobster.cc" App
+                ]
+            ]
+
+    else
+        Element.column [ Element.spacing 8 ]
             [ resource "elm-graphql" "https://github.com/dillonkearns/elm-graphql" Library
             , resource "elm-typescript-interop" "https://github.com/dillonkearns/elm-typescript-interop" Library
-            ]
-        , Element.row
-            [ Element.spaceEvenly, Element.width Element.fill ]
-            [ resource "Developing for the Web with Extreme Safety" "https://www.youtube.com/watch?v=t-2GiOuLRZc" Video
+            , resource "Developing for the Web with Extreme Safety" "https://www.youtube.com/watch?v=t-2GiOuLRZc" Video
             , resource "Mobster" "http://mobster.cc" App
             ]
-        ]
 
 
 type Resource
