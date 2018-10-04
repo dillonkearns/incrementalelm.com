@@ -44,6 +44,7 @@ contactSection =
         [ Background.color palette.highlight
         , Element.height (Element.shrink |> Element.minimum 300)
         , Element.width Element.fill
+        , Html.Attributes.id "contact" |> Element.htmlAttribute
         ]
         [ Element.el
             [ Element.Font.color palette.bold
