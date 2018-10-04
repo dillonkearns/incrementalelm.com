@@ -14,6 +14,7 @@ import ElmLogo
 import Html exposing (Html)
 import Page.Coaches
 import Page.Home
+import Page.Learn
 import Route exposing (Route)
 import Style exposing (fonts, palette)
 import Svg exposing (..)
@@ -172,6 +173,16 @@ mainView ({ page } as model) =
                     ]
                     [ View.Navbar.view model animationView StartAnimation
                     , Page.Coaches.view model.dimensions
+                    ]
+
+            Route.Learn learnTitle ->
+                Element.column
+                    [ Element.height Element.fill
+                    , Element.alignTop
+                    , Element.width Element.fill
+                    ]
+                    [ View.Navbar.view model animationView StartAnimation
+                    , Page.Learn.view model.dimensions
                     ]
 
             Route.WhyElm ->

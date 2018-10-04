@@ -1,7 +1,7 @@
 module Route exposing (Route(..), parse, title)
 
 import Url.Builder
-import Url.Parser exposing (Parser)
+import Url.Parser exposing ((</>), Parser, s)
 import View.MenuBar
 import View.Navbar
 
@@ -10,6 +10,7 @@ type Route
     = Home
     | WhyElm
     | Coaches
+    | Learn String
     | NotFound
 
 
@@ -25,6 +26,9 @@ title route =
         Coaches ->
             "Incremental Elm Coaches"
 
+        Learn learnTitle ->
+            learnTitle
+
         NotFound ->
             "Incremental Elm Consulting"
 
@@ -39,6 +43,7 @@ parser : Url.Parser.Parser (Route -> a) a
 parser =
     Url.Parser.oneOf
         [ Url.Parser.map Home Url.Parser.top
-        , Url.Parser.map WhyElm (Url.Parser.s "why-elm")
-        , Url.Parser.map Coaches (Url.Parser.s "coaches")
+        , Url.Parser.map WhyElm (s "why-elm")
+        , Url.Parser.map Coaches (s "coaches")
+        , Url.Parser.map (Learn "architecture") (s "learn" </> s "architecture")
         ]
