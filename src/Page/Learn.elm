@@ -8,6 +8,7 @@ import Html
 import Html.Attributes exposing (attribute, class, style)
 import Style exposing (fontSize, fonts, palette)
 import Style.Helpers
+import View.Ellie
 import View.FontAwesome
 
 
@@ -23,10 +24,10 @@ view dimensions =
         , Element.height Element.fill
         , Element.padding
             (if dimensions.width <= 1000 then
-                20
+                30
 
              else
-                50
+                200
             )
         , Element.spacing 30
         ]
@@ -38,6 +39,7 @@ view dimensions =
                 , Element.width Element.fill
                 ]
         , image
+        , View.Ellie.view "3xf2xmPgWJna1"
         , authorResources dimensions
         ]
 
