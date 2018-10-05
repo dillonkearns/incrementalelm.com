@@ -39,7 +39,7 @@ view dimensions =
                 , Element.width Element.fill
                 ]
         , image
-        , View.Ellie.view "3xf2xmPgWJna1"
+        , View.Ellie.view "3xfc59cYsd6a1"
         , authorResources dimensions
         ]
 
