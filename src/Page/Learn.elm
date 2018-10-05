@@ -47,12 +47,17 @@ view dimensions =
 
 authorResources dimensions =
     Element.column [ Element.spacing 8, Element.centerX ]
-        [ Resource.view
-            { name = "Architecture section of The Official Elm Guide"
-            , url = "https://guide.elm-lang.org/architecture/"
-            , kind = Resource.Article
-            }
-        ]
+        ([ { name = "Architecture section of The Official Elm Guide"
+           , url = "https://guide.elm-lang.org/architecture/"
+           , kind = Resource.Article
+           }
+         , { name = "Add a Decrement button to the Ellie example"
+           , url = "https://ellie-app.com/3xfc59cYsd6a1"
+           , kind = Resource.Exercise
+           }
+         ]
+            |> List.map Resource.view
+        )
 
 
 image =

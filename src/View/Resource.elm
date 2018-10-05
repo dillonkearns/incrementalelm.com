@@ -24,6 +24,7 @@ type ResourceKind
     | Video
     | App
     | Article
+    | Exercise
 
 
 view { name, url, kind } =
@@ -41,6 +42,9 @@ view { name, url, kind } =
 
                 Article ->
                     ( "far fa-newspaper", Element.rgb255 0 122 255, Style.fonts.title )
+
+                Exercise ->
+                    ( "fas fa-pencil-alt", Element.rgb255 0 122 255, Style.fonts.title )
     in
     Element.newTabLink [ Element.width Element.fill ]
         { label =
