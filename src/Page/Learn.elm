@@ -32,13 +32,7 @@ view dimensions =
             )
         , Element.spacing 30
         ]
-        [ [ Element.text "The Elm Architecture" ]
-            |> Element.paragraph
-                [ Style.fontSize.title
-                , Style.fonts.title
-                , Element.Font.center
-                , Element.width Element.fill
-                ]
+        [ title "The Elm Architecture"
         , image
         , View.Ellie.view "3xfc59cYsd6a1"
         , resourcesView dimensions
@@ -46,7 +40,7 @@ view dimensions =
               , url = "https://guide.elm-lang.org/architecture/"
               , kind = Resource.Article
               }
-            , { name = "Add a Decrement button to the Ellie example"
+            , { name = "Add a -1 button to the Ellie example"
               , url = "https://ellie-app.com/3xfc59cYsd6a1"
               , kind = Resource.Exercise
               }
@@ -54,9 +48,22 @@ view dimensions =
         ]
 
 
+title text =
+    [ Element.text text ]
+        |> Element.paragraph
+            [ Style.fontSize.title
+            , Style.fonts.title
+            , Element.Font.center
+            , Element.width Element.fill
+            ]
+
+
 resourcesView dimensions resources =
-    Element.column [ Element.spacing 8, Element.centerX ]
-        (resources |> List.map Resource.view)
+    Element.column [ Element.spacing 32, Element.centerX ]
+        [ title "Further Reading and Exercises"
+        , Element.column [ Element.spacing 16, Element.centerX ]
+            (resources |> List.map Resource.view)
+        ]
 
 
 image =
