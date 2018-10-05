@@ -7,7 +7,7 @@ import Browser.Events
 import Browser.Navigation
 import Element exposing (Element)
 import Element.Background as Background
-import Element.Border
+import Element.Border as Border
 import Element.Font
 import ElmLogo
 import Html exposing (Html)
@@ -25,6 +25,7 @@ view model animationView startAnimationMsg =
     Element.row
         [ Element.spaceEvenly
         , Element.width Element.fill
+        , Border.shadow { offset = ( 1, 1 ), size = 1, blur = 5, color = Element.rgba255 0 0 0 0.3 }
         ]
         [ logoView model animationView
         , links model startAnimationMsg
