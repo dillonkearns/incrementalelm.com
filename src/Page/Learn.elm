@@ -10,6 +10,7 @@ import Style exposing (fontSize, fonts, palette)
 import Style.Helpers
 import View.Ellie
 import View.FontAwesome
+import View.Resource as Resource
 
 
 view :
@@ -46,41 +47,12 @@ view dimensions =
 
 authorResources dimensions =
     Element.column [ Element.spacing 8, Element.centerX ]
-        [ resource "Architecture section of The Official Elm Guide" "https://guide.elm-lang.org/architecture/" Article
+        [ Resource.view
+            { name = "Architecture section of The Official Elm Guide"
+            , url = "https://guide.elm-lang.org/architecture/"
+            , kind = Resource.Article
+            }
         ]
-
-
-type Resource
-    = Library
-    | Video
-    | App
-    | Article
-
-
-resource resourceName url resourceType =
-    let
-        ( iconClasses, color, font ) =
-            case resourceType of
-                Library ->
-                    ( "fa fa-code", palette.highlight, Style.fonts.code )
-
-                Video ->
-                    ( "fab fa-youtube", Element.rgb255 255 0 0, Style.fonts.title )
-
-                App ->
-                    ( "fas fa-desktop", Element.rgb255 0 122 255, Style.fonts.title )
-
-                Article ->
-                    ( "far fa-newspaper", Element.rgb255 0 122 255, Style.fonts.title )
-    in
-    Element.newTabLink [ Element.width Element.fill ]
-        { label =
-            Element.row [ Element.spacing 5 ]
-                [ View.FontAwesome.styledIcon iconClasses [ Element.Font.color color ]
-                , [ Element.text resourceName ] |> Element.paragraph [ font ]
-                ]
-        , url = url
-        }
 
 
 image =
