@@ -21,15 +21,17 @@ view :
     -> Element.Element msg
 view dimensions =
     Element.column
-        [ Element.width Element.fill
-        , Element.height Element.fill
-        , Element.padding
-            (if dimensions.width <= 1000 then
-                30
+        [ if dimensions.width <= 1000 then
+            Element.width (Element.fill |> Element.maximum 600)
 
-             else
-                200
-            )
+          else
+            Element.width Element.fill
+        , Element.height Element.fill
+        , if dimensions.width <= 1000 then
+            Element.padding 20
+
+          else
+            Element.paddingXY 200 50
         , Element.spacing 30
         ]
         [ title "The Elm Architecture"
