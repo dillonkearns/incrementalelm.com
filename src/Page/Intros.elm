@@ -80,7 +80,24 @@ introInfo title body dimensions =
 
 
 requestButton title =
-    View.Helpers.textButton { url = "mailto:info@incrementalelm.com?subject=" ++ mailSubject title, text = "Request This Talk" } []
+    Element.link
+        [ Element.centerX
+        ]
+        { url = "mailto:info@incrementalelm.com?subject=" ++ mailSubject title
+        , label =
+            Style.Helpers.button
+                { fontColor = .mainBackground
+                , backgroundColor = .highlight
+                , size = fontSize.body
+                }
+                [ envelopeIcon |> Element.el []
+                , Element.text "info@incrementalelm.com"
+                ]
+        }
+
+
+envelopeIcon =
+    View.FontAwesome.icon "fas fa-chevron-circle-right"
 
 
 mailSubject title =
