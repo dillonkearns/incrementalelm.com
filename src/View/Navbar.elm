@@ -28,11 +28,19 @@ view model animationView startAnimationMsg =
         , Border.shadow { offset = ( 1, 1 ), size = 1, blur = 5, color = Element.rgba255 0 0 0 0.3 }
         ]
         [ logoView model animationView
-        , links model startAnimationMsg
+        , linksView model startAnimationMsg
         ]
 
 
-links model startAnimationMsg =
+links =
+    [ { name = "Learn Elm", url = "/learn" }
+    , { name = "Coaches", url = "/coaches" }
+    , { name = "Articles", url = "/" }
+    , { name = "Contact", url = "/" }
+    ]
+
+
+linksView model startAnimationMsg =
     Element.row
         [ Element.spacing 20
         , Element.padding 20
@@ -43,12 +51,16 @@ links model startAnimationMsg =
             [ View.MenuBar.view model startAnimationMsg ]
 
          else
-            [ Element.text "Learn Elm"
-            , Element.link [] { label = Element.text "Coaches", url = "/coaches" }
-            , Element.text "Articles"
-            , Element.text "Contact"
-            ]
+            links
+                |> List.map linkView
         )
+
+
+linkView link =
+    Element.link []
+        { label = Element.text link.name
+        , url = link.url
+        }
 
 
 modalMenuView menuAnimation =
