@@ -28,7 +28,7 @@ title route =
             "Incremental Elm Coaches"
 
         Intros ->
-            "Free Intro Talks"
+            "Free Intro Talk"
 
         Learn learnTitle ->
             learnTitle
