@@ -30,7 +30,7 @@ view dimensions =
             )
         , Element.spacing 30
         ]
-        [ [ Element.text "Incremental Elm Coaches" ]
+        [ [ Element.text "Free Intro Talk" ]
             |> Element.paragraph
                 [ Style.fontSize.title
                 , Style.fonts.title
@@ -51,54 +51,26 @@ view dimensions =
 
 
 introInfo title body dimensions =
-    if dimensions.width <= 1000 then
-        Element.row
-            [ Element.Border.shadow { offset = ( 2, 1 ), size = 1, blur = 4, color = Element.rgb 0.8 0.8 0.8 }
-            , Element.width Element.fill
-            , Element.padding 30
-            ]
-            [ Element.column
-                [ Element.spacing 25
-                , Element.centerX
-                , Element.width Element.fill
-                ]
-                [ Element.paragraph
-                    [ fontSize.title
-                    , Element.Font.size 32
-                    , Element.width Element.fill
-                    , Element.Font.center
-                    ]
-                    [ Element.text title ]
-                , bioView body
-                , authorResources dimensions
-                ]
-            ]
-
-    else
-        Element.row
-            [ Element.height (Element.shrink |> Element.minimum 200)
-            , Element.Border.shadow { offset = ( 2, 1 ), size = 1, blur = 4, color = Element.rgb 0.8 0.8 0.8 }
+    Element.row
+        [ Element.Border.shadow { offset = ( 2, 1 ), size = 1, blur = 4, color = Element.rgb 0.8 0.8 0.8 }
+        , Element.centerX
+        , Element.width (Element.fill |> Element.maximum 900)
+        ]
+        [ Element.column
+            [ Element.spacing 25
             , Element.centerX
-            , Element.width (Element.fill |> Element.maximum 1200)
+            , Element.padding 30
+            , Element.width Element.fill
             ]
-            [ Element.el
-                [ Element.width (Element.fill |> Element.maximum 1000)
-                , Element.padding 30
+            [ Element.paragraph
+                [ fontSize.title
+                , Element.Font.size 32
+                , Element.Font.center
                 ]
-                (Element.column
-                    [ Element.spacing 25
-                    , Element.centerX
-                    ]
-                    [ Element.paragraph
-                        [ fontSize.title
-                        , Element.Font.size 32
-                        ]
-                        [ Element.text title ]
-                    , bioView body
-                    , authorResources dimensions
-                    ]
-                )
+                [ Element.text title ]
+            , bioView body
             ]
+        ]
 
 
 authorResources dimensions =
