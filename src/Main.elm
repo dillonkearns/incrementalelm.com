@@ -96,7 +96,10 @@ update action model =
         UrlRequest urlRequest ->
             case urlRequest of
                 Browser.Internal url ->
-                    ( model
+                    ( { model
+                        | showMenu = False
+                        , menuBarAnimation = View.MenuBar.init
+                      }
                     , Browser.Navigation.pushUrl model.key (Url.toString url)
                     )
 

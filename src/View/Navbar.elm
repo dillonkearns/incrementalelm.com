@@ -83,11 +83,7 @@ modalMenuView menuAnimation =
             , Style.fontSize.title
             , Element.Font.color palette.bold
             ]
-            [ Element.text "Learn Elm"
-            , Element.text "Coaches"
-            , Element.text "Articles"
-            , Element.text "Contact"
-            ]
+            (links |> List.map linkView)
         ]
 
 
