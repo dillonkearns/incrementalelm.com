@@ -1,4 +1,4 @@
-module View.Navbar exposing (view)
+module View.Navbar exposing (modalMenuView, view)
 
 import Animation exposing (backgroundColor)
 import Browser
@@ -49,6 +49,34 @@ links model startAnimationMsg =
             , Element.text "Contact"
             ]
         )
+
+
+modalMenuView menuAnimation =
+    Element.column
+        ([ Background.color palette.main
+         , Element.height Element.fill
+         , Element.width Element.fill
+         , Element.padding 80
+         ]
+            ++ (menuAnimation
+                    |> Animation.render
+                    |> List.map Element.htmlAttribute
+               )
+        )
+        [ Element.column
+            [ Element.centerX
+            , Element.width Element.shrink
+            , Element.spacing 25
+            , fonts.body
+            , Style.fontSize.title
+            , Element.Font.color palette.bold
+            ]
+            [ Element.text "Learn Elm"
+            , Element.text "Coaches"
+            , Element.text "Articles"
+            , Element.text "Contact"
+            ]
+        ]
 
 
 logoView model animationView =

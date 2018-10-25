@@ -160,7 +160,7 @@ mainView ({ page } as model) =
             , Element.width Element.fill
             ]
             [ View.Navbar.view model animationView StartAnimation
-            , menu model.menuAnimation
+            , View.Navbar.modalMenuView model.menuAnimation
             ]
 
      else
@@ -216,34 +216,6 @@ interpolation =
         { duration = second * 1
         , ease = Ease.inOutCubic
         }
-
-
-menu menuAnimation =
-    Element.column
-        ([ Background.color palette.main
-         , Element.height Element.fill
-         , Element.width Element.fill
-         , Element.padding 80
-         ]
-            ++ (menuAnimation
-                    |> Animation.render
-                    |> List.map Element.htmlAttribute
-               )
-        )
-        [ Element.column
-            [ Element.centerX
-            , Element.width Element.shrink
-            , Element.spacing 25
-            , fonts.body
-            , Style.fontSize.title
-            , Element.Font.color palette.bold
-            ]
-            [ Element.text "Learn Elm"
-            , Element.text "Coaches"
-            , Element.text "Articles"
-            , Element.text "Contact"
-            ]
-        ]
 
 
 layout model =
