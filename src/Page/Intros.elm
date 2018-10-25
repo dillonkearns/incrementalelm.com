@@ -37,17 +37,9 @@ view dimensions =
                 , Element.Font.center
                 , Element.width Element.fill
                 ]
-        , introInfo "Adaptable, Reliable Frontends With Elm" "Experience what it's like to make changes and do refactorings in a non-trivial Elm code base. You'll learn about some libraries that make Elm even more robust, like Elm UI, dillonkearns/elm-graphql, elm-typescript-interop, and remote-data" dimensions
+        , introInfo "Adaptable, Reliable Frontends With Elm" "Experience what it's like to make changes and do refactorings in a non-trivial Elm code base. You'll learn about some libraries that make Elm even more robust, like Elm UI, dillonkearns/elm-graphql, elm-typescript-interop, and remote-data." dimensions
+        , introInfo "How I Introduced Elm at a Fortune 10" "Learn about the conditions that made Elm the right choice for a frontend framework at a Fortune 10 company, and how we pitched it to management. You'll understand some of the reasons why the teams moved faster with fewer bugs after only a few weeks' experience with Elm. We'll wrap up with a live code demo showing how to get started introducing your first bit of Elm to a JavaScript codebase." dimensions
         ]
-
-
-
-{-
-
-   Adaptable, Maintainable, Reliable Frontends with Elm - experience what it's like to make changes and do refactorings in a non-trivial Elm code base. You'll learn about some libraries that make Elm even more robust, like Elm UI, dillonkearns/elm-graphql, elm-typescript-interop, and remote-data
-   * Introducing Elm - adding Elm to a JavaScript app one small step at a time.
-   * Introducing Elm at a Fortune 10 company
--}
 
 
 introInfo title body dimensions =
