@@ -8,7 +8,9 @@ import Html
 import Html.Attributes exposing (attribute, class, style)
 import Style exposing (fontSize, fonts, palette)
 import Style.Helpers
+import Url
 import View.FontAwesome
+import View.Helpers
 
 
 view :
@@ -72,8 +74,29 @@ introInfo title body dimensions =
                 ]
                 [ Element.text title ]
             , bioView body
+            , requestButton title
             ]
         ]
+
+
+requestButton title =
+    View.Helpers.textButton { url = "mailto:info@incrementalelm.com?subject=" ++ mailSubject title, text = "Request This Talk" } []
+
+
+mailSubject title =
+    "Request Talk: "
+        ++ Url.percentEncode title
+
+
+
+-- Element.text "Request This Talk"
+--     |> Element.el
+--         [ Background.color palette.highlight
+--         , Element.Font.color palette.mainBackground
+--         , Element.padding 10
+--         , Element.Border.rounded 4
+--         , Element.centerX
+--         ]
 
 
 bioView body =
