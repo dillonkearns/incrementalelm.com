@@ -36,7 +36,6 @@ links =
     [ { name = "Learn Elm", url = "/learn" }
     , { name = "Coaches", url = "/coaches" }
     , { name = "Articles", url = "/" }
-    , { name = "Contact", url = "/" }
     ]
 
 
@@ -51,13 +50,27 @@ linksView model startAnimationMsg =
             [ View.MenuBar.view model startAnimationMsg ]
 
          else
-            links
+            (links
                 |> List.map linkView
+            )
+                ++ [ contactButton ]
         )
 
 
+contactButton =
+    Element.text "Contact"
+        |> Element.el
+            [ Background.color palette.highlight
+            , Element.padding 12
+            , Border.shadow { offset = ( 2, 1 ), size = 1, blur = 4, color = Element.rgb 0.8 0.8 0.8 }
+            , Element.Font.color palette.mainBackground
+            , Border.rounded 5
+            , Element.centerX
+            ]
+
+
 linkView link =
-    Element.link []
+    Element.link [ Element.width Element.fill ]
         { label = Element.text link.name
         , url = link.url
         }
@@ -77,13 +90,14 @@ modalMenuView menuAnimation =
         )
         [ Element.column
             [ Element.centerX
+            , Element.Font.center
             , Element.width Element.shrink
             , Element.spacing 25
             , fonts.body
             , Style.fontSize.title
             , Element.Font.color palette.bold
             ]
-            (links |> List.map linkView)
+            ((links |> List.map linkView) ++ [ contactButton ])
         ]
 
 
