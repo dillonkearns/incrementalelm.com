@@ -73,65 +73,6 @@ introInfo title body dimensions =
         ]
 
 
-authorResources dimensions =
-    if dimensions.width > 1000 then
-        Element.column [ Element.spacing 8, Element.width Element.fill ]
-            [ Element.row
-                [ Element.spaceEvenly
-                , Element.width Element.fill
-                , Element.spacing 10
-                ]
-                [ resource "elm-graphql" "https://github.com/dillonkearns/elm-graphql" Library
-                , resource "elm-typescript-interop" "https://github.com/dillonkearns/elm-typescript-interop" Library
-                ]
-            , Element.row
-                [ Element.spaceEvenly
-                , Element.width Element.fill
-                , Element.spacing 10
-                ]
-                [ resource "Developing for the Web with Extreme Safety" "https://www.youtube.com/watch?v=t-2GiOuLRZc" Video
-                , resource "Mobster" "http://mobster.cc" App
-                ]
-            ]
-
-    else
-        Element.column [ Element.spacing 8, Element.centerX ]
-            [ resource "elm-graphql" "https://github.com/dillonkearns/elm-graphql" Library
-            , resource "elm-typescript-interop" "https://github.com/dillonkearns/elm-typescript-interop" Library
-            , resource "Developing for the Web with Extreme Safety" "https://www.youtube.com/watch?v=t-2GiOuLRZc" Video
-            , resource "Mobster" "http://mobster.cc" App
-            ]
-
-
-type Resource
-    = Library
-    | Video
-    | App
-
-
-resource resourceName url resourceType =
-    let
-        ( iconClasses, color, font ) =
-            case resourceType of
-                Library ->
-                    ( "fa fa-code", palette.highlight, Style.fonts.code )
-
-                Video ->
-                    ( "fab fa-youtube", Element.rgb255 255 0 0, Style.fonts.title )
-
-                App ->
-                    ( "fas fa-desktop", Element.rgb255 0 122 255, Style.fonts.title )
-    in
-    Element.newTabLink [ Element.width Element.fill ]
-        { label =
-            Element.row [ Element.spacing 5 ]
-                [ View.FontAwesome.styledIcon iconClasses [ Element.Font.color color ]
-                , [ Element.text resourceName ] |> Element.paragraph [ font ]
-                ]
-        , url = url
-        }
-
-
 bioView body =
     Element.paragraph
         [ Element.Font.size 16
@@ -139,14 +80,3 @@ bioView body =
         , Element.width Element.fill
         ]
         [ Element.text body ]
-
-
-avatar =
-    Element.image [ Element.width (Element.fill |> Element.maximum 250), Element.centerX ]
-        { src = "/assets/dillon2.jpg"
-        , description = "Dillon Kearns"
-        }
-
-
-dillonBio =
-    """As a consultant, Dillon introduced Elm at a Fortune 10 company and trained several teams to adopt it as their primary front-end framework. Dillon leverages his background in organizational change to help teams build learning cultures and continuously improve. His philosophy is that "if it's broken, your compiler should be the first to tell you." In his free time, he loves backpacking and playing the piano."""
