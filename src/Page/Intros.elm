@@ -10,7 +10,6 @@ import Style exposing (fontSize, fonts, palette)
 import Style.Helpers
 import Url
 import View.FontAwesome
-import View.Helpers
 
 
 view :
@@ -91,7 +90,7 @@ requestButton title =
                 , size = fontSize.body
                 }
                 [ envelopeIcon |> Element.el []
-                , Element.text "info@incrementalelm.com"
+                , Element.text "Request this talk"
                 ]
         }
 
