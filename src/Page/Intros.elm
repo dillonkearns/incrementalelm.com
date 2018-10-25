@@ -29,24 +29,35 @@ view dimensions =
                 50
             )
         , Element.spacing 30
+        , Element.width (Element.fill |> Element.maximum 900)
+        , Element.centerX
         ]
-        [ [ Element.text "Free Intro Talk" ]
-            |> Element.paragraph
-                [ Style.fontSize.title
-                , Style.fonts.title
-                , Element.Font.center
-                , Element.width Element.fill
-                ]
+        [ paragraph
+            [ Style.fontSize.title
+            , Style.fonts.title
+            , Element.Font.center
+            , Element.width Element.fill
+            ]
+            "Free Intro Talk"
+        , paragraph
+            [ Style.fontSize.body
+            , Style.fonts.body
+            ]
+            "We offer free intro sessions for any teams that are curious to learn more about Elm! This is a great way to gauge whether there is interest in Elm on the team, and whether it might address any relevant pain points."
         , introInfo "Adaptable, Reliable Frontends With Elm" "Experience what it's like to make changes and do refactorings in a non-trivial Elm code base. You'll learn about some libraries that make Elm even more robust, like Elm UI, dillonkearns/elm-graphql, elm-typescript-interop, and remote-data." dimensions
         , introInfo "How I Introduced Elm at a Fortune 10" "Learn about the conditions that made Elm the right choice for a frontend framework at a Fortune 10 company, and how we pitched it to management. You'll understand some of the reasons why the teams moved faster with fewer bugs after only a few weeks' experience with Elm. We'll wrap up with a live code demo showing how to get started introducing your first bit of Elm to a JavaScript codebase." dimensions
         ]
+
+
+paragraph styles content =
+    [ Element.text content ]
+        |> Element.paragraph ([ Element.width Element.fill ] ++ styles)
 
 
 introInfo title body dimensions =
     Element.row
         [ Element.Border.shadow { offset = ( 2, 1 ), size = 1, blur = 4, color = Element.rgb 0.8 0.8 0.8 }
         , Element.centerX
-        , Element.width (Element.fill |> Element.maximum 900)
         ]
         [ Element.column
             [ Element.spacing 25
