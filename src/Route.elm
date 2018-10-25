@@ -11,6 +11,7 @@ type Route
     | WhyElm
     | Coaches
     | Learn String
+    | Intros
     | NotFound
 
 
@@ -25,6 +26,9 @@ title route =
 
         Coaches ->
             "Incremental Elm Coaches"
+
+        Intros ->
+            "Free Intro Talks"
 
         Learn learnTitle ->
             learnTitle
@@ -44,6 +48,7 @@ parser =
     Url.Parser.oneOf
         [ Url.Parser.map Home Url.Parser.top
         , Url.Parser.map WhyElm (s "why-elm")
+        , Url.Parser.map Intros (s "intros")
         , Url.Parser.map Coaches (s "coaches")
         , Url.Parser.map (Learn "architecture") (s "learn" </> s "architecture")
         ]

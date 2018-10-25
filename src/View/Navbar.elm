@@ -36,6 +36,7 @@ links =
     [ { name = "Learn Elm", url = "/learn" }
     , { name = "Coaches", url = "/coaches" }
     , { name = "Articles", url = "/" }
+    , { name = "Free Intro", url = "intros" }
     ]
 
 
