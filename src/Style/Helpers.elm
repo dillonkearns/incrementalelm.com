@@ -15,7 +15,7 @@ button { fontColor, backgroundColor, size } children =
             [ Background.color (backgroundColor Style.hoverPalette)
             ]
         , Background.color (backgroundColor Style.palette)
-        , Element.padding 15
+        , Element.padding 13
         , Element.Border.rounded 10
         , Style.fontSize.body
         , size
