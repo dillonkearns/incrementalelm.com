@@ -13,6 +13,7 @@ import ElmLogo
 import Html exposing (Html)
 import Page.Home
 import Style exposing (fontSize, fonts, palette)
+import Style.Helpers
 import Task
 import Time
 import Url exposing (Url)
@@ -59,15 +60,30 @@ linksView model startAnimationMsg =
 
 
 contactButton =
-    Element.text "Contact"
-        |> Element.el
-            [ Background.color palette.highlight
-            , Element.padding 12
-            , Border.shadow { offset = ( 2, 1 ), size = 1, blur = 4, color = Element.rgb 0.8 0.8 0.8 }
-            , Element.Font.color palette.mainBackground
-            , Border.rounded 5
-            , Element.centerX
-            ]
+    Element.link
+        [ Element.centerX
+        ]
+        { url = "/contact"
+        , label =
+            Style.Helpers.button
+                { fontColor = .mainBackground
+                , backgroundColor = .highlight
+                , size = fontSize.body
+                }
+                [ Element.text "Contact" ]
+        }
+
+
+
+-- Element.text "Contact"
+--     |> Element.el
+--         [ Background.color palette.highlight
+--         , Element.padding 12
+--         , Border.shadow { offset = ( 2, 1 ), size = 1, blur = 4, color = Element.rgb 0.8 0.8 0.8 }
+--         , Element.Font.color palette.mainBackground
+--         , Border.rounded 5
+--         , Element.centerX
+--         ]
 
 
 linkView link =
