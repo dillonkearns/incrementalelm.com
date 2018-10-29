@@ -199,16 +199,6 @@ mainView ({ page } as model) =
                     , Page.Learn.view model.dimensions
                     ]
 
-            Just Route.WhyElm ->
-                Element.column
-                    [ Element.height Element.shrink
-                    , Element.alignTop
-                    , Element.width Element.fill
-                    ]
-                    [ View.Navbar.view model animationView StartAnimation
-                    , Element.text "Why Elm Contents..."
-                    ]
-
             Just Route.Home ->
                 Element.column
                     [ Element.height Element.shrink
