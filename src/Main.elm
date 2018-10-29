@@ -189,7 +189,17 @@ mainView ({ page } as model) =
                     , Page.Intros.view model.dimensions
                     ]
 
-            Just (Route.Learn learnTitle) ->
+            Just Route.CaseStudies ->
+                Element.column
+                    [ Element.height Element.fill
+                    , Element.alignTop
+                    , Element.width Element.fill
+                    ]
+                    [ View.Navbar.view model animationView StartAnimation
+                    , Page.Intros.view model.dimensions
+                    ]
+
+            Just (Route.Learn maybeLearnTitle) ->
                 Element.column
                     [ Element.height Element.fill
                     , Element.alignTop

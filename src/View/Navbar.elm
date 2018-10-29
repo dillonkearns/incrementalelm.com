@@ -12,6 +12,7 @@ import Element.Font
 import ElmLogo
 import Html exposing (Html)
 import Page.Home
+import Route
 import Style exposing (fontSize, fonts, palette)
 import Style.Helpers
 import Task
@@ -34,11 +35,11 @@ view model animationView startAnimationMsg =
 
 
 links =
-    [ { name = "Free Intro", url = "/intro" }
-    , { name = "Case Studies", url = "/case-studies" }
-    , { name = "Coaches", url = "/coaches" }
-    , { name = "Articles", url = "/" }
-    , { name = "Learn Elm", url = "/learn" }
+    [ { name = "Free Intro", route = Route.Intros }
+    , { name = "Case Studies", route = Route.CaseStudies }
+    , { name = "Coaches", route = Route.Coaches }
+    , { name = "Articles", route = Route.Home }
+    , { name = "Learn Elm", route = Route.Learn Nothing }
     ]
 
 
@@ -90,7 +91,7 @@ contactButton =
 linkView link =
     Element.link [ Element.width Element.fill ]
         { label = Element.text link.name
-        , url = link.url
+        , url = Route.toUrl link.route
         }
 
 

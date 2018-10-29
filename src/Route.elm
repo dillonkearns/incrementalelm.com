@@ -3,14 +3,14 @@ module Route exposing (Route(..), parse, title, toUrl)
 import Url.Builder
 import Url.Parser exposing ((</>), Parser, s)
 import View.MenuBar
-import View.Navbar
 
 
 type Route
     = Home
     | Coaches
-    | Learn String
+    | Learn (Maybe String)
     | Intros
+    | CaseStudies
 
 
 toUrl route =
@@ -24,8 +24,16 @@ toUrl route =
         Intros ->
             [ "intro" ]
 
-        Learn learnTitle ->
-            [ "learn", learnTitle ]
+        Learn maybeLearnTitle ->
+            case maybeLearnTitle of
+                Just learnTitle ->
+                    [ "learn", learnTitle ]
+
+                Nothing ->
+                    [ "learn" ]
+
+        CaseStudies ->
+            [ "case-studies" ]
     )
         |> (\path -> Url.Builder.absolute path [])
 
@@ -45,8 +53,16 @@ title maybeRoute =
                     Intros ->
                         "Free Intro Talk"
 
-                    Learn learnTitle ->
-                        learnTitle
+                    Learn maybeLearnTitle ->
+                        case maybeLearnTitle of
+                            Just learnTitle ->
+                                learnTitle
+
+                            Nothing ->
+                                "Incremental Elm Learning Resources"
+
+                    CaseStudies ->
+                        "Incremental Elm Case Studies"
             )
         |> Maybe.withDefault "Incremental Elm - Page not found"
 
@@ -62,5 +78,7 @@ parser =
         [ Url.Parser.map Home Url.Parser.top
         , Url.Parser.map Intros (s "intro")
         , Url.Parser.map Coaches (s "coaches")
-        , Url.Parser.map (Learn "architecture") (s "learn" </> s "architecture")
+        , Url.Parser.map CaseStudies (s "case-studies")
+        , Url.Parser.map (Learn (Just "architecture")) (s "learn" </> s "architecture")
+        , Url.Parser.map (Learn Nothing) (s "learn")
         ]
