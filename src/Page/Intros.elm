@@ -46,8 +46,8 @@ view dimensions =
             , Style.fonts.body
             ]
             "We offer free intro sessions for any teams that are curious to learn more about Elm! This is a great way to gauge whether there is interest in Elm on the team, and whether it might address any relevant pain points."
-        , introInfo "Adaptable, Reliable Frontends With Elm" "Experience the remarkable ease of adding features and refactoring in a non-trivial Elm codebase. You'll learn about some libraries that make Elm even more robust, like Elm UI, dillonkearns/elm-graphql, elm-typescript-interop, and remote-data." dimensions
-        , introInfo "How I Introduced Elm at a Fortune 10" "Learn about the conditions that made Elm the right choice of frontend framework at a Fortune 10 company, and how we pitched it to management. You'll understand some of the reasons why the teams moved faster with fewer bugs after only a few weeks with Elm. We'll wrap up with a live code demo showing how to get started introducing your first bit of Elm to a JavaScript codebase." dimensions
+        , introInfo "https://images.unsplash.com/photo-1521898284481-a5ec348cb555?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6f2ed5bce03f084b61b8936517f711d7&auto=format&fit=crop&w=668&q=80" "Adaptable, Reliable Frontends With Elm" "Experience the remarkable ease of adding features and refactoring in a non-trivial Elm codebase. You'll learn about some libraries that make Elm even more robust, like Elm UI, dillonkearns/elm-graphql, elm-typescript-interop, and remote-data." dimensions
+        , introInfo "https://images.unsplash.com/photo-1522165078649-823cf4dbaf46?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=756f069c98c96a701453b1e27630e961&auto=format&fit=crop&w=1650&q=80" "How I Introduced Elm at a Fortune 10" "Learn about the conditions that made Elm the right choice of frontend framework at a Fortune 10 company, and how we pitched it to management. You'll understand some of the reasons why the teams moved faster with fewer bugs after only a few weeks with Elm. We'll wrap up with a live code demo showing how to get started introducing your first bit of Elm to a JavaScript codebase." dimensions
         ]
 
 
@@ -56,7 +56,7 @@ paragraph styles content =
         |> Element.paragraph ([ Element.width Element.fill ] ++ styles)
 
 
-introInfo title body dimensions =
+introInfo iconUrl title body dimensions =
     Element.row
         [ Element.Border.shadow { offset = ( 2, 1 ), size = 1, blur = 4, color = Element.rgb 0.8 0.8 0.8 }
         , Element.centerX
@@ -67,7 +67,8 @@ introInfo title body dimensions =
             , Element.padding 30
             , Element.width Element.fill
             ]
-            [ Element.paragraph
+            [ icon iconUrl
+            , Element.paragraph
                 [ fontSize.title
                 , Element.Font.size 32
                 , Element.Font.center
@@ -77,6 +78,13 @@ introInfo title body dimensions =
             , requestButton title
             ]
         ]
+
+
+icon iconUrl =
+    Element.image [ Element.width (Element.fill |> Element.maximum 250), Element.centerX ]
+        { src = iconUrl
+        , description = "Icon"
+        }
 
 
 requestButton talkTitle =
