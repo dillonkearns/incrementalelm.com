@@ -9,6 +9,7 @@ import Html.Attributes exposing (attribute, class, style)
 import Style exposing (fontSize, fonts, palette)
 import Style.Helpers
 import Url
+import Url.Builder
 import View.FontAwesome
 
 
@@ -78,11 +79,11 @@ introInfo title body dimensions =
         ]
 
 
-requestButton title =
-    Element.link
+requestButton talkTitle =
+    Element.newTabLink
         [ Element.centerX
         ]
-        { url = "mailto:info@incrementalelm.com?subject=" ++ mailSubject title
+        { url = mailUrl talkTitle
         , label =
             Style.Helpers.button
                 { fontColor = .mainBackground
@@ -95,24 +96,23 @@ requestButton title =
         }
 
 
+mailUrl talkTitle =
+    "mailto:info@incrementalelm.com"
+        ++ Url.Builder.toQuery
+            ([ ( "subject"
+               , "Request Talk: "
+                    ++ talkTitle
+               )
+             , ( "body"
+               , "We are interested in the free " ++ talkTitle ++ " intro talk. Do you have any availability to do a session for our team?"
+               )
+             ]
+                |> List.map (\( key, value ) -> Url.Builder.string key value)
+            )
+
+
 envelopeIcon =
     View.FontAwesome.icon "fas fa-chevron-circle-right"
-
-
-mailSubject title =
-    "Request Talk: "
-        ++ Url.percentEncode title
-
-
-
--- Element.text "Request This Talk"
---     |> Element.el
---         [ Background.color palette.highlight
---         , Element.Font.color palette.mainBackground
---         , Element.padding 10
---         , Element.Border.rounded 4
---         , Element.centerX
---         ]
 
 
 bioView body =
