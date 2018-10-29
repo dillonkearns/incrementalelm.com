@@ -127,6 +127,7 @@ iterations dimensions =
         Element.column
             [ Element.width Element.fill
             , Element.padding 20
+            , Element.spacing 40
             ]
     )
         [ iteration 0
