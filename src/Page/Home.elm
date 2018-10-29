@@ -203,14 +203,14 @@ whyElmSection =
             Element.link
                 [ Element.centerX
                 ]
-                { url = "/why-elm"
+                { url = "/case-studies"
                 , label =
                     Style.Helpers.button
                         { fontColor = .mainBackground
                         , backgroundColor = .light
                         , size = fontSize.small
                         }
-                        [ "Read About Why Elm?" |> wrappedText
+                        [ "See Our Case Studies" |> wrappedText
                         ]
                 }
         }

@@ -34,10 +34,11 @@ view model animationView startAnimationMsg =
 
 
 links =
-    [ { name = "Learn Elm", url = "/learn" }
+    [ { name = "Free Intro", url = "intro" }
+    , { name = "Case Studies", url = "/case-studies" }
     , { name = "Coaches", url = "/coaches" }
     , { name = "Articles", url = "/" }
-    , { name = "Free Intro", url = "intro" }
+    , { name = "Learn Elm", url = "/learn" }
     ]
 
 
