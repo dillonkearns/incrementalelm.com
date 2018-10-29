@@ -264,5 +264,18 @@ whyIncrementalSection =
             , "See how Elm fits in your environment: learn the fundamentals and ship something in less than a week!"
             , "Elm is all about reliability. Incremental Elm Consulting gets you there reliably"
             ]
-        , append = Element.none
+        , append =
+            Element.link
+                [ Element.centerX
+                ]
+                { url = "/intro"
+                , label =
+                    Style.Helpers.button
+                        { fontColor = .mainBackground
+                        , backgroundColor = .highlight
+                        , size = fontSize.small
+                        }
+                        [ "Learn About Free Intro Sessions" |> wrappedText
+                        ]
+                }
         }
