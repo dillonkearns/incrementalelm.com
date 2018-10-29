@@ -1,4 +1,4 @@
-module Route exposing (Route(..), parse, title)
+module Route exposing (Route(..), parse, title, toUrl)
 
 import Url.Builder
 import Url.Parser exposing ((</>), Parser, s)
@@ -11,6 +11,23 @@ type Route
     | Coaches
     | Learn String
     | Intros
+
+
+toUrl route =
+    (case route of
+        Home ->
+            []
+
+        Coaches ->
+            [ "coaches" ]
+
+        Intros ->
+            [ "intro" ]
+
+        Learn learnTitle ->
+            [ "learn", learnTitle ]
+    )
+        |> (\path -> Url.Builder.absolute path [])
 
 
 title : Maybe Route -> String
