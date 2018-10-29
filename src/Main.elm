@@ -38,7 +38,7 @@ type alias Model =
         , height : Float
         , device : Element.Device
         }
-    , page : Route
+    , page : Maybe Route
     , key : Browser.Navigation.Key
     , showMenu : Bool
     }
@@ -169,7 +169,7 @@ mainView ({ page } as model) =
 
      else
         case page of
-            Route.Coaches ->
+            Just Route.Coaches ->
                 Element.column
                     [ Element.height Element.fill
                     , Element.alignTop
@@ -179,7 +179,7 @@ mainView ({ page } as model) =
                     , Page.Coaches.view model.dimensions
                     ]
 
-            Route.Intros ->
+            Just Route.Intros ->
                 Element.column
                     [ Element.height Element.fill
                     , Element.alignTop
@@ -189,7 +189,7 @@ mainView ({ page } as model) =
                     , Page.Intros.view model.dimensions
                     ]
 
-            Route.Learn learnTitle ->
+            Just (Route.Learn learnTitle) ->
                 Element.column
                     [ Element.height Element.fill
                     , Element.alignTop
@@ -199,7 +199,7 @@ mainView ({ page } as model) =
                     , Page.Learn.view model.dimensions
                     ]
 
-            Route.WhyElm ->
+            Just Route.WhyElm ->
                 Element.column
                     [ Element.height Element.shrink
                     , Element.alignTop
@@ -209,7 +209,7 @@ mainView ({ page } as model) =
                     , Element.text "Why Elm Contents..."
                     ]
 
-            Route.Home ->
+            Just Route.Home ->
                 Element.column
                     [ Element.height Element.shrink
                     , Element.alignTop
@@ -219,7 +219,7 @@ mainView ({ page } as model) =
                         :: Page.Home.view model.dimensions
                     )
 
-            Route.NotFound ->
+            Nothing ->
                 Element.text "Page not found!"
     )
         |> layout model

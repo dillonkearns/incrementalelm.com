@@ -12,35 +12,35 @@ type Route
     | Coaches
     | Learn String
     | Intros
-    | NotFound
 
 
-title : Route -> String
-title route =
-    case route of
-        Home ->
-            "Incremental Elm Consulting"
+title : Maybe Route -> String
+title maybeRoute =
+    maybeRoute
+        |> Maybe.map
+            (\route ->
+                case route of
+                    Home ->
+                        "Incremental Elm Consulting"
 
-        WhyElm ->
-            "Incremental Elm - Why Elm?"
+                    WhyElm ->
+                        "Incremental Elm - Why Elm?"
 
-        Coaches ->
-            "Incremental Elm Coaches"
+                    Coaches ->
+                        "Incremental Elm Coaches"
 
-        Intros ->
-            "Free Intro Talk"
+                    Intros ->
+                        "Free Intro Talk"
 
-        Learn learnTitle ->
-            learnTitle
-
-        NotFound ->
-            "Incremental Elm Consulting"
+                    Learn learnTitle ->
+                        learnTitle
+            )
+        |> Maybe.withDefault "Incremental Elm - Page not found"
 
 
 parse url =
     url
         |> Url.Parser.parse parser
-        |> Maybe.withDefault NotFound
 
 
 parser : Url.Parser.Parser (Route -> a) a
