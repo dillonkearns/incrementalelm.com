@@ -23,6 +23,7 @@
   <link rel="manifest" href="/manifest.json">
   <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
   <meta name="theme-color" content="#ffffff">
+  <script src="/elm.js"></script>
 </head>
 <body>
   <script>
@@ -34,17 +35,20 @@
       }
     })();
   </script>
-  <script src="/elm.js"></script>
   <script>
   let app = Elm.Main.init()
   app.ports.pageChanged.subscribe(() => {
+    console.log('new page', {
+      'page_path': window.location.pathname,
+      'page_url': window.location.href,
+      'page_title': document.title
+    })
     gtag('config', 'UA-63981340-2', {
       'page_path': window.location.pathname,
       'page_url': window.location.href,
       'page_title': document.title
     });
   })
-
 </script>
 </body>
 </html>
