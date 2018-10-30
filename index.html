@@ -38,16 +38,19 @@
   <script>
   let app = Elm.Main.init()
   app.ports.pageChanged.subscribe(() => {
-    console.log('new page', {
-      'page_path': window.location.pathname,
-      'page_url': window.location.href,
-      'page_title': document.title
-    })
-    gtag('config', 'UA-63981340-2', {
-      'page_path': window.location.pathname,
-      'page_url': window.location.href,
-      'page_title': document.title
-    });
+    setTimeout(() => {
+      console.log('new page', {
+        'page_path': window.location.pathname,
+        'page_url': window.location.href,
+        'page_title': document.title
+      })
+      
+      gtag('config', 'UA-63981340-2', {
+        'page_path': window.location.pathname,
+        'page_url': window.location.href,
+        'page_title': document.title
+      });
+    }, 100)
   })
 </script>
 </body>
