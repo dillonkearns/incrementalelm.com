@@ -9,14 +9,6 @@
 
     gtag('config', 'UA-63981340-2');
   </script>
-  <script>
-  window.onhashchange = function() {
-    gtag('config', 'UA-63981340-2', {
-      'page_path': window.location.pathname,
-      'page_url': window.location.href
-    });
-  }
-  </script>
 
   <title>Incremental Elm</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -45,6 +37,10 @@
   <script src="/elm.js"></script>
   <script>
   let app = Elm.Main.init()
+  app.ports.pageChanged.subscribe(() => {
+    gtag('config', 'UA-63981340-2');
+  })
+
 </script>
 </body>
 </html>

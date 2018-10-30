@@ -1,4 +1,4 @@
-module Main exposing (main)
+port module Main exposing (main)
 
 import Animation exposing (backgroundColor)
 import Browser
@@ -27,6 +27,9 @@ import Url.Builder
 import Url.Parser exposing (Parser)
 import View.MenuBar
 import View.Navbar
+
+
+port pageChanged : () -> Cmd msg
 
 
 type alias Model =
@@ -92,7 +95,7 @@ update action model =
             )
 
         UrlChanged url ->
-            ( { model | page = Route.parse url }, Cmd.none )
+            ( { model | page = Route.parse url }, pageChanged () )
 
         UrlRequest urlRequest ->
             case urlRequest of
