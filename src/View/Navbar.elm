@@ -76,18 +76,6 @@ contactButton =
         }
 
 
-
--- Element.text "Contact"
---     |> Element.el
---         [ Background.color palette.highlight
---         , Element.padding 12
---         , Border.shadow { offset = ( 2, 1 ), size = 1, blur = 4, color = Element.rgb 0.8 0.8 0.8 }
---         , Element.Font.color palette.mainBackground
---         , Border.rounded 5
---         , Element.centerX
---         ]
-
-
 linkView link =
     Element.link [ Element.width Element.fill ]
         { label = Element.text link.name
