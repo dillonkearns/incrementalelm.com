@@ -13,6 +13,7 @@ import Element.Font
 import ElmLogo
 import Html exposing (Html)
 import Page.Coaches
+import Page.Contact
 import Page.Home
 import Page.Intros
 import Page.Learn
@@ -221,6 +222,16 @@ mainView ({ page } as model) =
                     (View.Navbar.view model animationView StartAnimation
                         :: Page.Home.view model.dimensions
                     )
+
+            Just Route.Contact ->
+                Element.column
+                    [ Element.height Element.fill
+                    , Element.alignTop
+                    , Element.width Element.fill
+                    ]
+                    [ View.Navbar.view model animationView StartAnimation
+                    , Page.Contact.view model.dimensions
+                    ]
 
             Nothing ->
                 Element.text "Page not found!"
