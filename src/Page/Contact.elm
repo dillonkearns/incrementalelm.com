@@ -46,7 +46,6 @@ view dimensions =
             Element.row [ Element.spacing 50 ]
           )
             [ Element.image [ Element.width Element.fill, Element.centerX ]
-                -- { src = "https://images.unsplash.com/photo-1522223142907-0fbfb9c571c1?ixlib=rb-0.3.5&s=0191cf141320fcc6db4202c0e84a2906&auto=format&fit=crop&w=2226&q=80"
                 { src = "https://images.unsplash.com/photo-1511847628852-980ec678a438?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=13f1461f96f13dc4ddadb4a37d33c0bc&auto=format&fit=crop&w=2250&q=80"
                 , description = "Contact Image"
                 }
