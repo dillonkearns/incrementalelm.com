@@ -12,6 +12,7 @@ import Element.Border
 import Element.Font
 import ElmLogo
 import Html exposing (Html)
+import Page.CaseStudies
 import Page.Coaches
 import Page.Contact
 import Page.Home
@@ -200,7 +201,7 @@ mainView ({ page } as model) =
                     , Element.width Element.fill
                     ]
                     [ View.Navbar.view model animationView StartAnimation
-                    , Page.Intros.view model.dimensions
+                    , Page.CaseStudies.view model.dimensions
                     ]
 
             Just (Route.Learn maybeLearnTitle) ->
