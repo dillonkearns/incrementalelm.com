@@ -15,6 +15,7 @@ fonts =
 fontSize =
     { body = Element.Font.size 20
     , title = Element.Font.size 40
+    , quotation = Element.Font.size 100
     , medium = Element.Font.size 20
     , small = Element.Font.size 14
     , logo = Element.Font.size 24

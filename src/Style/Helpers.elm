@@ -1,4 +1,4 @@
-module Style.Helpers exposing (button)
+module Style.Helpers exposing (button, link)
 
 import Element exposing (Element)
 import Element.Background as Background
@@ -21,3 +21,8 @@ button { fontColor, backgroundColor, size } children =
         , size
         ]
         children
+
+
+link { url, content } =
+    Element.newTabLink [ Element.Font.color Style.palette.highlight ]
+        { url = url, label = Element.text content }
