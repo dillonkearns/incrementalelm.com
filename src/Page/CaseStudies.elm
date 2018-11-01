@@ -41,43 +41,12 @@ view dimensions =
             , Element.width Element.fill
             ]
             [ Element.text "Case Studies" ]
-        , quote "Dillon at Incremental Elm has been crucial in guiding our transition to Elm. His approach is focused on your goals, with Elm as a tool to get you there. With his coaching we got Elm up and running and shipped an entirely new product, and with exceptional speed and quality - something that has previously been a myth with highly interactive frontends. If you have the chance to work with Incremental Elm, take it."
-        ]
-
-
-quoteColor =
-    Style.palette.light
-
-
-quote content =
-    Element.row
-        [ Element.width Element.fill
-        , Style.fonts.body
-        , Element.padding 10
-        , Element.Border.widthEach { bottom = 0, left = 15, right = 0, top = 0 }
-        , Element.Border.color quoteColor
-        ]
-        [ Element.text "“"
-            |> Element.el
-                [ Style.fontSize.quotation
-                , Element.Font.color quoteColor
-                , Element.alignTop
-                ]
-        , Element.column
-            [ Element.width Element.fill
-            , Element.paddingXY 30 10
-            , Element.spacing 30
-            ]
-            [ Element.paragraph
-                [ Style.fonts.body
-                , Element.Font.color (Element.rgba 0 0 0 1)
-                , Style.fonts.body
-                , Style.fontSize.body
-                ]
-                [ Element.text content |> Element.el [] ]
-            , Element.row [ Element.Font.bold ]
-                [ Element.text "Ed Gonzalez, Co-Founder at "
-                , Style.Helpers.link { url = "https://buildrtech.com/", content = "Buildr Technologies" }
-                ]
-            ]
+        , Style.Helpers.blockQuote
+            { content = "Dillon at Incremental Elm has been crucial in guiding our transition to Elm. His approach is focused on your goals, with Elm as a tool to get you there. With his coaching we got Elm up and running and shipped an entirely new product, and with exceptional speed and quality - something that has previously been a myth with highly interactive frontends. If you have the chance to work with Incremental Elm, take it."
+            , author =
+                Element.row [ Element.Font.bold ]
+                    [ Element.text "Ed Gonzalez, Co-Founder at "
+                    , Style.Helpers.link { url = "https://buildrtech.com/", content = "Buildr Technologies" }
+                    ]
+            }
         ]
