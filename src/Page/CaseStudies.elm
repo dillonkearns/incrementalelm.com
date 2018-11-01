@@ -34,13 +34,13 @@ view dimensions =
         , Element.width (Element.fill |> Element.maximum 900)
         , Element.centerX
         ]
-        [ paragraph
+        [ Element.paragraph
             [ Style.fontSize.title
             , Style.fonts.title
             , Element.Font.center
             , Element.width Element.fill
             ]
-            "Case Studies"
+            [ Element.text "Case Studies" ]
         , quote "Dillon at Incremental Elm has been crucial in guiding our transition to Elm. His approach is focused on your goals, with Elm as a tool to get you there. With his coaching we got Elm up and running and shipped an entirely new product, and with exceptional speed and quality - something that has previously been a myth with highly interactive frontends. If you have the chance to work with Incremental Elm, take it."
         ]
 
@@ -81,12 +81,3 @@ quote content =
                 ]
             ]
         ]
-
-
-
--- , quotationMark "”"
-
-
-paragraph styles content =
-    [ Element.text content ]
-        |> Element.paragraph ([ Element.width Element.fill ] ++ styles)
