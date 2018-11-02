@@ -52,6 +52,7 @@ blockQuote { content, author } =
                 , Element.Font.color (Element.rgba 0 0 0 1)
                 , Style.fonts.body
                 , Style.fontSize.body
+                , Element.spacing 12
                 ]
                 [ Element.text content |> Element.el [] ]
             , author
