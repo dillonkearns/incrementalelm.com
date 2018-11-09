@@ -20,7 +20,7 @@ view dimensions =
         [ Element.width Element.fill
         , Element.height Element.fill
         , Element.padding
-            (if dimensions.width <= 1000 then
+            (if Dimensions.isMobile dimensions then
                 20
 
              else

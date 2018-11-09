@@ -70,14 +70,15 @@ update action model =
         InitialViewport { viewport } ->
             ( { model
                 | dimensions =
-                    { width = viewport.width
-                    , height = viewport.height
-                    , device =
-                        Element.classifyDevice
-                            { height = round viewport.height
-                            , width = round viewport.width
-                            }
-                    }
+                    Dimensions.init
+                        { width = viewport.width
+                        , height = viewport.height
+                        , device =
+                            Element.classifyDevice
+                                { height = round viewport.height
+                                , width = round viewport.width
+                                }
+                        }
               }
             , Cmd.none
             )
@@ -85,10 +86,11 @@ update action model =
         WindowResized width height ->
             ( { model
                 | dimensions =
-                    { width = toFloat width
-                    , height = toFloat height
-                    , device = Element.classifyDevice { height = height, width = width }
-                    }
+                    Dimensions.init
+                        { width = toFloat width
+                        , height = toFloat height
+                        , device = Element.classifyDevice { height = height, width = width }
+                        }
               }
             , Cmd.none
             )
@@ -158,6 +160,7 @@ view ({ page } as model) =
     }
 
 
+mainView : Model -> Html Msg
 mainView ({ page } as model) =
     (if model.showMenu then
         Element.column
@@ -254,10 +257,6 @@ layout model =
         )
 
 
-isMobile { dimensions } =
-    dimensions.width < 1000
-
-
 animationView model =
     svg
         [ version "1.1"
@@ -318,10 +317,11 @@ init _ url navigationKey =
                 [ Animation.opacity 0
                 ]
       , dimensions =
-            { width = 0
-            , height = 0
-            , device = Element.classifyDevice { height = 0, width = 0 }
-            }
+            Dimensions.init
+                { width = 0
+                , height = 0
+                , device = Element.classifyDevice { height = 0, width = 0 }
+                }
       , page = Route.parse url
       , key = navigationKey
       , showMenu = False

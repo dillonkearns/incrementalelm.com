@@ -33,8 +33,8 @@ blockQuote :
     Dimensions
     -> { content : String, author : Element msg }
     -> Element msg
-blockQuote { width } { content, author } =
-    if width <= 1000 then
+blockQuote dimensions { content, author } =
+    if Dimensions.isMobile dimensions then
         Element.row
             [ Element.width Element.fill
             , Style.fonts.body

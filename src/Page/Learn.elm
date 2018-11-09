@@ -17,13 +17,13 @@ import View.Resource as Resource
 view : Dimensions -> Element.Element msg
 view dimensions =
     Element.column
-        [ if dimensions.width <= 1000 then
+        [ if Dimensions.isMobile dimensions then
             Element.width (Element.fill |> Element.maximum 600)
 
           else
             Element.width Element.fill
         , Element.height Element.fill
-        , if dimensions.width <= 1000 then
+        , if Dimensions.isMobile dimensions then
             Element.padding 20
 
           else

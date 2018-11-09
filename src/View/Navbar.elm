@@ -5,6 +5,7 @@ import Browser
 import Browser.Dom
 import Browser.Events
 import Browser.Navigation
+import Dimensions
 import Element exposing (Element)
 import Element.Background as Background
 import Element.Border as Border
@@ -50,7 +51,7 @@ linksView model startAnimationMsg =
         , fonts.body
         , Element.Font.color palette.bold
         ]
-        (if isMobile model then
+        (if Dimensions.isMobile model.dimensions then
             [ View.MenuBar.view model startAnimationMsg ]
 
          else
@@ -121,10 +122,6 @@ logoView model animationView =
                 ]
         , url = "/"
         }
-
-
-isMobile { dimensions } =
-    dimensions.width < 1000
 
 
 logoText =

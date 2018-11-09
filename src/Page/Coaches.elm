@@ -18,7 +18,7 @@ view dimensions =
         [ Element.width Element.fill
         , Element.height Element.fill
         , Element.padding
-            (if dimensions.width <= 1000 then
+            (if Dimensions.isMobile dimensions then
                 20
 
              else
@@ -38,7 +38,7 @@ view dimensions =
 
 
 aboutDillon dimensions =
-    if dimensions.width <= 1000 then
+    if Dimensions.isMobile dimensions then
         Element.row
             [ Element.Border.shadow { offset = ( 2, 1 ), size = 1, blur = 4, color = Element.rgb 0.8 0.8 0.8 }
             , Element.width Element.fill
@@ -91,7 +91,15 @@ aboutDillon dimensions =
 
 
 authorResources dimensions =
-    if dimensions.width > 1000 then
+    if Dimensions.isMobile dimensions then
+        Element.column [ Element.spacing 8, Element.centerX ]
+            [ resource "elm-graphql" "https://github.com/dillonkearns/elm-graphql" Library
+            , resource "elm-typescript-interop" "https://github.com/dillonkearns/elm-typescript-interop" Library
+            , resource "Developing for the Web with Extreme Safety" "https://www.youtube.com/watch?v=t-2GiOuLRZc" Video
+            , resource "Mobster" "http://mobster.cc" App
+            ]
+
+    else
         Element.column [ Element.spacing 8, Element.width Element.fill ]
             [ Element.row
                 [ Element.spaceEvenly
@@ -109,14 +117,6 @@ authorResources dimensions =
                 [ resource "Developing for the Web with Extreme Safety" "https://www.youtube.com/watch?v=t-2GiOuLRZc" Video
                 , resource "Mobster" "http://mobster.cc" App
                 ]
-            ]
-
-    else
-        Element.column [ Element.spacing 8, Element.centerX ]
-            [ resource "elm-graphql" "https://github.com/dillonkearns/elm-graphql" Library
-            , resource "elm-typescript-interop" "https://github.com/dillonkearns/elm-typescript-interop" Library
-            , resource "Developing for the Web with Extreme Safety" "https://www.youtube.com/watch?v=t-2GiOuLRZc" Video
-            , resource "Mobster" "http://mobster.cc" App
             ]
 
 

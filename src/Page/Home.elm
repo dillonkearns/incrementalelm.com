@@ -112,18 +112,18 @@ servicesSection dimensions =
 
 
 iterations dimensions =
-    (if dimensions.width > 1000 then
-        Element.row
-            [ Element.spaceEvenly
-            , Element.width Element.fill
-            , Element.padding 50
-            ]
-
-     else
+    (if Dimensions.isMobile dimensions then
         Element.column
             [ Element.width Element.fill
             , Element.padding 20
             , Element.spacing 40
+            ]
+
+     else
+        Element.row
+            [ Element.spaceEvenly
+            , Element.width Element.fill
+            , Element.padding 50
             ]
     )
         [ iteration 0

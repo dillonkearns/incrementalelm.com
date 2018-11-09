@@ -18,7 +18,7 @@ view dimensions =
         [ Element.width Element.fill
         , Element.height Element.fill
         , Element.padding
-            (if dimensions.width <= 1000 then
+            (if Dimensions.isMobile dimensions then
                 20
 
              else
@@ -35,7 +35,7 @@ view dimensions =
             , Element.width Element.fill
             ]
             "Contact Incremental Elm"
-        , (if dimensions.width <= 1000 then
+        , (if Dimensions.isMobile dimensions then
             Element.column [ Element.spacing 50 ]
 
            else

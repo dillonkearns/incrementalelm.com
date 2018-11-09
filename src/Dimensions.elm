@@ -1,10 +1,23 @@
-module Dimensions exposing (Dimensions)
+module Dimensions exposing (Dimensions, init, isMobile)
 
 import Element
 
 
-type alias Dimensions =
+init : Attributes -> Dimensions
+init attributes =
+    Dimensions attributes
+
+
+type alias Attributes =
     { width : Float
     , height : Float
     , device : Element.Device
     }
+
+
+type Dimensions
+    = Dimensions Attributes
+
+
+isMobile (Dimensions { width }) =
+    width <= 1000
