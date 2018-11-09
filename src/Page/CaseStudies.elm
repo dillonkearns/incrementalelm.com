@@ -42,6 +42,7 @@ view dimensions =
             ]
             [ Element.text "Case Studies" ]
         , Style.Helpers.blockQuote
+            dimensions
             { content = "Dillon at Incremental Elm has been crucial in guiding our transition to Elm. His approach is focused on your goals, with Elm as a tool to get you there. With his coaching we got Elm up and running and shipped an entirely new product, and with exceptional speed and quality - something that has previously been a myth with highly interactive frontends. If you have the chance to work with Incremental Elm, take it."
             , author =
                 Element.paragraph [ Element.Font.bold ]

@@ -178,7 +178,7 @@ iterationBubble iterationNumber =
             , Element.centerX
             , Element.centerY
             , Element.Font.center
-            , fontSize.medium
+            , fontSize.body
             , Element.Font.bold
             , Background.color palette.highlight
             , Element.width (Element.px 150)

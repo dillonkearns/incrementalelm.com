@@ -28,36 +28,67 @@ link { url, content } =
         { url = url, label = Element.text content }
 
 
-blockQuote { content, author } =
-    Element.row
-        [ Element.width Element.fill
-        , Style.fonts.body
-        , Element.padding 10
-        , Element.Border.widthEach { bottom = 0, left = 15, right = 0, top = 0 }
-        , Element.Border.color quoteColor
-        ]
-        [ Element.text "“"
-            |> Element.el
-                [ Style.fontSize.quotation
-                , Element.Font.color quoteColor
-                , Element.alignTop
-                ]
-        , Element.column
+blockQuote :
+    { width : Float
+    , height : Float
+    , device : Element.Device
+    }
+    -> { content : String, author : Element msg }
+    -> Element msg
+blockQuote { width } { content, author } =
+    if width <= 1000 then
+        Element.row
             [ Element.width Element.fill
-            , Element.paddingXY 30 10
-            , Element.spacing 30
+            , Style.fonts.body
+            , Element.padding 10
             ]
-            [ Element.paragraph
-                [ Style.fonts.body
-                , Element.Font.color (Element.rgba 0 0 0 1)
-                , Style.fonts.body
-                , Style.fontSize.body
-                , Element.spacing 12
+            [ Element.column
+                [ Element.width Element.fill
+                , Element.paddingXY 30 10
+                , Element.spacing 30
                 ]
-                [ Element.text content |> Element.el [] ]
-            , author
+                [ Element.paragraph
+                    [ Style.fonts.body
+                    , Element.Font.color (Element.rgba 0 0 0 1)
+                    , Style.fonts.body
+                    , Style.fontSize.medium
+                    , Element.spacing 12
+                    ]
+                    [ Element.text content |> Element.el [] ]
+                , author
+                ]
             ]
-        ]
+
+    else
+        Element.row
+            [ Element.width Element.fill
+            , Style.fonts.body
+            , Element.padding 10
+            , Element.Border.widthEach { bottom = 0, left = 15, right = 0, top = 0 }
+            , Element.Border.color quoteColor
+            ]
+            [ Element.text "“"
+                |> Element.el
+                    [ Style.fontSize.quotation
+                    , Element.Font.color quoteColor
+                    , Element.alignTop
+                    ]
+            , Element.column
+                [ Element.width Element.fill
+                , Element.paddingXY 30 10
+                , Element.spacing 30
+                ]
+                [ Element.paragraph
+                    [ Style.fonts.body
+                    , Element.Font.color (Element.rgba 0 0 0 1)
+                    , Style.fonts.body
+                    , Style.fontSize.medium
+                    , Element.spacing 12
+                    ]
+                    [ Element.text content |> Element.el [] ]
+                , author
+                ]
+            ]
 
 
 quoteColor =
