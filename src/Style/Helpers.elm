@@ -35,26 +35,20 @@ blockQuote :
     -> Element msg
 blockQuote dimensions { content, author } =
     if Dimensions.isMobile dimensions then
-        Element.row
+        Element.column
             [ Element.width Element.fill
-            , Style.fonts.body
-            , Element.padding 10
+            , Element.paddingXY 30 30
+            , Element.spacing 30
+            , Style.shadow
             ]
-            [ Element.column
-                [ Element.width Element.fill
-                , Element.paddingXY 30 10
-                , Element.spacing 30
+            [ Element.paragraph
+                [ Style.fonts.body
+                , Style.fonts.body
+                , Style.fontSize.medium
+                , Element.spacing 12
                 ]
-                [ Element.paragraph
-                    [ Style.fonts.body
-                    , Element.Font.color (Element.rgba 0 0 0 1)
-                    , Style.fonts.body
-                    , Style.fontSize.medium
-                    , Element.spacing 12
-                    ]
-                    [ Element.text content |> Element.el [] ]
-                , author
-                ]
+                [ Element.text content |> Element.el [] ]
+            , author
             ]
 
     else
