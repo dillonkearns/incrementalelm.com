@@ -1,5 +1,6 @@
 module Page.Learn exposing (view)
 
+import Dimensions exposing (Dimensions)
 import Element exposing (Element)
 import Element.Background as Background
 import Element.Border
@@ -13,12 +14,7 @@ import View.FontAwesome
 import View.Resource as Resource
 
 
-view :
-    { width : Float
-    , height : Float
-    , device : Element.Device
-    }
-    -> Element.Element msg
+view : Dimensions -> Element.Element msg
 view dimensions =
     Element.column
         [ if dimensions.width <= 1000 then

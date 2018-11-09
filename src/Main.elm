@@ -5,6 +5,7 @@ import Browser
 import Browser.Dom
 import Browser.Events
 import Browser.Navigation
+import Dimensions exposing (Dimensions)
 import Ease
 import Element exposing (Element)
 import Element.Background as Background
@@ -38,11 +39,7 @@ type alias Model =
     { styles : List Animation.State
     , menuBarAnimation : View.MenuBar.Model
     , menuAnimation : Animation.State
-    , dimensions :
-        { width : Float
-        , height : Float
-        , device : Element.Device
-        }
+    , dimensions : Dimensions
     , page : Maybe Route
     , key : Browser.Navigation.Key
     , showMenu : Bool

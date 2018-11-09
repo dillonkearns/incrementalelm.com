@@ -1,5 +1,6 @@
 module Page.Intros exposing (view)
 
+import Dimensions exposing (Dimensions)
 import Element exposing (Element)
 import Element.Background as Background
 import Element.Border
@@ -13,12 +14,7 @@ import Url.Builder
 import View.FontAwesome
 
 
-view :
-    { width : Float
-    , height : Float
-    , device : Element.Device
-    }
-    -> Element.Element msg
+view : Dimensions -> Element.Element msg
 view dimensions =
     Element.column
         [ Element.width Element.fill

@@ -1,5 +1,6 @@
 module Style.Helpers exposing (blockQuote, button, link)
 
+import Dimensions exposing (Dimensions)
 import Element exposing (Element)
 import Element.Background as Background
 import Element.Border
@@ -29,10 +30,7 @@ link { url, content } =
 
 
 blockQuote :
-    { width : Float
-    , height : Float
-    , device : Element.Device
-    }
+    Dimensions
     -> { content : String, author : Element msg }
     -> Element msg
 blockQuote { width } { content, author } =

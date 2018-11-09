@@ -1,5 +1,6 @@
 module Page.Home exposing (view)
 
+import Dimensions exposing (Dimensions)
 import Element exposing (Element)
 import Element.Background as Background
 import Element.Border
@@ -25,12 +26,7 @@ bulletPoint content =
             ]
 
 
-view :
-    { width : Float
-    , height : Float
-    , device : Element.Device
-    }
-    -> List (Element.Element msg)
+view : Dimensions -> List (Element.Element msg)
 view dimensions =
     [ whyElmSection
     , whyIncrementalSection
