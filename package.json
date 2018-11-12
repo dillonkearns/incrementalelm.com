@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "elm-live src/Main.elm --port 1234 --open --pushstate -- --output elm.js",
+    "start": "elm-live src/Main.elm --port 8000 --open --pushstate -- --output elm.js",
     "build": "elm make src/Main.elm --optimize --output dist/elm.js && elm-minify dist/elm.js && cp -r index.html 404.html CNAME assets dist"
   },
   "keywords": [],
