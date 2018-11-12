@@ -1,10 +1,12 @@
-module Style.Helpers exposing (blockQuote, button, link)
+module Style.Helpers exposing (blockQuote, button, link, roundedAvatar)
 
 import Dimensions exposing (Dimensions)
 import Element exposing (Element)
 import Element.Background as Background
 import Element.Border
 import Element.Font
+import Html
+import Html.Attributes
 import Style
 
 
@@ -49,3 +51,14 @@ blockQuote dimensions { content, author } =
             [ Element.text content |> Element.el [] ]
         , author
         ]
+
+
+roundedAvatar src =
+    Html.img
+        [ Html.Attributes.src src
+        , Html.Attributes.style "border-radius" "50%"
+        , Html.Attributes.style "max-width" "75px"
+        ]
+        []
+        |> Element.html
+        |> Element.el []

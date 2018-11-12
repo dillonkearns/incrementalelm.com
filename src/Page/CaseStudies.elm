@@ -36,9 +36,15 @@ view dimensions =
             dimensions
             { content = "Dillon at Incremental Elm has been crucial in guiding our transition to Elm. His approach is focused on your goals, with Elm as a tool to get you there. With his coaching we got Elm up and running and shipped an entirely new product, and with exceptional speed and quality - something that has previously been a myth with highly interactive frontends. If you have the chance to work with Incremental Elm, take it."
             , author =
-                Element.paragraph [ Element.Font.bold ]
-                    [ Element.text "Ed Gonzalez, Co-Founder at "
-                    , Style.Helpers.link { url = "https://buildrtech.com/", content = "Buildr Technologies" }
+                Element.row [ Element.spacing 20 ]
+                    [ Style.Helpers.roundedAvatar "/assets/ed-gonzalez.png"
+                    , Element.paragraph [ Element.Font.bold, Element.centerY ]
+                        [ Element.text "Ed Gonzalez, Co-Founder at " |> Element.el [ Element.centerY ]
+                        , Style.Helpers.link
+                            { url = "https://buildrtech.com/"
+                            , content = "Buildr Technologies"
+                            }
+                        ]
                     ]
             }
         , buildrStory
