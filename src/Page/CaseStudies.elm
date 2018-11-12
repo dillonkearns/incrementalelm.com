@@ -85,14 +85,14 @@ buildrStory dimensions =
             Element.row [ Element.spacing 30 ]
           )
             [ groundbreakImage
-            , "Mike Stock and Ed Gonzalez came from roles in technical leadership at Procore Technologies, the leading SaaS platform for construction companies. They knew what it took to build a highly interactive, best-in-class user experience like the one they had set out to deliver. But they didn't have the luxury of time. They had heard about the power of Elm's type system to help you deliver faster and fearlessly refactor. They were also excited about Elm UI, an Elm library that makes styling frontends as reliable and easy as the rest of an Elm project."
+            , "Mike Stock and Ed Gonzalez came from roles in technical leadership at Procore Technologies, the leading SaaS platform for construction companies. They knew what it took to build a highly interactive, best-in-class user experience like the one they had set out to deliver. But they didn't have the luxury of time. They had heard about the power of Elm's type system to help you deliver faster and fearlessly refactor. They were also excited about Elm UI, a library that makes styling frontends as reliable and easy as the rest of an Elm project."
                 |> Element.text
                 |> paragraph
             ]
         , "On day 1, we collaborated with Buildr Tech to integrate Elm into their deployment pipeline and move a page from Closeout to Elm. We transitioned some API endpoints over to GraphQL and wired up an Elm page using a type-safe Elm GraphQL client. From there, new API requests worked as expected as soon as the code compiled, so Buildr could focus on solving their customers’ problems and getting their new product to market."
             |> Element.text
             |> paragraph
-        , "With their app bootstrapped with Elm, they were able to move rapidly building their highly interactive application and go live in time for the big conference! With guidance from Incremental Elm, the Buildr was able to lay a solid foundation for their Elm code and grow in a direction that gave them the flexibility they needed to change on a dime."
+        , "With their app bootstrapped with Elm, they were able to move rapidly building their highly interactive application and go live in time for the big conference! With guidance from Incremental Elm, Buildr was able to lay a solid foundation for their Elm code and grow in a direction that gave them the flexibility they needed to change on a dime."
             |> Element.text
             |> paragraph
         ]
