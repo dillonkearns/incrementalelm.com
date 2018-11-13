@@ -89,9 +89,14 @@ buildrStory dimensions =
                 |> Element.text
                 |> paragraph
             ]
-        , "On day 1, we collaborated with Buildr Tech to integrate Elm into their deployment pipeline and move a page from Closeout to Elm. We transitioned some API endpoints over to GraphQL and wired up an Elm page using a type-safe Elm GraphQL client. From there, new API requests worked as expected as soon as the code compiled, so Buildr could focus on solving their customers’ problems and getting their new product to market."
-            |> Element.text
-            |> paragraph
+        , [ Element.text "On day 1, we collaborated with Buildr Tech to integrate Elm into their deployment pipeline and move a page from their Closeout app to Elm. We transitioned some API endpoints over to GraphQL and wired up an Elm page using "
+          , Style.Helpers.link
+                { url = "https://github.com/dillonkearns/elm-graphql"
+                , content = "a type-safe Elm GraphQL client"
+                }
+          , Element.text ". From there, new API requests worked as expected as soon as the code compiled, so Buildr could focus on solving their customers’ problems and getting their new product to market."
+          ]
+            |> Element.paragraph [ Element.spacing 10 ]
         , "With their app bootstrapped with Elm, they were able to move rapidly building their highly interactive application and go live in time for the big conference! With guidance from Incremental Elm, Buildr was able to lay a solid foundation for their Elm code and grow in a direction that gave them the flexibility they needed to change on a dime."
             |> Element.text
             |> paragraph
