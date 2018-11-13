@@ -85,9 +85,14 @@ buildrStory dimensions =
             Element.row [ Element.spacing 30 ]
           )
             [ groundbreakImage
-            , "Mike Stock and Ed Gonzalez came from roles in technical leadership at Procore Technologies, the leading SaaS platform for construction companies. They knew what it took to build a highly interactive, best-in-class user experience like the one they had set out to deliver. But they didn't have the luxury of time. They had heard about the power of Elm's type system to help you deliver faster and fearlessly refactor. They were also excited about Elm UI, a library that makes styling frontends as reliable and easy as the rest of an Elm project."
-                |> Element.text
-                |> paragraph
+            , [ Element.text "Mike Stock and Ed Gonzalez came from roles in technical leadership at Procore Technologies, the leading SaaS platform for construction companies. They knew what it took to build a highly interactive, best-in-class user experience like the one they had set out to deliver. But they didn't have the luxury of time. They had heard about the power of Elm's type system to help you deliver faster and fearlessly refactor. They were also excited about "
+              , Style.Helpers.link
+                    { url = "https://github.com/mdgriffith/elm-ui/"
+                    , content = "Elm UI"
+                    }
+              , Element.text ", a library that makes styling frontends as reliable and easy as the rest of an Elm project."
+              ]
+                |> Element.paragraph [ Element.spacing 10 ]
             ]
         , [ Element.text "On day 1, we collaborated with Buildr Tech to integrate Elm into their deployment pipeline and move a page from their Closeout app to Elm. We transitioned some API endpoints over to GraphQL and wired up an Elm page using "
           , Style.Helpers.link
