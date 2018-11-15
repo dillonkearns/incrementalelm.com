@@ -8,6 +8,7 @@ import Element.Font
 import Html
 import Html.Attributes exposing (attribute, class, style)
 import Page.Learn.Architecture
+import Page.Learn.GettingStarted
 import Page.Learn.Post exposing (Post)
 import Style exposing (fontSize, fonts, palette)
 import Style.Helpers
@@ -33,25 +34,26 @@ view dimensions learnPageName =
         , Element.spacing 30
         ]
         (findPostByName learnPageName
-            |> Maybe.map (\post -> post dimensions)
-            |> Maybe.map (\learnPost -> title learnPost.title :: learnPost.body)
+            |> Maybe.map
+                (\learnPost ->
+                    title learnPost.title
+                        :: learnPost.body dimensions
+                )
             |> Maybe.withDefault [ Element.text "Couldn't find page!" ]
         )
 
 
 all =
     [ Page.Learn.Architecture.details
+    , Page.Learn.GettingStarted.details
     ]
 
 
-findPostByName : String -> Maybe (Dimensions -> Post msg)
+findPostByName : String -> Maybe (Post msg)
 findPostByName postName =
-    if postName == "architecture" then
-        all
-            |> List.head
-
-    else
-        Nothing
+    all
+        |> List.filter (\post -> post.pageName == postName)
+        |> List.head
 
 
 title text =

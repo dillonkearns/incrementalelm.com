@@ -9,24 +9,25 @@ import View.Ellie
 import View.Resource as Resource
 
 
-details : Dimensions -> Post msg
-details dimensions =
+details : Post msg
+details =
     { pageName = "architecture"
     , title = "The Elm Architecture"
     , body =
-        [ image
-        , View.Ellie.view "3xfc59cYsd6a1"
-        , resourcesView dimensions
-            [ { name = "Architecture section of The Official Elm Guide"
-              , url = "https://guide.elm-lang.org/architecture/"
-              , kind = Resource.Article
-              }
-            , { name = "Add a -1 button to the Ellie example"
-              , url = "https://ellie-app.com/3xfc59cYsd6a1"
-              , kind = Resource.Exercise
-              }
+        \dimensions ->
+            [ image
+            , View.Ellie.view "3xfc59cYsd6a1"
+            , resourcesView dimensions
+                [ { name = "Architecture section of The Official Elm Guide"
+                  , url = "https://guide.elm-lang.org/architecture/"
+                  , kind = Resource.Article
+                  }
+                , { name = "Add a -1 button to the Ellie example"
+                  , url = "https://ellie-app.com/3xfc59cYsd6a1"
+                  , kind = Resource.Exercise
+                  }
+                ]
             ]
-        ]
     }
 
 
