@@ -7,6 +7,8 @@ import Element.Border
 import Element.Font
 import Html
 import Html.Attributes exposing (attribute, class, style)
+import Page.Learn.Architecture
+import Page.Learn.Post exposing (Post)
 import Style exposing (fontSize, fonts, palette)
 import Style.Helpers
 import View.Ellie
@@ -14,8 +16,8 @@ import View.FontAwesome
 import View.Resource as Resource
 
 
-view : Dimensions -> Element.Element msg
-view dimensions =
+view : Dimensions -> String -> Element.Element msg
+view dimensions learnPageName =
     Element.column
         [ if Dimensions.isMobile dimensions then
             Element.width (Element.fill |> Element.maximum 600)
@@ -30,20 +32,26 @@ view dimensions =
             Element.paddingXY 200 50
         , Element.spacing 30
         ]
-        [ title "The Elm Architecture"
-        , image
-        , View.Ellie.view "3xfc59cYsd6a1"
-        , resourcesView dimensions
-            [ { name = "Architecture section of The Official Elm Guide"
-              , url = "https://guide.elm-lang.org/architecture/"
-              , kind = Resource.Article
-              }
-            , { name = "Add a -1 button to the Ellie example"
-              , url = "https://ellie-app.com/3xfc59cYsd6a1"
-              , kind = Resource.Exercise
-              }
-            ]
-        ]
+        (findPostByName learnPageName
+            |> Maybe.map (\post -> post dimensions)
+            |> Maybe.map (\learnPost -> title learnPost.title :: learnPost.body)
+            |> Maybe.withDefault [ Element.text "Couldn't find page!" ]
+        )
+
+
+all =
+    [ Page.Learn.Architecture.details
+    ]
+
+
+findPostByName : String -> Maybe (Dimensions -> Post msg)
+findPostByName postName =
+    if postName == "architecture" then
+        all
+            |> List.head
+
+    else
+        Nothing
 
 
 title text =

@@ -87,6 +87,6 @@ parser =
         , Url.Parser.map Coaches (s "coaches")
         , Url.Parser.map Contact (s "contact")
         , Url.Parser.map CaseStudies (s "case-studies")
-        , Url.Parser.map (Learn (Just "architecture")) (s "learn" </> s "architecture")
+        , Url.Parser.map (\learnPostName -> Learn (Just learnPostName)) (s "learn" </> Url.Parser.string)
         , Url.Parser.map (Learn Nothing) (s "learn")
         ]

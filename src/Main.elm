@@ -205,14 +205,27 @@ mainView ({ page } as model) =
                     ]
 
             Just (Route.Learn maybeLearnTitle) ->
-                Element.column
-                    [ Element.height Element.fill
-                    , Element.alignTop
-                    , Element.width Element.fill
-                    ]
-                    [ View.Navbar.view model animationView StartAnimation
-                    , Page.Learn.view model.dimensions
-                    ]
+                case maybeLearnTitle of
+                    Just learnPostName ->
+                        Element.column
+                            [ Element.height Element.fill
+                            , Element.alignTop
+                            , Element.width Element.fill
+                            ]
+                            [ View.Navbar.view model animationView StartAnimation
+                            , Page.Learn.view model.dimensions learnPostName
+                            ]
+
+                    Nothing ->
+                        Element.column
+                            [ Element.height Element.fill
+                            , Element.alignTop
+                            , Element.width Element.fill
+                            ]
+                            [ View.Navbar.view model animationView StartAnimation
+
+                            -- TODO , Page.Learn.view model.dimensions learnPostName
+                            ]
 
             Just Route.Home ->
                 Element.column
