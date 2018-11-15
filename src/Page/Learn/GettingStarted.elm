@@ -23,6 +23,14 @@ body dimensions =
           , url = "https://guide.elm-lang.org/"
           , kind = Resource.Article
           }
+        , { name = "Making Impossible States Impossible"
+          , url = "https://www.youtube.com/watch?v=IcgmSRJHu_8"
+          , kind = Resource.Video
+          }
+        , { name = "Elm in Action"
+          , url = "https://www.manning.com/books/elm-in-action"
+          , kind = Resource.Book
+          }
         ]
     ]
 

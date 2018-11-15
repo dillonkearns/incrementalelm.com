@@ -25,6 +25,7 @@ type ResourceKind
     | App
     | Article
     | Exercise
+    | Book
 
 
 view { name, url, kind } =
@@ -45,6 +46,9 @@ view { name, url, kind } =
 
                 Exercise ->
                     ( "fas fa-pencil-alt", Element.rgb255 0 122 255, Style.fonts.title )
+
+                Book ->
+                    ( "fas fa-book", Element.rgb255 0 122 255, Style.fonts.title )
     in
     Element.newTabLink [ Element.width Element.fill ]
         { label =
