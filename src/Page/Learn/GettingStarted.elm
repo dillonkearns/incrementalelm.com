@@ -18,7 +18,7 @@ details =
 
 
 body dimensions =
-    [ Element.text "Here are my favorite resources for learning the Elm fundamentals." |> Element.el [ Element.Font.center, Element.width Element.fill ]
+    [ [ Element.text "Here are my favorite resources for learning the Elm fundamentals." ] |> Element.paragraph [ Element.Font.center, Element.width Element.fill ]
     , resourcesView dimensions
         [ { name = "The Official Elm Guide"
           , url = "https://guide.elm-lang.org/"
