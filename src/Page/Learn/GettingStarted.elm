@@ -12,7 +12,7 @@ import View.Resource as Resource
 details : Post msg
 details =
     { pageName = "getting-started"
-    , title = "Getting Strated Resources"
+    , title = "Getting Started Resources"
     , body = body
     }
 
