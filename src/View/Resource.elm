@@ -52,7 +52,7 @@ view { name, url, kind } =
     in
     Element.newTabLink [ Element.width Element.fill ]
         { label =
-            Element.row [ Element.spacing 5 ]
+            Element.row [ Element.spacing 5, Element.Font.center ]
                 [ View.FontAwesome.styledIcon iconClasses [ Element.Font.color color ]
                 , [ Element.text name ] |> Element.paragraph [ font ]
                 ]

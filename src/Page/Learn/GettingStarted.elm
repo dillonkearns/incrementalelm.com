@@ -46,13 +46,20 @@ resourcesView dimensions resources =
         , Element.padding 30
         , Element.width Element.fill
         ]
-        [ Element.column [ Element.spacing 32, Element.centerX ]
+        [ Element.column
+            [ Element.spacing 32
+            , Element.centerX
+            , Element.width Element.fill
+            ]
             (resources
                 |> List.map
                     (\resource ->
-                        Element.column [ Element.spacing 8 ]
-                            [ Resource.view resource
-                            , Element.paragraph [ Style.fontSize.small ] [ Element.text resource.description ]
+                        Element.column
+                            [ Element.spacing 8
+                            , Element.width Element.fill
+                            ]
+                            [ Resource.view resource |> Element.el [ Element.centerX ]
+                            , Element.paragraph [ Style.fontSize.small, Element.Font.center ] [ Element.text resource.description ]
                             ]
                     )
             )
