@@ -35,6 +35,11 @@ body dimensions =
           , kind = Resource.Book
           , description = "If you want to thoroughly master the fundamentals, I highly recommend working through this book!"
           }
+        , { name = "The Elm Slack"
+          , url = "https://elmlang.herokuapp.com"
+          , kind = Resource.App
+          , description = "This is a great place to get help when you're starting out, there are lots of friendly people in #beginners."
+          }
         ]
     ]
 
