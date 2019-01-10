@@ -7,8 +7,7 @@ import Html.Attributes as Attr exposing (..)
 view : Html msg
 view =
     div [ id "mc_embed_signup" ]
-        [ -- <form action="https://incrementalelm.us7.list-manage.com/subscribe/post?u=8252abc4ac213a3cdf1832799&amp;id=c68ad2ba25" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
-          Html.form
+        [ Html.form
             [ action "https://incrementalelm.us7.list-manage.com/subscribe/post?u=8252abc4ac213a3cdf1832799&amp;id=c68ad2ba25"
             , method "post"
             , id "mc-embedded-subscribe-form"
