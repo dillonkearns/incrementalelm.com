@@ -29,7 +29,7 @@ view dimensions =
         , Element.width (Element.fill |> Element.maximum 900)
         , Element.centerX
         ]
-        [ Element.html View.SignupForm.view
+        [ Element.html View.SignupForm.view |> Element.el [ Element.Border.width 1, Element.padding 20, Element.width Element.fill ]
         , paragraph
             [ Style.fontSize.title
             , Style.fonts.title

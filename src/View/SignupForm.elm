@@ -28,8 +28,7 @@ view =
                     []
                 ]
             , div [ class "clear" ]
-                [ input [ class "button", id "mc-embedded-subscribe", name "subscribe", type_ "submit", value "Subscribe" ]
-                    []
+                [ submitButton
                 ]
             ]
         ]
@@ -37,9 +36,27 @@ view =
 
 fieldGroup : { display : String, name : String } -> Html msg
 fieldGroup values =
-    div [ class "mc-field-group" ]
+    div [ class "mc-field-group", style "margin-top" "10px" ]
         [ label [ for <| "mce-" ++ values.name ] [ text values.display ]
-        , input [ type_ "email", value "", name values.name, id <| "mce-" ++ values.name ] []
+        , div [] []
+        , input
+            [ type_ "email"
+            , value ""
+            , name values.name
+            , id <| "mce-" ++ values.name
+            , style "appearance" "none"
+            , style "-webkit-appearance" "none"
+            , style "-moz-appearance" "none"
+            , style "border-radius" "4px"
+            , style "border" "2px solid #d0d0d0"
+            , style "padding-top" "10px"
+            , style "padding-left" "10px"
+            , style "padding-right" "10px"
+            , style "font-family" "Raleway"
+            , style "font-size" "20px"
+            , style "margin-top" "10px"
+            ]
+            []
         ]
 
 
@@ -88,21 +105,16 @@ closingContents =
         ]
 
 
-
--- <div class="mc-field-group input-group">
---     <strong>Interests </strong>
---     <ul><li><input type="checkbox" value="1" name="group[76553][1]" id="mce-group[76553]-76553-0"><label for="mce-group[76553]-76553-0">Elm Training</label></li>
--- <li><input type="checkbox" value="2" name="group[76553][2]" id="mce-group[76553]-76553-1"><label for="mce-group[76553]-76553-1">Redux =&gt; Elm</label></li>
--- <li><input type="checkbox" value="4" name="group[76553][4]" id="mce-group[76553]-76553-2"><label for="mce-group[76553]-76553-2">GraphQL and Elm</label></li>
--- </ul>
--- </div>
---
---
---
---
--- 	<div id="mce-responses" class="clear">
--- 		<div class="response" id="mce-error-response" style="display:none"></div>
--- 		<div class="response" id="mce-success-response" style="display:none"></div>
--- 	</div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
---     <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_8252abc4ac213a3cdf1832799_c68ad2ba25" tabindex="-1" value=""></div>
---     <div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+submitButton : Html msg
+submitButton =
+    input
+        [ class "button"
+        , id "mc-embedded-subscribe"
+        , name "subscribe"
+        , type_ "submit"
+        , value "Subscribe"
+        , style "font-size" "18px"
+        , style "font-family" "Open Sans"
+        , style "margin-top" "10px"
+        ]
+        []
