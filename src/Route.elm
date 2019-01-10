@@ -12,6 +12,7 @@ type Route
     | Intros
     | CaseStudies
     | Contact
+    | Signup
 
 
 toUrl route =
@@ -38,6 +39,9 @@ toUrl route =
 
         Contact ->
             [ "contact" ]
+
+        Signup ->
+            [ "signup" ]
     )
         |> (\path -> Url.Builder.absolute path [])
 
@@ -70,6 +74,9 @@ title maybeRoute =
 
                     Contact ->
                         "Contact Incremental Elm"
+
+                    Signup ->
+                        "Incremental Elm - Signup"
             )
         |> Maybe.withDefault "Incremental Elm - Page not found"
 
@@ -89,4 +96,5 @@ parser =
         , Url.Parser.map CaseStudies (s "case-studies")
         , Url.Parser.map (\learnPostName -> Learn (Just learnPostName)) (s "learn" </> Url.Parser.string)
         , Url.Parser.map (Learn Nothing) (s "learn")
+        , Url.Parser.map Signup (s "signup")
         ]

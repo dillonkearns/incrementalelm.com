@@ -19,6 +19,7 @@ import Page.Contact
 import Page.Home
 import Page.Intros
 import Page.Learn
+import Page.Signup
 import Route exposing (Route)
 import Style exposing (fonts, palette)
 import Svg exposing (..)
@@ -202,6 +203,16 @@ mainView ({ page } as model) =
                     ]
                     [ View.Navbar.view model animationView StartAnimation
                     , Page.CaseStudies.view model.dimensions
+                    ]
+
+            Just Route.Signup ->
+                Element.column
+                    [ Element.height Element.fill
+                    , Element.alignTop
+                    , Element.width Element.fill
+                    ]
+                    [ View.Navbar.view model animationView StartAnimation
+                    , Page.Signup.view model.dimensions
                     ]
 
             Just (Route.Learn maybeLearnTitle) ->
