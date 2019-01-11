@@ -27,23 +27,23 @@ button { fontColor, backgroundColor, size } children =
 
 
 title contents =
-    Element.el
+    Element.paragraph
         [ Style.fontSize.title
         , Style.fonts.title
         , Element.Font.center
         , Element.width Element.fill
         ]
-        contents
+        [ contents ]
 
 
 smallTitle contents =
-    Element.el
+    Element.paragraph
         [ Style.fontSize.smallTitle
         , Style.fonts.title
         , Element.Font.center
         , Element.width Element.fill
         ]
-        contents
+        [ contents ]
 
 
 link { url, content } =
