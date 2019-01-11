@@ -16,7 +16,8 @@ import View.SignupForm
 view : Dimensions -> Element.Element msg
 view dimensions =
     Element.column
-        [ Element.width Element.fill
+        [ Style.fontSize.medium
+        , Element.width Element.fill
         , Element.height Element.fill
         , Element.padding
             (if Dimensions.isMobile dimensions then
@@ -29,7 +30,8 @@ view dimensions =
         , Element.width (Element.fill |> Element.maximum 900)
         , Element.centerX
         ]
-        [ Element.html View.SignupForm.view |> Element.el [ Element.Border.width 1, Element.padding 20, Element.width Element.fill ]
+        [ preamble
+        , Element.html View.SignupForm.view |> Element.el [ Element.Border.width 1, Element.padding 20, Element.width Element.fill ]
         , paragraph
             [ Style.fontSize.title
             , Style.fonts.title
@@ -64,6 +66,20 @@ view dimensions =
                 , contactButton
                 ]
             ]
+        ]
+
+
+preamble =
+    Element.column
+        [ Element.spacing 10
+        ]
+        [ Element.text
+            """
+Mark your calendar! We're running an Elm GraphQL Fundamentals Workshop.
+  """
+        , Style.Helpers.smallTitle <| Element.text "Thursday, February 28, 2019"
+        , Style.Helpers.smallTitle <| Element.text "1:00 PM – 5:00 PM PST"
+        , paragraph [] "Signup here to grab your discount code! We'll send you the latest news about Elm and GraphQL, and you can unsubscribe any time."
         ]
 
 

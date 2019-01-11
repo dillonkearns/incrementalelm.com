@@ -1,4 +1,4 @@
-module Style.Helpers exposing (blockQuote, button, link, roundedAvatar)
+module Style.Helpers exposing (blockQuote, button, link, roundedAvatar, smallTitle, title)
 
 import Dimensions exposing (Dimensions)
 import Element exposing (Element)
@@ -24,6 +24,26 @@ button { fontColor, backgroundColor, size } children =
         , size
         ]
         children
+
+
+title contents =
+    Element.el
+        [ Style.fontSize.title
+        , Style.fonts.title
+        , Element.Font.center
+        , Element.width Element.fill
+        ]
+        contents
+
+
+smallTitle contents =
+    Element.el
+        [ Style.fontSize.smallTitle
+        , Style.fonts.title
+        , Element.Font.center
+        , Element.width Element.fill
+        ]
+        contents
 
 
 link { url, content } =
