@@ -97,4 +97,5 @@ parser =
         , Url.Parser.map (\learnPostName -> Learn (Just learnPostName)) (s "learn" </> Url.Parser.string)
         , Url.Parser.map (Learn Nothing) (s "learn")
         , Url.Parser.map Signup (s "signup")
+        , Url.Parser.map (\signupPath -> Signup) (s "signup" </> Url.Parser.string)
         ]
