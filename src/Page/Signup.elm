@@ -73,13 +73,14 @@ preamble =
     Element.column
         [ Element.spacing 10
         ]
-        [ Element.text
-            """
-Mark your calendar! We're running an Elm GraphQL Fundamentals Workshop.
-  """
+        [ Element.text "Mark your calendar! We're running an Elm GraphQL Fundamentals Workshop."
+        , Element.image [ Element.width (Element.px 250), Element.centerX, Element.paddingXY 0 25 ]
+            { src = "/assets/graphql-workshop.png"
+            , description = "GraphQL Workshop"
+            }
         , Style.Helpers.smallTitle <| Element.text "Thursday, February 28, 2019"
         , Style.Helpers.smallTitle <| Element.text "1:00 PM – 5:00 PM PST"
-        , paragraph [] "Signup here to grab your discount code! We'll send you the latest news about Elm and GraphQL, and you can unsubscribe any time."
+        , paragraph [] "Sign up here to grab your discount code! We'll send you the latest news about Elm and GraphQL, and you can unsubscribe any time."
         ]
 
 
