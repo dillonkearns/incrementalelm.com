@@ -73,7 +73,10 @@ preamble =
     Element.column
         [ Element.spacing 10
         ]
-        [ paragraph [] "Mark your calendar! We're running an Elm GraphQL Fundamentals Workshop."
+        [ Element.row []
+            [ paragraph [] "Mark your calendar! We're running an "
+            , Style.Helpers.link { url = "https://www.eventbrite.com/edit?eid=54624184406", content = " Elm GraphQL Fundamentals Workshop." }
+            ]
         , Element.image [ Element.width (Element.px 250), Element.centerX, Element.paddingXY 0 25 ]
             { src = "/assets/graphql-workshop.png"
             , description = "GraphQL Workshop"
