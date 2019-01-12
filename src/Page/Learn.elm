@@ -17,7 +17,7 @@ import View.FontAwesome
 import View.Resource as Resource
 
 
-view : Dimensions -> String -> Element.Element msg
+view : Dimensions -> Maybe String -> Element.Element msg
 view dimensions learnPageName =
     Element.column
         [ if Dimensions.isMobile dimensions then
@@ -33,13 +33,18 @@ view dimensions learnPageName =
             Element.paddingXY 200 50
         , Element.spacing 30
         ]
-        (findPostByName learnPageName
-            |> Maybe.map
-                (\learnPost ->
-                    title learnPost.title
-                        :: learnPost.body dimensions
-                )
-            |> Maybe.withDefault [ Element.text "Couldn't find page!" ]
+        (case learnPageName of
+            Just actualLearnPageName ->
+                findPostByName actualLearnPageName
+                    |> Maybe.map
+                        (\learnPost ->
+                            title learnPost.title
+                                :: learnPost.body dimensions
+                        )
+                    |> Maybe.withDefault [ Element.text "Couldn't find page!" ]
+
+            Nothing ->
+                [ Element.none ]
         )
 
 
