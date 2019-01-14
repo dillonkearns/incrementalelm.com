@@ -44,13 +44,24 @@ view dimensions learnPageName =
                     |> Maybe.withDefault [ Element.text "Couldn't find page!" ]
 
             Nothing ->
-                [ Element.none ]
+                resourcesDirectory
         )
 
 
+resourcesDirectory =
+    all
+        |> List.map
+            (\resource ->
+                Style.Helpers.sameTabLink
+                    { url = "/learn/" ++ resource.pageName
+                    , content = resource.title
+                    }
+            )
+
+
 all =
-    [ Page.Learn.Architecture.details
-    , Page.Learn.GettingStarted.details
+    [ Page.Learn.GettingStarted.details
+    , Page.Learn.Architecture.details
     ]
 
 
