@@ -1,4 +1,4 @@
-module Page.Learn exposing (view)
+module Page.Learn exposing (all, view)
 
 import Dimensions exposing (Dimensions)
 import Element exposing (Element)
