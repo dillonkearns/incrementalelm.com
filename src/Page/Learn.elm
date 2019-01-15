@@ -50,7 +50,13 @@ learnPostView :
     -> List (Element msg)
 learnPostView dimensions learnPost =
     title learnPost.title
-        :: learnPost.body dimensions
+        :: (learnPost.body dimensions
+                ++ [ learnPost.resources.title
+                        |> Maybe.map title
+                        |> Maybe.withDefault Element.none
+                   , newResourcesView learnPost.resources.items
+                   ]
+           )
 
 
 resourcesDirectory =
@@ -94,6 +100,33 @@ resourcesView dimensions resources =
         , Element.column [ Element.spacing 16, Element.centerX ]
             (resources |> List.map Resource.view)
         ]
+
+
+newResourcesView resources =
+    Element.column
+        [ Element.spacing 16
+        , Element.centerX
+        , Element.padding 30
+        , Element.width Element.fill
+        ]
+        (resources
+            |> List.map
+                (\resource ->
+                    case resource.description of
+                        Nothing ->
+                            Resource.view resource
+
+                        Just description ->
+                            Element.column
+                                [ Element.spacing 8
+                                , Element.width Element.fill
+                                , Element.paddingXY 0 16
+                                ]
+                                [ Resource.view resource
+                                , Element.paragraph [ Style.fontSize.small, Element.Font.center ] [ Element.text description ]
+                                ]
+                )
+        )
 
 
 image =

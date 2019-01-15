@@ -9,5 +9,5 @@ type alias Post msg =
     { pageName : String
     , title : String
     , body : Dimensions -> List (Element msg)
-    , resources : List Resource
+    , resources : { title : Maybe String, items : List Resource }
     }
