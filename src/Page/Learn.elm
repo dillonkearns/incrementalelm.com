@@ -16,7 +16,7 @@ import Style exposing (fontSize, fonts, palette)
 import Style.Helpers
 import View.Ellie
 import View.FontAwesome
-import View.Resource as Resource
+import View.Resource as Resource exposing (Resource)
 
 
 view : Dimensions -> Maybe String -> Element.Element msg
@@ -74,6 +74,7 @@ parsePostBody markup =
            )
 
 
+resourcesDirectory : List (Element msg)
 resourcesDirectory =
     all
         |> List.map
@@ -99,6 +100,7 @@ findPostByName postName =
         |> List.head
 
 
+title : String -> Element msg
 title text =
     [ Element.text text ]
         |> Element.paragraph
@@ -109,14 +111,9 @@ title text =
             ]
 
 
-resourcesView dimensions resources =
-    Element.column [ Element.spacing 32, Element.centerX ]
-        [ title "Further Reading and Exercises"
-        , Element.column [ Element.spacing 16, Element.centerX ]
-            (resources |> List.map Resource.view)
-        ]
-
-
+newResourcesView :
+    List Resource
+    -> Element msg
 newResourcesView resources =
     Element.column
         [ Element.spacing 16
@@ -142,10 +139,3 @@ newResourcesView resources =
                                 ]
                 )
         )
-
-
-image =
-    Element.image [ Element.width (Element.fill |> Element.maximum 600), Element.centerX ]
-        { src = "/assets/architecture.jpg"
-        , description = "The Elm Architecture"
-        }
