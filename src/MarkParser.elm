@@ -30,7 +30,7 @@ document =
                 , icon = Mark.Default.listIcon
                 }
                 defaultText
-            , Mark.Default.image [ Element.width (Element.fill |> Element.maximum 600), Element.centerX ]
+            , image
             , ellie
             , Mark.Default.monospace
                 [ Element.spacing 5
@@ -46,6 +46,23 @@ document =
             , Mark.map (\viewEls model -> Element.paragraph [] (viewEls model)) defaultText
             ]
         )
+
+
+image : Mark.Block (model -> Element msg)
+image =
+    Mark.record2 "Image"
+        (\src description model ->
+            Element.image
+                [ Element.width (Element.fill |> Element.maximum 600)
+                , Element.centerX
+                ]
+                { src = src
+                , description = description
+                }
+                |> Element.el [ Element.centerX ]
+        )
+        (Mark.field "src" Mark.string)
+        (Mark.field "description" Mark.string)
 
 
 ellie : Mark.Block (model -> Element msg)

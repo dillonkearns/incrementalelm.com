@@ -18,9 +18,7 @@ details =
     , title = "The Elm Architecture"
     , body =
         \dimensions ->
-            -- [ newBody ]
-            [ image
-            , View.Ellie.view "3xfc59cYsd6a1"
+            [ newBody
             , resourcesView dimensions
                 [ { name = "Architecture section of The Official Elm Guide"
                   , url = "https://guide.elm-lang.org/architecture/"
@@ -37,8 +35,7 @@ details =
 
 newBody : Element msg
 newBody =
-    """This is some opening text!
-| Image
+    """| Image
     src = /assets/architecture.jpg
     description = The Elm Architecture
 
@@ -52,8 +49,7 @@ newBody =
                         Element.text "Couldn't parse!\n"
 
                     Ok element ->
-                        [ element identity ]
-                            |> Element.paragraph [ Element.width Element.fill ]
+                        element identity
            )
 
 
