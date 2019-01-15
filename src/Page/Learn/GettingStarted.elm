@@ -9,11 +9,11 @@ import View.Ellie
 import View.Resource as Resource exposing (Resource)
 
 
-details : Post msg
+details : Post
 details =
     { pageName = "getting-started"
     , title = "Getting Started Resources"
-    , body = body
+    , body = "Here are my favorite resources for learning the Elm fundamentals."
     , resources =
         { title = Nothing
         , items =
@@ -40,9 +40,3 @@ details =
             ]
         }
     }
-
-
-body dimensions =
-    [ [ Element.text "Here are my favorite resources for learning the Elm fundamentals." ]
-        |> Element.paragraph [ Element.Font.center, Element.width Element.fill ]
-    ]

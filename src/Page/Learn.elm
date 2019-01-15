@@ -7,6 +7,8 @@ import Element.Border
 import Element.Font
 import Html
 import Html.Attributes exposing (attribute, class, style)
+import Mark
+import MarkParser
 import Page.Learn.Architecture
 import Page.Learn.GettingStarted
 import Page.Learn.Post exposing (Post)
@@ -46,16 +48,29 @@ view dimensions learnPageName =
 
 learnPostView :
     Dimensions
-    -> Post msg
+    -> Post
     -> List (Element msg)
 learnPostView dimensions learnPost =
-    title learnPost.title
-        :: (learnPost.body dimensions
-                ++ [ learnPost.resources.title
-                        |> Maybe.map title
-                        |> Maybe.withDefault Element.none
-                   , newResourcesView learnPost.resources.items
-                   ]
+    [ title learnPost.title
+    , parsePostBody learnPost.body
+    , learnPost.resources.title
+        |> Maybe.map title
+        |> Maybe.withDefault Element.none
+    , newResourcesView learnPost.resources.items
+    ]
+
+
+parsePostBody : String -> Element msg
+parsePostBody markup =
+    markup
+        |> Mark.parse MarkParser.document
+        |> (\result ->
+                case result of
+                    Err message ->
+                        Element.text "Couldn't parse!\n"
+
+                    Ok element ->
+                        element identity
            )
 
 
@@ -70,14 +85,14 @@ resourcesDirectory =
             )
 
 
-all : List (Post msg)
+all : List Post
 all =
     [ Page.Learn.GettingStarted.details
     , Page.Learn.Architecture.details
     ]
 
 
-findPostByName : String -> Maybe (Post msg)
+findPostByName : String -> Maybe Post
 findPostByName postName =
     all
         |> List.filter (\post -> post.pageName == postName)

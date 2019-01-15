@@ -12,14 +12,18 @@ import View.Ellie
 import View.Resource as Resource
 
 
-details : Post msg
+details : Post
 details =
     { pageName = "architecture"
     , title = "The Elm Architecture"
     , body =
-        \dimensions ->
-            [ newBody
-            ]
+        """| Image
+    src = /assets/architecture.jpg
+    description = The Elm Architecture
+
+
+| Ellie
+    3xfc59cYsd6a1"""
     , resources =
         { title = Just "Further Reading and Exercises"
         , items =
@@ -36,23 +40,3 @@ details =
             ]
         }
     }
-
-
-newBody : Element msg
-newBody =
-    """| Image
-    src = /assets/architecture.jpg
-    description = The Elm Architecture
-
-
-| Ellie
-    3xfc59cYsd6a1"""
-        |> Mark.parse MarkParser.document
-        |> (\result ->
-                case result of
-                    Err message ->
-                        Element.text "Couldn't parse!\n"
-
-                    Ok element ->
-                        element identity
-           )

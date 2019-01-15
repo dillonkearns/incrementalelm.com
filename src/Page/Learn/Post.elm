@@ -5,9 +5,9 @@ import Element exposing (Element)
 import View.Resource exposing (Resource)
 
 
-type alias Post msg =
+type alias Post =
     { pageName : String
     , title : String
-    , body : Dimensions -> List (Element msg)
+    , body : String
     , resources : { title : Maybe String, items : List Resource }
     }

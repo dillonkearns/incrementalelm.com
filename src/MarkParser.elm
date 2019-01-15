@@ -20,7 +20,11 @@ document =
     in
     Mark.document
         (\children model ->
-            Element.textColumn [ Element.width Element.fill, Element.centerX ]
+            Element.textColumn
+                [ Element.width Element.fill
+                , Element.centerX
+                , Font.center
+                ]
                 (List.map (\view -> view model) children)
         )
         (Mark.manyOf
