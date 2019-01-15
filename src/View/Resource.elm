@@ -16,6 +16,7 @@ type alias Resource =
     { name : String
     , url : String
     , kind : ResourceKind
+    , description : Maybe String
     }
 
 

@@ -30,6 +30,18 @@ details =
                   }
                 ]
             ]
+    , resources =
+        [ { name = "Architecture section of The Official Elm Guide"
+          , url = "https://guide.elm-lang.org/architecture/"
+          , kind = Resource.Article
+          , description = Nothing
+          }
+        , { name = "Add a -1 button to the Ellie example"
+          , url = "https://ellie-app.com/3xfc59cYsd6a1"
+          , kind = Resource.Exercise
+          , description = Nothing
+          }
+        ]
     }
 
 

@@ -36,16 +36,21 @@ view dimensions learnPageName =
         (case learnPageName of
             Just actualLearnPageName ->
                 findPostByName actualLearnPageName
-                    |> Maybe.map
-                        (\learnPost ->
-                            title learnPost.title
-                                :: learnPost.body dimensions
-                        )
+                    |> Maybe.map (learnPostView dimensions)
                     |> Maybe.withDefault [ Element.text "Couldn't find page!" ]
 
             Nothing ->
                 resourcesDirectory
         )
+
+
+learnPostView :
+    Dimensions
+    -> Post msg
+    -> List (Element msg)
+learnPostView dimensions learnPost =
+    title learnPost.title
+        :: learnPost.body dimensions
 
 
 resourcesDirectory =
@@ -59,6 +64,7 @@ resourcesDirectory =
             )
 
 
+all : List (Post msg)
 all =
     [ Page.Learn.GettingStarted.details
     , Page.Learn.Architecture.details
