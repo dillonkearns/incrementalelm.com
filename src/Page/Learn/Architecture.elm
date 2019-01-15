@@ -3,6 +3,9 @@ module Page.Learn.Architecture exposing (details)
 import Dimensions exposing (Dimensions)
 import Element exposing (Element)
 import Element.Font
+import Mark
+import Mark.Default
+import MarkParser
 import Page.Learn.Post exposing (Post)
 import Style
 import View.Ellie
@@ -15,6 +18,7 @@ details =
     , title = "The Elm Architecture"
     , body =
         \dimensions ->
+            -- [ newBody ]
             [ image
             , View.Ellie.view "3xfc59cYsd6a1"
             , resourcesView dimensions
@@ -29,6 +33,28 @@ details =
                 ]
             ]
     }
+
+
+newBody : Element msg
+newBody =
+    """This is some opening text!
+| Image
+    src = /assets/architecture.jpg
+    description = The Elm Architecture
+
+
+| Ellie
+    3xfc59cYsd6a1"""
+        |> Mark.parse MarkParser.document
+        |> (\result ->
+                case result of
+                    Err message ->
+                        Element.text ("Couldn't parse!\n" ++ Debug.toString message)
+
+                    Ok element ->
+                        [ element identity ]
+                            |> Element.paragraph [ Element.width Element.fill ]
+           )
 
 
 resourcesView dimensions resources =

@@ -12,11 +12,13 @@
             "elm/svg": "1.0.0",
             "elm/time": "1.0.0",
             "elm/url": "1.0.0",
+            "mdgriffith/elm-markup": "2.0.5",
             "mdgriffith/elm-style-animation": "4.0.0",
             "mdgriffith/elm-ui": "1.1.0"
         },
         "indirect": {
             "elm/json": "1.0.0",
+            "elm/parser": "1.1.0",
             "elm/virtual-dom": "1.0.0"
         }
     },
