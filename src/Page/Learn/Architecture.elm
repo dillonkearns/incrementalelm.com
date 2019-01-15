@@ -49,7 +49,7 @@ newBody =
         |> (\result ->
                 case result of
                     Err message ->
-                        Element.text ("Couldn't parse!\n" ++ Debug.toString message)
+                        Element.text "Couldn't parse!\n"
 
                     Ok element ->
                         [ element identity ]
