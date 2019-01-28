@@ -39,7 +39,6 @@ links =
     [ { name = "Free Intro", route = Route.Intros }
     , { name = "Case Studies", route = Route.CaseStudies }
     , { name = "Coaches", route = Route.Coaches }
-    , { name = "Articles", route = Route.Home }
     , { name = "Learn Elm", route = Route.Learn Nothing }
     ]
 
