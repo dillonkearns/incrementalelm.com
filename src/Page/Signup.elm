@@ -13,8 +13,8 @@ import View.FontAwesome
 import View.SignupForm
 
 
-view : Dimensions -> Element.Element msg
-view dimensions =
+view : Maybe String -> Dimensions -> Element.Element msg
+view maybeReferenceId dimensions =
     Element.column
         [ Style.fontSize.medium
         , Element.width Element.fill
@@ -31,7 +31,7 @@ view dimensions =
         , Element.centerX
         ]
         [ preamble
-        , Element.html View.SignupForm.view |> Element.el [ Element.Border.width 1, Element.padding 20, Element.width Element.fill ]
+        , View.SignupForm.view maybeReferenceId |> Element.html |> Element.el [ Element.Border.width 1, Element.padding 20, Element.width Element.fill ]
         , paragraph
             [ Style.fontSize.title
             , Style.fonts.title

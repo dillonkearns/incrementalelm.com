@@ -205,14 +205,14 @@ mainView ({ page } as model) =
                     , Page.CaseStudies.view model.dimensions
                     ]
 
-            Just Route.Signup ->
+            Just (Route.Signup { maybeReferenceId }) ->
                 Element.column
                     [ Element.height Element.fill
                     , Element.alignTop
                     , Element.width Element.fill
                     ]
                     [ View.Navbar.view model animationView StartAnimation
-                    , Page.Signup.view model.dimensions
+                    , Page.Signup.view maybeReferenceId model.dimensions
                     ]
 
             Just (Route.Learn maybeLearnTitle) ->

@@ -4,8 +4,8 @@ import Html exposing (..)
 import Html.Attributes as Attr exposing (..)
 
 
-view : Html msg
-view =
+view : Maybe String -> Html msg
+view maybeReferenceId =
     div [ id "mc_embed_signup" ]
         [ Html.form
             [ action "https://incrementalelm.us7.list-manage.com/subscribe/post?u=8252abc4ac213a3cdf1832799&amp;id=c68ad2ba25"
@@ -20,6 +20,7 @@ view =
                 [ fieldGroup { name = "EMAIL", display = "Email Address" }
                 , fieldGroup { name = "FNAME", display = "First Name" }
                 , fieldGroup { name = "LNAME", display = "Last Name" }
+                , fieldGroup_ { hidden = True, defaultValue = maybeReferenceId, display = "Reference ID", name = "REFERENCE" }
                 ]
             , mailchimpGroups
             , closingContents
@@ -36,14 +37,31 @@ view =
 
 fieldGroup : { display : String, name : String } -> Html msg
 fieldGroup values =
-    div [ class "mc-field-group", style "margin-top" "10px" ]
-        [ label [ for <| "mce-" ++ values.name ] [ text values.display ]
+    fieldGroup_
+        { hidden = False
+        , defaultValue = Nothing
+        , display = values.display
+        , name = values.name
+        }
+
+
+fieldGroup_ : { hidden : Bool, defaultValue : Maybe String, display : String, name : String } -> Html msg
+fieldGroup_ options =
+    div
+        [ class "mc-field-group"
+        , if options.hidden then
+            style "display" "none"
+
+          else
+            style "margin-top" "10px"
+        ]
+        [ label [ for <| "mce-" ++ options.name ] [ text options.display ]
         , div [] []
         , input
             [ type_ "email"
-            , value ""
-            , name values.name
-            , id <| "mce-" ++ values.name
+            , options.defaultValue |> Maybe.withDefault "" |> value
+            , name options.name
+            , id <| "mce-" ++ options.name
             , style "appearance" "none"
             , style "-webkit-appearance" "none"
             , style "-moz-appearance" "none"

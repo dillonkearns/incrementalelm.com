@@ -12,7 +12,7 @@ type Route
     | Intros
     | CaseStudies
     | Contact
-    | Signup
+    | Signup { maybeReferenceId : Maybe String }
 
 
 toUrl route =
@@ -40,7 +40,7 @@ toUrl route =
         Contact ->
             [ "contact" ]
 
-        Signup ->
+        Signup _ ->
             [ "signup" ]
     )
         |> (\path -> Url.Builder.absolute path [])
@@ -75,7 +75,7 @@ title maybeRoute =
                     Contact ->
                         "Contact Incremental Elm"
 
-                    Signup ->
+                    Signup _ ->
                         "Incremental Elm - Signup"
             )
         |> Maybe.withDefault "Incremental Elm - Page not found"
@@ -96,6 +96,7 @@ parser =
         , Url.Parser.map CaseStudies (s "case-studies")
         , Url.Parser.map (\learnPostName -> Learn (Just learnPostName)) (s "learn" </> Url.Parser.string)
         , Url.Parser.map (Learn Nothing) (s "learn")
-        , Url.Parser.map Signup (s "signup")
-        , Url.Parser.map (\signupPath -> Signup) (s "signup" </> Url.Parser.string)
+        , Url.Parser.map (Signup { maybeReferenceId = Nothing }) (s "signup")
+        , Url.Parser.map (\signupPath -> Signup { maybeReferenceId = Nothing }) (s "signup" </> Url.Parser.string)
+        , Url.Parser.map (\signupPath referenceId -> Signup { maybeReferenceId = Just referenceId }) (s "signup" </> Url.Parser.string </> Url.Parser.string)
         ]
