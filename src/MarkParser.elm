@@ -24,6 +24,7 @@ document =
                 [ Element.width Element.fill
                 , Element.centerX
                 , Font.center
+                , Element.spacing 30
                 ]
                 (List.map (\view -> view model) children)
         )
@@ -44,6 +45,7 @@ document =
                 , Border.rounded 2
                 , Font.size 16
                 , Style.fonts.code
+                , Font.alignLeft
                 ]
 
             -- Toplevel Text
@@ -78,7 +80,7 @@ ellie =
 
 listStyles : List Int -> List (Element.Attribute msg)
 listStyles cursor =
-    case List.length cursor of
+    (case List.length cursor of
         0 ->
             -- top level element
             [ Element.spacing 16 ]
@@ -91,3 +93,5 @@ listStyles cursor =
 
         _ ->
             [ Element.spacing 8 ]
+    )
+        ++ [ Font.alignLeft ]
