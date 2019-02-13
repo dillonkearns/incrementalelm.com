@@ -23,7 +23,6 @@ document =
             Element.textColumn
                 [ Element.width Element.fill
                 , Element.centerX
-                , Font.center
                 , Element.spacing 30
                 ]
                 (List.map (\view -> view model) children)
