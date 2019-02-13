@@ -2,7 +2,6 @@ port module ValidateMarkup exposing (main)
 
 import Mark
 import MarkParser
-import Page.Learn
 import Page.Learn.Post exposing (Post)
 
 
@@ -36,7 +35,7 @@ markupResult =
 
 markupErrors : List String
 markupErrors =
-    Page.Learn.all
+    Page.Learn.Post.all
         |> List.filterMap
             (\post ->
                 case post.body |> Mark.parse MarkParser.document of

@@ -1,4 +1,4 @@
-module Page.Learn exposing (all, view)
+module Page.Learn exposing (view)
 
 import Dimensions exposing (Dimensions)
 import Element exposing (Element)
@@ -9,8 +9,6 @@ import Html
 import Html.Attributes exposing (attribute, class, style)
 import Mark
 import MarkParser
-import Page.Learn.Architecture
-import Page.Learn.GettingStarted
 import Page.Learn.Post exposing (Post)
 import Style exposing (fontSize, fonts, palette)
 import Style.Helpers
@@ -76,7 +74,7 @@ parsePostBody markup =
 
 resourcesDirectory : List (Element msg)
 resourcesDirectory =
-    all
+    Page.Learn.Post.all
         |> List.map
             (\resource ->
                 Style.Helpers.sameTabLink
@@ -86,16 +84,9 @@ resourcesDirectory =
             )
 
 
-all : List Post
-all =
-    [ Page.Learn.GettingStarted.details
-    , Page.Learn.Architecture.details
-    ]
-
-
 findPostByName : String -> Maybe Post
 findPostByName postName =
-    all
+    Page.Learn.Post.all
         |> List.filter (\post -> post.pageName == postName)
         |> List.head
 
