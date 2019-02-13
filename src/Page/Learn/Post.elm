@@ -17,7 +17,7 @@ all : List Post
 all =
     [ { pageName = "getting-started"
       , title = "Getting Started Resources"
-      , body = "Here are my favorite resources for learning the Elm fundamentals."
+      , body = "Here are our favorite resources for learning the Elm fundamentals."
       , resources =
             Just
                 { title = Nothing
@@ -48,7 +48,7 @@ all =
     , { pageName = "editor-config"
       , title = "Recommended Editor Configuration"
       , body =
-            """Right now, my editor of choice is Atom because of the excellent Elm tools available in that editor.
+            """Right now, our editor of choice is Atom because of the excellent Elm tools available in that editor.
 
 
 I'm closely watching the rapid and promising improvements in {Link|the Intellij Elm plugin | url = https://github.com/klazuka/intellij-elm }. At the moment it's missing some very useful features that Atom has support for, so it gets second place for me. Also, the Vim support is decent in Intellij, and outstanding in Atom, which is a big plus for me!
@@ -75,7 +75,7 @@ You can install our recommended core Elm packages in one go by running this from
 | Header
     Atom Vim Configuration
 
-If you like Vim, Atom has the best Vim support of any editor I've used! It even has first-class integration with Atom's built-in multiple cursors feature. Here's my recommended setup:
+If you like Vim, Atom has the best Vim support of any editor I've used! It even has first-class integration with Atom's built-in multiple cursors feature. Here is our recommended setup:
 
 | Monospace
     apm install vim-mode-plus vim-mode-plus-keymaps-for-surround
