@@ -73,7 +73,7 @@ You can install our recommended core Elm packages in one go by running this from
     - {Link|elm-format package | url = https://atom.io/packages/elm-format } - Runs {Code|elm-format} on save in your editor. Requires that you've run {Code|npm install -g elm-format}.
 
 | Header
-    Vim
+    Atom Vim Configuration
 
 If you like Vim, Atom has the best Vim support of any editor I've used! It even has first-class integration with Atom's built-in multiple cursors feature. Here's my recommended setup:
 
