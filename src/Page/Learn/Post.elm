@@ -93,12 +93,12 @@ See the docs for lots of details about the features in vim-mode-plus.
       , title = "The Elm Architecture"
       , body =
             """| Image
-          src = /assets/architecture.jpg
-          description = The Elm Architecture
+    src = /assets/architecture.jpg
+    description = The Elm Architecture
 
 
-      | Ellie
-          3xfc59cYsd6a1"""
+| Ellie
+    3xfc59cYsd6a1"""
       , resources =
             Just
                 { title = Just "Further Reading and Exercises"
