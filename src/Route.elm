@@ -13,6 +13,7 @@ type Route
     | CaseStudies
     | Contact
     | Signup { maybeReferenceId : Maybe String }
+    | Feedback
 
 
 toUrl route =
@@ -42,6 +43,9 @@ toUrl route =
 
         Signup _ ->
             [ "signup" ]
+
+        Feedback ->
+            [ "feedback" ]
     )
         |> (\path -> Url.Builder.absolute path [])
 
@@ -77,6 +81,9 @@ title maybeRoute =
 
                     Signup _ ->
                         "Incremental Elm - Signup"
+
+                    Feedback ->
+                        "Incremental Elm Workshop Feedback"
             )
         |> Maybe.withDefault "Incremental Elm - Page not found"
 
@@ -91,6 +98,7 @@ parser =
     Url.Parser.oneOf
         [ Url.Parser.map Home Url.Parser.top
         , Url.Parser.map Intros (s "intro")
+        , Url.Parser.map Feedback (s "feedback")
         , Url.Parser.map Coaches (s "coaches")
         , Url.Parser.map Contact (s "contact")
         , Url.Parser.map CaseStudies (s "case-studies")

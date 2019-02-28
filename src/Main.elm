@@ -16,6 +16,7 @@ import Html exposing (Html)
 import Page.CaseStudies
 import Page.Coaches
 import Page.Contact
+import Page.Feedback
 import Page.Home
 import Page.Intros
 import Page.Learn
@@ -213,6 +214,16 @@ mainView ({ page } as model) =
                     ]
                     [ View.Navbar.view model animationView StartAnimation
                     , Page.Signup.view maybeReferenceId model.dimensions
+                    ]
+
+            Just Route.Feedback ->
+                Element.column
+                    [ Element.height Element.fill
+                    , Element.alignTop
+                    , Element.width Element.fill
+                    ]
+                    [ View.Navbar.view model animationView StartAnimation
+                    , Page.Feedback.view model.dimensions
                     ]
 
             Just (Route.Learn maybeLearnTitle) ->
