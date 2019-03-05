@@ -244,6 +244,16 @@ mainView ({ page } as model) =
                     , Element.width Element.fill
                     ]
                     (View.Navbar.view model animationView StartAnimation
+                        :: Page.Home.view model.dimensions
+                    )
+
+            Just Route.HomeOld ->
+                Element.column
+                    [ Element.height Element.shrink
+                    , Element.alignTop
+                    , Element.width Element.fill
+                    ]
+                    (View.Navbar.view model animationView StartAnimation
                         :: Page.HomeOld.view model.dimensions
                     )
 

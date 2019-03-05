@@ -6,7 +6,8 @@ import View.MenuBar
 
 
 type Route
-    = Home
+    = HomeOld
+    | Home
     | Coaches
     | Learn (Maybe String)
     | Intros
@@ -19,6 +20,9 @@ type Route
 toUrl route =
     (case route of
         Home ->
+            []
+
+        HomeOld ->
             []
 
         Coaches ->
@@ -59,6 +63,9 @@ title maybeRoute =
                     Home ->
                         "Incremental Elm Consulting"
 
+                    HomeOld ->
+                        "Incremental Elm Consulting"
+
                     Coaches ->
                         "Incremental Elm Coaches"
 
@@ -96,7 +103,8 @@ parse url =
 parser : Url.Parser.Parser (Route -> a) a
 parser =
     Url.Parser.oneOf
-        [ Url.Parser.map Home Url.Parser.top
+        [ Url.Parser.map HomeOld Url.Parser.top
+        , Url.Parser.map Home (s "new")
         , Url.Parser.map Intros (s "intro")
         , Url.Parser.map Feedback (s "feedback")
         , Url.Parser.map Coaches (s "coaches")
