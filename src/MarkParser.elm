@@ -1,4 +1,4 @@
-module MarkParser exposing (document)
+module MarkParser exposing (document, parse)
 
 import Element exposing (Element)
 import Element.Background as Background
@@ -10,6 +10,10 @@ import Mark exposing (Document)
 import Mark.Default
 import Style
 import View.Ellie
+
+
+parse =
+    Mark.parse document
 
 
 document : Mark.Document (model -> Element msg)
@@ -28,7 +32,7 @@ document =
                 (List.map (\view -> view model) children)
         )
         (Mark.manyOf
-            [ Mark.Default.header [ Font.size 36 ] defaultText
+            [ Mark.Default.header [ Font.size 36, Font.center ] defaultText
             , Mark.Default.list
                 { style = listStyles
                 , icon = Mark.Default.listIcon

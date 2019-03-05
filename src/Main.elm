@@ -18,6 +18,7 @@ import Page.Coaches
 import Page.Contact
 import Page.Feedback
 import Page.Home
+import Page.HomeOld
 import Page.Intros
 import Page.Learn
 import Page.Signup
@@ -243,7 +244,7 @@ mainView ({ page } as model) =
                     , Element.width Element.fill
                     ]
                     (View.Navbar.view model animationView StartAnimation
-                        :: Page.Home.view model.dimensions
+                        :: Page.HomeOld.view model.dimensions
                     )
 
             Just Route.Contact ->

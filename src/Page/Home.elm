@@ -7,272 +7,54 @@ import Element.Border
 import Element.Font
 import Html
 import Html.Attributes exposing (attribute, class, style)
+import MarkParser
 import Style exposing (fontSize, fonts, palette)
 import Style.Helpers
 import View.FontAwesome
 
 
-wrappedText contents =
-    Element.paragraph [] [ Element.text contents ]
-
-
-bulletPoint content =
-    "→ "
-        ++ content
-        |> wrappedText
-        |> Element.el
-            [ fonts.body
-            , fontSize.body
-            ]
-
-
 view : Dimensions -> List (Element.Element msg)
 view dimensions =
-    [ whyElmSection
-    , whyIncrementalSection
-    , servicesSection dimensions
-    , contactSection
-    ]
+    [ parsedMarkup dimensions ]
 
 
-contactSection =
-    Element.column
-        [ Background.color palette.highlight
-        , Element.height (Element.shrink |> Element.minimum 300)
-        , Element.width Element.fill
-        , Html.Attributes.id "contact" |> Element.htmlAttribute
-        ]
-        [ Element.el
-            [ Element.Font.color palette.bold
-            , Element.centerX
-            , fontSize.title
-            , fonts.body
-            , Element.padding 30
-            ]
-            ("Get in touch"
-                |> wrappedText
-                |> Element.el
-                    [ fonts.title
-                    , Element.centerX
-                    , Element.Font.center
-                    , Element.Font.color palette.mainBackground
-                    ]
-            )
-        , contactButton
-        ]
+parsedMarkup dimensions =
+    """| Header
+    Stop Learning Elm Best Practices */The Hard Way/*
 
+We've been down this path so you don't have to. And we have the proven training material and coding techniques to put your team on the fast track to writing code like Elm Experts.
 
-contactButton =
-    Element.link
-        [ Element.centerX
-        ]
-        { url =
-            "mailto:info@incrementalelm.com"
-        , label =
-            Style.Helpers.button
-                { fontColor = .mainBackground
-                , backgroundColor = .bold
-                , size = fontSize.body
-                }
-                [ envelopeIcon |> Element.el []
-                , Element.text "info@incrementalelm.com"
-                ]
-        }
+Give your team lead a break from researching "the best way to do X in Elm", and preparing learning sessions on the basics for the rest of the team. That's what we're here for! We can get your team "thinking in Elm" with our tested teaching techniques and expert guidance.
 
+Learn more about how our Elm Developer Support Packages can save your team time and help you deliver on Elm's promise of insanely reliable, easy to maintain applications. Or check out the Incremental Elm Handbook for a condensed version of the techniques that Elm Masters use intuitively to speed through building up Elm code with ease (the first chapter is free!).
 
-envelopeIcon =
-    View.FontAwesome.icon "far fa-envelope"
+"""
+        |> parseMarkup
+        |> Element.el
+            [ if Dimensions.isMobile dimensions then
+                Element.width (Element.fill |> Element.maximum 600)
 
+              else
+                Element.width Element.fill
+            , Element.height Element.fill
+            , if Dimensions.isMobile dimensions then
+                Element.padding 20
 
-servicesSection dimensions =
-    Element.column
-        [ Background.color palette.main
-        , Element.height (Element.shrink |> Element.minimum 300)
-        , Element.width Element.fill
-        ]
-        [ Element.column
-            [ Element.Font.color palette.bold
-            , Element.centerY
-            , Element.width Element.fill
-            , fontSize.title
-            , fonts.body
-            , Element.spacing 25
-            , Element.padding 30
-            ]
-            [ "Services"
-                |> wrappedText
-                |> Element.el
-                    [ fonts.title
-                    , Element.centerX
-                    , Element.Font.center
-                    ]
-            , iterations dimensions
-            ]
-        ]
-
-
-iterations dimensions =
-    (if Dimensions.isMobile dimensions then
-        Element.column
-            [ Element.width Element.fill
-            , Element.padding 20
-            , Element.spacing 40
-            ]
-
-     else
-        Element.row
-            [ Element.spaceEvenly
-            , Element.width Element.fill
-            , Element.padding 50
-            ]
-    )
-        [ iteration 0
-            [ "Elm Fundamentals training for your team"
-            , "Ship Elm code to production in under a week"
-            , "Master The Elm Architecture"
-            , "Fundamentals of Test-Driven Development in Elm"
-            ]
-        , iteration 1
-            [ "Reuse and scaling patterns"
-            , "Advanced JavaScript interop techniques"
-            , "Choose the right Elm styling approach for your environment"
-            ]
-        , iteration 2
-            [ "Transition your codebase to a full Single-Page Elm App"
-            , "Master Elm architectural patterns"
-            ]
-        ]
-
-
-iteration iterationNumber bulletPoints =
-    [ iterationBubble iterationNumber
-    , List.map bulletPoint bulletPoints
-        |> Element.column
-            [ Element.centerX
+              else
+                Element.paddingXY 200 50
             , Element.spacing 30
             ]
-    ]
-        |> Element.column
-            [ Element.spacing 50
-            , Element.alignTop
-            , Element.width Element.fill
-            ]
 
 
-faTransform =
-    attribute "data-fa-transform"
+parseMarkup : String -> Element msg
+parseMarkup markup =
+    markup
+        |> MarkParser.parse
+        |> (\result ->
+                case result of
+                    Err message ->
+                        Element.text "Couldn't parse!\n"
 
-
-iterationBubble iterationNumber =
-    (Element.paragraph [ Element.height Element.shrink, Element.centerY ]
-        [ Element.text "Iteration "
-        , Element.text (String.fromInt iterationNumber)
-        ]
-        |> Element.el
-            [ Element.Font.color white
-            , fonts.title
-            , Element.centerX
-            , Element.centerY
-            , Element.Font.center
-            , fontSize.body
-            , Element.Font.bold
-            , Background.color palette.highlight
-            , Element.width (Element.px 150)
-            , Element.height (Element.px 150)
-            , Element.Border.rounded 10000
-            ]
-    )
-        |> Element.el [ Element.centerX ]
-
-
-whyElmSection =
-    bulletSection
-        { backgroundColor = palette.highlightBackground
-        , fontColor = Element.rgb 255 255 255
-        , headingText = "Want a highly reliable & maintainable frontend?"
-        , bulletContents =
-            [ "Zero runtime exceptions"
-            , "Rely on language guarantees instead of discipline"
-            , "Predictable code - no globals or hidden side-effects"
-            ]
-        , append =
-            Element.link
-                [ Element.centerX
-                ]
-                { url = "/case-studies"
-                , label =
-                    Style.Helpers.button
-                        { fontColor = .mainBackground
-                        , backgroundColor = .light
-                        , size = fontSize.small
-                        }
-                        [ "See Our Case Studies" |> wrappedText
-                        ]
-                }
-        }
-
-
-elementRgb red green blue =
-    Element.rgb (red / 255) (green / 255) (blue / 255)
-
-
-white =
-    elementRgb 255 255 255
-
-
-bulletSection { backgroundColor, fontColor, headingText, bulletContents, append } =
-    Element.column
-        [ Background.color backgroundColor
-        , Element.height (Element.shrink |> Element.minimum 300)
-        , Element.width Element.fill
-        ]
-        [ Element.column
-            [ Element.Font.color fontColor
-            , Element.centerY
-            , Element.width Element.fill
-            , fontSize.title
-            , fonts.body
-            , Element.spacing 25
-            , Element.padding 30
-            ]
-            (List.concat
-                [ [ headingText
-                        |> wrappedText
-                        |> Element.el
-                            [ fonts.title
-                            , Element.centerX
-                            , Element.Font.center
-                            ]
-                  ]
-                , List.map bulletPoint bulletContents
-                , [ append ]
-                ]
-            )
-        ]
-
-
-whyIncrementalSection =
-    bulletSection
-        { backgroundColor = palette.mainBackground
-        , fontColor = palette.bold
-        , headingText = "How do I start?"
-        , bulletContents =
-            [ "One tiny step at a time!"
-            , "See how Elm fits in your environment: learn the fundamentals and ship something in less than a week!"
-            , "Elm is all about reliability. Incremental Elm Consulting gets you there reliably."
-            ]
-        , append =
-            Element.link
-                [ Element.centerX
-                ]
-                { url = "/intro"
-                , label =
-                    Style.Helpers.button
-                        { fontColor = .mainBackground
-                        , backgroundColor = .highlight
-                        , size = fontSize.small
-                        }
-                        [ "Learn About Free Intro Sessions" |> wrappedText
-                        ]
-                }
-        }
+                    Ok element ->
+                        element identity
+           )
