@@ -9,6 +9,7 @@ type Route
     = HomeOld
     | Home
     | Coaches
+    | Events
     | Learn (Maybe String)
     | Intros
     | CaseStudies
@@ -50,6 +51,9 @@ toUrl route =
 
         Feedback ->
             [ "feedback" ]
+
+        Events ->
+            [ "events" ]
     )
         |> (\path -> Url.Builder.absolute path [])
 
@@ -91,6 +95,9 @@ title maybeRoute =
 
                     Feedback ->
                         "Incremental Elm Workshop Feedback"
+
+                    Events ->
+                        "Incremental Elm - Event Calendar"
             )
         |> Maybe.withDefault "Incremental Elm - Page not found"
 
@@ -106,6 +113,7 @@ parser =
         [ Url.Parser.map HomeOld Url.Parser.top
         , Url.Parser.map Home (s "new")
         , Url.Parser.map Intros (s "intro")
+        , Url.Parser.map Events (s "events")
         , Url.Parser.map Feedback (s "feedback")
         , Url.Parser.map Coaches (s "coaches")
         , Url.Parser.map Contact (s "contact")

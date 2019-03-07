@@ -16,6 +16,7 @@ import Html exposing (Html)
 import Page.CaseStudies
 import Page.Coaches
 import Page.Contact
+import Page.Events
 import Page.Feedback
 import Page.Home
 import Page.HomeOld
@@ -215,6 +216,16 @@ mainView ({ page } as model) =
                     ]
                     [ View.Navbar.view model animationView StartAnimation
                     , Page.Signup.view maybeReferenceId model.dimensions
+                    ]
+
+            Just Route.Events ->
+                Element.column
+                    [ Element.height Element.fill
+                    , Element.alignTop
+                    , Element.width Element.fill
+                    ]
+                    [ View.Navbar.view model animationView StartAnimation
+                    , Page.Events.view model.dimensions
                     ]
 
             Just Route.Feedback ->
