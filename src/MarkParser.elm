@@ -28,6 +28,7 @@ document =
                 [ Element.width Element.fill
                 , Element.centerX
                 , Element.spacing 30
+                , Font.size 15
                 ]
                 (List.map (\view -> view model) children)
         )
@@ -46,7 +47,7 @@ document =
                 , Background.color
                     (Element.rgba 0 0 0 0.04)
                 , Border.rounded 2
-                , Font.size 16
+                , Font.size 14
                 , Style.fonts.code
                 , Font.alignLeft
                 ]
