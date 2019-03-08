@@ -1,60 +1,81 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html>
-<head>
-  <!-- Global site tag (gtag.js) - Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-63981340-2"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'UA-63981340-2');
-  </script>
-
-  <title>Incremental Elm</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
-  <link href="https://cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" 
-  <style>
-    @import url('https://fonts.googleapis.com/css?family=Open+Sans|Raleway|Roboto+Mono');
-  </style>
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-  <link rel="manifest" href="/manifest.json">
-  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
-  <meta name="theme-color" content="#ffffff">
-  <script src="/elm.js"></script>
-</head>
-<body>
-  <script>
-  (function(){
-      let redirect = sessionStorage.redirect;
-      delete sessionStorage.redirect;
-      if (redirect && redirect != location.href) {
-        history.replaceState(null, null, redirect);
+  <head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=UA-63981340-2"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
       }
-    })();
-  </script>
-  <script>
-  let app = Elm.Main.init()
-  app.ports.pageChanged.subscribe(() => {
-    setTimeout(() => {
-      console.log('new page', {
-        'page_path': window.location.pathname,
-        'page_url': window.location.href,
-        'page_title': document.title
-      })
+      gtag("js", new Date());
 
-      gtag('config', 'UA-63981340-2', {
-        'page_path': window.location.pathname,
-        'page_url': window.location.href,
-        'page_title': document.title
+      gtag("config", "UA-63981340-2");
+    </script>
+
+    <title>Incremental Elm</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.2.0/css/all.css"
+      integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.2.0/css/all.css"
+      integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ"
+      crossorigin="anonymous"
+    />
+    <link
+      href="https://cdn-images.mailchimp.com/embedcode/classic-10_7.css"
+      rel="stylesheet"
+      <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="/apple-touch-icon.png"
+    />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
+    <meta name="theme-color" content="#ffffff" />
+    <script src="/elm.js"></script>
+  </head>
+  <body>
+    <script>
+      (function() {
+        let redirect = sessionStorage.redirect;
+        delete sessionStorage.redirect;
+        if (redirect && redirect != location.href) {
+          history.replaceState(null, null, redirect);
+        }
+      })();
+    </script>
+    <script>
+      let app = Elm.Main.init();
+      app.ports.pageChanged.subscribe(() => {
+        setTimeout(() => {
+          console.log("new page", {
+            page_path: window.location.pathname,
+            page_url: window.location.href,
+            page_title: document.title
+          });
+
+          gtag("config", "UA-63981340-2", {
+            page_path: window.location.pathname,
+            page_url: window.location.href,
+            page_title: document.title
+          });
+        }, 100);
       });
-    }, 100)
-  })
-</script>
-</body>
+    </script>
+  </body>
 </html>
