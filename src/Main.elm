@@ -13,9 +13,11 @@ import Element.Border
 import Element.Font
 import ElmLogo
 import Html exposing (Html)
+import Page
 import Page.CaseStudies
 import Page.Coaches
 import Page.Contact
+import Page.ElmGraphqlWorkshop
 import Page.Events
 import Page.Feedback
 import Page.Home
@@ -256,6 +258,16 @@ mainView ({ page } as model) =
                     ]
                     (View.Navbar.view model animationView StartAnimation
                         :: Page.Home.view model.dimensions
+                    )
+
+            Just (Route.CustomPage thePage) ->
+                Element.column
+                    [ Element.height Element.shrink
+                    , Element.alignTop
+                    , Element.width Element.fill
+                    ]
+                    (View.Navbar.view model animationView StartAnimation
+                        :: [ Page.view thePage model.dimensions ]
                     )
 
             Just Route.HomeOld ->

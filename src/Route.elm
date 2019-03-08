@@ -1,5 +1,6 @@
 module Route exposing (Route(..), parse, title, toUrl)
 
+import Page
 import Url.Builder
 import Url.Parser exposing ((</>), Parser, s)
 import View.MenuBar
@@ -16,6 +17,7 @@ type Route
     | Contact
     | Signup { maybeReferenceId : Maybe String }
     | Feedback
+    | CustomPage Page.Page
 
 
 toUrl route =
@@ -54,6 +56,9 @@ toUrl route =
 
         Events ->
             [ "events" ]
+
+        CustomPage page ->
+            [ page.url ]
     )
         |> (\path -> Url.Builder.absolute path [])
 
@@ -98,6 +103,9 @@ title maybeRoute =
 
                     Events ->
                         "Incremental Elm - Event Calendar"
+
+                    CustomPage page ->
+                        page.title
             )
         |> Maybe.withDefault "Incremental Elm - Page not found"
 
@@ -123,4 +131,15 @@ parser =
         , Url.Parser.map (Signup { maybeReferenceId = Nothing }) (s "signup")
         , Url.Parser.map (\signupPath -> Signup { maybeReferenceId = Nothing }) (s "signup" </> Url.Parser.string)
         , Url.Parser.map (\signupPath referenceId -> Signup { maybeReferenceId = Just referenceId }) (s "signup" </> Url.Parser.string </> Url.Parser.string)
+        , customParser
         ]
+
+
+customParser : Url.Parser.Parser (Route -> a) a
+customParser =
+    Page.all
+        |> List.map
+            (\page ->
+                Url.Parser.map (CustomPage page) (s page.url)
+            )
+        |> Url.Parser.oneOf
