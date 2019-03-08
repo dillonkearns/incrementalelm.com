@@ -17,7 +17,6 @@ import Page
 import Page.CaseStudies
 import Page.Coaches
 import Page.Contact
-import Page.ElmGraphqlWorkshop
 import Page.Events
 import Page.Feedback
 import Page.Home
