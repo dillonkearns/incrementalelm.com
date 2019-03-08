@@ -68,6 +68,8 @@ In this hands-on workshop, the author of Elm's type-safe GraphQL query builder l
 
 Over the course of this full-day workshop, we will cover everything from core GraphQL concepts, to the Elm-GraphQL library fundamentals, and finally advanced elm-graphql techniques.
 
+
+
 *Morning (1st Half)*
 
 
@@ -102,6 +104,14 @@ Over the course of this full-day workshop, we will cover everything from core Gr
     - Using custom Elm JSON decoders for your Custom Scalar Codecs
     - Advanced techniques for modularizing your API requests in Elm
 
+| Header
+    Questions?
+
+{Link|Send us an email|url = /contact} and we'll be happy to help!
+
+| Image
+    description = Elm-GraphQL Workshop
+    src = /assets/oslo-workshop1.jpg
 """
       , url = "elm-graphql-workshop"
       }
