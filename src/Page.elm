@@ -74,35 +74,35 @@ Over the course of this full-day workshop, we will cover everything from core Gr
 
 
 | List
-    - GraphQL core concepts overview
-    - Elm GraphQL Overview
-    - Making your first GraphQL query
-    - Get it compiling, then get it right
-    - Using your editor to help you build queries quickly
-    - Combining fields together
-    - Basics of modularizing queries - using Elm constructs instead of GraphQL Variables
-    - Mapping into meaningful data structures
-    - Pipelines versus map2, map3..., functions
-    - Handling polymorphic types (Interfaces and Unions)
-    - Handling errors
-    - Paginated queries
-    - What is the purpose of custom scalars in GraphQL?
-    - Using custom Elm JSON decoders for your Custom Scalars
-    - Advanced techniques for modularizing your API requests in Elm
+    #. GraphQL core concepts overview
+    #. Elm GraphQL Overview
+    #. Making your first GraphQL query
+    #. Get it compiling, then get it right
+    #. Using your editor to help you build queries quickly
+    #. Combining fields together
+    #. Basics of modularizing queries - using Elm constructs instead of GraphQL Variables
+    #. Mapping into meaningful data structures
+    #. Pipelines versus map2, map3..., functions
+    #. Handling polymorphic types (Interfaces and Unions)
+    #. Handling errors
+    #. Paginated queries
+    #. What is the purpose of custom scalars in GraphQL?
+    #. Using custom Elm JSON decoders for your Custom Scalars
+    #. Advanced techniques for modularizing your API requests in Elm
 
 *Afternoon (2nd Half)*
 
 | List
-    - Handling polymorphic types (Interfaces and Unions)
-    - Handling errors
-    - Paginated queries
-    - Dealing with real-world schema flaws
-    - Improving schemas
-    - Schema design strategies
-    - What is the purpose of custom scalars in GraphQL?
-    - Leveraging Scalars in Elm GraphQL
-    - Using custom Elm JSON decoders for your Custom Scalar Codecs
-    - Advanced techniques for modularizing your API requests in Elm
+    #. Handling polymorphic types (Interfaces and Unions)
+    #. Handling errors
+    #. Paginated queries
+    #. Dealing with real-world schema flaws
+    #. Improving schemas
+    #. Schema design strategies
+    #. What is the purpose of custom scalars in GraphQL?
+    #. Leveraging Scalars in Elm GraphQL
+    #. Using custom Elm JSON decoders for your Custom Scalar Codecs
+    #. Advanced techniques for modularizing your API requests in Elm
 
 | Header
     Questions?
