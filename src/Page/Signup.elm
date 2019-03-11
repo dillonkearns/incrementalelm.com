@@ -9,6 +9,7 @@ import Html
 import Html.Attributes exposing (attribute, class, style)
 import Style exposing (fontSize, fonts, palette)
 import Style.Helpers
+import View.DripSignupForm
 import View.FontAwesome
 import View.SignupForm
 
@@ -31,41 +32,7 @@ view maybeReferenceId dimensions =
         , Element.centerX
         ]
         [ preamble
-        , View.SignupForm.view maybeReferenceId |> Element.html |> Element.el [ Element.Border.width 1, Element.padding 20, Element.width Element.fill ]
-        , paragraph
-            [ Style.fontSize.title
-            , Style.fonts.title
-            , Element.Font.center
-            , Element.width Element.fill
-            ]
-            "Contact Incremental Elm"
-        , (if Dimensions.isMobile dimensions then
-            Element.column [ Element.spacing 50 ]
-
-           else
-            Element.row [ Element.spacing 50 ]
-          )
-            [ Element.image [ Element.width Element.fill, Element.centerX ]
-                { src = "/assets/contact.jpg"
-                , description = "Contact Image"
-                }
-            , Element.column [ Element.spacing 50 ]
-                [ Element.paragraph
-                    [ Element.width Element.fill
-                    , Style.fontSize.body
-                    , Style.fonts.body
-                    ]
-                    [ Element.text "A great way to get in touch with us is connect with us is to request "
-                    , Element.newTabLink [ Element.Font.color palette.highlight ]
-                        { url = "/coaches", label = Element.text "one of our free intro talks" }
-                    , Element.text ". This can help to get a sense of whether Elm might be a good fit for your team. You can also "
-                    , Element.newTabLink [ Element.Font.color palette.highlight ]
-                        { url = "/coaches", label = Element.text "learn more about our coaches" }
-                    , Element.text " and their conference talks and open source contributions. Or just send us a message and say hello!"
-                    ]
-                , contactButton
-                ]
-            ]
+        , View.DripSignupForm.view maybeReferenceId |> Element.html
         ]
 
 

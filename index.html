@@ -1,6 +1,86 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <style>
+      form {
+        font-family: "Open Sans", arial, sans;
+        width: 500px;
+        padding: 30px;
+        background: #ffffff;
+        margin: 50px auto;
+        box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.22);
+        -moz-box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.22);
+        -webkit-box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.22);
+      }
+      form h2 {
+        background: #4d4d4d;
+        text-transform: uppercase;
+        font-family: "Open Sans", sans-serif;
+        color: #797979;
+        font-size: 18px;
+        font-weight: 100;
+        padding: 20px;
+        margin: -30px -30px 30px -30px;
+      }
+      form input[type="text"],
+      form input[type="date"],
+      form input[type="datetime"],
+      form input[type="email"],
+      form input[type="number"],
+      form input[type="search"],
+      form input[type="time"],
+      form input[type="url"],
+      form input[type="password"],
+      form textarea,
+      form select {
+        box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        outline: none;
+        display: block;
+        width: 100%;
+        padding: 7px;
+        border: none;
+        border-bottom: 1px solid #ddd;
+        background: transparent;
+        margin-bottom: 10px;
+        font: 16px Arial, Helvetica, sans-serif;
+        height: 45px;
+      }
+      form textarea {
+        resize: none;
+        overflow: hidden;
+      }
+      form input[type="button"],
+      form input[type="submit"] {
+        -moz-box-shadow: inset 0px 1px 0px 0px #45d6d6;
+        -webkit-box-shadow: inset 0px 1px 0px 0px #45d6d6;
+        box-shadow: inset 0px 1px 0px 0px #45d6d6;
+        background-color: #2cbbbb;
+        border: 1px solid #27a0a0;
+        display: inline-block;
+        cursor: pointer;
+        color: #ffffff;
+        font-family: "Open Sans", sans-serif;
+        font-size: 14px;
+        padding: 8px 18px;
+        text-decoration: none;
+        text-transform: uppercase;
+      }
+      form input[type="submit"] {
+        background-color: rgba(0, 168, 232, 1);
+        font-family: "Raleway";
+        font-size: 20px;
+        border: none;
+        color: #fff;
+        padding: 10px 50px;
+        border-radius: 10px
+        font-weight: normal;
+      }
+      form input[type="submit"]:hover {
+        background-color: rgba(20, 188, 252, 1);
+      }
+    </style>
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script
       async
@@ -37,15 +117,6 @@
     <link
       href="https://fonts.googleapis.com/css?family=Open+Sans|Raleway|Roboto+Mono"
       rel="stylesheet"
-    />
-
-    <link
-      href="https://cdn-images.mailchimp.com/embedcode/classic-10_7.css"
-      rel="stylesheet"
-      <link
-      rel="apple-touch-icon"
-      sizes="180x180"
-      href="/apple-touch-icon.png"
     />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
