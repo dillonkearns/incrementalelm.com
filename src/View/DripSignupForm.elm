@@ -4,6 +4,7 @@ import Element exposing (Element)
 import Element.Region
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import Route
 
 
 dripAttribute =
@@ -104,8 +105,8 @@ referenceIdInput maybeReferenceId =
         ]
 
 
-view : Maybe String -> Html msg
-view maybeReferenceId =
+view : Route.SignupDetails -> Html msg
+view signupDetails =
     Html.form
         [ action "https://www.getdrip.com/forms/375406512/submissions"
         , method "post"
@@ -117,7 +118,7 @@ view maybeReferenceId =
         , emailInput
         , firstNameInput
         , lastNameInput
-        , referenceIdInput maybeReferenceId
+        , referenceIdInput signupDetails.maybeReferenceId
         , websiteField
         , div []
             [ input

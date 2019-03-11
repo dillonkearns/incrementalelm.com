@@ -7,6 +7,7 @@ import Element.Border
 import Element.Font
 import Html
 import Html.Attributes exposing (attribute, class, style)
+import Route
 import Style exposing (fontSize, fonts, palette)
 import Style.Helpers
 import View.DripSignupForm
@@ -14,8 +15,8 @@ import View.FontAwesome
 import View.SignupForm
 
 
-view : Maybe String -> Dimensions -> Element.Element msg
-view maybeReferenceId dimensions =
+view : Route.SignupDetails -> Dimensions -> Element.Element msg
+view signupDetails dimensions =
     Element.column
         [ Style.fontSize.medium
         , Element.width Element.fill
@@ -32,7 +33,7 @@ view maybeReferenceId dimensions =
         , Element.centerX
         ]
         [ preamble
-        , View.DripSignupForm.view maybeReferenceId |> Element.html
+        , View.DripSignupForm.view signupDetails |> Element.html
         ]
 
 
