@@ -1,5 +1,6 @@
 module Page.Signup exposing (view)
 
+import Dict
 import Dimensions exposing (Dimensions)
 import Element exposing (Element)
 import Element.Background as Background
@@ -32,23 +33,33 @@ view signupDetails dimensions =
         , Element.width (Element.fill |> Element.maximum 900)
         , Element.centerX
         ]
-        [ preamble
+        [ preamble signupDetails.formName
         , View.DripSignupForm.view signupDetails |> Element.html
         ]
 
 
-preamble =
-    Element.column
-        [ Element.spacing 10
-        ]
-        [ paragraph [] "Mark your calendar! We're running an Elm GraphQL Fundamentals Workshop."
-        , Element.image [ Element.width (Element.px 250), Element.centerX, Element.paddingXY 0 25 ]
-            { src = "/assets/graphql-workshop.png"
-            , description = "GraphQL Workshop"
+preamble maybeFormName =
+    maybeFormName
+        |> Maybe.andThen (\formName -> dict |> Dict.get formName)
+        |> Maybe.withDefault defaultForm
+        |> (\details ->
+                Element.text details.introContent
+           )
+
+
+defaultForm =
+    { formId = "863568508", introContent = "Sign up for my list." }
+
+
+dict =
+    Dict.fromList
+        [ ( "graphql-workshop", { formId = "375406512", introContent = "" } )
+        , ( "graphql", { formId = "375406512", introContent = "" } )
+        , ( "tiny-steps"
+          , { formId = "863568508"
+            , introContent = "Sign up here to get see our 3-minute walk-trhough video of the steps from Moving Faster with Tiny Steps in Elm!"
             }
-        , Style.Helpers.smallTitle <| Element.text "Thursday, February 28, 2019"
-        , Style.Helpers.smallTitle <| Element.text "1:00 PM – 5:00 PM PST"
-        , paragraph [] "Sign up here to grab your discount code! We'll send you the latest news about Elm and GraphQL, and you can unsubscribe any time."
+          )
         ]
 
 

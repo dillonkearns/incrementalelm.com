@@ -133,8 +133,8 @@ parser =
         , Url.Parser.map (\learnPostName -> Learn (Just learnPostName)) (s "learn" </> Url.Parser.string)
         , Url.Parser.map (Learn Nothing) (s "learn")
         , Url.Parser.map (Signup { maybeReferenceId = Nothing, formName = Nothing }) (s "signup")
-        , Url.Parser.map (\signupPath -> Signup { maybeReferenceId = Nothing, formName = Nothing }) (s "signup" </> Url.Parser.string)
-        , Url.Parser.map (\signupPath referenceId -> Signup { maybeReferenceId = Just referenceId, formName = Nothing }) (s "signup" </> Url.Parser.string </> Url.Parser.string)
+        , Url.Parser.map (\signupPath -> Signup { maybeReferenceId = Nothing, formName = Just signupPath }) (s "signup" </> Url.Parser.string)
+        , Url.Parser.map (\signupPath referenceId -> Signup { maybeReferenceId = Just referenceId, formName = Just signupPath }) (s "signup" </> Url.Parser.string </> Url.Parser.string)
         , customParser
         ]
 
