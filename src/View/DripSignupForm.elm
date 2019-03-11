@@ -91,6 +91,7 @@ lastNameInput =
         }
 
 
+referenceIdInput : Maybe String -> Html msg
 referenceIdInput maybeReferenceId =
     div [ style "display" "none", attribute "aria-hidden" "true" ]
         [ label [ for "drip-reference-id" ] [ text "Reference ID" ]
@@ -105,12 +106,12 @@ referenceIdInput maybeReferenceId =
         ]
 
 
-view : Route.SignupDetails -> Html msg
-view signupDetails =
+view : String -> { details | maybeReferenceId : Maybe String } -> Html msg
+view formId signupDetails =
     Html.form
-        [ action "https://www.getdrip.com/forms/375406512/submissions"
+        [ action <| "https://www.getdrip.com/forms/" ++ formId ++ "/submissions"
         , method "post"
-        , Html.Attributes.attribute "data-drip-embedded-form" "375406512"
+        , Html.Attributes.attribute "data-drip-embedded-form" formId
         , style "font-family" "'Open Sans'"
         ]
         [ h2 [ dripAttribute "headline", style "display" "none" ] [ text "Incremental Elm" ]

@@ -33,18 +33,23 @@ view signupDetails dimensions =
         , Element.width (Element.fill |> Element.maximum 900)
         , Element.centerX
         ]
-        [ preamble signupDetails.formName
-        , View.DripSignupForm.view signupDetails |> Element.html
-        ]
+        (signupView signupDetails)
 
 
-preamble maybeFormName =
-    maybeFormName
-        |> Maybe.andThen (\formName -> dict |> Dict.get formName)
-        |> Maybe.withDefault defaultForm
-        |> (\details ->
-                Element.text details.introContent
-           )
+signupView signupDetails =
+    let
+        form =
+            signupDetails.formName
+                |> Maybe.andThen (\formName -> dict |> Dict.get formName)
+                |> Maybe.withDefault defaultForm
+    in
+    [ preamble form
+    , View.DripSignupForm.view form.formId signupDetails |> Element.html
+    ]
+
+
+preamble form =
+    Element.text form.introContent
 
 
 defaultForm =
