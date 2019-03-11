@@ -6,69 +6,88 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 
 
-
-{-
-   <form action="https://www.getdrip.com/forms/375406512/submissions" method="post" data-drip-embedded-form="375406512">
-     <h3 data-drip-attribute="headline">Incremental Elm</h3>
-     <div data-drip-attribute="description"></div>
-       <div>
-           <label for="drip-email">Email Address</label><br />
-           <input type="email" id="drip-email" name="fields[email]" value="" />
-       </div>
-       <div>
-           <label for="drip-first-name">First</label><br />
-           <input type="text" id="drip-first-name" name="fields[first_name]" value="" />
-       </div>
-       <div>
-           <label for="drip-last-name">Last</label><br />
-           <input type="text" id="drip-last-name" name="fields[last_name]" value="" />
-       </div>
-
-
-
-
-     <div style="display: none;" aria-hidden="true">
-       <label for="website">Website</label><br />
-       <input type="text" id="website" name="website" tabindex="-1" autocomplete="false" value="" />
-     </div>
-     <div>
-       <input type="submit" value="Sign Up" data-drip-attribute="sign-up-button" />
-     </div>
-
-
-
-
-   </form>
-
--}
-
-
 dripAttribute =
     Html.Attributes.attribute "data-drip-attribute"
 
 
 emailInput =
-    div []
-        [ label [ for "drip-email" ] [ text "Email Address" ]
-        , br [] []
-        , input [ type_ "email", id "drip-email", name "fields[email]" ] []
-        ]
+    dripInput
+        { inputId = "drip-email"
+        , type_ = "email"
+        , labelText = "Email Address"
+        , name = "fields[email]"
+        , display = Show
+        , value = Nothing
+        }
 
 
 firstNameInput =
-    div []
-        [ label [ for "drip-first-name" ] [ text "First" ]
+    dripInput
+        { inputId = "drip-first-name"
+        , type_ = "text"
+        , labelText = "First"
+        , name = "fields[first_name]"
+        , display = Show
+        , value = Nothing
+        }
+
+
+dripInput details =
+    div
+        (case details.display of
+            Show ->
+                []
+
+            Hide ->
+                [ style "display" "none", attribute "aria-hidden" "true" ]
+        )
+        [ label [ for details.inputId ] [ text details.labelText ]
         , br [] []
-        , input [ type_ "text", id "drip-first-name", name "fields[first_name]" ] []
+        , input
+            ([ type_ details.type_
+             , id details.inputId
+             , name details.name
+             ]
+                |> includeValueIfPresent details.value
+            )
+            []
         ]
+
+
+includeValueIfPresent maybeValue list =
+    case maybeValue of
+        Just actualValue ->
+            value actualValue :: list
+
+        Nothing ->
+            list
+
+
+websiteField =
+    dripInput
+        { inputId = "website"
+        , type_ = "text"
+        , labelText = "Website"
+        , name = "website"
+        , display = Hide
+        , value = Just ""
+        }
+
+
+type Display
+    = Hide
+    | Show
 
 
 lastNameInput =
-    div []
-        [ label [ for "drip-last-name" ] [ text "Last" ]
-        , br [] []
-        , input [ type_ "text", id "drip-last-name", name "fields[last_name]" ] []
-        ]
+    dripInput
+        { inputId = "drip-last-name"
+        , type_ = "text"
+        , labelText = "Last"
+        , name = "fields[last_name]"
+        , display = Show
+        , value = Just ""
+        }
 
 
 referenceIdInput maybeReferenceId =
@@ -233,11 +252,3 @@ submitButton =
         , style "margin-top" "10px"
         ]
         []
-
-
-websiteField =
-    div [ style "display" "none", attribute "aria-hidden" "true" ]
-        [ label [ for "website" ] [ text "Website" ]
-        , br [] []
-        , input [ type_ "text", id "website", name "website", tabindex -1, autocomplete False, value "" ] []
-        ]
