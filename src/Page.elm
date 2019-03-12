@@ -102,9 +102,9 @@ Over the course of this full-day workshop, we will cover everything from core Gr
     #. Advanced techniques for modularizing your API requests in Elm
 
 | Header
-    Questions?
+    Questions? Feedback?
 
-{Link|Send us an email|url = /contact} and we'll be happy to help!
+We'd love to hear from you! Let us know what you think of our workshop agenda. Or {Link|send us an email|url = /contact} and we'll be happy to help! Or ping us in the #graphql channel in the {Link|Elm Slack|url = https://elmlang.herokuapp.com/}.
 
 | Image
     description = Elm-GraphQL Workshop
