@@ -83,11 +83,6 @@ Over the course of this full-day workshop, we will cover everything from core Gr
     #. Basics of modularizing queries - using Elm constructs instead of GraphQL Variables
     #. Mapping into meaningful data structures
     #. Pipelines versus map2, map3..., functions
-    #. Handling polymorphic types (Interfaces and Unions)
-    #. Handling errors
-    #. Paginated queries
-    #. What is the purpose of custom scalars in GraphQL?
-    #. Using custom Elm JSON decoders for your Custom Scalars
     #. Advanced techniques for modularizing your API requests in Elm
 
 *Afternoon (2nd Half)*
@@ -95,6 +90,7 @@ Over the course of this full-day workshop, we will cover everything from core Gr
 | List
     #. Handling polymorphic types (Interfaces and Unions)
     #. Handling errors
+    #. Getting real-time data using Subscriptions
     #. Paginated queries
     #. Dealing with real-world schema flaws
     #. Improving schemas
