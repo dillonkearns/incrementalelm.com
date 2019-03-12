@@ -46,6 +46,7 @@ parseMarkup markup =
            )
 
 
+all : List { body : String, title : String, url : String }
 all =
     [ { title = "Elm GraphQL Workshop"
       , body = """| Image
