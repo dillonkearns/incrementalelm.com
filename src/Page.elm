@@ -1,4 +1,4 @@
-module Page exposing (Page, all, view)
+module Page exposing (Page, all)
 
 import Dimensions exposing (Dimensions)
 import Element exposing (Element)
@@ -10,40 +10,6 @@ type alias Page =
     , body : String
     , url : String
     }
-
-
-view : Page -> Dimensions -> Element msg
-view page dimensions =
-    page.body
-        |> parseMarkup
-        |> Element.el
-            [ if Dimensions.isMobile dimensions then
-                Element.width (Element.fill |> Element.maximum 600)
-
-              else
-                Element.width Element.fill
-            , Element.height Element.fill
-            , if Dimensions.isMobile dimensions then
-                Element.padding 20
-
-              else
-                Element.paddingXY 200 50
-            , Element.spacing 30
-            ]
-
-
-parseMarkup : String -> Element msg
-parseMarkup markup =
-    markup
-        |> MarkParser.parse
-        |> (\result ->
-                case result of
-                    Err message ->
-                        Element.text "Couldn't parse!\n"
-
-                    Ok element ->
-                        element identity
-           )
 
 
 all : List { body : String, title : String, url : String }
