@@ -18,6 +18,7 @@ view dimensions =
     [ parsedMarkup dimensions ]
 
 
+parsedMarkup : Dimensions -> Element msg
 parsedMarkup dimensions =
     """| Header
     Stop Learning Elm Best Practices */The Hard Way/*
