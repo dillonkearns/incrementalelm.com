@@ -101,11 +101,14 @@ textWith validRelativeUrls config =
 resources : Mark.Block (model -> Element msg)
 resources =
     Mark.block "Resources"
-        (\badges model ->
-            Element.row
-                [ Element.spacing 18
+        (\resourceElements model ->
+            Element.column
+                [ Element.spacing 16
+                , Element.centerX
+                , Element.padding 30
+                , Element.width Element.fill
                 ]
-                badges
+                resourceElements
         )
         (Mark.manyOf
             [ Mark.record3 "Resource"
