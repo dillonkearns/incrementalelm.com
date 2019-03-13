@@ -24,7 +24,7 @@ document : Mark.Document (model -> Element msg)
 document =
     let
         defaultText =
-            Mark.Default.textWith Mark.Default.defaultTextStyle
+            textWith Mark.Default.defaultTextStyle
     in
     Mark.document
         (\children model ->
@@ -62,6 +62,85 @@ document =
             , Mark.map (\viewEls model -> Element.paragraph [] (viewEls model)) defaultText
             ]
         )
+
+
+textWith :
+    { code : List (Element.Attribute msg)
+    , link : List (Element.Attribute msg)
+    , inlines : List (Mark.Inline (model -> Element msg))
+    , replacements : List Mark.Replacement
+    }
+    -> Mark.Block (model -> List (Element msg))
+textWith config =
+    Mark.map
+        (\els model ->
+            List.map (\view -> view model) els
+        )
+        (Mark.text
+            { view = textFragment
+            , inlines =
+                [ link config.link
+                , code config.code
+                ]
+                    ++ config.inlines
+            , replacements = config.replacements
+            }
+        )
+
+
+{-| A custom inline block for code. This is analagous to `backticks` in markdown.
+Though, style it however you'd like.
+`{Code| Here is my styled inline code block }`
+-}
+code : List (Element.Attribute msg) -> Mark.Inline (model -> Element msg)
+code style =
+    Mark.inline "Code"
+        (\txt model ->
+            Element.row style
+                (List.map (\item -> textFragment item model) txt)
+        )
+        |> Mark.inlineText
+
+
+{-| A custom inline block for links.
+`{Link|My link text|url=http://google.com}`
+-}
+link : List (Element.Attribute msg) -> Mark.Inline (model -> Element msg)
+link style =
+    Mark.inline "Link"
+        (\txt url model ->
+            Element.link style
+                { url = url
+                , label =
+                    Element.row [ Element.htmlAttribute (Html.Attributes.style "display" "inline-flex") ]
+                        (List.map (\item -> textFragment item model) txt)
+                }
+        )
+        |> Mark.inlineText
+        |> Mark.inlineString "url"
+
+
+{-| Render a text fragment.
+-}
+textFragment : Mark.Text -> model -> Element msg
+textFragment node model_ =
+    case node of
+        Mark.Text styles txt ->
+            Element.el (List.concatMap toStyles styles) (Element.text txt)
+
+
+{-| -}
+toStyles : Mark.Style -> List (Element.Attribute msg)
+toStyles style =
+    case style of
+        Mark.Bold ->
+            [ Font.bold ]
+
+        Mark.Italic ->
+            [ Font.italic ]
+
+        Mark.Strike ->
+            [ Font.strike ]
 
 
 image : Mark.Block (model -> Element msg)
