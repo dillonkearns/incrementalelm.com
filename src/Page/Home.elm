@@ -57,7 +57,7 @@ Give your team lead a break from researching "the best way to do X in Elm", and 
 parseMarkup : String -> Element msg
 parseMarkup markup =
     markup
-        |> MarkParser.parse
+        |> MarkParser.parse []
         |> (\result ->
                 case result of
                     Err message ->

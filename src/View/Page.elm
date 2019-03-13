@@ -35,7 +35,7 @@ view page dimensions =
 parseMarkup : String -> Element msg
 parseMarkup markup =
     markup
-        |> MarkParser.parse
+        |> MarkParser.parse []
         |> (\result ->
                 case result of
                     Err message ->

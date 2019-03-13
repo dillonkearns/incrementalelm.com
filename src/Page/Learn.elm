@@ -68,7 +68,7 @@ learnPostView dimensions learnPost =
 parsePostBody : String -> Element msg
 parsePostBody markup =
     markup
-        |> Mark.parse MarkParser.document
+        |> MarkParser.parse []
         |> (\result ->
                 case result of
                     Err message ->

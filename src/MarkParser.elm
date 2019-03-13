@@ -13,18 +13,23 @@ import Style
 import View.Ellie
 
 
+type alias RelativeUrl =
+    List String
+
+
 parse :
-    String
+    List RelativeUrl
+    -> String
     -> Result (List (Parser.Advanced.DeadEnd Mark.Context Mark.Problem)) (model -> Element msg)
-parse =
-    Mark.parse document
+parse validRelativeUrls =
+    Mark.parse (document validRelativeUrls)
 
 
-document : Mark.Document (model -> Element msg)
-document =
+document : List RelativeUrl -> Mark.Document (model -> Element msg)
+document validRelativeUrls =
     let
         defaultText =
-            textWith Mark.Default.defaultTextStyle
+            textWith validRelativeUrls Mark.Default.defaultTextStyle
     in
     Mark.document
         (\children model ->
@@ -65,13 +70,15 @@ document =
 
 
 textWith :
-    { code : List (Element.Attribute msg)
-    , link : List (Element.Attribute msg)
-    , inlines : List (Mark.Inline (model -> Element msg))
-    , replacements : List Mark.Replacement
-    }
+    List RelativeUrl
+    ->
+        { code : List (Element.Attribute msg)
+        , link : List (Element.Attribute msg)
+        , inlines : List (Mark.Inline (model -> Element msg))
+        , replacements : List Mark.Replacement
+        }
     -> Mark.Block (model -> List (Element msg))
-textWith config =
+textWith validRelativeUrls config =
     Mark.map
         (\els model ->
             List.map (\view -> view model) els
@@ -79,7 +86,7 @@ textWith config =
         (Mark.text
             { view = textFragment
             , inlines =
-                [ link config.link
+                [ link validRelativeUrls config.link
                 , code config.code
                 ]
                     ++ config.inlines
@@ -105,8 +112,8 @@ code style =
 {-| A custom inline block for links.
 `{Link|My link text|url=http://google.com}`
 -}
-link : List (Element.Attribute msg) -> Mark.Inline (model -> Element msg)
-link style =
+link : List RelativeUrl -> List (Element.Attribute msg) -> Mark.Inline (model -> Element msg)
+link validRelativeUrls style =
     Mark.inline "Link"
         (\txt url model ->
             Element.link style
