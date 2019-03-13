@@ -55,6 +55,7 @@ document validRelativeUrls =
             , image
             , ellie
             , resources
+            , resource |> Mark.map (\thing model -> thing)
             , Mark.Default.monospace
                 [ Element.spacing 5
                 , Element.padding 24
@@ -111,15 +112,19 @@ resources =
                 resourceElements
         )
         (Mark.manyOf
-            [ Mark.record3 "Resource"
-                (\name resourceKind url ->
-                    View.Resource.view { name = name, url = url, kind = resourceKind }
-                )
-                (Mark.field "title" Mark.string)
-                (Mark.field "icon" iconBlock)
-                (Mark.field "url" Mark.string)
+            [ resource
             ]
         )
+
+
+resource =
+    Mark.record3 "Resource"
+        (\name resourceKind url ->
+            View.Resource.view { name = name, url = url, kind = resourceKind }
+        )
+        (Mark.field "title" Mark.string)
+        (Mark.field "icon" iconBlock)
+        (Mark.field "url" Mark.string)
 
 
 iconBlock : Mark.Block View.Resource.ResourceKind
