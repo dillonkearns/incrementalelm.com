@@ -43,6 +43,8 @@ document =
                 , icon = Mark.Default.listIcon
                 }
                 defaultText
+
+            -- |> Mark.map (\item model -> [ item model ] |> Element.paragraph [ Element.width (Element.px 10) ])
             , image
             , ellie
             , Mark.Default.monospace
@@ -102,4 +104,4 @@ listStyles cursor =
         _ ->
             [ Element.spacing 8 ]
     )
-        ++ [ Font.alignLeft ]
+        ++ [ Font.alignLeft, Element.width Element.fill ]
