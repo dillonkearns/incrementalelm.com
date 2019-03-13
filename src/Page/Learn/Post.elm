@@ -98,22 +98,20 @@ See the docs for lots of details about the features in vim-mode-plus.
 
 
 | Ellie
-    3xfc59cYsd6a1"""
-      , resources =
-            Just
-                { title = Just "Further Reading and Exercises"
-                , items =
-                    [ { name = "Architecture section of The Official Elm Guide"
-                      , url = "https://guide.elm-lang.org/architecture/"
-                      , kind = Resource.Article
-                      , description = Nothing
-                      }
-                    , { name = "Add a -1 button to the Ellie example"
-                      , url = "https://ellie-app.com/3xfc59cYsd6a1"
-                      , kind = Resource.Exercise
-                      , description = Nothing
-                      }
-                    ]
-                }
+    3xfc59cYsd6a1
+
+| Header
+    Further Reading and Exercises
+
+| Resources
+    | Resource
+        title = Architecture section of The Official Elm Guide
+        url = https://guide.elm-lang.org/architecture/
+        icon = Article
+    | Resource
+        title = Add a -1 button to the Ellie example
+        url = https://ellie-app.com/3xfc59cYsd6a1
+        icon = Exercise"""
+      , resources = Nothing
       }
     ]
