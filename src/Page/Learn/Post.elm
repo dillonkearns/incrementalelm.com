@@ -9,7 +9,6 @@ type alias Post =
     { pageName : String
     , title : String
     , body : String
-    , resources : Maybe { title : Maybe String, items : List Resource }
     }
 
 
@@ -46,7 +45,6 @@ If you want to thoroughly master the fundamentals, I highly recommend working th
     icon = App
 
 This is a great place to get help when you're starting out, there are lots of friendly people in #beginners."""
-      , resources = Nothing
       }
     , { pageName = "editor-config"
       , title = "Recommended Editor Configuration"
@@ -90,7 +88,6 @@ See the docs for lots of details about the features in vim-mode-plus.
     - {Link|vim-mode-plus surround keybindings | url = https://atom.io/packages/vim-mode-plus-keymaps-for-surround }
 
 """
-      , resources = Nothing
       }
     , { pageName = "architecture"
       , title = "The Elm Architecture"
@@ -115,6 +112,5 @@ See the docs for lots of details about the features in vim-mode-plus.
         title = Add a -1 button to the Ellie example
         url = https://ellie-app.com/3xfc59cYsd6a1
         icon = Exercise"""
-      , resources = Nothing
       }
     ]

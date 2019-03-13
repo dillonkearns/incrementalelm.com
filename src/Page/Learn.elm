@@ -52,17 +52,6 @@ learnPostView dimensions learnPost =
     [ title learnPost.title
     , parsePostBody learnPost.body
     ]
-        ++ (learnPost.resources
-                |> Maybe.map
-                    (\resources ->
-                        [ resources.title
-                            |> Maybe.map title
-                            |> Maybe.withDefault Element.none
-                        , newResourcesView resources.items
-                        ]
-                    )
-                |> Maybe.withDefault []
-           )
 
 
 parsePostBody : String -> Element msg
