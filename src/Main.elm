@@ -35,7 +35,6 @@ import Url.Builder
 import Url.Parser exposing (Parser)
 import View.MenuBar
 import View.Navbar
-import View.Page
 
 
 port pageChanged : () -> Cmd msg
@@ -267,7 +266,7 @@ mainView ({ page } as model) =
                     , Element.width Element.fill
                     ]
                     (View.Navbar.view model animationView StartAnimation
-                        :: [ View.Page.view thePage model.dimensions ]
+                        :: [ Page.view thePage model.dimensions ]
                     )
 
             Just Route.HomeOld ->
