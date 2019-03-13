@@ -8,10 +8,14 @@ import Element.Region
 import Html.Attributes
 import Mark exposing (Document)
 import Mark.Default
+import Parser.Advanced
 import Style
 import View.Ellie
 
 
+parse :
+    String
+    -> Result (List (Parser.Advanced.DeadEnd Mark.Context Mark.Problem)) (model -> Element msg)
 parse =
     Mark.parse document
 
