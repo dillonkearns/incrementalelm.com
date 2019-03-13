@@ -108,20 +108,11 @@ resources =
                 badges
         )
         (Mark.manyOf
-            [ Mark.record2 "Resource"
-                (\resourceKind url ->
-                    View.Resource.view { name = "Example", url = url, kind = resourceKind }
-                 -- Element.newTabLink
-                 --     [ Font.size 36
-                 --     , Font.color (Element.rgb255 255 255 255)
-                 --     , Element.mouseOver
-                 --         [ Font.color (Element.rgb255 253 183 3)
-                 --         ]
-                 --     ]
-                 --     { url = url
-                 --     , label = View.FontAwesome.icon iconClass
-                 --     }
+            [ Mark.record3 "Resource"
+                (\name resourceKind url ->
+                    View.Resource.view { name = name, url = url, kind = resourceKind }
                 )
+                (Mark.field "title" Mark.string)
                 (Mark.field "icon" iconBlock)
                 (Mark.field "url" Mark.string)
             ]
@@ -130,7 +121,6 @@ resources =
 
 iconBlock : Mark.Block View.Resource.ResourceKind
 iconBlock =
-    -- Mark.string
     Mark.oneOf
         [ Mark.exactly "Video" View.Resource.Video
         , Mark.exactly "Library" View.Resource.Library
