@@ -11,6 +11,8 @@ import Mark.Default
 import Parser.Advanced
 import Style
 import View.Ellie
+import View.FontAwesome
+import View.Resource
 
 
 type alias RelativeUrl =
@@ -52,6 +54,7 @@ document validRelativeUrls =
             -- |> Mark.map (\item model -> [ item model ] |> Element.paragraph [ Element.width (Element.px 10) ])
             , image
             , ellie
+            , resources
             , Mark.Default.monospace
                 [ Element.spacing 5
                 , Element.padding 24
@@ -93,6 +96,49 @@ textWith validRelativeUrls config =
             , replacements = config.replacements
             }
         )
+
+
+resources : Mark.Block (model -> Element msg)
+resources =
+    Mark.block "Resources"
+        (\badges model ->
+            Element.row
+                [ Element.spacing 18
+                ]
+                badges
+        )
+        (Mark.manyOf
+            [ Mark.record2 "Resource"
+                (\resourceKind url ->
+                    View.Resource.view { name = "Example", url = url, kind = resourceKind }
+                 -- Element.newTabLink
+                 --     [ Font.size 36
+                 --     , Font.color (Element.rgb255 255 255 255)
+                 --     , Element.mouseOver
+                 --         [ Font.color (Element.rgb255 253 183 3)
+                 --         ]
+                 --     ]
+                 --     { url = url
+                 --     , label = View.FontAwesome.icon iconClass
+                 --     }
+                )
+                (Mark.field "icon" iconBlock)
+                (Mark.field "url" Mark.string)
+            ]
+        )
+
+
+iconBlock : Mark.Block View.Resource.ResourceKind
+iconBlock =
+    -- Mark.string
+    Mark.oneOf
+        [ Mark.exactly "Video" View.Resource.Video
+        , Mark.exactly "Library" View.Resource.Library
+        , Mark.exactly "App" View.Resource.App
+        , Mark.exactly "Article" View.Resource.Article
+        , Mark.exactly "Exercise" View.Resource.Exercise
+        , Mark.exactly "Book" View.Resource.Book
+        ]
 
 
 {-| A custom inline block for code. This is analagous to `backticks` in markdown.

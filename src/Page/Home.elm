@@ -34,8 +34,6 @@ Or check out my free Incremental Elm Tips to learn the tricks that Elm Masters u
 Learn more about the services I provide to help your team write Elm faster and more reliably.
 
 Give your team lead a break from researching "the best way to do X in Elm", and preparing learning sessions on the basics for the rest of the team. That's what we're here for! We can get your team "thinking in Elm" with our tested teaching techniques and expert guidance.
-
-
 """
         |> parseMarkup
         |> Element.el
@@ -61,7 +59,12 @@ parseMarkup markup =
         |> (\result ->
                 case result of
                     Err message ->
-                        Element.text "Couldn't parse!\n"
+                        -- Element.text "Couldn't parse!\n"
+                        message
+                            |> Debug.toString
+                            |> Element.text
+                            |> List.singleton
+                            |> Element.paragraph []
 
                     Ok element ->
                         element identity
