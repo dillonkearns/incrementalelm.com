@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "elm-live src/Main.elm --port 8000 --open --pushstate -- --output elm.js",
-    "validate-markup": "elm make src/ValidateMarkup.elm --output markup.js && node validate-markup.js",
-    "build": "npm run validate-markup && elm make src/Main.elm --optimize --output dist/elm.js && elm-minify dist/elm.js && cp -r index.html 404.html CNAME assets dist"
+    "build": "elm make src/Main.elm --optimize --output dist/elm.js && elm-minify dist/elm.js && cp -r index.html 404.html CNAME assets dist"
   },
   "keywords": [],
   "author": "",
