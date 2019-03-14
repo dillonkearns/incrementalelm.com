@@ -20,18 +20,26 @@ all =
             """| Header
     Stop Learning Elm Best Practices */The Hard Way/*
 
+You've got the hang of Elm, but you're still wondering:
 
-Goal: teach you the techniques that will take you from getting by to expert with Elm.
+| List
+    - {Link|How can I write Elm code faster, and without getting stuck?|url = /learn/moving-faster-with-tiny-steps}
+    - {Link|Are types good enough, or should I write unit tests for my Elm code?|url = /learn/moving-faster-with-tiny-steps}
+    - {Link|Does "if it compiles, it works" only apply to trivial Elm applications?|url = /learn/moving-faster-with-tiny-steps}
+    - {Link|How do I organize my Elm app as I scale?| url = asdf.com}
+    - {Link|Which libraries and patterns am I missing out on that will take my Elm code to the next level?| url = asdf.com}
 
-We've been down this path so you don't have to. And we have the proven training material and coding techniques to put your team on the fast track to writing code like Elm Experts.
+How much time do your senior devs have to learn all the elm best practices? How much time do you want to spend going down a dead-end path only to learn that you have to backtrack to?
 
-Here's a blog post that will teach you one of my techniques {Link|writing Elm quickly and without getting stuck|url = /learn/moving-faster-with-tiny-steps} by taking tiny steps.
+We save your engineering team time by teaching techniques to write elm like an expert. Spoiler alert: the elm experts don't make it look easy by working their brains really hard. They know how to let the elm compiler do its job so they can look smart with minimal effort. And you can learn the skills and principles to build elm apps with fewer bugs and less effort, too.
 
-Learn more about how our Elm Developer Support Packages can save your team time and help you deliver on Elm's promise of insanely reliable, easy to maintain applications.
+Learn more about how Incremental Elm can help your team level up and write elm like experts.
+
+Learn more about how our {Link|Elm Developer Support Packages | url = /services#developer-support} can save your team time and help you deliver on Elm's promise of insanely reliable, easy to maintain applications.
+
+{Link|>> Services | url = /services}
 
 Or check out my free Incremental Elm Tips to learn the tricks that Elm Masters use intuitively to speed through building up Elm code with ease.
-
-Learn more about the services I provide to help your team write Elm faster and more reliably.
 
 Give your team lead a break from researching "the best way to do X in Elm", and preparing learning sessions on the basics for the rest of the team. That's what we're here for! We can get your team "thinking in Elm" with our tested teaching techniques and expert guidance.
 """
