@@ -19,12 +19,15 @@ customElements.define(
     }
 
     connectedCallback() {
+      console.log("hellooooo!");
       this._editor = CodeMirror(this, {
         identUnit: 4,
         mode: "elm",
-        lineNumbers: true,
+        lineNumbers: false,
         value: this._editorValue
       });
+      // console.log(this._editor);
+      window.myEditor = this._editor;
     }
   }
 );
