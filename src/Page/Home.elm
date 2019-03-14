@@ -25,7 +25,7 @@ parsedMarkup dimensions =
 
 We've been down this path so you don't have to. And we have the proven training material and coding techniques to put your team on the fast track to writing code like Elm Experts.
 
-Here's a blog post that will teach you one of my techniques {Link|writing Elm quickly and without getting stuck|url = https://medium.com/@dillonkearns/moving-faster-with-tiny-steps-in-elm-2e6a269e4efc} by taking tiny steps.
+Here's a blog post that will teach you one of my techniques {Link|writing Elm quickly and without getting stuck|url = /learn/moving-faster-with-tiny-steps} by taking tiny steps.
 
 Learn more about how our Elm Developer Support Packages can save your team time and help you deliver on Elm's promise of insanely reliable, easy to maintain applications.
 
