@@ -60,10 +60,6 @@ document validRelativeUrls =
             , resource |> Mark.map (\thing model -> thing)
             , monospace
                 [ Element.spacing 5
-                , Element.padding 24
-                , Background.color
-                    (Element.rgba 0 0 0 0.04)
-                , Border.rounded 2
                 , Font.size 14
                 , Style.fonts.code
                 , Font.alignLeft

@@ -251,7 +251,9 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {
 .CodeMirror {
   position: relative;
   overflow: hidden;
-  background: white;
+  /* background: white; */
+  background: rgba(0, 0, 0, 0.033);
+  padding: 10px;
 }
 
 .CodeMirror-scroll {
