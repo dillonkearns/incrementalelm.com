@@ -38,8 +38,8 @@ document validRelativeUrls =
             Element.textColumn
                 [ Element.width Element.fill
                 , Element.centerX
-                , Element.spacing 30
-                , Font.size 15
+                , Element.spacing 16
+                , Font.size 18
                 ]
                 (List.map (\view -> view model) children)
         )

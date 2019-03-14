@@ -24,13 +24,16 @@ view dimensions learnPageName =
             Element.width (Element.fill |> Element.maximum 600)
 
           else
-            Element.width Element.fill
+            -- Element.width Element.fill
+            Element.width (Element.fill |> Element.maximum 700)
+        , Element.centerX
         , Element.height Element.fill
         , if Dimensions.isMobile dimensions then
             Element.padding 20
 
           else
-            Element.paddingXY 200 50
+            -- Element.paddingXY 200 50
+            Element.paddingXY 0 0
         , Element.spacing 30
         ]
         (case learnPageName of
