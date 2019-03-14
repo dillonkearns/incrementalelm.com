@@ -10,6 +10,7 @@ import Mark exposing (Document)
 import Mark.Default
 import Parser.Advanced
 import Style
+import Style.Helpers
 import View.CodeSnippet
 import View.Ellie
 import View.FontAwesome
@@ -56,6 +57,7 @@ document validRelativeUrls =
             -- |> Mark.map (\item model -> [ item model ] |> Element.paragraph [ Element.width (Element.px 10) ])
             , image
             , ellie
+            , contactButton
             , resources
             , resource |> Mark.map (\thing model -> thing)
             , monospace
@@ -75,6 +77,28 @@ subHeader attrs textParser =
                 (elements model)
         )
         textParser
+
+
+contactButton : Mark.Block (model -> Element msg)
+contactButton =
+    Mark.stub "ContactButton" (\model -> contactButtonView)
+
+
+contactButtonView : Element msg
+contactButtonView =
+    Element.newTabLink
+        [ Element.centerX ]
+        { url = "mailto:info@incrementalelm.com"
+        , label =
+            Style.Helpers.button
+                { fontColor = .mainBackground
+                , backgroundColor = .highlight
+                , size = Style.fontSize.body
+                }
+                [ View.FontAwesome.icon "far fa-envelope" |> Element.el []
+                , Element.text "info@incrementalelm.com"
+                ]
+        }
 
 
 textWith :

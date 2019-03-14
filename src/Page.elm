@@ -36,6 +36,11 @@ Learn more about the services I provide to help your team write Elm faster and m
 Give your team lead a break from researching "the best way to do X in Elm", and preparing learning sessions on the basics for the rest of the team. That's what we're here for! We can get your team "thinking in Elm" with our tested teaching techniques and expert guidance.
 """
       }
+    , { title = "Contact Incremental Elm"
+      , url = "contact2"
+      , body = """| ContactButton
+"""
+      }
     , { title = "Elm GraphQL Workshop"
       , body = """| Image
     description = Elm-GraphQL Full-Day Workshop
