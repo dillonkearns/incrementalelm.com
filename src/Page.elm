@@ -38,7 +38,10 @@ Give your team lead a break from researching "the best way to do X in Elm", and 
       }
     , { title = "Contact Incremental Elm"
       , url = "contact2"
-      , body = """| Image
+      , body = """| Header
+    Contact Incremental Elm
+
+| Image
     src = /assets/contact.jpg
     description = Contact Image
 

@@ -99,6 +99,7 @@ contactButtonView =
                 , Element.text "info@incrementalelm.com"
                 ]
         }
+        |> Element.el [ Element.centerX ]
 
 
 textWith :
