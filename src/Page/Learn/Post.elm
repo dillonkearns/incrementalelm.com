@@ -56,7 +56,7 @@ I'm closely watching the rapid and promising improvements in {Link|the Intellij 
 
 To see some of the great features of Atom's Elm integration in action, look at the {Link|docs from the Elmjutsu Atom package| url = https://atom.io/packages/elmjutsu}.
 
-| Header
+| Subheader
     Recommended Atom Configuration
 
 First, download and install the {Link|Atom editor| url = https://atom.io/}.
@@ -73,7 +73,7 @@ You can install our recommended core Elm packages in one go by running this from
     - {Link|Atom IDE UI | url = https://atom.io/packages/atom-ide-ui } - provides a UI for displaying in-editor compiler errors & command-click to navigate to definition functionality.
     - {Link|elm-format package | url = https://atom.io/packages/elm-format } - Runs {Code|elm-format} on save in your editor. Requires that you've run {Code|npm install -g elm-format}.
 
-| Header
+| Subheader
     Atom Vim Configuration
 
 If you like Vim, Atom has the best Vim support of any editor I've used! It even has first-class integration with Atom's built-in multiple cursors feature. Here is our recommended setup:
