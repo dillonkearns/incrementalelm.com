@@ -255,7 +255,7 @@ When you start with small steps, removing hard-coding step by step, it lets you 
 
 | Subheader
     Thanks for Reading!
-      
+
 You can sign up here for more tips on writing Elm code incrementally. When you sign up, I’ll send the 3-minute walk-through video of each of these steps, and the download link for the starting-point code and the solution.
 
 Let me know how this technique goes! I’ve gotten a lot of great feedback from my clients about this approach, and I love hearing success stories. Hit reply and let me know how it goes! I’d love to hear how you’re able to apply this in your day-to-day work!

@@ -10,6 +10,7 @@ import Mark exposing (Document)
 import Mark.Default
 import Parser.Advanced
 import Style
+import View.CodeSnippet
 import View.Ellie
 import View.FontAwesome
 import View.Resource
@@ -57,7 +58,7 @@ document validRelativeUrls =
             , ellie
             , resources
             , resource |> Mark.map (\thing model -> thing)
-            , Mark.Default.monospace
+            , monospace
                 [ Element.spacing 5
                 , Element.padding 24
                 , Background.color
@@ -111,6 +112,20 @@ textWith validRelativeUrls config =
         )
 
 
+monospace : List (Element.Attribute msg) -> Mark.Block (model -> Element msg)
+monospace attrs =
+    Mark.block "Monospace"
+        (\string model ->
+            Element.el
+                (Element.htmlAttribute (Html.Attributes.style "line-height" "1.4em")
+                    :: Element.htmlAttribute (Html.Attributes.style "white-space" "pre")
+                    :: attrs
+                )
+                (View.CodeSnippet.codeEditor string [] |> Element.html)
+        )
+        Mark.multiline
+
+
 resources : Mark.Block (model -> Element msg)
 resources =
     Mark.block "Resources"
@@ -129,6 +144,7 @@ resources =
         )
 
 
+resource : Mark.Block (Element msg)
 resource =
     Mark.record3 "Resource"
         (\name resourceKind url ->
