@@ -159,6 +159,7 @@ We start with the failure case because it’s easiest. This is sort of like retu
     view : Maybe String -> Browser.Document msg
     view maybeArticlePath =
         articleNotFoundDocument
+
     articleNotFoundDocument : Browser.Document msg
     articleNotFoundDocument =
         { title = "Article Not Found"
@@ -200,6 +201,7 @@ Extract the dictionary to a top-level value.
         Dict.get articlePath articles
             |> Maybe.map articleDocument
             |> Maybe.withDefault articleNotFoundDocument
+
     articles =
         Dict.empty
 
@@ -215,6 +217,7 @@ Annotate our articles top-level value.
         Dict.get articlePath articles
             |> Maybe.map articleDocument
             |> Maybe.withDefault articleNotFoundDocument
+
     articles : Dict String Article
     articles =
         Dict.empty
@@ -241,7 +244,11 @@ Kent Beck calls this process “Make the change easy, then make the easy change.
 Add a single item to your dictionary
 
 | Monospace
-    Dict.fromList [ ( "hello", { title = "Hello!", body = "Here's a nice article for you! 🎉" } ) ]
+    Dict.fromList
+        [ ( "hello"
+          , { title = "Hello!", body = "Here's a nice article for you! 🎉" }
+          )
+        ]
 
 Now that we’ve done all those other steps, this was super easy! We know exactly what this data structure needs to look like in order to get the type of data we need, because we’ve already wired it up! And when we finally wire it up, everything just flows through uneventfully. Perhaps it’s a bit anti-climactic, but hey, it’s effective!
 
