@@ -24,10 +24,9 @@ customElements.define(
         identUnit: 4,
         mode: "elm",
         lineNumbers: false,
+        readOnly: "nocursor",
         value: this._editorValue
       });
-      // console.log(this._editor);
-      window.myEditor = this._editor;
     }
   }
 );
