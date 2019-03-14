@@ -18,4 +18,4 @@ codeEditor snippet attributes =
 editorValue : String -> Attribute msg
 editorValue value =
     property "editorValue" <|
-        Encode.string value
+        Encode.string (String.trim value)
