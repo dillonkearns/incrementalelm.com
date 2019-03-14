@@ -133,23 +133,6 @@ We'd love to hear from you! Let us know what you think of our workshop agenda. O
         url = https://ellie-app.com/3xfc59cYsd6a1
         icon = Exercise
 """
-
-      -- , resources =
-      --       Just
-      --           { title = Just "Further Reading and Exercises"
-      --           , items =
-      --               [ { name = "Architecture section of The Official Elm Guide"
-      --                 , url = "https://guide.elm-lang.org/architecture/"
-      --                 , kind = Resource.Article
-      --                 , description = Nothing
-      --                 }
-      --               , { name = "Add a -1 button to the Ellie example"
-      --                 , url = "https://ellie-app.com/3xfc59cYsd6a1"
-      --                 , kind = Resource.Exercise
-      --                 , description = Nothing
-      --                 }
-      --               ]
-      --           }
       }
     ]
 
