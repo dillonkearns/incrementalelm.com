@@ -140,7 +140,9 @@ The point of taking tiny steps is that you get constant, clear feedback. So befo
 
 We’re doing a simple blog page that looks up articles based on the URL. We’ve already got the wiring to get the article name from the URL (for example, localhost:8000\\/article\\/{Code|articlePath}). Now we just need to take that {Code|articlePath} and use it to look up the title and body of our article in a Dict.
 
-The Tiny Steps
+| Subheader
+    The Tiny Steps
+
 If you’d like to see a short video of each of these steps, or download the code so you can try them for yourself, just sign up here and I’ll send you a link.
 
 Okay, now let’s walk through our tiny steps for building our Dict!
@@ -251,7 +253,9 @@ In this example, we were dealing with hardcoded data. But it’s easy to imagine
 
 When you start with small steps, removing hard-coding step by step, it lets you think up front about the ideal data structure. This ideal data structure dictates your code, and then from there you figure out how to massage the data from your API into the right data structure. It’s easy to do things the other way around and let our JSON structures dictate how we’re storing the data on the client.
 
-Thanks for Reading!
+| Subheader
+    Thanks for Reading!
+      
 You can sign up here for more tips on writing Elm code incrementally. When you sign up, I’ll send the 3-minute walk-through video of each of these steps, and the download link for the starting-point code and the solution.
 
 Let me know how this technique goes! I’ve gotten a lot of great feedback from my clients about this approach, and I love hearing success stories. Hit reply and let me know how it goes! I’d love to hear how you’re able to apply this in your day-to-day work!
