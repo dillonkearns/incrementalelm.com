@@ -6,7 +6,7 @@
   "scripts": {
     "start": "elm-live src/Main.elm --port 8000 --open --pushstate -- --output elm.js",
     "test": "elm-test && elm make src/Main.elm --optimize --output /dev/null",
-    "build": "elm make src/Main.elm --optimize --output dist/elm.js && elm-minify dist/elm.js && mv dist/elm.min.js dist/elm.js && cp -r index.html 404.html CNAME assets lib js dist"
+    "build": "elm make src/Main.elm --optimize --output dist/elm.js && google-closure-compiler --js=dist/elm.js --js_output_file=dist/elm.min.js && mv dist/elm.min.js dist/elm.js && cp -r index.html 404.html CNAME assets lib js dist"
   },
   "keywords": [],
   "author": "",
@@ -14,6 +14,6 @@
   "devDependencies": {
     "elm": "^0.19.0-bugfix2",
     "elm-live": "^3.2.3",
-    "elm-minify": "^1.5.3"
+    "google-closure-compiler": "^20190301.0.0"
   }
 }
