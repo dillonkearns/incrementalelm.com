@@ -140,7 +140,8 @@ If you’d like to see a short video of each of these steps, or download the cod
 
 Okay, now let’s walk through our tiny steps for building our Dict!
 
-Step 0
+| Subheader
+    Step 0
 
 Always respond with “Article Not Found.”
 
@@ -159,7 +160,9 @@ We start with the failure case because it’s easiest. This is sort of like retu
 
 We’ve wired up our code so that when the user visits mysite.com/article/hello, you’ll see our “Article Not Found” page.
 
-Step 1
+| Subheader
+    Step 1
+
 Hard code an empty dictionary.
 
 | Monospace
@@ -179,7 +182,9 @@ So even though we’ve done almost nothing, the work that remains is all teed up
 
 When you mix in the hard part (building the actual business logic) with the “easy part” (the wiring), you end up with something super hard! But when you do the wiring first, you can completely focus on the hard part once that’s done. And amazingly, this small change in our approach makes it a lot easier.
 
-Step 2
+| Subheader
+    Step 2
+
 Extract the dictionary to a top-level value.
 
 | Monospace
@@ -193,7 +198,8 @@ Extract the dictionary to a top-level value.
 
 This is just a simple refactor. We can refactor at any step. This is more than a superficial change, though. Pulling out this top-level value allows us to continue tweaking this small area inside a sort of sandbox. This will be much easier with a type-annotation, though…
 
-Step 3
+| Subheader
+    Step 3
 Annotate our articles top-level value.
 
 | Monospace
@@ -208,7 +214,9 @@ Annotate our articles top-level value.
 
 This step is important because it allows the Elm compiler to give us more precise and helpful error messages. It can now pinpoint exactly where things go wrong if we take a misstep. Importantly, we’re locking in the type annotation at a time when everything compiles already so we know things line up. If we added the type annotation when things weren’t fully compiling, we wouldn’t be very confident that we got it right.
 
-Step 4
+| Subheader
+    Step 4
+
 Use a "synonym" for Dict.empty.
 
 | Monospace
@@ -220,7 +228,9 @@ What’s a synonym? Well, it’s just a different way to say the exact same thin
 
 Kent Beck calls this process “Make the change easy, then make the easy change.” Again, this is all about teeing ourselves up to make the next step trivial.
 
-Step 5
+| Subheader
+    Step 5
+
 Add a single item to your dictionary
 
 | Monospace
@@ -230,7 +240,8 @@ Now that we’ve done all those other steps, this was super easy! We know exactl
 
 But isn’t this just a toy example to illustrate a technique. While this technique is very powerful when it comes to more sophisticated problems, trust me when I say this is how I write code all the time, even when it’s as trivial as creating a dictionary. And I promise you, having this technique in your tool belt will make it easier to write Elm code!
 
-Step 6
+| Subheader
+    Step 6
 In this example, we were dealing with hardcoded data. But it’s easy to imagine grabbing this list from a database or an API. I’ll leave this as an exercise for the reader, but let’s explore the benefits.
 
 When you start with small steps, removing hard-coding step by step, it lets you think up front about the ideal data structure. This ideal data structure dictates your code, and then from there you figure out how to massage the data from your API into the right data structure. It’s easy to do things the other way around and let our JSON structures dictate how we’re storing the data on the client.

@@ -45,6 +45,7 @@ document validRelativeUrls =
         )
         (Mark.manyOf
             [ Mark.Default.header [ Font.size 36, Font.center ] defaultText
+            , subHeader [ Font.size 24, Font.semiBold, Font.alignLeft, Font.family [ Font.typeface "Raleway" ] ] defaultText
             , Mark.Default.list
                 { style = listStyles
                 , icon = Mark.Default.listIcon
@@ -71,6 +72,17 @@ document validRelativeUrls =
             , Mark.map (\viewEls model -> Element.paragraph [] (viewEls model)) defaultText
             ]
         )
+
+
+subHeader : List (Element.Attribute msg) -> Mark.Block (model -> List (Element msg)) -> Mark.Block (model -> Element msg)
+subHeader attrs textParser =
+    Mark.block "Subheader"
+        (\elements model ->
+            Element.paragraph
+                (Element.Region.heading 3 :: attrs)
+                (elements model)
+        )
+        textParser
 
 
 textWith :
