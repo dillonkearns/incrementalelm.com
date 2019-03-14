@@ -11,6 +11,7 @@ import Element exposing (Element)
 import Element.Background as Background
 import Element.Border
 import Element.Font
+import Element.Lazy
 import ElmLogo
 import Html exposing (Html)
 import Page
@@ -246,7 +247,7 @@ mainView ({ page } as model) =
                     , Element.width Element.fill
                     ]
                     [ View.Navbar.view model animationView StartAnimation
-                    , Page.Learn.view model.dimensions maybeLearnTitle
+                    , Element.Lazy.lazy2 Page.Learn.view model.dimensions maybeLearnTitle
                     ]
 
             Just Route.Home ->
