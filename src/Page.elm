@@ -46,7 +46,50 @@ Give your team lead a break from researching "the best way to do X in Elm", and 
     description = Contact Image
 
 | ContactButton
+
 """
+      }
+    , { title = "Incremental Elm Services"
+      , url = "services"
+      , body = """| Header
+    Incremental Elm Services
+
+| Subheader
+    Elm Developer Support Packages
+
+All Elm Developer Support include:
+
+| List
+    - Incremental Elm Slack access
+    - Email support
+    - Member-only learning content
+    - Member only webinars
+
+The packages are:
+
+| List
+    - Basic program (2 monthly Developer Support sessions)
+    - Unlimited {Code|elm-graphql} Developer Support
+    - Unlimited Elm Coaching Calls
+    - Code Reviews & Coaching Bundle
+
+All Developer Support Calls are 30-60 minutes long. To make sure our sessions are as effective as possible, we will define the goal before each call, and you will receive action items and followup notes//resources after each call.
+
+Each is billed quarterly.
+
+| Subheader
+    Coaching Days
+
+| List
+    - {Code|elm-graphql} Setup - get the entire setup in place for calling {Code|GraphQL} from your Elm app
+    - Full-Day Pairing
+
+| Subheader
+    Training
+
+Training packages is a good fit for teams with 4+ Elm engineers. We can arrange to do remote or on-site training depending on your team's needs.
+
+If you have a smaller team, contact us about our public remote workshops."""
       }
     , { title = "Elm GraphQL Workshop"
       , body = """| Image
