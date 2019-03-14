@@ -19,9 +19,9 @@ customElements.define(
     }
 
     connectedCallback() {
-      console.log("hellooooo!");
       this._editor = CodeMirror(this, {
         identUnit: 4,
+        viewportMargin: Infinity,
         mode: "elm",
         lineNumbers: false,
         readOnly: "nocursor",
