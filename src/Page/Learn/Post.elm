@@ -125,14 +125,19 @@ In this post, we’re going to be looking up an Article in an Elm Dict, using th
 
 Why use tiny steps? Simple! Because we want to write Elm code faster, and with more precise error messages to guide us through each step.
 
-Setting Up Your Environment
+| Subheader
+    Setting Up Your Environment
+    
 The point of taking tiny steps is that you get constant, clear feedback. So before I walk through the steps, here are some things to set up in your editor to help you get more feedback:
 
-See Elm compiler errors instantly without manually running a command. For example, have elm-make run whenever your files change. Or run elm-live, webpack, or parcel in watch mode.
-Even better, get error messages in your editor whenever you save. Here are some instructions for configuring Atom with in-editor compiler errors.
-Note that with both of these workflows, I recommend saving constantly so you get instant error messages.
-Atom also gives you auto-completion, which is another helpful form of feedback. Elm-IntelliJ is another good option for this.
-The Problem
+| List
+    - See Elm compiler errors instantly without manually running a command. For example, have elm-make run whenever your files change. Or run elm-live, webpack, or parcel in watch mode.
+    - Even better, get error messages in your editor whenever you save. Here are some instructions for configuring Atom with in-editor compiler errors.
+    - Note that with both of these workflows, I recommend saving constantly so you get instant error messages.
+    - Atom also gives you auto-completion, which is another helpful form of feedback. Elm-IntelliJ is another good option for this.
+| Subheader
+    The Problem
+
 We’re doing a simple blog page that looks up articles based on the URL. We’ve already got the wiring to get the article name from the URL (for example, mysite.com/article/<this-is-the-article-name>). Now we just need to take that articlePath and use it to look up the title and body of our article in a Dict.
 
 The Tiny Steps

@@ -38,13 +38,13 @@ document validRelativeUrls =
             Element.textColumn
                 [ Element.width Element.fill
                 , Element.centerX
-                , Element.spacing 16
+                , Element.spacing 30
                 , Font.size 18
                 ]
                 (List.map (\view -> view model) children)
         )
         (Mark.manyOf
-            [ Mark.Default.header [ Font.size 36, Font.center ] defaultText
+            [ Mark.Default.header [ Font.size 36, Font.center, Font.family [ Font.typeface "Raleway" ], Font.bold ] defaultText
             , subHeader [ Font.size 24, Font.semiBold, Font.alignLeft, Font.family [ Font.typeface "Raleway" ] ] defaultText
             , Mark.Default.list
                 { style = listStyles

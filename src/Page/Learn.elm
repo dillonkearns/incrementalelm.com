@@ -99,10 +99,11 @@ title : String -> Element msg
 title text =
     [ Element.text text ]
         |> Element.paragraph
-            [ Style.fontSize.title
-            , Style.fonts.title
+            [ Element.Font.size 36
             , Element.Font.center
-            , Element.width Element.fill
+            , Element.Font.family [ Element.Font.typeface "Raleway" ]
+            , Element.Font.semiBold
+            , Element.padding 16
             ]
 
 
