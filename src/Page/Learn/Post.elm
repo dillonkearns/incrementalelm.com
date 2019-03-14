@@ -127,7 +127,7 @@ Why use tiny steps? Simple! Because we want to write Elm code faster, and with m
 
 | Subheader
     Setting Up Your Environment
-    
+
 The point of taking tiny steps is that you get constant, clear feedback. So before I walk through the steps, here are some things to set up in your editor to help you get more feedback:
 
 | List
@@ -138,7 +138,7 @@ The point of taking tiny steps is that you get constant, clear feedback. So befo
 | Subheader
     The Problem
 
-We’re doing a simple blog page that looks up articles based on the URL. We’ve already got the wiring to get the article name from the URL (for example, mysite.com/article/<this-is-the-article-name>). Now we just need to take that articlePath and use it to look up the title and body of our article in a Dict.
+We’re doing a simple blog page that looks up articles based on the URL. We’ve already got the wiring to get the article name from the URL (for example, localhost:8000\\/article\\/{Code|articlePath}). Now we just need to take that {Code|articlePath} and use it to look up the title and body of our article in a Dict.
 
 The Tiny Steps
 If you’d like to see a short video of each of these steps, or download the code so you can try them for yourself, just sign up here and I’ll send you a link.
