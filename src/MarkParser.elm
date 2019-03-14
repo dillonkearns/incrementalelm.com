@@ -121,7 +121,7 @@ monospace attrs =
                     :: Element.htmlAttribute (Html.Attributes.style "white-space" "pre")
                     :: attrs
                 )
-                (View.CodeSnippet.codeEditor string [] |> Element.html)
+                (View.CodeSnippet.codeEditor string [])
         )
         Mark.multiline
 
