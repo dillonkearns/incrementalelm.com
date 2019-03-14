@@ -20,14 +20,18 @@ all =
             """| Header
     Stop Learning Elm Best Practices */The Hard Way/*
 
-You've got the hang of Elm, but you're still wondering:
+You've got the hang of Elm, but you want to level up.
+
+You have some lingering questions like:
 
 | List
     - {Link|How can I write Elm code faster, and without getting stuck?|url = /learn/moving-faster-with-tiny-steps}
     - {Link|Are types good enough, or should I write unit tests for my Elm code?|url = /learn/moving-faster-with-tiny-steps}
-    - {Link|Does "if it compiles, it works" only apply to trivial Elm applications?|url = /learn/moving-faster-with-tiny-steps}
     - {Link|How do I organize my Elm app as I scale?| url = asdf.com}
     - {Link|Which libraries and patterns am I missing out on that will take my Elm code to the next level?| url = asdf.com}
+
+| Subheader
+    Your Senior Devs Are Distracted Trying to Master Elm Instead of Focusing on Building Your App
 
 How much time do your senior devs have to learn all the elm best practices? How much time do you want to spend going down a dead-end path only to learn that you have to backtrack to?
 
