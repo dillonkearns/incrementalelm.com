@@ -59,11 +59,6 @@ document validRelativeUrls =
             , resources
             , resource |> Mark.map (\thing model -> thing)
             , monospace
-                [ Element.spacing 5
-                , Font.size 14
-                , Style.fonts.code
-                , Font.alignLeft
-                ]
 
             -- Toplevel Text
             , Mark.map (\viewEls model -> Element.paragraph [] (viewEls model)) defaultText
@@ -108,16 +103,13 @@ textWith validRelativeUrls config =
         )
 
 
-monospace : List (Element.Attribute msg) -> Mark.Block (model -> Element msg)
-monospace attrs =
+monospace : Mark.Block (model -> Element msg)
+monospace =
     Mark.block "Monospace"
-        (\string model ->
-            Element.el
-                (Element.htmlAttribute (Html.Attributes.style "line-height" "1.4em")
-                    :: Element.htmlAttribute (Html.Attributes.style "white-space" "pre")
-                    :: attrs
-                )
-                (View.CodeSnippet.codeEditor string [])
+        (\codeSnippet model ->
+            codeSnippet
+                |> View.CodeSnippet.codeEditor
+                |> Element.el [ Font.size 16 ]
         )
         Mark.multiline
 

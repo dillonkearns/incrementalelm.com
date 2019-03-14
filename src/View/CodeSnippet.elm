@@ -1,4 +1,4 @@
-module View.CodeSnippet exposing (codeEditor, editorValue)
+module View.CodeSnippet exposing (codeEditor)
 
 import Element exposing (Element)
 import Html exposing (Attribute, Html)
@@ -7,9 +7,9 @@ import Html.Events exposing (on)
 import Json.Encode as Encode exposing (Value)
 
 
-codeEditor : String -> List (Attribute msg) -> Element msg
-codeEditor snippet attributes =
-    Html.node "code-editor" (editorValue snippet :: attributes) []
+codeEditor : String -> Element msg
+codeEditor snippet =
+    Html.node "code-editor" [ editorValue snippet ] []
         |> Element.html
 
 
