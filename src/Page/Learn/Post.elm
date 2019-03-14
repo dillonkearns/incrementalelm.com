@@ -117,7 +117,7 @@ See the docs for lots of details about the features in vim-mode-plus.
       , title = "Moving Faster with Tiny Steps in Elm"
       , body =
             """| Image
-    src = /assets/steps.jpg
+    src = /assets/mountains.jpg
     description = The Elm Architecture
 
 

@@ -61,7 +61,12 @@ parsePostBody markup =
         |> (\result ->
                 case result of
                     Err message ->
-                        Element.text "Couldn't parse!\n"
+                        -- Element.text "Couldn't parse!\n"
+                        message
+                            |> Debug.toString
+                            |> Element.text
+                            |> List.singleton
+                            |> Element.paragraph []
 
                     Ok element ->
                         element identity
