@@ -20,7 +20,6 @@ import Page.Coaches
 import Page.Contact
 import Page.Events
 import Page.Feedback
-import Page.Home
 import Page.HomeOld
 import Page.Intros
 import Page.Learn
@@ -250,16 +249,6 @@ mainView ({ page } as model) =
                     , Element.Lazy.lazy2 Page.Learn.view model.dimensions maybeLearnTitle
                     ]
 
-            Just Route.Home ->
-                Element.column
-                    [ Element.height Element.shrink
-                    , Element.alignTop
-                    , Element.width Element.fill
-                    ]
-                    (View.Navbar.view model animationView StartAnimation
-                        :: Page.Home.view model.dimensions
-                    )
-
             Just (Route.CustomPage thePage) ->
                 Element.column
                     [ Element.height Element.shrink
@@ -267,7 +256,7 @@ mainView ({ page } as model) =
                     , Element.width Element.fill
                     ]
                     (View.Navbar.view model animationView StartAnimation
-                        :: [ Page.view thePage model.dimensions ]
+                        :: [ Element.Lazy.lazy2 Page.view thePage model.dimensions ]
                     )
 
             Just Route.HomeOld ->

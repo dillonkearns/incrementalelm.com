@@ -1,6 +1,7 @@
 module Route exposing (Route(..), SignupDetails, parse, title, toUrl)
 
 import Page
+import Url exposing (Url)
 import Url.Builder
 import Url.Parser exposing ((</>), Parser, s)
 import View.MenuBar
@@ -8,7 +9,6 @@ import View.MenuBar
 
 type Route
     = HomeOld
-    | Home
     | Coaches
     | Events
     | Learn (Maybe String)
@@ -24,11 +24,9 @@ type alias SignupDetails =
     { maybeReferenceId : Maybe String, formName : Maybe String }
 
 
+toUrl : Route -> String
 toUrl route =
     (case route of
-        Home ->
-            []
-
         HomeOld ->
             []
 
@@ -73,9 +71,6 @@ title maybeRoute =
         |> Maybe.map
             (\route ->
                 case route of
-                    Home ->
-                        "Incremental Elm Consulting"
-
                     HomeOld ->
                         "Incremental Elm Consulting"
 
@@ -114,6 +109,7 @@ title maybeRoute =
         |> Maybe.withDefault "Incremental Elm - Page not found"
 
 
+parse : Url -> Maybe Route
 parse url =
     url
         |> Url.Parser.parse parser
@@ -123,7 +119,6 @@ parser : Url.Parser.Parser (Route -> a) a
 parser =
     Url.Parser.oneOf
         [ Url.Parser.map HomeOld Url.Parser.top
-        , Url.Parser.map Home (s "new")
         , Url.Parser.map Intros (s "intro")
         , Url.Parser.map Events (s "events")
         , Url.Parser.map Feedback (s "feedback")
