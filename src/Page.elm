@@ -42,18 +42,12 @@ Here are some popular tips you can check out right away.
 | Signup
     I want weekly elm tips!
 
-We save your engineering team time by teaching techniques to write elm like an expert. Spoiler alert: the elm experts don't make it look easy by working their brains really hard. They know how to let the elm compiler do its job so they can look smart with minimal effort. And you can learn the skills and principles to build elm apps with fewer bugs and less effort, too.
+| Header
+    How I can help your team level up
 
-Learn more about how Incremental Elm can help your team level up and write elm like experts.
+I save your team time by teaching techniques to write elm like an expert. Spoiler alert: the elm experts don't make it look easy by working their brains really hard. They know how to let the elm compiler do its job so they can look smart with minimal effort. And you can learn the skills and principles to build elm apps with fewer bugs and less effort, too.
 
-Learn more about how our {Link|Elm Developer Support Packages | url = /services#developer-support} can save your team time and help you deliver on Elm's promise of insanely reliable, easy to maintain applications.
-
-{Link|>> Services | url = /services}
-
-Or check out my free Incremental Elm Tips to learn the tricks that Elm Masters use intuitively to speed through building up Elm code with ease.
-
-Give your team lead a break from researching "the best way to do X in Elm", and preparing learning sessions on the basics for the rest of the team. That's what we're here for! We can get your team "thinking in Elm" with our tested teaching techniques and expert guidance.
-"""
+Learn more about how my {Link|Elm Developer Support Packages | url = /services#developer-support} can save your team time and help you deliver on Elm's promise of insanely reliable, easy to maintain applications. Or check out {Link|my other service offerings| url = /services}."""
       }
     , { title = "Contact Incremental Elm"
       , url = "contact2"
