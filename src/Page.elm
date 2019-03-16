@@ -36,24 +36,9 @@ Here are some popular tips you can check out right away.
 | List
     - {Link|How can I write elm code faster, and without getting stuck?|url = /learn/moving-faster-with-tiny-steps}
     - {Link|Are types good enough, or should I write unit tests for my Elm code?|url = /learn/moving-faster-with-tiny-steps}
-
+    - {Link|How do I organize my Elm app as I scale?| url = asdf.com}
 
 Send me more elm tips every week
-
-
-
-You have some lingering questions like:
-
-| List
-    - {Link|How can I write Elm code faster, and without getting stuck?|url = /learn/moving-faster-with-tiny-steps}
-    - {Link|Are types good enough, or should I write unit tests for my Elm code?|url = /learn/moving-faster-with-tiny-steps}
-    - {Link|How do I organize my Elm app as I scale?| url = asdf.com}
-    - {Link|Which libraries and patterns am I missing out on that will take my Elm code to the next level?| url = asdf.com}
-
-| Subheader
-    Your Senior Devs Are Distracted Trying to Master Elm Instead of Focusing on Building Your App
-
-How much time do your senior devs have to learn all the elm best practices? How much time do you want to spend going down a dead-end path only to learn that you have to backtrack to?
 
 We save your engineering team time by teaching techniques to write elm like an expert. Spoiler alert: the elm experts don't make it look easy by working their brains really hard. They know how to let the elm compiler do its job so they can look smart with minimal effort. And you can learn the skills and principles to build elm apps with fewer bugs and less effort, too.
 
