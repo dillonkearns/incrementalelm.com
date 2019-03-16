@@ -25,9 +25,9 @@ Your team has got the hang of Elm. Now it's time to take it to the next level.
 You might want to keep reading if:
 
 | List
+    - You want your team to write elm code faster, and to keep writing it fast as your codebase grows.
     - You want your senior devs to spend their time applying elm best practices, not *figuring them out*.
     - You want expert guidance, proven elm techniques, and battle-tested learning material to level up your elm team and codebase fast.
-    - You want your team to write elm code faster, and to keep writing it fast as your codebase grows.
 
 If you're a do-it-yourself kind of person, look no further! You can level up with my Weekly Mastering Elm Tips right now.
 
