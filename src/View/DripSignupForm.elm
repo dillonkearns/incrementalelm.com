@@ -4,7 +4,6 @@ import Element exposing (Element)
 import Element.Region
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Route
 
 
 dripAttribute =

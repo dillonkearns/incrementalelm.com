@@ -12,6 +12,7 @@ import Parser.Advanced
 import Style
 import Style.Helpers
 import View.CodeSnippet
+import View.DripSignupForm
 import View.Ellie
 import View.FontAwesome
 import View.Resource
@@ -59,6 +60,7 @@ document validRelativeUrls =
             , ellie
             , contactButton
             , resources
+            , signupForm
             , resource |> Mark.map (\thing model -> thing)
             , monospace
 
@@ -100,6 +102,17 @@ contactButtonView =
                 ]
         }
         |> Element.el [ Element.centerX ]
+
+
+signupForm : Mark.Block (model -> Element msg)
+signupForm =
+    -- view : String -> { details | maybeReferenceId : Maybe String } -> Html msg
+    Mark.stub "Signup"
+        (\model ->
+            View.DripSignupForm.view "863568508" { maybeReferenceId = Nothing }
+                |> Element.html
+                |> Element.el []
+        )
 
 
 textWith :
