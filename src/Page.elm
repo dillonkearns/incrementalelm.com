@@ -78,6 +78,12 @@ All Elm Developer Support include:
     - Member-only learning content
     - Member only webinars
 
+Any of the packages except Basic includes your choice of one of these services when you sign up for a half-year:
+
+| List
+    - Elm-GraphQL Audit - get advice on where you could improve your data modeling for your GraphQL Schema, or improve your elm code for your {Code|elm-graphql} queries.
+    - Elm-GraphQL Setup - We'll get the initial set up all wired in for hitting your GraphQL API using {Code|elm-graphql}.
+
 The packages are:
 
 | List
