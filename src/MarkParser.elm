@@ -107,12 +107,18 @@ contactButtonView =
 signupForm : Mark.Block (model -> Element msg)
 signupForm =
     -- view : String -> { details | maybeReferenceId : Maybe String } -> Html msg
-    Mark.stub "Signup"
-        (\model ->
-            View.DripSignupForm.view "863568508" { maybeReferenceId = Nothing }
+    Mark.block "Signup"
+        (\buttonText model ->
+            View.DripSignupForm.viewNew buttonText "863568508" { maybeReferenceId = Nothing }
                 |> Element.html
                 |> Element.el []
         )
+        -- (Mark.field "buttonText" Mark.string)
+        Mark.string
+
+
+
+-- |> Mark.field "buttonText"
 
 
 textWith :

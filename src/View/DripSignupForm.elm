@@ -1,4 +1,4 @@
-module View.DripSignupForm exposing (view)
+module View.DripSignupForm exposing (view, viewNew)
 
 import Element exposing (Element)
 import Element.Region
@@ -106,7 +106,12 @@ referenceIdInput maybeReferenceId =
 
 
 view : String -> { details | maybeReferenceId : Maybe String } -> Html msg
-view formId signupDetails =
+view =
+    viewNew "Subscribe"
+
+
+viewNew : String -> String -> { details | maybeReferenceId : Maybe String } -> Html msg
+viewNew buttonText formId signupDetails =
     Html.form
         [ action <| "https://www.getdrip.com/forms/" ++ formId ++ "/submissions"
         , method "post"
@@ -126,7 +131,7 @@ view formId signupDetails =
                 , dripAttribute "sign-up-button"
                 , name "subscribe"
                 , type_ "submit"
-                , value "Subscribe"
+                , value buttonText
                 ]
                 []
             ]

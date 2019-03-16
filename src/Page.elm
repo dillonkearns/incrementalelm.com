@@ -40,8 +40,7 @@ Here are some popular tips you can check out right away.
 
 
 | Signup
-
-Send me more elm tips every week
+    I want weekly elm tips!
 
 We save your engineering team time by teaching techniques to write elm like an expert. Spoiler alert: the elm experts don't make it look easy by working their brains really hard. They know how to let the elm compiler do its job so they can look smart with minimal effort. And you can learn the skills and principles to build elm apps with fewer bugs and less effort, too.
 
