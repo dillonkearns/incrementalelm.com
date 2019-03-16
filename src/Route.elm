@@ -118,8 +118,7 @@ parse url =
 parser : Url.Parser.Parser (Route -> a) a
 parser =
     Url.Parser.oneOf
-        [ Url.Parser.map HomeOld Url.Parser.top
-        , Url.Parser.map Intros (s "intro")
+        [ Url.Parser.map Intros (s "intro")
         , Url.Parser.map Events (s "events")
         , Url.Parser.map Feedback (s "feedback")
         , Url.Parser.map Coaches (s "coaches")
@@ -139,6 +138,10 @@ customParser =
     Page.all
         |> List.map
             (\page ->
-                Url.Parser.map (CustomPage page) (s page.url)
+                if page.url == "" then
+                    Url.Parser.map (CustomPage page) Url.Parser.top
+
+                else
+                    Url.Parser.map (CustomPage page) (s page.url)
             )
         |> Url.Parser.oneOf

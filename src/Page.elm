@@ -15,7 +15,7 @@ type alias Page =
 all : List { body : String, title : String, url : String }
 all =
     [ { title = "Incremental Elm Consulting - About"
-      , url = "new"
+      , url = ""
       , body =
             """| Header
     Stop Learning Elm Best Practices */The Hard Way/*
