@@ -2,6 +2,14 @@
 <html>
   <head>
     <style>
+      /* Remove Mobile Safari submit button rounding */
+      form input[type="submit"] {
+        input {
+          border-radius: 0;
+          -webkit-appearance: none;
+        }
+      }
+
       form {
         font-family: "Open Sans", arial, sans;
         width: 500px;
