@@ -223,7 +223,7 @@ link validRelativeUrls style =
             Element.link style
                 { url = url
                 , label =
-                    Element.row [ Element.htmlAttribute (Html.Attributes.style "display" "inline-flex") ]
+                    Element.paragraph []
                         (List.map (\item -> textFragment item model) txt)
                 }
         )
