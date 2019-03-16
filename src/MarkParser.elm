@@ -115,6 +115,8 @@ signupForm =
                     [ Element.width Element.fill
                     , Element.padding 20
                     , Border.shadow { offset = ( 0, 0 ), size = 1, blur = 4, color = Element.rgb 0.8 0.8 0.8 }
+                    , Element.mouseOver
+                        [ Border.shadow { offset = ( 0, 0 ), size = 1, blur = 4, color = Element.rgb 0.85 0.85 0.85 } ]
                     ]
         )
         -- (Mark.field "buttonText" Mark.string)
