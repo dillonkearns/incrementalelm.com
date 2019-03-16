@@ -20,7 +20,27 @@ all =
             """| Header
     Stop Learning Elm Best Practices */The Hard Way/*
 
-You've got the hang of Elm, but you want to level up.
+Your team has got the hang of Elm. Now it's time to take it to the next level.
+
+You might want to keep reading if:
+
+| List
+    - You want your senior devs to spend their time applying elm best practices, not *figuring them out*
+    - You want expert guidance, proven elm techniques, and battle-tested training material to level up your elm team and codebase fast
+
+
+If you're a do-it-yourself kind of person, you don't need to pay a dime! You can level up with my Weekly Mastering Elm Tips right now.
+
+Here are some popular tips you can check out right away.
+
+| List
+    - {Link|How can I write elm code faster, and without getting stuck?|url = /learn/moving-faster-with-tiny-steps}
+    - {Link|Are types good enough, or should I write unit tests for my Elm code?|url = /learn/moving-faster-with-tiny-steps}
+
+
+Send me more elm tips every week
+
+
 
 You have some lingering questions like:
 
