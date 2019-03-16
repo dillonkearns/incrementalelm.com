@@ -111,7 +111,11 @@ signupForm =
         (\buttonText model ->
             View.DripSignupForm.viewNew buttonText "863568508" { maybeReferenceId = Nothing }
                 |> Element.html
-                |> Element.el []
+                |> Element.el
+                    [ Element.width Element.fill
+                    , Element.padding 20
+                    , Border.shadow { offset = ( 0, 0 ), size = 1, blur = 4, color = Element.rgb 0.8 0.8 0.8 }
+                    ]
         )
         -- (Mark.field "buttonText" Mark.string)
         Mark.string
