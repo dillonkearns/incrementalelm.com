@@ -110,6 +110,10 @@ Training packages is a good fit for teams with 4+ Elm engineers. We can arrange 
 
 If you have a smaller team, contact us about our public remote workshops."""
       }
+    , { title = "Incremental Elm Weekly Unsubscribe"
+      , body = "Got it! We won't send you any more weekly tips."
+      , url = "incremental-weekly-unsubscribe"
+      }
     , { title = "Elm GraphQL Workshop"
       , body = """| Image
     description = Elm-GraphQL Full-Day Workshop
