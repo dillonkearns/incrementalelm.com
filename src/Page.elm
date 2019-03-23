@@ -76,9 +76,9 @@ All Elm Developer Support include:
     - Incremental Elm Slack access
     - Email support
     - Member-only learning content
-    - Member only webinars
+    - Member-only webinars
 
-Any of the packages except Basic includes your choice of one of these services when you sign up for a half-year:
+Any of the packages except Basic includes your choice of one of these services when you sign up for a half year or more:
 
 | List
     - Elm-GraphQL Audit - get advice on where you could improve your data modeling for your GraphQL Schema, or improve your elm code for your {Code|elm-graphql} queries.
@@ -89,7 +89,7 @@ The packages are:
 | List
     - Basic program (2 monthly Developer Support sessions)
     - Unlimited {Code|elm-graphql} Developer Support
-    - Unlimited Elm Coaching Calls
+    - Unlimited Elm Developer Support Calls
     - Code Reviews & Coaching Bundle
 
 All Developer Support Calls are 30-60 minutes long. To make sure our sessions are as effective as possible, we will define the goal before each call, and you will receive action items and followup notes//resources after each call.
