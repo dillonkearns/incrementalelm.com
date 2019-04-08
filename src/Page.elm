@@ -83,6 +83,105 @@ Breaking down the actual steps that elm experts take naturally when they're codi
     - You pay for 3 months at a time. $250 x 3 = $750 per quarter
 """
       }
+    , { title = "How to Improve Your Schema"
+      , url = "scalar-cheat-sheet"
+      , body =
+            """| Header
+    How to improve your schema with Custom Scalars
+
+| Subheader
+    What
+
+Use Custom Scalars instead of GraphQL primitives.
+
+Instead of:
+
+| Monospace
+    type Tweet {
+      createdAtDateTime: String!
+      productId: String!
+    }
+
+It is better to say:
+| Monospace
+    type Tweet {
+      createdAt: DateTime!
+      id: TweetId!
+    }
+
+| Subheader
+    When
+
+| List
+    - You want to transform the value into a particular data structure (e.g. Custom Scalar {Code|DateTime} -> Elm {Code|Time})
+    - You want to ensure that a value is not mixed up and passed in where it has the same primitive representation but different semantic meaning (for example, {Code|ProductId} and {Code|UserId} might both be Strings, but if they are Custom Scalars then {Code|elm-graphql} can prevent you from passing in the wrong type.
+    - You want to control *how* the data is used. For example a {Code|Temperature} or {Code|USD} Custom Scalar has implementation details (perhaps {Code|USD} is represented in cents, but you don't want to leak that knowledge all over your codebase, you want to keep it in one central location).
+
+| Subheader
+    Why
+
+*Custom Scalars are a way of representing a contract.*
+
+For example, a {Code|DateTime} is just a {Code|String} under the hood. But there is a contract. When I call a value a {Code|DateTime}, I am promising that you will always be able to parse it as an ISO-8601 String (or however it is represented in your API).
+
+The data in your GraphQL response will actually be the same. But by using the {Code|DateTime} Custom Scalar,  you are telling  {Code|elm-graphql} that it is safe to use it in a specific way. In this case, it may be that it can parse it as an ISO-8601 String.
+
+Some other examples would be representing Currency (perhaps {Code|USD}). Again, the underlying representative is just a GraphQL primitive, but you've now given it semantic meaning. And {Code|elm-graphql} is able to take this semantic meaning and turn it into a specific type.
+
+| Subheader
+    Custom Scalars for Ids
+
+GraphQL provides a type called {Code|Id}. I recommend ignoring this type and instead creating a Custom Scalar to represent each type of Id in your domain. For example {Code|ProductId} or {Code|UserId}.
+
+Why bother?
+| List
+    - Nice clear information in the documentation for free
+    - Elm can prevent you from passing in a {Code|UserId} where the API requires a {Code|ProductId}
+
+| Subheader
+    Custom Scalars as Gate Keepers
+
+Custom Scalars also provide a pinch point that allows you to limit all the knowledge about how to use a certain type to a single place. For example, you can use an Opaque Type to make sure that the only way {Code|USD} is displayed is by asking the {Code|USD.elm} module to display it for you. This gives you confidence that the knowledge of how to turn the underlying data representation for {Code|USD} is not leaked throughout your codebase, which reduces bugs and makes it easier to reason about your code.
+
+If you're not using the Custom Scalar Codecs functionality in {Code|elm-graphql}. Take a look at the official {Link|Custom Scalar Codecs example and instructions | url = https://github.com/dillonkearns/elm-graphql/blob/master/examples/src/Example07CustomCodecs.elm
+ }.
+
+Here's an example illustrating this with {Code|USD}.
+
+| Monospace
+    module USD exposing (USD, codec, toString)
+
+    import Graphql.Codec exposing (Codec)
+    import Json.Decode exposing (Decoder)
+    import Json.Encode
+
+
+    type USD
+        = Dollars Int
+
+
+    codec : Codec USD
+    codec =
+        { encoder = encode
+        , decoder = decoder
+        }
+
+
+    decoder : Decoder USD
+    decoder =
+        Json.Decode.map Dollars Json.Decode.int
+
+
+    encode : USD -> Json.Encode.Value
+    encode (Dollars  dollars) =
+        Json.Encode.int dollars
+
+
+    toString : USD -> String
+    toString (Dollars  dollars ) =
+        "$" ++ String.fromInt dollars
+"""
+      }
     , { title = "Incremental Elm Services"
       , url = "services"
       , body = """| Header
