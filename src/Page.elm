@@ -107,7 +107,7 @@ Try using Custom Scalars like this:
 | Monospace
     type Tweet {
       createdAt: DateTime!
-      url: Url!
+      url: URL!
       id: TweetId!
     }
 
