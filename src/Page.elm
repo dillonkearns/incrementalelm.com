@@ -98,14 +98,16 @@ Instead of:
 
 | Monospace
     type Tweet {
-      createdAtDateTime: String!
-      productId: String!
+      createdAt: String!
+      url: String!
+      id: String!
     }
 
-It is better to say:
+Try using Custom Scalars like this:
 | Monospace
     type Tweet {
       createdAt: DateTime!
+      url: Url!
       id: TweetId!
     }
 
