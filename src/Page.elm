@@ -97,18 +97,24 @@ Use Custom Scalars instead of GraphQL primitives.
 Instead of:
 
 | Monospace
-    type Tweet {
-      createdAt: String!
-      url: String!
+    type Book {
+      publicationDate: String!
+
+      # cover assets are stored at
+      # `/covers/<coverImage>?format=<large|small>`
+      coverImage: String!
+
+      averageRating: Float!
       id: String!
     }
 
 Try using Custom Scalars like this:
 | Monospace
-    type Tweet {
-      createdAt: DateTime!
-      url: URL!
-      id: TweetId!
+    type Book {
+      publicationDate: DateTime!
+      coverImage: CoverImage!
+      averageRating: StarRating!
+      id: BookId!
     }
 
 | Subheader
