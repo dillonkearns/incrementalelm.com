@@ -47,15 +47,9 @@ document =
                 (List.map (\view -> view model) children)
         )
         (Mark.manyOf
-            [ Mark.Default.header [ Font.size 36, Font.center, Font.family [ Font.typeface "Raleway" ], Font.bold ] toplevelText
+            [ header
             , subHeader [ Font.size 24, Font.semiBold, Font.alignLeft, Font.family [ Font.typeface "Raleway" ] ] toplevelText
-            , Mark.Default.list
-                { style = listStyles
-                , icon = Mark.Default.listIcon
-                }
-                toplevelText
-
-            -- |> Mark.map (\item model -> [ item model ] |> Element.paragraph [ Element.width (Element.px 10) ])
+            , list
             , image
             , ellie
             , contactButton
@@ -66,6 +60,18 @@ document =
             , Mark.map (\viewEls model -> Element.paragraph [] (viewEls model)) toplevelText
             ]
         )
+
+
+header =
+    Mark.Default.header [ Font.size 36, Font.center, Font.family [ Font.typeface "Raleway" ], Font.bold ] toplevelText
+
+
+list =
+    Mark.Default.list
+        { style = listStyles
+        , icon = Mark.Default.listIcon
+        }
+        toplevelText
 
 
 subHeader : List (Element.Attribute msg) -> Mark.Block (model -> List (Element msg)) -> Mark.Block (model -> Element msg)
@@ -104,11 +110,10 @@ contactButtonView =
 
 signupForm : Mark.Block (model -> Element msg)
 signupForm =
-    -- view : String -> { details | maybeReferenceId : Maybe String } -> Html msg
-    Mark.record2 "Signup"
-        (\body buttonText model ->
-            [ Element.paragraph [ Font.center ] (body model)
-            , View.DripSignupForm.viewNew buttonText "863568508" { maybeReferenceId = Nothing }
+    Mark.block "Signup"
+        (\stuff model ->
+            [ Element.column [ Font.center, Element.spacing 30 ] (stuff.body |> List.map (\a -> a model))
+            , View.DripSignupForm.viewNew stuff.buttonText "863568508" { maybeReferenceId = Nothing }
                 |> Element.html
                 |> Element.el [ Element.width Element.fill ]
             ]
@@ -121,8 +126,15 @@ signupForm =
                         [ Border.shadow { offset = ( 0, 0 ), size = 1, blur = 4, color = Element.rgb 0.85 0.85 0.85 } ]
                     ]
         )
-        (Mark.field "body" toplevelText)
-        (Mark.field "buttonText" Mark.string)
+        (Mark.startWith (\buttonText body -> { buttonText = buttonText, body = body })
+            Mark.string
+            thing2
+        )
+
+
+thing2 : Mark.Block (List (model -> Element msg))
+thing2 =
+    Mark.manyOf [ header, list ]
 
 
 
