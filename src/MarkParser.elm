@@ -30,7 +30,7 @@ parse validRelativeUrls =
     Mark.parse document
 
 
-defaultText =
+toplevelText =
     textWith Mark.Default.defaultTextStyle
 
 
@@ -47,13 +47,13 @@ document =
                 (List.map (\view -> view model) children)
         )
         (Mark.manyOf
-            [ Mark.Default.header [ Font.size 36, Font.center, Font.family [ Font.typeface "Raleway" ], Font.bold ] defaultText
-            , subHeader [ Font.size 24, Font.semiBold, Font.alignLeft, Font.family [ Font.typeface "Raleway" ] ] defaultText
+            [ Mark.Default.header [ Font.size 36, Font.center, Font.family [ Font.typeface "Raleway" ], Font.bold ] toplevelText
+            , subHeader [ Font.size 24, Font.semiBold, Font.alignLeft, Font.family [ Font.typeface "Raleway" ] ] toplevelText
             , Mark.Default.list
                 { style = listStyles
                 , icon = Mark.Default.listIcon
                 }
-                defaultText
+                toplevelText
 
             -- |> Mark.map (\item model -> [ item model ] |> Element.paragraph [ Element.width (Element.px 10) ])
             , image
@@ -63,9 +63,7 @@ document =
             , signupForm
             , resource |> Mark.map (\thing model -> thing)
             , monospace
-
-            -- Toplevel Text
-            , Mark.map (\viewEls model -> Element.paragraph [] (viewEls model)) defaultText
+            , Mark.map (\viewEls model -> Element.paragraph [] (viewEls model)) toplevelText
             ]
         )
 
@@ -123,7 +121,7 @@ signupForm =
                         [ Border.shadow { offset = ( 0, 0 ), size = 1, blur = 4, color = Element.rgb 0.85 0.85 0.85 } ]
                     ]
         )
-        (Mark.field "body" defaultText)
+        (Mark.field "body" toplevelText)
         (Mark.field "buttonText" Mark.string)
 
 
