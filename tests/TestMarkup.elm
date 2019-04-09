@@ -15,7 +15,7 @@ suite =
             Page.all
                 |> List.filterMap
                     (\page ->
-                        case page.body |> Mark.parse (MarkParser.document []) of
+                        case page.body |> Mark.parse MarkParser.document of
                             Err error ->
                                 String.join "\n"
                                     [ page.title
