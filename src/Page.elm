@@ -39,7 +39,7 @@ Here are some popular tips you can check out right away.
 | Signup
     | Config
         buttonText = I want weekly elm tips!
-        formId = 573190762
+        formId = 863568508
     | Header
         Tips for Writing Like a Senior Elm Dev
     | List
