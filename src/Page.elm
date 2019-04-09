@@ -211,9 +211,8 @@ Download it now to get the descriptions and examples of all of these types of fi
     | Header
         ✅ Improve your Schema with this step-by-step checklist
     | List
-        - Broken down into easy steps that will improve your elm-graphql code!
-        - Identify in your schema that should be Custom Scalars
-        - See examples and descriptions of the 4 kinds of contracts that should be Custom Scalars
+        - Simple steps that will improve your elm-graphql codebase!
+        - Learn the 4 kinds of Contracts that you can turn into Custom Scalars
 """
       }
     , { title = "Incremental Elm Services"
