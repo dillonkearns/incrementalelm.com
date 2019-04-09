@@ -42,8 +42,7 @@ Here are some popular tips you can check out right away.
         Tips for Writing Like a Senior Elm Dev
     | List
         - Go beyond learning what great elm code /looks like/. Learn */how to write it/*.
-        - Tips you won't find anywhere else to super
-        - Broken down
+        - Tips you won't find anywhere else to level up your elm skills
 
 | Header
     How I can help your team level up
