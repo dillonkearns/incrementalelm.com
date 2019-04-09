@@ -122,7 +122,6 @@ viewNew buttonText formId signupDetails =
         , div [ dripAttribute "description" ] []
         , emailInput
         , firstNameInput
-        , lastNameInput
         , referenceIdInput signupDetails.maybeReferenceId
         , websiteField
         , div []
