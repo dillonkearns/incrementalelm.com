@@ -182,6 +182,24 @@ Here's an example illustrating this with {Code|USD}.
     toString : USD -> String
     toString (Dollars  dollars ) =
         "$" ++ String.fromInt dollars
+
+
+| Header
+    The Custom Scalar Checklist
+
+*Step-by-step checklist to identify the fields in your schema that should be Custom Scalars!*
+
+✅ Download your free checklist!
+
+The *Custom Scalar Checklist* goes through all the steps for identifying where you should be using Custom Scalars in your schema.
+
+Download it now to get the descriptions and examples of all of these types of fields which should be turned into Custom Scalars:
+
+| List
+    - Unit Contract
+    - Format Contract
+    - Context Contract
+    - Enumeration Contract
 """
       }
     , { title = "Incremental Elm Services"
