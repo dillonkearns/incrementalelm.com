@@ -32,15 +32,18 @@ You might want to keep reading if:
 If you're a do-it-yourself kind of person, look no further! You can level up with my Weekly Mastering Elm Tips right now.
 
 Here are some popular tips you can check out right away.
-
 | List
     - {Link|How can I write elm code faster, and without getting stuck?|url = /learn/moving-faster-with-tiny-steps}
-    - {Link|Are types good enough, or should I write unit tests for my Elm code?|url = /learn/moving-faster-with-tiny-steps}
-    - {Link|How do I organize my Elm app as I scale?| url = asdf.com}
-
+    - {Link|How can I improve my elm-graphql codebase?|url = /custom-scalar-checklist}
 
 | Signup
     I want weekly elm tips!
+    | Header
+        Tips for Writing Like a Senior Elm Dev
+    | List
+        - Go beyond learning what great elm code /looks like/. Learn */how to write it/*.
+        - Tips you won't find anywhere else to super
+        - Broken down
 
 | Header
     How I can help your team level up
