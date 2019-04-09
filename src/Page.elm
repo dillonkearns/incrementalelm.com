@@ -103,6 +103,7 @@ Instead of:
 | Monospace
     type Book {
       publicationDate: String!
+      priceInCents: Int!
 
       # cover assets are stored at
       # `/covers/<coverImage>?format=<large|small>`
@@ -116,6 +117,7 @@ Try using Custom Scalars like this:
 | Monospace
     type Book {
       publicationDate: DateTime!
+      price: USD!
       coverImage: CoverImage!
       averageRating: StarRating!
       id: BookId!
