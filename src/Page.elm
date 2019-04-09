@@ -37,7 +37,9 @@ Here are some popular tips you can check out right away.
     - {Link|How can I improve my elm-graphql codebase?|url = /custom-scalar-checklist}
 
 | Signup
-    I want weekly elm tips!
+    | Config
+        buttonText = I want weekly elm tips!
+        formId = 573190762
     | Header
         Tips for Writing Like a Senior Elm Dev
     | List
@@ -207,7 +209,9 @@ Download it now to get the descriptions and examples of all of these types of fi
     - Enumeration Contract
 
 | Signup
-    Download the checklist
+    | Config
+        buttonText = Download the checklist
+        formId = 573190762
     | Header
         ✅ Improve your Schema with this step-by-step checklist
     | List

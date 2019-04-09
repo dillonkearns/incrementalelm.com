@@ -118,7 +118,7 @@ signupForm =
                 , Element.centerX
                 ]
                 (stuff.body |> List.map (\a -> a model))
-            , View.DripSignupForm.viewNew stuff.buttonText "863568508" { maybeReferenceId = Nothing }
+            , View.DripSignupForm.viewNew stuff.config.buttonText "863568508" { maybeReferenceId = Nothing }
                 |> Element.html
                 |> Element.el [ Element.width Element.fill ]
             ]
@@ -131,8 +131,12 @@ signupForm =
                         [ Border.shadow { offset = ( 0, 0 ), size = 1, blur = 4, color = Element.rgb 0.85 0.85 0.85 } ]
                     ]
         )
-        (Mark.startWith (\buttonText body -> { buttonText = buttonText, body = body })
-            Mark.string
+        (Mark.startWith (\config body -> { config = config, body = body })
+            (Mark.record2 "Config"
+                (\buttonText formId -> { buttonText = buttonText, formId = formId })
+                (Mark.field "buttonText" Mark.string)
+                (Mark.field "formId" Mark.string)
+            )
             thing2
         )
 
