@@ -84,7 +84,7 @@ Breaking down the actual steps that elm experts take naturally when they're codi
 """
       }
     , { title = "How to Improve Your Schema"
-      , url = "scalar-cheat-sheet"
+      , url = "custom-scalar-checklist"
       , body =
             """| Header
     How to improve your schema with Custom Scalars
