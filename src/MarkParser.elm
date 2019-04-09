@@ -27,15 +27,15 @@ parse :
     -> String
     -> Result (List (Parser.Advanced.DeadEnd Mark.Context Mark.Problem)) (model -> Element msg)
 parse validRelativeUrls =
-    Mark.parse (document validRelativeUrls)
+    Mark.parse document
 
 
-document : List RelativeUrl -> Mark.Document (model -> Element msg)
-document validRelativeUrls =
-    let
-        defaultText =
-            textWith validRelativeUrls Mark.Default.defaultTextStyle
-    in
+defaultText =
+    textWith Mark.Default.defaultTextStyle
+
+
+document : Mark.Document (model -> Element msg)
+document =
     Mark.document
         (\children model ->
             Element.textColumn
@@ -107,20 +107,24 @@ contactButtonView =
 signupForm : Mark.Block (model -> Element msg)
 signupForm =
     -- view : String -> { details | maybeReferenceId : Maybe String } -> Html msg
-    Mark.block "Signup"
-        (\buttonText model ->
-            View.DripSignupForm.viewNew buttonText "863568508" { maybeReferenceId = Nothing }
+    Mark.record2 "Signup"
+        (\body buttonText model ->
+            [ Element.paragraph [ Font.center ] (body model)
+            , View.DripSignupForm.viewNew buttonText "863568508" { maybeReferenceId = Nothing }
                 |> Element.html
-                |> Element.el
+                |> Element.el [ Element.width Element.fill ]
+            ]
+                |> Element.column
                     [ Element.width Element.fill
                     , Element.padding 20
+                    , Element.spacing 20
                     , Border.shadow { offset = ( 0, 0 ), size = 1, blur = 4, color = Element.rgb 0.8 0.8 0.8 }
                     , Element.mouseOver
                         [ Border.shadow { offset = ( 0, 0 ), size = 1, blur = 4, color = Element.rgb 0.85 0.85 0.85 } ]
                     ]
         )
-        -- (Mark.field "buttonText" Mark.string)
-        Mark.string
+        (Mark.field "body" defaultText)
+        (Mark.field "buttonText" Mark.string)
 
 
 
@@ -128,15 +132,13 @@ signupForm =
 
 
 textWith :
-    List RelativeUrl
-    ->
-        { code : List (Element.Attribute msg)
-        , link : List (Element.Attribute msg)
-        , inlines : List (Mark.Inline (model -> Element msg))
-        , replacements : List Mark.Replacement
-        }
+    { code : List (Element.Attribute msg)
+    , link : List (Element.Attribute msg)
+    , inlines : List (Mark.Inline (model -> Element msg))
+    , replacements : List Mark.Replacement
+    }
     -> Mark.Block (model -> List (Element msg))
-textWith validRelativeUrls config =
+textWith config =
     Mark.map
         (\els model ->
             List.map (\view -> view model) els
@@ -144,7 +146,7 @@ textWith validRelativeUrls config =
         (Mark.text
             { view = textFragment
             , inlines =
-                [ link validRelativeUrls config.link
+                [ link config.link
                 , code config.code
                 ]
                     ++ config.inlines
@@ -222,8 +224,8 @@ code style =
 {-| A custom inline block for links.
 `{Link|My link text|url=http://google.com}`
 -}
-link : List RelativeUrl -> List (Element.Attribute msg) -> Mark.Inline (model -> Element msg)
-link validRelativeUrls style =
+link : List (Element.Attribute msg) -> Mark.Inline (model -> Element msg)
+link style =
     Mark.inline "Link"
         (\txt url model ->
             Element.link style

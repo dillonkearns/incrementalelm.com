@@ -193,10 +193,16 @@ Here's an example illustrating this with {Code|USD}.
 | Header
     The Custom Scalar Checklist
 
-✅ Step-by-step checklist to identify the fields in your schema that should be Custom Scalars!
-
 | Signup
-    Download the checklist
+    buttonText = Download the checklist
+    body = ✅ Get your step-by-step checklist
+
+| List
+    - Broken down into easy steps that will improve your elm-graphql code!
+    - Identify in your schema that should be Custom Scalars
+    - See examples and descriptions of the 4 kinds of contracts that should be Custom Scalars
+
+
 
 
 The *Custom Scalar Checklist* goes through all the steps for identifying where you should be using Custom Scalars in your schema.
