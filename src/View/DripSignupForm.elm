@@ -25,7 +25,7 @@ firstNameInput =
     dripInput
         { inputId = "drip-first-name"
         , type_ = "text"
-        , labelText = "First"
+        , labelText = "Your first name"
         , name = "fields[first_name]"
         , display = Show
         , value = Nothing
