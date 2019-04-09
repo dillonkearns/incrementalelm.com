@@ -112,7 +112,12 @@ signupForm : Mark.Block (model -> Element msg)
 signupForm =
     Mark.block "Signup"
         (\stuff model ->
-            [ Element.column [ Font.center, Element.spacing 30 ] (stuff.body |> List.map (\a -> a model))
+            [ Element.column
+                [ Font.center
+                , Element.spacing 30
+                , Element.centerX
+                ]
+                (stuff.body |> List.map (\a -> a model))
             , View.DripSignupForm.viewNew stuff.buttonText "863568508" { maybeReferenceId = Nothing }
                 |> Element.html
                 |> Element.el [ Element.width Element.fill ]
