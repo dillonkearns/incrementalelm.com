@@ -56,7 +56,33 @@ Learn more about how my {Link|Elm Developer Support Packages | url = /services#d
     , { title = "elm-graphql - Custom Scalars Tutorial"
       , url = "custom-scalars-tutorial"
       , body = """| Vimeo
-    329690102"""
+    329690102
+
+| Header
+    Want to take elm-graphql to the next level?
+| Subheader
+    Download the Custom Scalar Checklist ✅
+
+The *Custom Scalar Checklist* guides you through *simple*, *actionable* steps to identify where you should be using Custom Scalars in your schema.
+
+Download it now to get the descriptions and examples of all of these types of fields which should be turned into Custom Scalars:
+
+| List
+    - Unit Contract
+    - Format Contract
+    - Context Contract
+    - Enumeration Contract
+
+| Signup
+    | Config
+        buttonText = Download the checklist
+        formId = 573190762
+    | Header
+        ✅ Improve your Schema with this step-by-step checklist
+    | List
+        - Simple steps that will improve your elm-graphql codebase!
+        - Learn the 4 kinds of Contracts that you can turn into Custom Scalars
+"""
       }
     , { title = "Contact Incremental Elm"
       , url = "contact2"
