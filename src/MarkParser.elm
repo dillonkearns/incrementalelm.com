@@ -80,8 +80,7 @@ vimeoView videoId =
         |> Element.html
         |> Element.el
             [ Element.width Element.fill
-            , Element.height (Element.px 1000)
-            , Element.height (Element.px 700)
+            , Element.height (Element.px 600)
             ]
 
 
