@@ -71,15 +71,18 @@ header =
 vimeoView videoId =
     Html.iframe
         [ Html.Attributes.src <| "https://player.vimeo.com/video/" ++ videoId
-        , Html.Attributes.width 640
-        , Html.Attributes.height 480
+        , Html.Attributes.attribute "width" "100%"
+        , Html.Attributes.attribute "height" "100%"
         , Html.Attributes.attribute "allow" "autoplay; fullscreen"
         , Html.Attributes.attribute "allowfullscreen" ""
         ]
         []
         |> Element.html
         |> Element.el
-            []
+            [ Element.width Element.fill
+            , Element.height (Element.px 1000)
+            , Element.height (Element.px 700)
+            ]
 
 
 list =
