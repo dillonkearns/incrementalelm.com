@@ -53,6 +53,11 @@ I save your team time by teaching techniques to write elm like an expert. Spoile
 
 Learn more about how my {Link|Elm Developer Support Packages | url = /services#developer-support} can save your team time and help you deliver on Elm's promise of insanely reliable, easy to maintain applications. Or check out {Link|my other service offerings| url = /services}."""
       }
+    , { title = "elm-graphql - Custom Scalars Tutorial"
+      , url = "custom-scalars-tutorial"
+      , body = """| Vimeo
+    329690102"""
+      }
     , { title = "Contact Incremental Elm"
       , url = "contact2"
       , body = """| Header

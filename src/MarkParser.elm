@@ -5,6 +5,7 @@ import Element.Background as Background
 import Element.Border as Border
 import Element.Font as Font
 import Element.Region
+import Html
 import Html.Attributes
 import Mark exposing (Document)
 import Mark.Default
@@ -54,6 +55,7 @@ document =
             , ellie
             , contactButton
             , resources
+            , vimeo
             , signupForm
             , resource |> Mark.map (\thing model -> thing)
             , monospace
@@ -64,6 +66,20 @@ document =
 
 header =
     Mark.Default.header [ Font.size 36, Font.center, Font.family [ Font.typeface "Raleway" ], Font.bold ] toplevelText
+
+
+vimeoView videoId =
+    Html.iframe
+        [ Html.Attributes.src <| "https://player.vimeo.com/video/" ++ videoId
+        , Html.Attributes.width 640
+        , Html.Attributes.height 480
+        , Html.Attributes.attribute "allow" "autoplay; fullscreen"
+        , Html.Attributes.attribute "allowfullscreen" ""
+        ]
+        []
+        |> Element.html
+        |> Element.el
+            []
 
 
 list =
@@ -88,6 +104,13 @@ subHeader attrs textParser =
 contactButton : Mark.Block (model -> Element msg)
 contactButton =
     Mark.stub "ContactButton" (\model -> contactButtonView)
+
+
+vimeo : Mark.Block (model -> Element msg)
+vimeo =
+    Mark.block "Vimeo"
+        (\videoId model -> vimeoView videoId)
+        Mark.string
 
 
 contactButtonView : Element msg
