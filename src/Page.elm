@@ -53,18 +53,20 @@ I save your team time by teaching techniques to write elm like an expert. Spoile
 
 Learn more about how my {Link|Elm Developer Support Packages | url = /services#developer-support} can save your team time and help you deliver on Elm's promise of insanely reliable, easy to maintain applications. Or check out {Link|my other service offerings| url = /services}."""
       }
-    , { title = "Introducing Custom Scalars Course"
+    , { title = "Introducing Custom Scalars to your Codebase"
       , url = "introducing-custom-scalars"
       , body = """| Header
-    Introducing Custom Scalars
+    Introducing Custom Scalars to your codebase
 | Subheader
-    Part 1 - Identify your Custom Scalar candidates
+    Part 1 - Benefits of using Custom Scalars
+| Vimeo
+    TODO
 | Subheader
     Part 2 - Introducing the steps
 | Vimeo
     329896387
 | Subheader
-    Part 3 - Executing the Steps
+    Part 3 - Executing the steps
 | Vimeo
     329888719"""
       }
