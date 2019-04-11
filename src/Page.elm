@@ -61,11 +61,12 @@ Learn more about how my {Link|Elm Developer Support Packages | url = /services#d
     Part 1 - Identify your Custom Scalar candidates
 | Subheader
     Part 2 - Introducing the steps
+| Vimeo
+    329896387
 | Subheader
     Part 3 - Executing the Steps
 | Vimeo
-    329888719
-        """
+    329888719"""
       }
     , { title = "elm-graphql - Scalar Codecs Tutorial"
       , url = "scalar-codecs-tutorial"
