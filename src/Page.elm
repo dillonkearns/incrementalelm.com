@@ -57,6 +57,11 @@ Learn more about how my {Link|Elm Developer Support Packages | url = /services#d
       , url = "introducing-custom-scalars-course"
       , body = """| Header
     Introducing Custom Scalars to your codebase
+
+
+I recommend downloading the {Link|Custom Scalar Checklist | url = https://incrementalelm.com/assets/custom-scalar-checklist.pdf } and printing it out or keeping it open as you go through this lesson. The videos below are the steps you'll go through after identifying the fields you want to turn into Custom Scalars from going through the checklist.
+
+
 | Subheader
     Part 1 - Benefits of using Custom Scalars
 | Vimeo
