@@ -60,7 +60,7 @@ Learn more about how my {Link|Elm Developer Support Packages | url = /services#d
 | Subheader
     Part 1 - Benefits of using Custom Scalars
 | Vimeo
-    TODO
+    329898472
 | Subheader
     Part 2 - Introducing the steps
 | Vimeo
