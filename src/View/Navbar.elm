@@ -37,7 +37,6 @@ view model animationView startAnimationMsg =
 links =
     [ { name = "About", route = Route.HomeOld }
     , { name = "Case Studies", route = Route.CaseStudies }
-    , { name = "Coaches", route = Route.Coaches }
     , { name = "Learn", route = Route.Learn Nothing }
     ]
 
