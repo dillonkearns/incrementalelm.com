@@ -60,6 +60,119 @@ Learn more about how my {Link|Elm Developer Support Packages | url = /services#d
 | Subheader
     Your message is on its way 📪"""
       }
+    , { title = "Exit Checks"
+      , url = "exit-checks"
+      , body = """| Header
+    Avoid tweeting social security #'s using elm types
+
+One of the most successful techniques I've seen for making sure you don't break elm code the next time you touch it is a technique I call an Exit Check.
+
+Let's assume that you've introduced a Custom Type for your SSN, rather than a plain String like so:
+
+| Monospace
+    type Msg
+      = StoreSSN String
+      | LogMessage String
+
+Perhaps you're even using the Type Bouncer technique you learned last week to make sure that the value you have actually represents a real SSN.
+
+| Monospace
+    module SSN exposing (SSN)
+
+    type SSN = SSN String
+
+| Monospace
+    type Msg
+      = StoreSSN SSN
+      | LogMessage String
+
+| Subheader
+    Exit Checks
+
+So how do we make sure we don't Tweet, log, or otherwise misuse the user's SSN? We control the exits.
+
+If you expose the constructor, then we can pattern match to get the raw SSN. This means that enforcing the rules for how we want to use SSNs leaks out all over our code instead of being in one central place that we can easily maintain.
+
+| Monospace
+    -- the (..) exposes the constructor
+    module SSN exposing (SSN(..))
+
+
+So we can unwrap it from outside of the SSN module:
+| Monospace
+    case ssn of
+      SSN rawSsn -> SendTweet rawSsn
+
+Similarly, you can unwrap the raw SSN directly from outside the module if we expose a {Code|toString}.
+
+| Monospace
+    module SSN exposing (SSN, toString)
+
+    toString : SSN -> String
+    toString (SSN rawSsn) = rawSsn
+
+
+| Monospace
+    SendTweet (SSN.toString ssn)
+
+Think of an Exit Check like the Model in Model-View-Controller frameworks. The Model acts as a gatekeeper that ensures the integrity of all persistence in our app. Similarly, an Exit Check ensures the integrity of a Domain concept throughout our app.
+
+| Subheader
+    Control the Exits
+To add an Exit Check, all we need to do is define every function needed to use SSNs internally within the `SSN` module. And of course, each of those functions is responsible for using it appropriately. (And on the other side of that coin, that means that the calling code is free of that responsibility!).
+
+Let's make a function to securely send an SSN. We need to guarantee that:
+| List
+    - The SSN is encrypted using the proper key
+    - It is sent to the correct endpoint
+    - It is sent with https
+
+We don't want to check for all those things everywhere we call this code every time. We want to be able to make sure the code in this module is good whenever it changes, and then completely trust it from the calling code.
+
+| Monospace
+    module SSN exposing (SSN)
+
+    securelySendSsn : Ssn -> Http.Request
+    securelySendSsn ssn =
+      Http.post
+        { url = "https://yoursecuresite.com/secure-endpoint"
+        , body = encryptedSsnBody ssn,
+        , expect = ...
+        }
+
+Now we can be confident that the calling code will never mistakenly send SSNs to the wrong endpoint, or forget to encrypt them!
+
+| Subheader
+    Displaying the SSN
+What if you only want to display the last 4 digits of the SSN? How do you make sure that you, your team members, and your future self all remember to do that?
+
+You could vigilantly put that in a code review check list, or come up with all sorts of creative heuristics to avoid that mistake. Or you could use our Exit Check pattern, and check very carefully any time you are modifying the SSN module itself.
+
+It's very likely that you'll miss something if you have to think about where SSNs are used throughout your codebase. But it's quite manageable to keep the entire SSN module in your head and feel confident that you're not forgetting anything important.
+
+Here's a simple implementation of our last 4 digits view:
+
+| Monospace
+    module SSN exposing (SSN)
+
+    lastFourView : SSN -> Html msg
+    lastFourView ssn =
+      Html.text ("xxx-xx-" ++ lastFour ssn)
+
+| Subheader
+    Takeaways
+You can start applying the Exit Check pattern to your elm code right away!
+
+Here are some steps you can apply:
+
+| List
+    #. Notice some data in your codebase that you have to be careful to use safely or correctly
+    #. Wrap it in a Custom Type (if you haven't already)
+    #. Expose the constructor at first to make the change small and manageable
+    #. Get everything compiling and committed!
+    #. One by one, copy each function that is consuming your new Custom Type and call it from the new module
+    #. Once that's done, you can now hide the constructor, and you now have a proper Exit Check for your type!"""
+      }
     , { title = "Introducing Custom Scalars to your Codebase"
       , url = "introducing-custom-scalars-course"
       , body = """| Header
@@ -459,7 +572,10 @@ parseMarkup markup =
         |> (\result ->
                 case result of
                     Err message ->
-                        Element.text "Couldn't parse!\n"
+                        -- Element.text "Couldn't parse!\n"
+                        message
+                            |> Debug.toString
+                            |> Element.text
 
                     Ok element ->
                         element identity
