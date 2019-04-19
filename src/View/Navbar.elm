@@ -35,8 +35,8 @@ view model animationView startAnimationMsg =
 
 
 links =
-    [ { name = "Articles", route = Route.Learn Nothing }
-    , { name = "Videos", route = Route.Learn Nothing }
+    [ { name = "About", route = Route.HomeOld }
+    , { name = "Articles", route = Route.Learn Nothing }
     , { name = "Services", route = Route.Learn Nothing }
     ]
 
