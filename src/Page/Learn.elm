@@ -83,10 +83,17 @@ resourcesDirectory =
                             , Element.centerX
                             , Element.padding 40
                             , Element.spacing 10
+                            , Element.Border.width 1
+                            , Element.Border.color (Element.rgba255 0 0 0 0.1)
+                            , Element.mouseOver
+                                [ Element.Border.color (Element.rgba255 0 0 0 1)
+                                ]
                             ]
                             [ title resource.title
-                            , resource |> postPreview
-                            , readMoreLink
+                            , Element.column [ Element.spacing 20 ]
+                                [ resource |> postPreview
+                                , readMoreLink
+                                ]
                             ]
                     }
             )
@@ -97,10 +104,9 @@ readMoreLink =
         |> Element.el
             [ Element.centerX
             , Element.Font.size 18
-            , Element.Font.color (Element.rgba255 0 0 0 0.45)
-            , Element.mouseOver
-                [ Element.Font.color (Element.rgba255 0 0 0 0.85)
-                ]
+            , Element.alpha 0.6
+            , Element.mouseOver [ Element.alpha 1 ]
+            , Element.Font.underline
             ]
 
 
