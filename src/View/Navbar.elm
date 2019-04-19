@@ -126,7 +126,7 @@ logoText =
             [ Element.Font.color palette.bold
             , fontSize.logo
             ]
-    , Element.text "Consulting"
+    , Element.text "Training"
         |> Element.el
             [ Element.Font.color palette.bold
             , fontSize.small

@@ -14,7 +14,7 @@ type alias Page =
 
 all : List { body : String, title : String, url : String }
 all =
-    [ { title = "Incremental Elm Consulting - About"
+    [ { title = "Incremental Elm Training - About"
       , url = ""
       , body =
             """| Header

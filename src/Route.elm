@@ -68,7 +68,7 @@ title maybeRoute =
             (\route ->
                 case route of
                     HomeOld ->
-                        "Incremental Elm Consulting"
+                        "Incremental Elm Training"
 
                     Coaches ->
                         "Incremental Elm Coaches"

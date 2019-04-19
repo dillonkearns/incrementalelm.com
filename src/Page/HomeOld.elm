@@ -259,7 +259,7 @@ whyIncrementalSection =
         , bulletContents =
             [ "One tiny step at a time!"
             , "See how Elm fits in your environment: learn the fundamentals and ship something in less than a week!"
-            , "Elm is all about reliability. Incremental Elm Consulting gets you there reliably."
+            , "Elm is all about reliability. Incremental Elm Training gets you there reliably."
             ]
         , append =
             Element.link
