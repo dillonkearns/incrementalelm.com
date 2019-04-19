@@ -201,6 +201,9 @@ And wrapping it in a simple Custom Type.
 
 We could go further using a technique I call a *Type Bouncer* if we wanted confidence that the value came from a known source (correct user input, or server response, etc.). I go into that in a different post. (You can signup for my weekly tips to read more about that).
 
+
+The {Code|SSN} type wrapper is a good start. But how do you know that doesn't get unwrapped into a {Code|String}, passed in to a function as a primitive, and accidentally passed somewhere where it gets logged? As it is, you need to check everywhere it's called all over your codebase (now, or in the future). Let's change that using an Exit Check.
+
 | Subheader
     Exit Checks
 
