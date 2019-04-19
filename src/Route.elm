@@ -14,7 +14,6 @@ type Route
     | Learn (Maybe String)
     | Intros
     | CaseStudies
-    | Contact
     | Signup SignupDetails
     | Feedback
     | CustomPage Page.Page
@@ -46,9 +45,6 @@ toUrl route =
 
         CaseStudies ->
             [ "case-studies" ]
-
-        Contact ->
-            [ "contact" ]
 
         Signup _ ->
             [ "signup" ]
@@ -91,9 +87,6 @@ title maybeRoute =
                     CaseStudies ->
                         "Incremental Elm Case Studies"
 
-                    Contact ->
-                        "Contact Incremental Elm"
-
                     Signup _ ->
                         "Incremental Elm - Signup"
 
@@ -122,7 +115,6 @@ parser =
         , Url.Parser.map Events (s "events")
         , Url.Parser.map Feedback (s "feedback")
         , Url.Parser.map Coaches (s "coaches")
-        , Url.Parser.map Contact (s "contact")
         , Url.Parser.map CaseStudies (s "case-studies")
         , Url.Parser.map (\learnPostName -> Learn (Just learnPostName)) (s "learn" </> Url.Parser.string)
         , Url.Parser.map (Learn Nothing) (s "learn")

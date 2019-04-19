@@ -60,6 +60,20 @@ Learn more about how my {Link|Elm Developer Support Packages | url = /services#d
 | Subheader
     Your message is on its way 📪"""
       }
+    , { title = "Weekly elm Tips!"
+      , url = "tips"
+      , body = """| Signup
+    | Config
+        buttonText = Get weekly elm tips!
+        formId = 573190762
+    | Header
+        Get tips in your inbox every week
+    | List
+        - Simple steps that will improve your elm-graphql codebase!
+        - Learn the 4 kinds of Contracts that you can turn into Custom Scalars
+
+"""
+      }
     , { title = "Exit Checks"
       , url = "exit-checks"
       , body = """| Header

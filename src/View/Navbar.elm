@@ -62,7 +62,7 @@ contactButton =
     Element.link
         [ Element.centerX
         ]
-        { url = "/contact"
+        { url = "/tips"
         , label =
             Style.Helpers.button
                 { fontColor = .mainBackground

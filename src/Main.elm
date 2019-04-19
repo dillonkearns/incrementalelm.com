@@ -273,16 +273,6 @@ mainView ({ page } as model) =
                         :: Page.HomeOld.view model.dimensions
                     )
 
-            Just Route.Contact ->
-                Element.column
-                    [ Element.height Element.fill
-                    , Element.alignTop
-                    , Element.width Element.fill
-                    ]
-                    [ View.Navbar.view model animationView StartAnimation
-                    , Page.Contact.view model.dimensions
-                    ]
-
             Nothing ->
                 Element.text "Page not found!"
     )
