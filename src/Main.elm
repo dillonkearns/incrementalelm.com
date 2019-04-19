@@ -2,7 +2,7 @@ port module Main exposing (main)
 
 import Animation exposing (backgroundColor)
 import Browser
-import Browser.Dom
+import Browser.Dom as Dom
 import Browser.Events
 import Browser.Navigation
 import Dimensions exposing (Dimensions)
@@ -53,11 +53,12 @@ type alias Model =
 
 type Msg
     = Animate Animation.Msg
-    | InitialViewport Browser.Dom.Viewport
+    | InitialViewport Dom.Viewport
     | WindowResized Int Int
     | UrlChanged Url
     | UrlRequest Browser.UrlRequest
     | StartAnimation
+    | NoOp
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -147,6 +148,9 @@ update action model =
                       }
                     , Cmd.none
                     )
+
+        NoOp ->
+            ( model, Cmd.none )
 
 
 updateStyles : Model -> Model
@@ -285,6 +289,11 @@ mainView ({ page } as model) =
         |> layout model
 
 
+resetViewport : Cmd Msg
+resetViewport =
+    Task.perform (\_ -> NoOp) (Dom.setViewport 0 0)
+
+
 interpolation =
     Animation.easing
         { duration = second * 1
@@ -372,7 +381,7 @@ init _ url navigationKey =
       , showMenu = False
       }
         |> updateStyles
-    , Browser.Dom.getViewport
+    , Dom.getViewport
         |> Task.perform InitialViewport
     )
 
