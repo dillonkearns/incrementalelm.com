@@ -167,10 +167,11 @@ signupForm =
             , View.DripSignupForm.viewNew stuff.config.buttonText stuff.config.formId { maybeReferenceId = Nothing }
                 |> Element.html
                 |> Element.el [ Element.width Element.fill ]
-            , Element.text "We'll never share your email. Unsubscribe any time."
-                |> Element.el
+            , [ Element.text "We'll never share your email. Unsubscribe any time." ]
+                |> Element.paragraph
                     [ Font.color (Element.rgba255 0 0 0 0.5)
                     , Font.size 14
+                    , Font.center
                     ]
             ]
                 |> Element.column
