@@ -36,7 +36,7 @@ dripInput details =
     div
         (case details.display of
             Show ->
-                [ style "margin-bottom" "20px" ]
+                [ style "margin-bottom" "20px", style "font-weight" "bold" ]
 
             Hide ->
                 [ style "display" "none", attribute "aria-hidden" "true" ]
