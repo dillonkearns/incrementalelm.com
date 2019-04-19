@@ -67,14 +67,30 @@ Learn more about how my {Link|Elm Developer Support Packages | url = /services#d
 
 One of the most successful techniques I've seen for making sure you don't break elm code the next time you touch it is a technique I call an Exit Check.
 
-Let's assume that you've introduced a Custom Type for your SSN, rather than a plain String like so:
+Let's start by taking this primitive String representation:
 
 | Monospace
     type Msg
       = StoreSSN String
       | LogMessage String
 
-Perhaps you're even using the Type Bouncer technique you learned last week to make sure that the value you have actually represents a real SSN.
+
+And wrapping it in a simple Custom Type.
+
+By the way, in my mailing list I introduce a technique called a *Type Bouncer* that gives you confidence that the value you have actually represents a real SSN. You can signup for free to get that tip and many more like it!
+
+| Signup
+    | Config
+        buttonText = Get more elm tips!
+        formId = 573190762
+    | Header
+        Learn about the Type Bouncer technique and other elm tips!
+    | List
+        - Simple steps that will improve your elm-graphql codebase!
+        - Learn the 4 kinds of Contracts that you can turn into Custom Scalars
+
+
+You can subscribe here to get more tips like this one!
 
 | Monospace
     module SSN exposing (SSN)

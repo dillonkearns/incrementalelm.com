@@ -35,9 +35,9 @@ view model animationView startAnimationMsg =
 
 
 links =
-    [ { name = "About", route = Route.HomeOld }
-    , { name = "Case Studies", route = Route.CaseStudies }
-    , { name = "Learn", route = Route.Learn Nothing }
+    [ { name = "Articles", route = Route.Learn Nothing }
+    , { name = "Videos", route = Route.Learn Nothing }
+    , { name = "Services", route = Route.Learn Nothing }
     ]
 
 
@@ -70,7 +70,7 @@ contactButton =
                 , backgroundColor = .highlight
                 , size = fontSize.body
                 }
-                [ Element.text "Contact" ]
+                [ Element.text "Get Weekly elm Tips" ]
         }
 
 
