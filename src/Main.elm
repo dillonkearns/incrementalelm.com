@@ -102,7 +102,7 @@ update action model =
             )
 
         UrlChanged url ->
-            ( { model | page = Route.parse url }, pageChanged () )
+            ( { model | page = Route.parse url }, Cmd.batch [ resetViewport, pageChanged () ] )
 
         UrlRequest urlRequest ->
             case urlRequest of
