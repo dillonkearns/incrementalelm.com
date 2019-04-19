@@ -15,6 +15,7 @@ import Element.Lazy
 import ElmLogo
 import Html exposing (Html)
 import Page
+import Page.Article
 import Page.CaseStudies
 import Page.Coaches
 import Page.Contact
@@ -251,6 +252,16 @@ mainView ({ page } as model) =
                     ]
                     [ View.Navbar.view model animationView StartAnimation
                     , Element.Lazy.lazy2 Page.Learn.view model.dimensions maybeLearnTitle
+                    ]
+
+            Just (Route.Article maybePostTitle) ->
+                Element.column
+                    [ Element.height Element.fill
+                    , Element.alignTop
+                    , Element.width Element.fill
+                    ]
+                    [ View.Navbar.view model animationView StartAnimation
+                    , Element.Lazy.lazy2 Page.Article.view model.dimensions maybePostTitle
                     ]
 
             Just (Route.CustomPage thePage) ->

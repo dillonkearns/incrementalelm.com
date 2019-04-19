@@ -12,6 +12,7 @@ type Route
     | Coaches
     | Events
     | Learn (Maybe String)
+    | Article (Maybe String)
     | Intros
     | CaseStudies
     | Signup SignupDetails
@@ -42,6 +43,14 @@ toUrl route =
 
                 Nothing ->
                     [ "learn" ]
+
+        Article maybePostTitle ->
+            case maybePostTitle of
+                Just postTitle ->
+                    [ "articles", postTitle ]
+
+                Nothing ->
+                    [ "articles" ]
 
         CaseStudies ->
             [ "case-studies" ]
@@ -84,6 +93,14 @@ title maybeRoute =
                             Nothing ->
                                 "Incremental Elm Learning Resources"
 
+                    Article maybePostTitle ->
+                        case maybePostTitle of
+                            Just postTitle ->
+                                postTitle
+
+                            Nothing ->
+                                "Incremental Elm - Articles"
+
                     CaseStudies ->
                         "Incremental Elm Case Studies"
 
@@ -116,8 +133,10 @@ parser =
         , Url.Parser.map Feedback (s "feedback")
         , Url.Parser.map Coaches (s "coaches")
         , Url.Parser.map CaseStudies (s "case-studies")
-        , Url.Parser.map (\learnPostName -> Learn (Just learnPostName)) (s "learn" </> Url.Parser.string)
+        , Url.Parser.map (\postName -> Learn (Just postName)) (s "learn" </> Url.Parser.string)
         , Url.Parser.map (Learn Nothing) (s "learn")
+        , Url.Parser.map (\postName -> Article (Just postName)) (s "articles" </> Url.Parser.string)
+        , Url.Parser.map (Article Nothing) (s "articles")
         , Url.Parser.map (Signup { maybeReferenceId = Nothing, formName = Nothing }) (s "signup")
         , Url.Parser.map (\signupPath -> Signup { maybeReferenceId = Nothing, formName = Just signupPath }) (s "signup" </> Url.Parser.string)
         , Url.Parser.map (\signupPath referenceId -> Signup { maybeReferenceId = Just referenceId, formName = Just signupPath }) (s "signup" </> Url.Parser.string </> Url.Parser.string)
