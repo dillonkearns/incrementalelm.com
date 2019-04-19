@@ -76,11 +76,26 @@ resourcesDirectory =
     Page.Learn.Post.all
         |> List.map
             (\resource ->
-                Style.Helpers.sameTabLink
+                Style.Helpers.sameTabLink2
                     { url = "/learn/" ++ resource.pageName
-                    , content = resource.title
+                    , content =
+                        resource |> postPreview
                     }
             )
+
+
+postPreview : Post -> Element msg
+postPreview post =
+    post.body
+        |> MarkParser.parsePreview []
+        |> (\result ->
+                case result of
+                    Err message ->
+                        Element.text "Couldn't parse!\n"
+
+                    Ok element ->
+                        element identity
+           )
 
 
 findPostByName : String -> Maybe Post

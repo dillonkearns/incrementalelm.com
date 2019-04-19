@@ -1,4 +1,4 @@
-module Style.Helpers exposing (blockQuote, button, link, roundedAvatar, sameTabLink, smallTitle, title)
+module Style.Helpers exposing (blockQuote, button, link, roundedAvatar, sameTabLink, sameTabLink2, smallTitle, title)
 
 import Dimensions exposing (Dimensions)
 import Element exposing (Element)
@@ -54,6 +54,11 @@ link { url, content } =
 sameTabLink { url, content } =
     Element.link [ Element.Font.color Style.palette.highlight ]
         { url = url, label = Element.text content }
+
+
+sameTabLink2 { url, content } =
+    Element.link []
+        { url = url, label = content }
 
 
 blockQuote :

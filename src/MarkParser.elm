@@ -1,4 +1,4 @@
-module MarkParser exposing (document, parse)
+module MarkParser exposing (document, parse, parsePreview)
 
 import Element exposing (Element)
 import Element.Background as Background
@@ -28,15 +28,33 @@ parse :
     -> String
     -> Result (List (Parser.Advanced.DeadEnd Mark.Context Mark.Problem)) (model -> Element msg)
 parse validRelativeUrls =
-    Mark.parse document
+    Mark.parse (document Nothing)
+
+
+parsePreview :
+    List RelativeUrl
+    -> String
+    -> Result (List (Parser.Advanced.DeadEnd Mark.Context Mark.Problem)) (model -> Element msg)
+parsePreview validRelativeUrls =
+    Mark.parse (document (Just 2))
 
 
 toplevelText =
     textWith Mark.Default.defaultTextStyle
 
 
-document : Mark.Document (model -> Element msg)
-document =
+takeElements : Maybe Int -> List a -> List a
+takeElements maybeNumber items =
+    case maybeNumber of
+        Just n ->
+            items |> List.take n
+
+        Nothing ->
+            items
+
+
+document : Maybe Int -> Mark.Document (model -> Element msg)
+document previewItemCount =
     Mark.document
         (\children model ->
             Element.textColumn
@@ -45,7 +63,7 @@ document =
                 , Element.spacing 30
                 , Font.size 18
                 ]
-                (List.map (\view -> view model) children)
+                (List.map (\view -> view model) (children |> takeElements previewItemCount))
         )
         (Mark.manyOf
             [ header
