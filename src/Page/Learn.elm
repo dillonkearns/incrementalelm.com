@@ -20,7 +20,12 @@ import View.Resource as Resource exposing (Resource)
 view : Dimensions -> Maybe String -> Element.Element msg
 view dimensions learnPageName =
     Element.column
-        [ Element.height Element.fill
+        [ if Dimensions.isMobile dimensions then
+            Element.width (Element.fill |> Element.maximum 600)
+
+          else
+            Element.width (Element.fill |> Element.maximum 700)
+        , Element.height Element.fill
         , if Dimensions.isMobile dimensions then
             Element.padding 20
 
@@ -28,7 +33,6 @@ view dimensions learnPageName =
             Element.paddingXY 0 0
         , Element.spacing 20
         , Element.centerX
-        , Element.width Element.fill
         ]
         (case learnPageName of
             Just actualLearnPageName ->
