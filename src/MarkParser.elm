@@ -188,13 +188,8 @@ signupForm =
                 (Mark.field "buttonText" Mark.string)
                 (Mark.field "formId" Mark.string)
             )
-            thing2
+            (Mark.manyOf [ header, list, topLevel ])
         )
-
-
-thing2 : Mark.Block (List (model -> Element msg))
-thing2 =
-    Mark.manyOf [ header, list, topLevel ]
 
 
 textWith :
