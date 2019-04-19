@@ -180,7 +180,10 @@ signupForm =
                     , Border.shadow { offset = ( 0, 0 ), size = 1, blur = 4, color = Element.rgb 0.8 0.8 0.8 }
                     , Element.mouseOver
                         [ Border.shadow { offset = ( 0, 0 ), size = 1, blur = 4, color = Element.rgb 0.85 0.85 0.85 } ]
+                    , Element.width (Element.fill |> Element.maximum 500)
+                    , Element.centerX
                     ]
+                |> Element.el []
         )
         (Mark.startWith (\config body -> { config = config, body = body })
             (Mark.record2 "Config"
