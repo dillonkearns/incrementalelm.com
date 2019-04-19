@@ -20,21 +20,14 @@ import View.Resource as Resource exposing (Resource)
 view : Dimensions -> Maybe String -> Element.Element msg
 view dimensions learnPageName =
     Element.column
-        [ if Dimensions.isMobile dimensions then
-            Element.width (Element.fill |> Element.maximum 600)
-
-          else
-            -- Element.width Element.fill
-            Element.width (Element.fill |> Element.maximum 700)
-        , Element.centerX
-        , Element.height Element.fill
+        [ Element.height Element.fill
         , if Dimensions.isMobile dimensions then
             Element.padding 20
 
           else
-            -- Element.paddingXY 200 50
             Element.paddingXY 0 0
-        , Element.spacing 30
+        , Element.spacing 20
+        , Element.centerX
         ]
         (case learnPageName of
             Just actualLearnPageName ->
@@ -79,7 +72,15 @@ resourcesDirectory =
                 Style.Helpers.sameTabLink2
                     { url = "/learn/" ++ resource.pageName
                     , content =
-                        resource |> postPreview
+                        Element.column
+                            [ Element.centerX
+                            , Element.width (Element.px 800)
+                            , Element.centerX
+                            , Element.padding 40
+                            ]
+                            [ title resource.title
+                            , resource |> postPreview
+                            ]
                     }
             )
 
