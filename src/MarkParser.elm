@@ -77,9 +77,13 @@ document previewItemCount =
             , signupForm
             , resource |> Mark.map (\thing model -> thing)
             , monospace
-            , Mark.map (\viewEls model -> Element.paragraph [] (viewEls model)) toplevelText
+            , topLevel
             ]
         )
+
+
+topLevel =
+    Mark.map (\viewEls model -> Element.paragraph [] (viewEls model)) toplevelText
 
 
 header =
@@ -185,11 +189,7 @@ signupForm =
 
 thing2 : Mark.Block (List (model -> Element msg))
 thing2 =
-    Mark.manyOf [ header, list ]
-
-
-
--- |> Mark.field "buttonText"
+    Mark.manyOf [ header, list, topLevel ]
 
 
 textWith :
