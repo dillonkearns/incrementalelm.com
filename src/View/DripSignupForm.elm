@@ -131,6 +131,7 @@ viewNew buttonText formId signupDetails =
                 , name "subscribe"
                 , type_ "submit"
                 , value buttonText
+                , style "width" "100%"
                 ]
                 []
             ]
