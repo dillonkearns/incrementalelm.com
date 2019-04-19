@@ -78,12 +78,26 @@ resourcesDirectory =
                             , Element.width (Element.maximum 800 Element.fill)
                             , Element.centerX
                             , Element.padding 40
+                            , Element.spacing 10
                             ]
                             [ title resource.title
                             , resource |> postPreview
+                            , readMoreLink
                             ]
                     }
             )
+
+
+readMoreLink =
+    Element.text "Continue reading >>"
+        |> Element.el
+            [ Element.centerX
+            , Element.Font.size 18
+            , Element.Font.color (Element.rgba255 0 0 0 0.45)
+            , Element.mouseOver
+                [ Element.Font.color (Element.rgba255 0 0 0 0.85)
+                ]
+            ]
 
 
 postPreview : Post -> Element msg
