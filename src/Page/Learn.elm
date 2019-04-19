@@ -26,11 +26,7 @@ view dimensions learnPageName =
           else
             Element.width (Element.fill |> Element.maximum 700)
         , Element.height Element.fill
-        , if Dimensions.isMobile dimensions then
-            Element.padding 20
-
-          else
-            Element.paddingXY 0 0
+        , Element.padding 20
         , Element.spacing 20
         , Element.centerX
         ]
