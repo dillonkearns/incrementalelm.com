@@ -28,6 +28,7 @@ view dimensions learnPageName =
             Element.paddingXY 0 0
         , Element.spacing 20
         , Element.centerX
+        , Element.width Element.fill
         ]
         (case learnPageName of
             Just actualLearnPageName ->
@@ -74,7 +75,7 @@ resourcesDirectory =
                     , content =
                         Element.column
                             [ Element.centerX
-                            , Element.width (Element.px 800)
+                            , Element.width (Element.maximum 800 Element.fill)
                             , Element.centerX
                             , Element.padding 40
                             ]

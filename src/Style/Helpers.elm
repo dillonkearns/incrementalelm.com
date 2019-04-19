@@ -57,7 +57,7 @@ sameTabLink { url, content } =
 
 
 sameTabLink2 { url, content } =
-    Element.link []
+    Element.link [ Element.width Element.fill ]
         { url = url, label = content }
 
 
