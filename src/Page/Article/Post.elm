@@ -171,7 +171,12 @@ Let me know how this technique goes! I’ve gotten a lot of great feedback from 
       }
     , { title = "Avoid tweeting social security #'s using elm types"
       , pageName = "exit-checks"
-      , body = """One of the most successful techniques I've seen for making sure you don't break elm code the next time you touch it is a technique I call an Exit Check.
+      , body = """| Image
+    src = /assets/article-cover/exit.jpg
+    description = Exit Checks
+
+
+      One of the most successful techniques I've seen for making sure you don't break elm code the next time you touch it is a technique I call an Exit Check.
 
 Let's start by taking this primitive String representation:
 
