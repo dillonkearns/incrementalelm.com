@@ -178,31 +178,44 @@ Let me know how this technique goes! I’ve gotten a lot of great feedback from 
 
       One of the most successful techniques I've seen for making sure you don't break elm code the next time you touch it is a technique I call an Exit Check.
 
-Let's start by taking this primitive String representation:
+Let's say you have these innocent functions in your app. How do you know that you won't get your wires crossed and log a user's social security number?
 
 | Monospace
-    type Msg
-      = StoreSSN String
-      | LogMessage String
+    securelySaveSSN : String -> Cmd Msg
+
+    logMessage : String -> Cmd Msg
 
 
-And wrapping it in a simple Custom Type.
+You might wrap it in a type wrapper like so:
 
 | Monospace
-    module SSN exposing (SSN)
+    module SSN exposing (SSN(..))
 
     type SSN = SSN String
 
 | Monospace
-    type Msg
-      = StoreSSN SSN
-      | LogMessage String
+    securelySaveSSN : SSN -> Cmd Msg
+
+    logMessage : String -> Cmd Msg
 
 
-We could go further using a technique I call a *Type Bouncer* if we wanted confidence that the value came from a known source (correct user input, or server response, etc.). I go into that in a different post. (You can signup for my weekly tips to read more about that).
+The {Code|SSN} type wrapper is a good start. But how do you know it won't be unwrapped and passed around somewhere where it could mistakenly be misused?
 
+| Monospace
+    saveSettings : Model -> Cmd msg
+    saveSettings model =
+      let
+        (SSN ssn) = model.ssn
+      in
+        Cmd.batch [
+          logMessage "saving ssn: " ++ ssn,
+          , Http.post
+            { url = "http://myapp.com/api"
+            -- ...
+            }
+        ]
 
-The {Code|SSN} type wrapper is a good start. But how do you know that doesn't get unwrapped into a {Code|String}, passed in to a function as a primitive, and accidentally passed somewhere where it gets logged? As it is, you need to check everywhere it's called all over your codebase (now, or in the future). Let's change that using an Exit Check.
+Whoops, somebody forgot that we had a special {Code|securelySaveSSN} function that uses encrypts the SSN and uses https. The {Code|SSN} type wrapper has failed to communicate the limits we want to ensure about its use. By convention, we only want to use {Code|securelySaveSSN} instead of calling {Code|Http.post} with the raw string. In this article, you'll learn a technique that will make that more than a convention: Exit Checks. Using Exit Checks will get the elm compiler to help guide towards correctly using your data.
 
 | Subheader
     Exit Checks
@@ -289,6 +302,14 @@ Here are some steps you can apply:
     #. Expose the constructor at first to make the change small and manageable
     #. Get everything compiling and committed!
     #. One by one, copy each function that is consuming your new Custom Type and call it from the new module
-    #. Once that's done, you can now hide the constructor, and you now have a proper Exit Check for your type!"""
+    #. Once that's done, you can now hide the constructor, and you now have a proper Exit Check for your type!
+
+| Subheader
+    Taking it even further
+
+We could go further using a technique I call a *Type Bouncer* if we wanted confidence that the value came from a known source (correct user input, or server response, etc.). I go into that in a different post. (You can signup for my weekly tips to read more about that).
+
+
+"""
       }
     ]
