@@ -169,7 +169,7 @@ You can sign up here for more tips on writing Elm code incrementally. When you s
 Let me know how this technique goes! I’ve gotten a lot of great feedback from my clients about this approach, and I love hearing success stories. Hit reply and let me know how it goes! I’d love to hear how you’re able to apply this in your day-to-day work!
 """
       }
-    , { title = "Avoid tweeting social security #'s using elm types"
+    , { title = "How elm types can prevent logging users' social security #'s"
       , pageName = "exit-checks"
       , body = """| Image
     src = /assets/article-cover/exit.jpg
