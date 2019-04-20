@@ -215,7 +215,9 @@ The {Code|SSN} type wrapper is a good start. But how do you know it won't be unw
             }
         ]
 
-Whoops, somebody forgot that we had a special {Code|securelySaveSSN} function that uses encrypts the SSN and uses https. The {Code|SSN} type wrapper has failed to communicate the limits we want to ensure about its use. By convention, we only want to use {Code|securelySaveSSN} instead of calling {Code|Http.post} with the raw string. In this article, you'll learn a technique that will make that more than a convention: Exit Checks. Using Exit Checks will get the elm compiler to help guide towards correctly using your data.
+Whoops, somebody forgot that we had a special {Code|securelySaveSSN} function that encrypts the SSN and uses https. Do you dare look at the commit history? It could well have been your past self (we've all been there)!
+
+Humans make mistakes, so let's not expect them to be perfect. The core issue here is that the {Code|SSN} type wrapper has failed to communicate the limits of how we want it to be used. It's merely a convention to use {Code|securelySaveSSN} instead of calling {Code|Http.post} with the raw String. In this article, you'll learn a technique that gets the elm compiler to help guide us towards using data as intended: Exit Checks.
 
 | Subheader
     Exit Checks
