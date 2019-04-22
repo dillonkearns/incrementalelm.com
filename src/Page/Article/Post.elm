@@ -183,7 +183,7 @@ Let's say you have these innocent functions in your app. How do you know that yo
 | Monospace
     securelySaveSSN : String -> Cmd Msg
 
-    logMessage : String -> Cmd Msg
+    reportError : String -> Cmd Msg
 
 
 You might wrap it in a type wrapper like so:
@@ -196,7 +196,7 @@ You might wrap it in a type wrapper like so:
 | Monospace
     securelySaveSSN : SSN -> Cmd Msg
 
-    logMessage : String -> Cmd Msg
+    reportError : String -> Cmd Msg
 
 
 The {Code|SSN} type wrapper is a good start. But how do you know it won't be unwrapped and passed around somewhere where it could mistakenly be misused?
@@ -208,7 +208,7 @@ The {Code|SSN} type wrapper is a good start. But how do you know it won't be unw
         (SSN ssn) = model.ssn
       in
         Cmd.batch [
-          logMessage "saving ssn: " ++ ssn,
+          reportError "saving ssn: " ++ ssn,
           , Http.post
             { url = "http://myapp.com/api"
             -- ...
