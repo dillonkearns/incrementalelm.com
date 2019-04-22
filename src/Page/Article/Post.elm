@@ -230,11 +230,20 @@ If you expose the constructor, then we can pattern match to get the raw SSN. Thi
     -- the (..) exposes the constructor
     module SSN exposing (SSN(..))
 
-
-So we can unwrap it from outside of the SSN module:
+So we can unwrap it from outside of the SSN module, even if we were careful to wrap the value with the {Code|SSN} type as soon as possible.
 | Monospace
-    case ssn of
-      SSN rawSsn -> SendTweet rawSsn
+    storeSsn : SSN -> Cmd Msg
+    storeSsn (SSN rawSsn) =
+      sendData (ssnPayload rawSsn) saveSsnEndpoint
+
+    sendData : Json.Encode.Value -> String -> Cmd Msg
+    sendData payload endpoint =
+    -- generic data sending function
+    -- if there's an HTTP error, it sends the payload
+    -- and error to our error reporting service
+    -- ⚠️ Not good for SSNs!
+
+
 
 Similarly, you can unwrap the raw SSN directly from outside the module if we expose a {Code|toString}.
 
@@ -246,9 +255,11 @@ Similarly, you can unwrap the raw SSN directly from outside the module if we exp
 
 
 | Monospace
-    SendTweet (SSN.toString ssn)
+    storeSsn : SSN -> Cmd Msg
+    storeSsn ssn =
+      sendData (ssnPayload (SSN.toString ssn)) saveSsnEndpoint
 
-Think of an Exit Check like the Model in Model-View-Controller frameworks. The Model acts as a gatekeeper that ensures the integrity of all persistence in our app. Similarly, an Exit Check ensures the integrity of a Domain concept throughout our app.
+Think of an Exit Check like the Model in Model-View-Controller frameworks. The Model acts as a gatekeeper that ensures the integrity of all persistence in our app. Similarly, an Exit Check ensures the integrity of a Domain concept (SSNs in this case) throughout our app.
 
 | Subheader
     Control the Exits
