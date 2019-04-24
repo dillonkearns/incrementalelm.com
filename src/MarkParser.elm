@@ -73,6 +73,7 @@ document previewItemCount =
             , image
             , ellie
             , contactButton
+            , button
             , resources
             , vimeo
             , crowdcast
@@ -131,6 +132,14 @@ contactButton =
     Mark.stub "ContactButton" (\model -> contactButtonView)
 
 
+button : Mark.Block (model -> Element msg)
+button =
+    Mark.record2 "Button"
+        (\body url model -> buttonView { body = body, url = url })
+        (Mark.field "body" Mark.string)
+        (Mark.field "url" Mark.string)
+
+
 vimeo : Mark.Block (model -> Element msg)
 vimeo =
     Mark.block "Vimeo"
@@ -149,7 +158,7 @@ contactButtonView : Element msg
 contactButtonView =
     Element.newTabLink
         [ Element.centerX ]
-        { url = "mailto:info@incrementalelm.com"
+        { url = "mailto:dillon@incrementalelm.com"
         , label =
             Style.Helpers.button
                 { fontColor = .mainBackground
@@ -157,7 +166,24 @@ contactButtonView =
                 , size = Style.fontSize.body
                 }
                 [ View.FontAwesome.icon "far fa-envelope" |> Element.el []
-                , Element.text "info@incrementalelm.com"
+                , Element.text "dillon@incrementalelm.com"
+                ]
+        }
+        |> Element.el [ Element.centerX ]
+
+
+buttonView : { url : String, body : String } -> Element msg
+buttonView details =
+    Element.newTabLink
+        [ Element.centerX ]
+        { url = details.url
+        , label =
+            Style.Helpers.button
+                { fontColor = .mainBackground
+                , backgroundColor = .highlight
+                , size = Style.fontSize.body
+                }
+                [ Element.text details.body
                 ]
         }
         |> Element.el [ Element.centerX ]

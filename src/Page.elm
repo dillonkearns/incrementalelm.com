@@ -437,47 +437,57 @@ Download it now to get the descriptions and examples of all of these types of fi
     Incremental Elm Services
 
 | Subheader
-    Core Elm Skills Accelerator Program
+    📚 Core Elm Skills Accelerator Program
 
-All Elm Developer Support include:
-
-| List
-    - Incremental Elm Slack access
-    - Email support
-    - Member-only learning content
-    - Member-only webinars
-
-Any of the packages except Basic includes your choice of one of these services when you sign up for a half year or more:
+Would you like to develop skills to help you with the following challenges?
 
 | List
-    - Elm-GraphQL Audit - get advice on where you could improve your data modeling for your GraphQL Schema, or improve your elm code for your {Code|elm-graphql} queries.
-    - Elm-GraphQL Setup - We'll get the initial set up all wired in for hitting your GraphQL API using {Code|elm-graphql}.
+    - What does the process of architecture look like for an in elm?
+    - How do know which parts of your elm code to split out and organize together?
+    - How do you keep your app easy to change and hard to break as you grow your non-trivial single-page apps?
+    - How do you make working with new elm libraries manageable?
+    - How can you use types to fix bugs and prevent new bugs?
 
-The packages are:
 
+In my Elm Core Skills Accelerator, you will develop the habits and skills to address these issues head-on. Because the program is structured around group coaching and battle-tested lessons and exercises, the program is relatively high on learning commitment, and relatively low on financial commitment. You'll come away with more than a knowledge dump. You'll come away with real skills and real improvements to your codebase.
+
+You'll learn through several mediums:
 | List
-    - Basic program (2 monthly Developer Support sessions)
-    - Unlimited {Code|elm-graphql} Developer Support
-    - Unlimited Elm Developer Support Calls
-    - Code Reviews & Coaching Bundle
+    - Group coaching calls every other week
+    - Drills to practice core skills
+    - Exercises to apply to improve your codebase and get feedback in coaching hours
+    - Slack chat with your peers in your program
 
-All Developer Support Calls are 30-60 minutes long. To make sure our sessions are as effective as possible, we will define the goal before each call, and you will receive action items and followup notes//resources after each call.
+The program is limited to 5 people, which means you get a good balance of coaching on your specific issues, and learning from other developer's experiences.
 
-Each is billed quarterly.
 
-| Subheader
-    Coaching Days
+If you're interested to learn more, fill out this form and I'll send you a link to schedule a call so we can explore whether this program can help you with your goals.
 
-| List
-    - {Code|elm-graphql} Setup - get the entire setup in place for calling {Code|GraphQL} from your Elm app
-    - Full-Day Pairing
+| Button
+    url = /asdf
+    body = Apply for the Accelerator Program
+
+
 
 | Subheader
     Training
 
 Training packages is a good fit for teams with 4+ Elm engineers. We can arrange to do remote or on-site training depending on your team's needs.
 
-If you have a smaller team, contact us about our public remote workshops."""
+If you have a smaller team, contact me about our public remote workshops.
+
+
+
+
+
+| Subheader
+    Contact
+    
+Want to discuss finding the right service to help you improve your elm codebase? Send me an email with a brief description of the outcome your looking for.
+
+| ContactButton
+
+"""
       }
     , { title = "Incremental Elm Weekly Unsubscribe"
       , body = "Got it! We won't send you any more weekly tips."
