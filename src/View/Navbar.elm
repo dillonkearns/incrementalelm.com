@@ -35,8 +35,8 @@ view model animationView startAnimationMsg =
 
 
 links =
-    [ { name = "Articles", route = Route.Article Nothing }
-    , { name = "Services", route = Route.Learn Nothing }
+    [ { name = "Articles", url = "/articles" }
+    , { name = "Services", url = "/services" }
     ]
 
 
@@ -76,7 +76,7 @@ contactButton =
 linkView link =
     Element.link [ Element.width Element.fill ]
         { label = Element.text link.name
-        , url = Route.toUrl link.route
+        , url = link.url
         }
 
 

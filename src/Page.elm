@@ -437,7 +437,7 @@ Download it now to get the descriptions and examples of all of these types of fi
     Incremental Elm Services
 
 | Subheader
-    Elm Developer Support Packages
+    Core Elm Skills Accelerator Program
 
 All Elm Developer Support include:
 
