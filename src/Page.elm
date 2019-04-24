@@ -602,10 +602,7 @@ parseMarkup markup =
         |> (\result ->
                 case result of
                     Err message ->
-                        -- Element.text "Couldn't parse!\n"
-                        message
-                            |> Debug.toString
-                            |> Element.text
+                        Element.text "Couldn't parse!\n"
 
                     Ok element ->
                         element identity
