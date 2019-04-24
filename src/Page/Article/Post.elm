@@ -204,10 +204,10 @@ The {Code|SSN} type wrapper is a good start. But how do you know it won't be unw
 | Monospace
     storeSSN : SSN -> Cmd Msg
     storeSSN (SSN rawSsn) =
-      sendData (ssnPayload rawSsn) saveSsnEndpoint
+      genericSendData (ssnPayload rawSsn) saveSsnEndpoint
 
-    sendData : Json.Encode.Value -> String -> Cmd Msg
-    sendData payload endpoint =
+    genericSendData : Json.Encode.Value -> String -> Cmd Msg
+    genericSendData payload endpoint =
     -- generic data sending function
     -- if there's an HTTP error, it sends the payload
     -- and error to our error reporting service
@@ -215,12 +215,17 @@ The {Code|SSN} type wrapper is a good start. But how do you know it won't be unw
 
 Whoops, somebody forgot that we had a special {Code|securelySaveSSN} function that encrypts the SSN and masks the SSN when logging errors. Do you dare look at the commit history? It could well have been your past self (we've all been there)!
 
-Humans make mistakes, so let's not expect them to be perfect. The core issue here is that the {Code|SSN} type wrapper has failed to communicate the limits of how we want it to be used. It's merely a convention to use {Code|securelySaveSSN} instead of calling the generic {Code|sendData} with the raw String. In this article, you'll learn a technique that gets the elm compiler to help guide us towards using data as intended: Exit Checks.
+Humans make mistakes, so let's not expect them to be perfect. The core issue here is that the {Code|SSN} type wrapper has failed to communicate the limits of how we want it to be used. It's merely a convention to use {Code|securelySaveSSN} instead of calling the generic {Code|genericSendData} with the raw String. In this article, you'll learn a technique that gets the elm compiler to help guide us towards using data as intended: Exit Checks.
 
 | Subheader
-    Exit Checks
+    🔑 Exit Checks
 
 So how do we make sure we don't log, Tweet, or otherwise misuse the user's SSN? We control the exits.
+
+There are two ways for the raw data to exit. If raw data exits, then we don't have control over it. So we want to close off these two exit routes.
+
+| Subheader
+    🔓 Unsecure Exit 1 - Public Constructor
 
 If you expose the constructor, then we can pattern match to get the raw SSN. This means that enforcing the rules for how we want to use SSNs leaks out all over our code instead of being in one central place that we can easily maintain.
 
@@ -228,22 +233,10 @@ If you expose the constructor, then we can pattern match to get the raw SSN. Thi
     -- the (..) exposes the constructor
     module SSN exposing (SSN(..))
 
-So we can unwrap it from outside of the SSN module, even if we were careful to wrap the value with the {Code|SSN} type as soon as possible.
-| Monospace
-    storeSsn : SSN -> Cmd Msg
-    storeSsn (SSN rawSsn) =
-      sendData (ssnPayload rawSsn) saveSsnEndpoint
+| Subheader
+    🔓 Unsecure Exit 2 - Public Accessor
 
-    sendData : Json.Encode.Value -> String -> Cmd Msg
-    sendData payload endpoint =
-    -- generic data sending function
-    -- if there's an HTTP error, it sends the payload
-    -- and error to our error reporting service
-    -- ⚠️ Not good for SSNs!
-
-
-
-Similarly, you can unwrap the raw SSN directly from outside the module if we expose a {Code|toString}.
+Similarly, you can unwrap the raw SSN directly from outside the module if we expose an accessor (also known as getters) which returns the /raw data/. In this case, our primitive representation of the SSN is a String, so we could have an unsecure exit by exposing a {Code|toString} accessor.
 
 | Monospace
     module SSN exposing (SSN, toString)
@@ -255,7 +248,10 @@ Similarly, you can unwrap the raw SSN directly from outside the module if we exp
 | Monospace
     storeSsn : SSN -> Cmd Msg
     storeSsn ssn =
-      sendData (ssnPayload (SSN.toString ssn)) saveSsnEndpoint
+      genericSendData (ssnPayload (SSN.toString ssn)) saveSsnEndpoint
+
+| Subheader
+    Exit Checks are just gatekeepers
 
 Think of an Exit Check like the Model in Model-View-Controller frameworks. The Model acts as a gatekeeper that ensures the integrity of all persistence in our app. Similarly, an Exit Check ensures the integrity of a Domain concept (SSNs in this case) throughout our app.
 
