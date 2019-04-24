@@ -5,9 +5,9 @@ import Html exposing (div, iframe)
 import Html.Attributes exposing (attribute, src, style)
 
 
-view =
+view formId =
     iframe
-        [ src "https://docs.google.com/forms/d/e/1FAIpQLSd7V15KXuoReco2xJzz70LD-d691hQJ-586XNjAmQVSkdYUsQ/viewform?embedded=true"
+        [ src <| "https://docs.google.com/forms/d/e/" ++ formId ++ "/viewform?embedded=true"
         , style "frameborder" "0"
         , attribute "marginheight" "0"
         , attribute "marginwidth" "0"

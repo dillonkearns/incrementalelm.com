@@ -159,7 +159,7 @@ crowdcast =
 googleForm : Mark.Block (model -> Element msg)
 googleForm =
     Mark.block "GoogleForm"
-        (\crowdcastId model -> GoogleForm.view)
+        (\formId model -> GoogleForm.view formId)
         Mark.string
 
 
