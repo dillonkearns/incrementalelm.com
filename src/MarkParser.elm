@@ -183,7 +183,7 @@ contactButtonView =
 
 buttonView : { url : String, body : String } -> Element msg
 buttonView details =
-    Element.newTabLink
+    Element.link
         [ Element.centerX ]
         { url = details.url
         , label =
