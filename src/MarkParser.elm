@@ -1,5 +1,6 @@
 module MarkParser exposing (document, parse, parsePreview)
 
+import Crowdcast
 import Element exposing (Element)
 import Element.Background as Background
 import Element.Border as Border
@@ -74,6 +75,7 @@ document previewItemCount =
             , contactButton
             , resources
             , vimeo
+            , crowdcast
             , signupForm
             , resource |> Mark.map (\thing model -> thing)
             , monospace
@@ -133,6 +135,13 @@ vimeo : Mark.Block (model -> Element msg)
 vimeo =
     Mark.block "Vimeo"
         (\videoId model -> vimeoView videoId)
+        Mark.string
+
+
+crowdcast : Mark.Block (model -> Element msg)
+crowdcast =
+    Mark.block "Crowdcast"
+        (\crowdcastId model -> Crowdcast.view crowdcastId)
         Mark.string
 
 
