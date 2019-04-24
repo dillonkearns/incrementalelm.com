@@ -299,6 +299,18 @@ Here's a simple implementation of our last 4 digits view:
     lastFourView ssn =
       Html.text ("xxx-xx-" ++ lastFour ssn)
 
+
+
+| Signup
+    | Config
+        buttonText = I want weekly elm tips!
+        formId = 863568508
+    | Header
+        Want weekly tips like this one?
+    | List
+        - Go beyond learning what great elm code /looks like/. Learn */how to write it/*.
+        - Tips you won't find anywhere else to level up your elm skills
+
 | Subheader
     Takeaways
 You can start applying the Exit Check pattern to your elm code right away!
