@@ -213,7 +213,7 @@ The {Code|SSN} type wrapper is a good start. But how do you know it won't be unw
     -- and error to our error reporting service
     -- ⚠️ Not good for SSNs!
 
-Whoops, somebody forgot that we had a special {Code|securelySaveSSN} function that encrypts the SSN and masks the SSN when logging errors. Do you dare look at the commit history? It could well have been your past self (we've all been there)!
+Whoops, somebody forgot that we had a special {Code|securelySaveSSN} function that encrypts the SSN and masks the SSN when reporting errors. Do you dare look at the commit history? It could well have been your past self (we've all been there)!
 
 Humans make mistakes, so let's not expect them to be perfect. The core issue here is that the {Code|SSN} type wrapper has failed to communicate the limits of how we want it to be used. It's merely a convention to use {Code|securelySaveSSN} instead of calling the generic {Code|genericSendData} with the raw String. In this article, you'll learn a technique that gets the elm compiler to help guide us towards using data as intended: Exit Checks.
 
@@ -244,6 +244,7 @@ Similarly, you can unwrap the raw SSN directly from outside the module if we exp
     toString : SSN -> String
     toString (SSN rawSsn) = rawSsn
 
+The public accessor function has the same effect as our publicly exposed constructor did, allowing us to accidentally pass the raw data to our {Code|genericSendData}.
 
 | Monospace
     storeSsn : SSN -> Cmd Msg
@@ -256,14 +257,15 @@ Similarly, you can unwrap the raw SSN directly from outside the module if we exp
 Think of an Exit Check like the Model in Model-View-Controller frameworks. The Model acts as a gatekeeper that ensures the integrity of all persistence in our app. Similarly, an Exit Check ensures the integrity of a Domain concept (SSNs in this case) throughout our app.
 
 | Subheader
-    Control the Exits
-To add an Exit Check, all we need to do is define every function needed to use SSNs internally within the `SSN` module. And of course, each of those functions is responsible for using it appropriately. (And on the other side of that coin, that means that the calling code is free of that responsibility!).
+    How to control the exits
+To add an Exit Check, all we need to do is define every function needed to use SSNs internally within the {Code|SSN} module. And of course, each of those functions is responsible for using it appropriately. (And on the other side of that coin, that means that the calling code is free of that responsibility!).
 
 Let's make a function to securely send an SSN. We need to guarantee that:
 | List
     - The SSN is encrypted using the proper key
     - It is sent to the correct endpoint
     - It is sent with https
+    - It is masked before being being sent to our error reporting
 
 We don't want to check for all those things everywhere we call this code every time. We want to be able to make sure the code in this module is good whenever it changes, and then completely trust it from the calling code.
 
@@ -284,7 +286,7 @@ Now we can be confident that the calling code will never mistakenly send SSNs to
     Displaying the SSN
 What if you only want to display the last 4 digits of the SSN? How do you make sure that you, your team members, and your future self all remember to do that?
 
-You could vigilantly put that in a code review check list, or come up with all sorts of creative heuristics to avoid that mistake. Or you could use our Exit Check pattern, and check very carefully any time you are modifying the SSN module itself.
+You could vigilantly put that in a code review checklist, or come up with all sorts of creative heuristics to avoid that mistake. I like to reach for the Exit Check pattern as my first choice. Then you need to check very carefully any time you are modifying the SSN module itself, and you can trust the module and treat it as a blackbox when you're not modifying it.
 
 It's very likely that you'll miss something if you have to think about where SSNs are used throughout your codebase. But it's quite manageable to keep the entire SSN module in your head and feel confident that you're not forgetting anything important.
 
