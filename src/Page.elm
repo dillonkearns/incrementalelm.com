@@ -443,7 +443,7 @@ Download it now to get the descriptions and examples of all of these types of fi
     Incremental Elm Services
 
 | Subheader
-    📚 Core Elm Skills Accelerator Program
+    🏋️\u{200D}♂️ 📚 Core Elm Skills Accelerator Program
 
 Would you like to develop skills to help you with the following challenges?
 
@@ -476,7 +476,7 @@ If you're interested to learn more, fill out this form and I'll send you a link 
 
 
 | Subheader
-    Training
+    🎓 Training
 
 Training packages is a good fit for teams with 4+ Elm engineers. We can arrange to do remote or on-site training depending on your team's needs.
 
@@ -487,7 +487,7 @@ If you have a smaller team, contact me about our public remote workshops.
 
 
 | Subheader
-    Contact
+    👋 Contact
 
 Want to discuss finding the right service to help you improve your elm codebase? Send me an email with a brief description of the outcome your looking for.
 
