@@ -312,13 +312,6 @@ Here are some steps you can apply:
     #. Get everything compiling and committed!
     #. One by one, copy each function that is consuming your new Custom Type and call it from the new module
     #. Once that's done, you can now hide the constructor, and you now have a proper Exit Check for your type!
-
-| Subheader
-    Taking it even further
-
-We could go further using a technique I call a *Type Bouncer* if we wanted confidence that the value came from a known source (correct user input, or server response, etc.). I go into that in a different post. (You can signup for my weekly tips to read more about that).
-
-
 """
       }
     ]
