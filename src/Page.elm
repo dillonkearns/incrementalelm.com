@@ -14,7 +14,13 @@ type alias Page =
 
 all : List { body : String, title : String, url : String }
 all =
-    [ { title = "Incremental Elm Training - About"
+    [ { title = "Accelerator Application"
+      , url = "accelerator-application"
+      , body = """| GoogleForm
+    asdf
+"""
+      }
+    , { title = "Incremental Elm Training - About"
       , url = ""
       , body =
             """| Header
@@ -464,7 +470,7 @@ The program is limited to 5 people, which means you get a good balance of coachi
 If you're interested to learn more, fill out this form and I'll send you a link to schedule a call so we can explore whether this program can help you with your goals.
 
 | Button
-    url = /asdf
+    url = /accelerator-application
     body = Apply for the Accelerator Program
 
 
@@ -482,7 +488,7 @@ If you have a smaller team, contact me about our public remote workshops.
 
 | Subheader
     Contact
-    
+
 Want to discuss finding the right service to help you improve your elm codebase? Send me an email with a brief description of the outcome your looking for.
 
 | ContactButton

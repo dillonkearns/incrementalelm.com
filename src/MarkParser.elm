@@ -6,6 +6,7 @@ import Element.Background as Background
 import Element.Border as Border
 import Element.Font as Font
 import Element.Region
+import GoogleForm
 import Html
 import Html.Attributes
 import Mark exposing (Document)
@@ -77,6 +78,7 @@ document previewItemCount =
             , resources
             , vimeo
             , crowdcast
+            , googleForm
             , signupForm
             , resource |> Mark.map (\thing model -> thing)
             , monospace
@@ -151,6 +153,13 @@ crowdcast : Mark.Block (model -> Element msg)
 crowdcast =
     Mark.block "Crowdcast"
         (\crowdcastId model -> Crowdcast.view crowdcastId)
+        Mark.string
+
+
+googleForm : Mark.Block (model -> Element msg)
+googleForm =
+    Mark.block "GoogleForm"
+        (\crowdcastId model -> GoogleForm.view)
         Mark.string
 
 
