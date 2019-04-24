@@ -202,27 +202,25 @@ You might wrap it in a type wrapper like so:
 The {Code|SSN} type wrapper is a good start. But how do you know it won't be unwrapped and passed around somewhere where it could mistakenly be misused?
 
 | Monospace
-    saveSettings : Model -> Cmd msg
-    saveSettings model =
-      let
-        (SSN ssn) = model.ssn
-      in
-        Cmd.batch [
-          reportError "saving ssn: " ++ ssn,
-          , Http.post
-            { url = "http://myapp.com/api"
-            -- ...
-            }
-        ]
+    storeSSN : SSN -> Cmd Msg
+    storeSSN (SSN rawSsn) =
+      sendData (ssnPayload rawSsn) saveSsnEndpoint
 
-Whoops, somebody forgot that we had a special {Code|securelySaveSSN} function that encrypts the SSN and uses https. Do you dare look at the commit history? It could well have been your past self (we've all been there)!
+    sendData : Json.Encode.Value -> String -> Cmd Msg
+    sendData payload endpoint =
+    -- generic data sending function
+    -- if there's an HTTP error, it sends the payload
+    -- and error to our error reporting service
+    -- ⚠️ Not good for SSNs!
 
-Humans make mistakes, so let's not expect them to be perfect. The core issue here is that the {Code|SSN} type wrapper has failed to communicate the limits of how we want it to be used. It's merely a convention to use {Code|securelySaveSSN} instead of calling {Code|Http.post} with the raw String. In this article, you'll learn a technique that gets the elm compiler to help guide us towards using data as intended: Exit Checks.
+Whoops, somebody forgot that we had a special {Code|securelySaveSSN} function that encrypts the SSN and masks the SSN when logging errors. Do you dare look at the commit history? It could well have been your past self (we've all been there)!
+
+Humans make mistakes, so let's not expect them to be perfect. The core issue here is that the {Code|SSN} type wrapper has failed to communicate the limits of how we want it to be used. It's merely a convention to use {Code|securelySaveSSN} instead of calling the generic {Code|sendData} with the raw String. In this article, you'll learn a technique that gets the elm compiler to help guide us towards using data as intended: Exit Checks.
 
 | Subheader
     Exit Checks
 
-So how do we make sure we don't Tweet, log, or otherwise misuse the user's SSN? We control the exits.
+So how do we make sure we don't log, Tweet, or otherwise misuse the user's SSN? We control the exits.
 
 If you expose the constructor, then we can pattern match to get the raw SSN. This means that enforcing the rules for how we want to use SSNs leaks out all over our code instead of being in one central place that we can easily maintain.
 
