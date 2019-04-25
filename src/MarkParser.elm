@@ -69,6 +69,13 @@ document previewItemCount =
         )
         (Mark.manyOf
             [ header
+            , navHeader
+                [ Font.size 24
+                , Font.semiBold
+                , Font.alignLeft
+                , Font.family [ Font.typeface "Raleway" ]
+                ]
+                toplevelText
             , subHeader
                 [ Font.size 24
                 , Font.semiBold
@@ -129,10 +136,27 @@ subHeader attrs textParser =
     Mark.block "Subheader"
         (\elements model ->
             Element.paragraph
-                (Element.Region.heading 3 :: attrs)
+                (Element.Region.heading 3
+                    :: attrs
+                )
                 (elements model)
         )
         textParser
+
+
+navHeader : List (Element.Attribute msg) -> Mark.Block (model -> List (Element msg)) -> Mark.Block (model -> Element msg)
+navHeader attrs textParser =
+    Mark.record2 "Navheader"
+        (\elements id model ->
+            Element.paragraph
+                (Element.Region.heading 3
+                    :: Element.htmlAttribute (Html.Attributes.id id)
+                    :: attrs
+                )
+                (elements model)
+        )
+        (Mark.field "title" textParser)
+        (Mark.field "id" Mark.string)
 
 
 contactButton : Mark.Block (model -> Element msg)

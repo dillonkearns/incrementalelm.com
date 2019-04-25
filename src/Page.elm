@@ -475,8 +475,9 @@ If you're interested to learn more, fill out this form and I'll send you a link 
 
 
 
-| Subheader
-    🎓 Training
+| Navheader
+    id = training
+    title = 🎓 Training
 
 Training packages is a good fit for teams with 4+ Elm engineers. We can arrange to do remote or on-site training depending on your team's needs.
 
@@ -493,6 +494,8 @@ Want to discuss finding the right service to help you improve your elm codebase?
 
 | ContactButton
 
+<>
+<>
 """
       }
     , { title = "Incremental Elm Weekly Unsubscribe"
