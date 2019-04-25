@@ -443,7 +443,7 @@ Download it now to get the descriptions and examples of all of these types of fi
     Incremental Elm Services
 
 | Subheader
-    🏋️\u{200D}♂️ 📚 Core Elm Skills Accelerator Program
+    🏋️\u{200D}♂️ 📚 Growing Elm Modules - Group Coaching Program
 
 Would you like to develop skills to help you with the following challenges?
 
@@ -455,7 +455,7 @@ Would you like to develop skills to help you with the following challenges?
     - How can you use types to fix bugs and prevent new bugs?
 
 
-In my Elm Core Skills Accelerator, you will develop the habits and skills to address these issues head-on. Because the program is structured around group coaching and battle-tested lessons and exercises, the program is relatively high on learning commitment, and relatively low on financial commitment. You'll come away with more than a knowledge dump. You'll come away with real skills and real improvements to your codebase.
+In my Growing Elm Modules program, you will develop the habits and skills to address these issues head-on. Because the program is structured around group coaching and battle-tested lessons and exercises, the program is relatively high on learning commitment, and relatively low on financial commitment. You'll come away with more than a knowledge dump. You'll come away with real skills and real improvements to your codebase.
 
 You'll learn through several mediums:
 | List
@@ -471,7 +471,7 @@ If you're interested to learn more, fill out this form and I'll send you a link 
 
 | Button
     url = /accelerator-application
-    body = Apply for the Accelerator Program
+    body = Apply for Growing Elm Modules Program
 
 
 
