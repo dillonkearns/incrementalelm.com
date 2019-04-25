@@ -69,7 +69,13 @@ document previewItemCount =
         )
         (Mark.manyOf
             [ header
-            , subHeader [ Font.size 24, Font.semiBold, Font.alignLeft, Font.family [ Font.typeface "Raleway" ] ] toplevelText
+            , subHeader
+                [ Font.size 24
+                , Font.semiBold
+                , Font.alignLeft
+                , Font.family [ Font.typeface "Raleway" ]
+                ]
+                toplevelText
             , list
             , image
             , ellie
