@@ -304,7 +304,7 @@ Here's a simple implementation of our last 4 digits view:
 | Signup
     | Config
         buttonText = I want weekly elm tips!
-        formId = 863568508
+        formId = 906002494
     | Header
         Want weekly tips like this one?
     | List
