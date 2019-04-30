@@ -101,7 +101,7 @@ document previewItemCount =
 
 
 topLevel =
-    Mark.map (\viewEls model -> Element.paragraph [] (viewEls model)) toplevelText
+    Mark.map (\viewEls model -> Element.paragraph [ Element.spacing 15 ] (viewEls model)) toplevelText
 
 
 header =
