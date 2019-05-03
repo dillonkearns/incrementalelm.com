@@ -52,6 +52,15 @@ Instead of testing the business logic that's accessible to test in your code, ma
     - Keep all your interesting business logic decoupled from wiring and display logic
     - Given your nice, independent business logic modules, write unit tests for those.
 
+| Signup
+    | Config
+        buttonText = I want weekly elm tips!
+        formId = 906002494
+    | Header
+        Want weekly tips like this one?
+    | List
+        - Go beyond learning what great elm code /looks like/. Learn */how to write it/*.
+        - Tips you won't find anywhere else to level up your elm skills
 
 | Subheader
     Test-first guides you to decouple business logic
