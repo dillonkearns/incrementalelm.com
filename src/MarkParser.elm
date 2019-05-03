@@ -41,6 +41,7 @@ parsePreview validRelativeUrls =
     Mark.parse (document (Just 2))
 
 
+toplevelText : Mark.Block (model -> List (Element msg))
 toplevelText =
     textWith Mark.Default.defaultTextStyle
 
@@ -100,14 +101,17 @@ document previewItemCount =
         )
 
 
+topLevel : Mark.Block (model -> Element msg)
 topLevel =
     Mark.map (\viewEls model -> Element.paragraph [ Element.spacing 15 ] (viewEls model)) toplevelText
 
 
+header : Mark.Block (model -> Element msg)
 header =
     Mark.Default.header [ Font.size 36, Font.center, Font.family [ Font.typeface "Raleway" ], Font.bold ] toplevelText
 
 
+vimeoView : String -> Element msg
 vimeoView videoId =
     Html.div [ Html.Attributes.class "embed-container" ]
         [ Html.iframe
@@ -123,6 +127,7 @@ vimeoView videoId =
         |> Element.el [ Element.width Element.fill ]
 
 
+list : Mark.Block (model -> Element msg)
 list =
     Mark.Default.list
         { style = listStyles
