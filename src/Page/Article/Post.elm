@@ -14,7 +14,7 @@ type alias Post =
 
 all : List Post
 all =
-    [ { pageName = "to-test-or-not"
+    [ { pageName = "to-test-or-not-to-test"
       , title = "To test, or not to test elm code?"
       , body =
             """| Image
