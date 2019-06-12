@@ -574,6 +574,17 @@ If you're interested to learn more, fill out this form and I'll send you a link 
     url = /accelerator-application
     body = Apply for Growing Elm Modules Program
 
+| Navheader
+    id = coaching
+    title = 👥 One-on-one Coaching
+
+I offer more personalized guidance that will help you improve your elm app tailored to your specific needs. If you need help with specific challenges you're facing now, this may be a good fit. If you're looking for more general improvement, the group coaching program may be a better value for you.
+
+One-on-one coaching sessions happen on a weekly or bi-weekly basis. Each session has a priority and focus that we decide on beforehand, and ends with a set of next steps. The next steps serve as an action plan to maximize the learning and give you the opportunity to apply the material from the session.
+
+| Button
+    url = https://app.moonclerk.com/pay/59azfo4etnk4
+    body = See Coaching Pricing
 
 
 | Navheader
