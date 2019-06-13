@@ -375,7 +375,7 @@ link style =
             Element.link style
                 { url = url
                 , label =
-                    Element.paragraph []
+                    Element.row [ Element.htmlAttribute (Html.Attributes.style "display" "inline-flex") ]
                         (List.map (\item -> textFragment item model) txt)
                 }
         )
