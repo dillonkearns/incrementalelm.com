@@ -69,12 +69,7 @@ preamble =
         [ Element.spacing 10
         , Element.centerX
         ]
-        [ paragraph [] "Mark your calendar! We're running an "
-        , Style.Helpers.link
-            { url = "https://www.eventbrite.com/e/advanced-elm-graphql-techniques-workshop-tickets-56480425473"
-            , content = "Elm GraphQL Advanced Techniques Workshop."
-            }
-        , Element.image [ Element.width (Element.px 250), Element.centerX, Element.paddingXY 0 25 ]
+        [ Element.image [ Element.width (Element.px 250), Element.centerX, Element.paddingXY 0 25 ]
             { src = "/assets/graphql-workshop.png"
             , description = "GraphQL Workshop"
             }
