@@ -146,7 +146,7 @@ Here are some popular tips you can check out right away.
 | Signup
     | Config
         buttonText = I want weekly elm tips!
-        formId = 863568508
+        formId = 906002494
     | Header
         Tips for Writing Like a Senior Elm Dev
     | List
@@ -172,7 +172,7 @@ Learn more about how my {Link|Elm Developer Support Packages | url = /services#d
       , body = """| Signup
     | Config
         buttonText = Get weekly elm tips!
-        formId = 573190762
+        formId = 906002494
     | Header
         Get tips in your inbox every week
     | List
@@ -203,7 +203,7 @@ By the way, in my mailing list I introduce a technique called a *Type Bouncer* t
 | Signup
     | Config
         buttonText = Get more elm tips!
-        formId = 573190762
+        formId = 906002494
     | Header
         Learn about the Type Bouncer technique and other elm tips!
     | List
