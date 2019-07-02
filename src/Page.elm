@@ -169,16 +169,25 @@ Learn more about how my {Link|Elm Developer Support Packages | url = /services#d
       }
     , { title = "Weekly elm Tips!"
       , url = "tips"
-      , body = """| Signup
+      , body = """Here are some popular tips you can check out right away.
+| List
+    - {Link|Moving Faster with Tiny Steps in Elm|url = /articles/moving-faster-with-tiny-steps}
+    - {Link|Using elm types to prevent logging social security #'s|url = /articles/exit-gatekeepers}
+
+| Subheader
+    Want more?
+
+I send out practical elm tips every week! 👇
+
+| Signup
     | Config
         buttonText = Get weekly elm tips!
         formId = 906002494
     | Header
-        Get tips in your inbox every week
+        Get tips to improve your elm code every week
     | List
-        - Simple steps that will improve your elm-graphql codebase!
-        - Learn the 4 kinds of Contracts that you can turn into Custom Scalars
-
+        - Go beyond learning what great elm code /looks like/. Learn */how to write it/*.
+        - Tips you won't find anywhere else to level up your elm skills
 """
       }
     , { title = "Exit Checks"
