@@ -12,6 +12,7 @@ import Mark.Error
 import MarkParser
 import RawContent
 import Url exposing (Url)
+import View.Navbar
 
 
 type alias Flags =
