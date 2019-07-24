@@ -29,7 +29,7 @@ import View.Navbar
 
 
 type alias Flags =
-    { assets : Json.Decode.Value
+    { images : Json.Decode.Value
     }
 
 
@@ -53,7 +53,7 @@ type alias Model =
     , dimensions : Dimensions
     , styles : List Animation.State
     , showMenu : Bool
-    , assets : Dict String String
+    , images : Dict String String
     }
 
 
@@ -61,7 +61,7 @@ init : Flags -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
 init flags url key =
     ( { key = key
       , url = url
-      , assets = Json.Decode.decodeValue (Json.Decode.dict Json.Decode.string) flags.assets |> Result.withDefault Dict.empty
+      , images = Json.Decode.decodeValue (Json.Decode.dict Json.Decode.string) flags.images |> Result.withDefault Dict.empty
       , styles = ElmLogo.polygons |> List.map Animation.style
       , menuBarAnimation = View.MenuBar.init
       , menuAnimation =
@@ -219,7 +219,7 @@ view model =
 
 mainView : Model -> { title : String, body : Element Msg }
 mainView model =
-    case RawContent.content model.assets of
+    case RawContent.content model.images of
         Ok site ->
             pageView model site
 
