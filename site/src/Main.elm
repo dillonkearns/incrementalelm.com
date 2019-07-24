@@ -76,6 +76,7 @@ type Msg
     = LinkClicked Browser.UrlRequest
     | UrlChanged Url.Url
     | StartAnimation
+    | Animate Animation.Msg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -126,6 +127,15 @@ update msg model =
                     , Cmd.none
                     )
 
+        Animate time ->
+            ( { model
+                | styles = List.map (Animation.update time) model.styles
+                , menuBarAnimation = View.MenuBar.update time model.menuBarAnimation
+                , menuAnimation = Animation.update time model.menuAnimation
+              }
+            , Cmd.none
+            )
+
 
 interpolation =
     Animation.easing
@@ -135,8 +145,12 @@ interpolation =
 
 
 subscriptions : Model -> Sub Msg
-subscriptions _ =
-    Sub.none
+subscriptions model =
+    Animation.subscription Animate
+        (model.styles
+            ++ View.MenuBar.animationStates model.menuBarAnimation
+            ++ [ model.menuAnimation ]
+        )
 
 
 view : Model -> Browser.Document Msg
