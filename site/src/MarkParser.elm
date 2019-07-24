@@ -267,7 +267,10 @@ image assets =
                             Nothing ->
                                 Err
                                     { title = "Could not image `" ++ imageSrc ++ "`"
-                                    , message = "Must be one of " :: [ "TODO" ]
+                                    , message =
+                                        [ "Must be one of\n"
+                                        , Dict.keys assets |> String.join "\n"
+                                        ]
                                     }
                     )
             )
