@@ -1,6 +1,4 @@
-|> Article
-    author = Dillon Kearns
-    tags = asdf
+|> Articleasdf
     title = Using elm types to prevent logging social security #'s
     description = TODO
 

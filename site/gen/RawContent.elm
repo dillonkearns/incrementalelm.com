@@ -13,10 +13,8 @@ pages : List ( List String, String )
 pages =
     [
     ( ["about"]
-      , """|> Article 
-    author = Matthew Griffith
+      , """|> Article
     title = How I Learned /elm-markup/
-    tags = software other
     description =
         How I learned to use elm-markup.
 
@@ -60,9 +58,7 @@ What does a *list* look like?
 
   ,( ["articles"]
       , """|> Article
-    author = Matthew Griffith
     title = How I Learned /elm-markup/
-    tags = software other
     description =
         How I learned to use elm-markup.
 
@@ -75,9 +71,7 @@ Here are some articles. You can learn more at.....
 
   ,( []
       , """|> Article
-    author = Dillon Kearns
     title = Incremental Elm Consulting
-    tags = software other
     description = How I learned to use elm-markup.
 
 |> H1
@@ -126,9 +120,7 @@ posts : List ( List String, String )
 posts =
     [
     ( ["articles", "exit-gatekeepers"]
-      , """|> Article
-    author = Dillon Kearns
-    tags = asdf
+      , """|> Articleasdf
     title = Using elm types to prevent logging social security #'s
     description = TODO
 
@@ -291,9 +283,7 @@ Here are some steps you can apply:
 
   ,( ["articles", "moving-faster-with-tiny-steps"]
       , """|> Article
-    author = Dillon Kearns
     title = Moving Faster with Tiny Steps in Elm
-    tags = software other
     description =
         How I learned to use elm-markup.
 
@@ -453,9 +443,7 @@ Let me know how this technique goes! I've gotten a lot of great feedback from my
 
   ,( ["articles", "to-test-or-not-to-test"]
       , """|> Article
-    author = Dillon Kearns
     title = To test, or not to test elm code?
-    tags = software other
     description =
         How I learned to use elm-markup.
 

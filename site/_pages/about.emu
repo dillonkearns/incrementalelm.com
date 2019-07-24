@@ -1,7 +1,5 @@
-|> Article 
-    author = Matthew Griffith
+|> Article
     title = How I Learned /elm-markup/
-    tags = software other
     description =
         How I learned to use elm-markup.
 

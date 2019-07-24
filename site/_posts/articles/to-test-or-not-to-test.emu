@@ -1,7 +1,5 @@
 |> Article
-    author = Dillon Kearns
     title = To test, or not to test elm code?
-    tags = software other
     description =
         How I learned to use elm-markup.
 

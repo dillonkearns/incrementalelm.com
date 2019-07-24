@@ -174,9 +174,7 @@ stylesFor styles =
 
 
 type alias Metadata msg =
-    { author : String
-    , description : List (Element msg)
-    , tags : List String
+    { description : List (Element msg)
     , title : { styled : Element msg, raw : String }
     }
 
@@ -184,21 +182,17 @@ type alias Metadata msg =
 metadata : Mark.Block (Metadata msg)
 metadata =
     Mark.record "Article"
-        (\author description title tags ->
-            { author = author
-            , description = description
+        (\description title ->
+            { description = description
             , title = title
-            , tags = tags
             }
         )
-        |> Mark.field "author" Mark.string
         |> Mark.field "description" text
         |> Mark.field "title"
             (Mark.map
                 gather
                 titleText
             )
-        |> Mark.field "tags" (Mark.string |> Mark.map (String.split " "))
         |> Mark.toBlock
 
 
@@ -412,7 +406,7 @@ signupForm =
 --         { author = author
 --         , description = description
 --         , title = title
---         , tags = tags
+--         ,tags
 --         }
 --     )
 --     |> Mark.field "author" Mark.string
