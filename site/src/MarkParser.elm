@@ -37,9 +37,7 @@ document indexView =
                     , Element.spacing 30
                     , Font.size 18
                     ]
-                    (titleView meta.title.styled
-                        :: body
-                    )
+                    body
                 ]
             , preview =
                 body |> List.take 2
