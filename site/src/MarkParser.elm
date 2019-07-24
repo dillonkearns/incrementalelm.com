@@ -376,30 +376,3 @@ signupForm =
                 ]
             )
         |> Mark.toBlock
-
-
-
--- (Mark.manyOf
---     [ header
---     , list
---
---     -- , topLevel
---     ]
--- )
--- Mark.record "Article"
---     (\author description title tags ->
---         { author = author
---         , description = description
---         , title = title
---         ,tags
---         }
---     )
---     |> Mark.field "author" Mark.string
---     |> Mark.field "description" text
---     |> Mark.field "title"
---         (Mark.map
---             gather
---             titleText
---         )
---     |> Mark.field "tags" (Mark.string |> Mark.map (String.split " "))
---     |> Mark.toBlock
