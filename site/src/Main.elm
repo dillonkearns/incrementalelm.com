@@ -5,6 +5,7 @@ import Browser
 import Browser.Navigation as Nav
 import Content exposing (Content)
 import Dimensions exposing (Dimensions)
+import Ease
 import Element exposing (Element)
 import Element.Border
 import Element.Font as Font
@@ -45,6 +46,7 @@ type alias Model =
     , menuAnimation : Animation.State
     , dimensions : Dimensions
     , styles : List Animation.State
+    , showMenu : Bool
     }
 
 
@@ -64,6 +66,7 @@ init flags url key =
                 , height = 0
                 , device = Element.classifyDevice { height = 0, width = 0 }
                 }
+      , showMenu = False
       }
     , Cmd.none
     )
@@ -92,7 +95,43 @@ update msg model =
             )
 
         StartAnimation ->
-            ( model, Cmd.none )
+            case model.showMenu of
+                True ->
+                    ( { model
+                        | showMenu = False
+                        , menuBarAnimation = View.MenuBar.startAnimation model
+                        , menuAnimation =
+                            model.menuAnimation
+                                |> Animation.interrupt
+                                    [ Animation.toWith interpolation
+                                        [ Animation.opacity 100
+                                        ]
+                                    ]
+                      }
+                    , Cmd.none
+                    )
+
+                False ->
+                    ( { model
+                        | showMenu = True
+                        , menuBarAnimation = View.MenuBar.startAnimation model
+                        , menuAnimation =
+                            model.menuAnimation
+                                |> Animation.interrupt
+                                    [ Animation.toWith interpolation
+                                        [ Animation.opacity 100
+                                        ]
+                                    ]
+                      }
+                    , Cmd.none
+                    )
+
+
+interpolation =
+    Animation.easing
+        { duration = second * 1
+        , ease = Ease.inOutCubic
+        }
 
 
 subscriptions : Model -> Sub Msg
