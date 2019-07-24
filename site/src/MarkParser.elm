@@ -109,20 +109,7 @@ titleText =
                 , raw = string
                 }
         , replacements = Mark.commonReplacements
-        , inlines =
-            [-- Mark.annotation "link"
-             --    (\texts url ->
-             --        Element.link []
-             --            { url = url
-             --            , label =
-             --                Element.row
-             --                    [ Element.htmlAttribute (Attr.style "display" "inline-flex")
-             --                    ]
-             --                    (List.map (applyTuple viewText) texts)
-             --            }
-             --    )
-             --    |> Mark.field "url" Mark.string
-            ]
+        , inlines = []
         }
 
 
