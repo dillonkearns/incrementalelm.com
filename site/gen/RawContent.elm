@@ -73,6 +73,17 @@ Here are some articles. You can learn more at.....
 """
       )
 
+  ,( []
+      , """|> Article
+    author = Dillon Kearns
+    title = Incremental Elm Consulting
+    tags = software other
+    description = How I learned to use elm-markup.
+
+Welcome to the home page!
+"""
+      )
+
     ]
 
 
