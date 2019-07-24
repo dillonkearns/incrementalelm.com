@@ -305,30 +305,25 @@ list =
 
 renderList : Mark.Enumerated (Element msg) -> Element msg
 renderList (Mark.Enumerated enum) =
-    let
-        group =
-            case enum.icon of
-                Mark.Bullet ->
-                    Html.ul
-
-                Mark.Number ->
-                    Html.ol
-    in
-    -- group []
-    --     (List.map renderItem enum.items)
     Element.column []
-        (List.map renderItem enum.items)
+        (List.map (renderItem enum.icon) enum.items)
 
 
-renderItem : Mark.Item (Element msg) -> Element msg
-renderItem (Mark.Item item) =
-    -- Html.li []
-    --     [ Html.div [] item.content
-    --     , renderList item.children
-    --     ]
+renderItem : Mark.Icon -> Mark.Item (Element msg) -> Element msg
+renderItem icon (Mark.Item item) =
     Element.textColumn []
         [ Element.row [ Element.spacing 10 ]
-            [ Element.el [] (Element.text "•")
+            [ Element.el []
+                (Element.text
+                    (case icon of
+                        Mark.Bullet ->
+                            "•"
+
+                        Mark.Number ->
+                            (item.index |> Tuple.first |> (\n -> n + 1) |> String.fromInt)
+                                ++ "."
+                    )
+                )
             , Element.paragraph [] item.content
             ]
         , renderList item.children
