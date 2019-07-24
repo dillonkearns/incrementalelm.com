@@ -2,6 +2,8 @@ module Main exposing (main)
 
 import Animation
 import Browser
+import Browser.Dom as Dom
+import Browser.Events
 import Browser.Navigation as Nav
 import Content exposing (Content)
 import Dimensions exposing (Dimensions)
@@ -17,6 +19,7 @@ import MarkParser
 import RawContent
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
+import Task
 import Time
 import Url exposing (Url)
 import View.MenuBar
@@ -68,7 +71,8 @@ init flags url key =
                 }
       , showMenu = False
       }
-    , Cmd.none
+    , Dom.getViewport
+        |> Task.perform InitialViewport
     )
 
 
@@ -77,6 +81,8 @@ type Msg
     | UrlChanged Url.Url
     | StartAnimation
     | Animate Animation.Msg
+    | InitialViewport Dom.Viewport
+    | WindowResized Int Int
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -92,6 +98,34 @@ update msg model =
 
         UrlChanged url ->
             ( { model | url = url }
+            , Cmd.none
+            )
+
+        InitialViewport { viewport } ->
+            ( { model
+                | dimensions =
+                    Dimensions.init
+                        { width = viewport.width
+                        , height = viewport.height
+                        , device =
+                            Element.classifyDevice
+                                { height = round viewport.height
+                                , width = round viewport.width
+                                }
+                        }
+              }
+            , Cmd.none
+            )
+
+        WindowResized width height ->
+            ( { model
+                | dimensions =
+                    Dimensions.init
+                        { width = toFloat width
+                        , height = toFloat height
+                        , device = Element.classifyDevice { height = height, width = width }
+                        }
+              }
             , Cmd.none
             )
 
@@ -146,11 +180,14 @@ interpolation =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Animation.subscription Animate
-        (model.styles
-            ++ View.MenuBar.animationStates model.menuBarAnimation
-            ++ [ model.menuAnimation ]
-        )
+    Sub.batch
+        [ Animation.subscription Animate
+            (model.styles
+                ++ View.MenuBar.animationStates model.menuBarAnimation
+                ++ [ model.menuAnimation ]
+            )
+        , Browser.Events.onResize WindowResized
+        ]
 
 
 view : Model -> Browser.Document Msg
