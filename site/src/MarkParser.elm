@@ -58,10 +58,10 @@ document indexView =
 titleView : Element msg -> Element msg
 titleView title =
     Element.paragraph
-        [ Font.size 56
+        [ Font.size 36
         , Font.center
         , Font.family [ Font.typeface "Raleway" ]
-        , Font.bold
+        , Font.semiBold
         ]
         [ Element.el
             [ Element.centerX
