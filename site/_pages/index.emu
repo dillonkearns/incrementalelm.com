@@ -4,4 +4,34 @@
     tags = software other
     description = How I learned to use elm-markup.
 
-Welcome to the home page!
+|> H1
+    Stop Learning Elm Best Practices */The Hard Way/*
+
+Your team has got the hang of Elm. Now it's time to take it to the next level.
+
+You might want to keep reading if:
+
+|> List
+    - You want your team to write elm code faster, and to keep writing it fast as your codebase grows.
+    - You want your senior devs to spend their time applying elm best practices, not *figuring them out*.
+    - You want expert guidance, proven elm techniques, and battle-tested learning material to level up your elm team and codebase fast.
+
+If you're a do-it-yourself kind of person, look no further! You can level up with my Weekly Mastering Elm Tips right now.
+
+Here are some popular tips you can check out right away.
+
+|> List
+    - [How can I write elm code faster, and without getting stuck?]{link|url = /learn/moving-faster-with-tiny-steps}
+    - [How can I improve my elm-graphql codebase?]{link|url = /custom-scalar-checklist}
+
+|> Signup
+    |> Config
+        buttonText = I want weekly elm tips!
+        formId = 906002494
+
+|> H1
+    How I can help your team level up
+
+I save your team time by teaching techniques to write elm like an expert. Spoiler alert: the elm experts don't make it look easy by working their brains really hard. They know how to let the elm compiler do its job so they can look smart with minimal effort. And you can learn the skills and principles to build elm apps with fewer bugs and less effort, too.
+
+Learn more about how my [Elm Developer Support Packages]{link| url = /services#developer-support} can save your team time and help you deliver on Elm's promise of insanely reliable, easy to maintain applications. Or check out [my other service offerings]{link| url = /services}.
