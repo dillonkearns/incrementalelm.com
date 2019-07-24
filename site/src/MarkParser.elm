@@ -7,6 +7,7 @@ import Html exposing (Html)
 import Html.Attributes as Attr
 import Mark
 import Mark.Error
+import View.DripSignupForm
 
 
 document :
@@ -43,6 +44,7 @@ document indexView =
                 , list
                 , code
                 , indexContent indexView
+                , signupForm
                 , Mark.map
                     (Element.paragraph
                         []
@@ -352,3 +354,74 @@ renderItem (Mark.Item item) =
             ]
         , renderList item.children
         ]
+
+
+signupForm : Mark.Block (Element msg)
+signupForm =
+    let
+        body =
+            [ Element.none ]
+    in
+    Mark.block "Signup"
+        (\config ->
+            [ Element.column
+                [ Font.center
+                , Element.spacing 30
+                , Element.centerX
+                ]
+                body
+            , View.DripSignupForm.viewNew config.buttonText config.formId { maybeReferenceId = Nothing }
+                |> Element.html
+                |> Element.el [ Element.width Element.fill ]
+            , [ Element.text "We'll never share your email. Unsubscribe any time." ]
+                |> Element.paragraph
+                    [ Font.color (Element.rgba255 0 0 0 0.5)
+                    , Font.size 14
+                    , Font.center
+                    ]
+            ]
+                |> Element.column
+                    [ Element.width Element.fill
+                    , Element.padding 20
+                    , Element.spacing 20
+                    , Element.Border.shadow { offset = ( 0, 0 ), size = 1, blur = 4, color = Element.rgb 0.8 0.8 0.8 }
+                    , Element.mouseOver
+                        [ Element.Border.shadow { offset = ( 0, 0 ), size = 1, blur = 4, color = Element.rgb 0.85 0.85 0.85 } ]
+                    , Element.width (Element.fill |> Element.maximum 500)
+                    , Element.centerX
+                    ]
+                |> Element.el []
+        )
+        (Mark.record "Config"
+            (\buttonText formId -> { buttonText = buttonText, formId = formId })
+            |> Mark.field "buttonText" Mark.string
+            |> Mark.field "formId" Mark.string
+            |> Mark.toBlock
+        )
+
+
+
+-- (Mark.manyOf
+--     [ header
+--     , list
+--
+--     -- , topLevel
+--     ]
+-- )
+-- Mark.record "Article"
+--     (\author description title tags ->
+--         { author = author
+--         , description = description
+--         , title = title
+--         , tags = tags
+--         }
+--     )
+--     |> Mark.field "author" Mark.string
+--     |> Mark.field "description" text
+--     |> Mark.field "title"
+--         (Mark.map
+--             gather
+--             titleText
+--         )
+--     |> Mark.field "tags" (Mark.string |> Mark.map (String.split " "))
+--     |> Mark.toBlock

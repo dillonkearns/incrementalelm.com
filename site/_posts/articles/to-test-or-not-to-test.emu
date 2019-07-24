@@ -39,3 +39,12 @@ Instead of testing the business logic that's accessible to test in your code, ma
 |> List
     - Keep all your interesting business logic decoupled from wiring and display logic
     - Given your nice, independent business logic modules, write unit tests for those.
+
+|> Signup
+    |> Config
+        buttonText = I want weekly elm tips!
+        formId = 906002494
+
+|> H2
+    Test-first guides you to decouple business logic
+Writing unit tests before versus after writing your implementation is fundamentally different. One of the core benefits of Test-Driven Development is that it guides you to keep your business logic decoupled from your wiring and view logic. Because you're writing tests first, you will naturally write testable code, since you're thinking about how to test it */before/* you think about how to implement it.
