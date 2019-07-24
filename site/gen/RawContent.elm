@@ -120,7 +120,7 @@ posts : List ( List String, String )
 posts =
     [
     ( ["articles", "exit-gatekeepers"]
-      , """|> Articleasdf
+      , """|> Article
     title = Using elm types to prevent logging social security #'s
     description = TODO
 
@@ -288,7 +288,7 @@ Here are some steps you can apply:
         How I learned to use elm-markup.
 
 |> Image
-    src = mountains.jpg
+    src = /assets/mountains.jpg
     description = The Elm Architecture
 
 
