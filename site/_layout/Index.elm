@@ -21,9 +21,8 @@ postSummary :
     ( List String, PageOrPost msg )
     -> Element msg
 postSummary ( postPath, post ) =
-    -- post.metadata.title.styled
-    --     |> linkToPost postPath
     articleIndex post
+        |> linkToPost postPath
 
 
 linkToPost : List String -> Element msg -> Element msg
@@ -52,28 +51,24 @@ title text =
 
 articleIndex : PageOrPost msg -> Element msg
 articleIndex resource =
-    Style.Helpers.sameTabLink2
-        { url = "/articles/" -- ++ resource.pageName
-        , content =
-            Element.column
-                [ Element.centerX
-                , Element.width (Element.maximum 800 Element.fill)
-                , Element.centerX
-                , Element.padding 40
-                , Element.spacing 10
-                , Element.Border.width 1
-                , Element.Border.color (Element.rgba255 0 0 0 0.1)
-                , Element.mouseOver
-                    [ Element.Border.color (Element.rgba255 0 0 0 1)
-                    ]
-                ]
-                [ title resource.metadata.title.raw
-                , Element.column [ Element.spacing 20 ]
-                    [ resource |> postPreview
-                    , readMoreLink
-                    ]
-                ]
-        }
+    Element.column
+        [ Element.centerX
+        , Element.width (Element.maximum 800 Element.fill)
+        , Element.centerX
+        , Element.padding 40
+        , Element.spacing 10
+        , Element.Border.width 1
+        , Element.Border.color (Element.rgba255 0 0 0 0.1)
+        , Element.mouseOver
+            [ Element.Border.color (Element.rgba255 0 0 0 1)
+            ]
+        ]
+        [ title resource.metadata.title.raw
+        , Element.column [ Element.spacing 20 ]
+            [ resource |> postPreview
+            , readMoreLink
+            ]
+        ]
 
 
 readMoreLink =
