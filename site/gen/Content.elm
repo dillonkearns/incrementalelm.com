@@ -47,10 +47,10 @@ buildAllData :
     Dict String String
     -> { pages : List ( List String, String ), posts : List ( List String, String ) }
     -> Result (Element msg) (Content msg)
-buildAllData assets record =
+buildAllData imageAssets record =
     case
         record.posts
-            |> List.map (\( path, markup ) -> ( path, Mark.compile (MarkParser.document assets Element.none) markup ))
+            |> List.map (\( path, markup ) -> ( path, Mark.compile (MarkParser.document imageAssets Element.none) markup ))
             |> combineResults
     of
         Ok postListings ->
@@ -61,7 +61,7 @@ buildAllData assets record =
                             (\( path, markup ) ->
                                 ( path
                                 , Mark.compile
-                                    (MarkParser.document assets (Index.view postListings))
+                                    (MarkParser.document imageAssets (Index.view postListings))
                                     markup
                                 )
                             )

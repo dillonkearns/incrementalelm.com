@@ -28,7 +28,7 @@ document :
             , metadata : Metadata msg
             , preview : List (Element msg)
             }
-document assets indexView =
+document imageAssets indexView =
     Mark.documentWith
         (\meta body ->
             { metadata = meta
@@ -51,7 +51,7 @@ document assets indexView =
             Mark.manyOf
                 [ header
                 , h2
-                , image assets
+                , image imageAssets
                 , list
                 , code
                 , indexContent indexView
@@ -236,15 +236,8 @@ h2 =
         text
 
 
-
---   const assets = {
---   "dillon2.jpg": require("../../assets/assets/dillon2.jpg"),
---   "article-cover/exit.jpg": require("../../assets/assets/article-cover/exit.jpg")
--- };
-
-
 image : Dict String String -> Mark.Block (Element msg)
-image assets =
+image imageAssets =
     Mark.record "Image"
         (\src description ->
             Element.image
@@ -260,7 +253,7 @@ image assets =
             (Mark.string
                 |> Mark.verify
                     (\imageSrc ->
-                        case Dict.get imageSrc assets of
+                        case Dict.get imageSrc imageAssets of
                             Just hashedImagePath ->
                                 Ok hashedImagePath
 
@@ -269,7 +262,7 @@ image assets =
                                     { title = "Could not image `" ++ imageSrc ++ "`"
                                     , message =
                                         [ "Must be one of\n"
-                                        , Dict.keys assets |> String.join "\n"
+                                        , Dict.keys imageAssets |> String.join "\n"
                                         ]
                                     }
                     )

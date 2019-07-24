@@ -6,8 +6,8 @@ import Element exposing (Element)
 
 
 content : Dict String String -> Result (Element msg) (Content msg)
-content assets =
-    Content.buildAllData assets { pages = pages, posts = posts }
+content imageAssets =
+    Content.buildAllData imageAssets { pages = pages, posts = posts }
 
 
 pages : List ( List String, String )
