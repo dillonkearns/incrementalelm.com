@@ -25,9 +25,9 @@ document indexView =
             , body =
                 [ Element.textColumn
                     [ Element.centerX
-                    , Element.spacing 20
                     , Element.width Element.fill
-                    , Element.padding 50
+                    , Element.spacing 30
+                    , Font.size 18
                     ]
                     (titleView meta.title.styled
                         :: body
@@ -48,7 +48,7 @@ document indexView =
                 , signupForm
                 , Mark.map
                     (Element.paragraph
-                        []
+                        [ Element.spacing 15 ]
                     )
                     text
                 ]

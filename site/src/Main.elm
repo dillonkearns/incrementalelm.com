@@ -230,8 +230,21 @@ pageView model content =
         Just pageOrPost ->
             { title = pageOrPost.metadata.title.raw
             , body =
-                (header model :: pageOrPost.body)
-                    |> Element.textColumn [ Element.width Element.fill ]
+                [ header model
+                , pageOrPost.body
+                    |> Element.column
+                        [ if Dimensions.isMobile model.dimensions then
+                            Element.width (Element.fill |> Element.maximum 600)
+
+                          else
+                            Element.width (Element.fill |> Element.maximum 700)
+                        , Element.height Element.fill
+                        , Element.padding 20
+                        , Element.spacing 20
+                        , Element.centerX
+                        ]
+                ]
+                    |> Element.column [ Element.width Element.fill ]
             }
 
         Nothing ->
