@@ -5,7 +5,7 @@ import Index
 import List.Extra
 import Mark
 import Mark.Error
-import MarkParser
+import MarkParser exposing (PageOrPost)
 import Result.Extra
 import Url exposing (Url)
 
@@ -13,11 +13,7 @@ import Url exposing (Url)
 lookup :
     Content msg
     -> Url
-    ->
-        Maybe
-            { body : List (Element msg)
-            , metadata : MarkParser.Metadata msg
-            }
+    -> Maybe (PageOrPost msg)
 lookup content url =
     List.Extra.find
         (\( path, markup ) ->
@@ -40,19 +36,9 @@ dropTrailingSlash path =
 
 type alias Content msg =
     { posts :
-        List
-            ( List String
-            , { body : List (Element msg)
-              , metadata : MarkParser.Metadata msg
-              }
-            )
+        List ( List String, PageOrPost msg )
     , pages :
-        List
-            ( List String
-            , { body : List (Element msg)
-              , metadata : MarkParser.Metadata msg
-              }
-            )
+        List ( List String, PageOrPost msg )
     }
 
 
@@ -107,27 +93,8 @@ renderErrors ( path, errors ) =
 
 
 combineResults :
-    List
-        ( List String
-        , Mark.Outcome (List Mark.Error.Error)
-            (Mark.Partial
-                { body : List (Element msg)
-                , metadata : MarkParser.Metadata msg
-                }
-            )
-            { body : List (Element msg)
-            , metadata : MarkParser.Metadata msg
-            }
-        )
-    ->
-        Result ( List String, List Mark.Error.Error )
-            (List
-                ( List String
-                , { body : List (Element msg)
-                  , metadata : MarkParser.Metadata msg
-                  }
-                )
-            )
+    List ( List String, Mark.Outcome (List Mark.Error.Error) (Mark.Partial (PageOrPost msg)) (PageOrPost msg) )
+    -> Result ( List String, List Mark.Error.Error ) (List ( List String, PageOrPost msg ))
 combineResults list =
     list
         |> List.map

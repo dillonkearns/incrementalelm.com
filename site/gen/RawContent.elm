@@ -58,11 +58,8 @@ What does a *list* look like?
 
   ,( ["articles"]
       , """|> Article
-    title = How I Learned /elm-markup/
-    description =
-        How I learned to use elm-markup.
-
-Here are some articles. You can learn more at.....
+    title = Articles
+    description = Incremental Elm Consulting articles
 
 |> IndexContent
     posts = articles

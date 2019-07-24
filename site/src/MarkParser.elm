@@ -1,4 +1,4 @@
-module MarkParser exposing (Metadata, document)
+module MarkParser exposing (Metadata, PageOrPost, document)
 
 import Element exposing (Element)
 import Element.Border
@@ -11,12 +11,20 @@ import View.CodeSnippet
 import View.DripSignupForm
 
 
+type alias PageOrPost msg =
+    { body : List (Element msg)
+    , metadata : Metadata msg
+    , preview : List (Element msg)
+    }
+
+
 document :
     Element msg
     ->
         Mark.Document
             { body : List (Element msg)
             , metadata : Metadata msg
+            , preview : List (Element msg)
             }
 document indexView =
     Mark.documentWith
@@ -33,6 +41,8 @@ document indexView =
                         :: body
                     )
                 ]
+            , preview =
+                body |> List.take 2
             }
         )
         -- We have some required metadata that starts our document.
@@ -52,6 +62,8 @@ document indexView =
                     )
                     text
                 ]
+
+        -- |> Mark.map (List.take 2)
         }
 
 
