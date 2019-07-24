@@ -358,12 +358,8 @@ renderItem (Mark.Item item) =
 
 signupForm : Mark.Block (Element msg)
 signupForm =
-    let
-        body =
-            [ Element.none ]
-    in
     Mark.record "Signup"
-        (\buttonText formId ->
+        (\buttonText formId body ->
             [ Element.column
                 [ Font.center
                 , Element.spacing 30
@@ -394,6 +390,12 @@ signupForm =
         )
         |> Mark.field "buttonText" Mark.string
         |> Mark.field "formId" Mark.string
+        |> Mark.field "body"
+            (Mark.manyOf
+                [ header
+                , list
+                ]
+            )
         |> Mark.toBlock
 
 

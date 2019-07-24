@@ -103,6 +103,12 @@ Here are some popular tips you can check out right away.
 |> Signup
     buttonText = I want weekly elm tips!
     formId = 906002494
+    body =
+        |> H1
+            Tips for Writing Like a Senior Elm Dev
+        |> List
+            - Go beyond learning what great elm code /looks like/. Learn */how to write it/*.
+            - Tips you won't find anywhere else to level up your elm skills
 
 |> H1
     How I can help your team level up
@@ -260,6 +266,12 @@ Here's a simple implementation of our last 4 digits view:
 |> Signup
     buttonText = I want weekly elm tips!
     formId = 906002494
+    body =
+        |> H1
+            Tips for Writing Like a Senior Elm Dev
+        |> List
+            - Go beyond learning what great elm code /looks like/. Learn */how to write it/*.
+            - Tips you won't find anywhere else to level up your elm skills
 
 |> H2
     Takeaways
@@ -487,6 +499,12 @@ Instead of testing the business logic that's accessible to test in your code, ma
 |> Signup
     buttonText = I want weekly elm tips!
     formId = 906002494
+    body =
+        |> H1
+            Tips for Writing Like a Senior Elm Dev
+        |> List
+            - Go beyond learning what great elm code /looks like/. Learn */how to write it/*.
+            - Tips you won't find anywhere else to level up your elm skills
 
 |> H2
     Test-first guides you to decouple business logic
