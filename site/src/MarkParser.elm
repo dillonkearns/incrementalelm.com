@@ -311,9 +311,9 @@ renderList (Mark.Enumerated enum) =
 
 renderItem : Mark.Icon -> Mark.Item (Element msg) -> Element msg
 renderItem icon (Mark.Item item) =
-    Element.textColumn []
-        [ Element.row [ Element.spacing 10 ]
-            [ Element.el []
+    Element.column [ Element.width Element.fill, Element.spacing 20 ]
+        [ Element.row [ Element.width Element.fill, Element.spacing 10 ]
+            [ Element.el [ Element.alignTop ]
                 (Element.text
                     (case icon of
                         Mark.Bullet ->
@@ -324,7 +324,7 @@ renderItem icon (Mark.Item item) =
                                 ++ "."
                     )
                 )
-            , Element.paragraph [] item.content
+            , Element.row [ Element.width Element.fill ] item.content
             ]
         , renderList item.children
         ]
