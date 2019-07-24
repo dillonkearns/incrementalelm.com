@@ -6,12 +6,14 @@ import Browser.Dom as Dom
 import Browser.Events
 import Browser.Navigation as Nav
 import Content exposing (Content)
+import Dict exposing (Dict)
 import Dimensions exposing (Dimensions)
 import Ease
 import Element exposing (Element)
 import Element.Border
 import Element.Font as Font
 import ElmLogo
+import Json.Decode
 import List.Extra
 import Mark
 import Mark.Error
@@ -27,7 +29,8 @@ import View.Navbar
 
 
 type alias Flags =
-    ()
+    { assets : Json.Decode.Value
+    }
 
 
 main : Program Flags Model Msg
@@ -50,6 +53,7 @@ type alias Model =
     , dimensions : Dimensions
     , styles : List Animation.State
     , showMenu : Bool
+    , assets : Dict String String
     }
 
 
@@ -57,6 +61,7 @@ init : Flags -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
 init flags url key =
     ( { key = key
       , url = url
+      , assets = Json.Decode.decodeValue (Json.Decode.dict Json.Decode.string) flags.assets |> Result.withDefault Dict.empty
       , styles = ElmLogo.polygons |> List.map Animation.style
       , menuBarAnimation = View.MenuBar.init
       , menuAnimation =
@@ -214,7 +219,7 @@ view model =
 
 mainView : Model -> { title : String, body : Element Msg }
 mainView model =
-    case RawContent.content of
+    case RawContent.content model.assets of
         Ok site ->
             pageView model site
 

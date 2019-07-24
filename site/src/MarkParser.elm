@@ -1,5 +1,6 @@
 module MarkParser exposing (Metadata, PageOrPost, document)
 
+import Dict exposing (Dict)
 import Element exposing (Element)
 import Element.Border
 import Element.Font as Font
@@ -19,14 +20,15 @@ type alias PageOrPost msg =
 
 
 document :
-    Element msg
+    Dict String String
+    -> Element msg
     ->
         Mark.Document
             { body : List (Element msg)
             , metadata : Metadata msg
             , preview : List (Element msg)
             }
-document indexView =
+document assets indexView =
     Mark.documentWith
         (\meta body ->
             { metadata = meta
@@ -49,7 +51,7 @@ document indexView =
             Mark.manyOf
                 [ header
                 , h2
-                , image
+                , image assets
                 , list
                 , code
                 , indexContent indexView
@@ -234,8 +236,15 @@ h2 =
         text
 
 
-image : Mark.Block (Element msg)
-image =
+
+--   const assets = {
+--   "dillon2.jpg": require("../../assets/assets/dillon2.jpg"),
+--   "article-cover/exit.jpg": require("../../assets/assets/article-cover/exit.jpg")
+-- };
+
+
+image : Dict String String -> Mark.Block (Element msg)
+image assets =
     Mark.record "Image"
         (\src description ->
             Element.image
@@ -247,7 +256,21 @@ image =
                 }
                 |> Element.el [ Element.centerX ]
         )
-        |> Mark.field "src" Mark.string
+        |> Mark.field "src"
+            (Mark.string
+                |> Mark.verify
+                    (\imageSrc ->
+                        case Dict.get imageSrc assets of
+                            Just hashedImagePath ->
+                                Ok hashedImagePath
+
+                            Nothing ->
+                                Err
+                                    { title = "Could not image `" ++ imageSrc ++ "`"
+                                    , message = "Must be one of " :: [ "TODO" ]
+                                    }
+                    )
+            )
         |> Mark.field "description" Mark.string
         |> Mark.toBlock
 

@@ -4,7 +4,7 @@
 
 
 |> Image
-    src = /assets/article-cover/exit.jpg
+    src = article-cover/exit.jpg
     description = Exit Gatekeepers
 
 

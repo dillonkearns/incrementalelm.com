@@ -1,5 +1,6 @@
 module Content exposing (Content, buildAllData, lookup)
 
+import Dict exposing (Dict)
 import Element exposing (Element)
 import Index
 import List.Extra
@@ -43,12 +44,13 @@ type alias Content msg =
 
 
 buildAllData :
-    { pages : List ( List String, String ), posts : List ( List String, String ) }
+    Dict String String
+    -> { pages : List ( List String, String ), posts : List ( List String, String ) }
     -> Result (Element msg) (Content msg)
-buildAllData record =
+buildAllData assets record =
     case
         record.posts
-            |> List.map (\( path, markup ) -> ( path, Mark.compile (MarkParser.document Element.none) markup ))
+            |> List.map (\( path, markup ) -> ( path, Mark.compile (MarkParser.document assets Element.none) markup ))
             |> combineResults
     of
         Ok postListings ->
@@ -59,9 +61,7 @@ buildAllData record =
                             (\( path, markup ) ->
                                 ( path
                                 , Mark.compile
-                                    (MarkParser.document
-                                        (Index.view postListings)
-                                    )
+                                    (MarkParser.document assets (Index.view postListings))
                                     markup
                                 )
                             )

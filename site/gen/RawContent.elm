@@ -1,62 +1,18 @@
 module RawContent exposing (content)
 
 import Content exposing (Content)
+import Dict exposing (Dict)
 import Element exposing (Element)
 
 
-content : Result (Element msg) (Content msg)
-content =
-    Content.buildAllData { pages = pages, posts = posts }
+content : Dict String String -> Result (Element msg) (Content msg)
+content assets =
+    Content.buildAllData assets { pages = pages, posts = posts }
 
 
 pages : List ( List String, String )
 pages =
-    [
-    ( ["about"]
-      , """|> Article
-    title = How I Learned /elm-markup/
-    description =
-        How I learned to use elm-markup.
-
-dummy text of the printing and [typesetting industry]{link| url = http://mechanical-elephant.com }. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. In id pellentesque elit, id sollicitudin felis. Morbi eu risus molestie enim suscipit auctor. Morbi pharetra, nisl ut finibus ornare, dolor tortor aliquet est, quis feugiat odio sem ut sem. Nullam eu bibendum ligula. Nunc mollis tortor ac rutrum interdum. Nunc ultrices risus eu pretium interdum. Nullam maximus convallis quam vitae ullamcorper. Praesent sapien nulla, hendrerit quis tincidunt a, placerat et felis. Nullam consectetur magna nec lacinia egestas. Aenean rutrum nunc diam.
-Morbi ut porta justo. Integer ac eleifend sem. Fusce sed auctor velit, et condimentum quam. Vivamus id mollis libero, mattis commodo mauris. In hac habitasse platea dictumst. Duis eu lobortis arcu, ac volutpat ante. Duis sapien enim, auctor vitae semper vitae, tincidunt et justo. Cras aliquet turpis nec enim mattis finibus. Nulla diam urna, semper ut elementum at, porttitor ut sapien. Pellentesque et dui neque. In eget lectus odio. Fusce nulla velit, eleifend sit amet malesuada ac, hendrerit id neque. Curabitur blandit elit et urna fringilla, id commodo quam fermentum.
-But for real, here's a kitten.
-
-
-|> Image
-    src = http://placekitten.com/g/200/300
-    description = What a cute kitten.
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. In id pellentesque elit, id sollicitudin felis. Morbi eu risus molestie enim suscipit auctor. Morbi pharetra, nisl ut finibus ornare, dolor tortor aliquet est, quis feugiat odio sem ut sem. Nullam eu bibendum ligula. Nunc mollis tortor ac rutrum interdum. Nunc ultrices risus eu pretium interdum. Nullam maximus convallis quam vitae ullamcorper. Praesent sapien nulla, hendrerit quis tincidunt a, placerat et felis. Nullam consectetur magna nec lacinia egestas. Aenean rutrum nunc diam.
-Morbi ut porta justo. Integer ac eleifend sem. Fusce sed auctor velit, et condimentum quam. Vivamus id mollis libero, mattis commodo mauris. In hac habitasse platea dictumst. Duis eu lobortis arcu, ac volutpat ante. Duis sapien enim, auctor vitae semper vitae, tincidunt et justo. Cras aliquet turpis nec enim mattis finibus. Nulla diam urna, semper ut elementum at, porttitor ut sapien. Pellentesque et dui neque. In eget lectus odio. Fusce nulla velit, eleifend sit amet malesuada ac, hendrerit id neque. Curabitur blandit elit et urna fringilla, id commodo quam fermentum.
-
-|> Code
-    This is a code block
-    With Multiple lines
-
-|> H1
-    My section on /lists/
-
-What does a *list* look like?
-
-|> List
-    1.  This is definitely the first thing.
-        Add all together now
-        With some Content
-    -- Another thing.
-        1. sublist
-        -- more sublist
-            -- indented
-        -- other sublist
-            -- subthing
-            -- other subthing
-    -- and yet, another
-        --  and another one
-            With some content
-"""
-      )
-
-  ,( ["articles"]
+    [ ( [ "articles" ]
       , """|> Article
     title = Articles
     description = Incremental Elm Consulting articles
@@ -65,8 +21,7 @@ What does a *list* look like?
     posts = articles
 """
       )
-
-  ,( []
+    , ( []
       , """|> Article
     title = Incremental Elm Consulting
     description = How I learned to use elm-markup.
@@ -109,21 +64,19 @@ I save your team time by teaching techniques to write elm like an expert. Spoile
 Learn more about how my [Elm Developer Support Packages]{link| url = /services#developer-support} can save your team time and help you deliver on Elm's promise of insanely reliable, easy to maintain applications. Or check out [my other service offerings]{link| url = /services}.
 """
       )
-
     ]
 
 
 posts : List ( List String, String )
 posts =
-    [
-    ( ["articles", "exit-gatekeepers"]
+    [ ( [ "articles", "exit-gatekeepers" ]
       , """|> Article
     title = Using elm types to prevent logging social security #'s
     description = TODO
 
 
 |> Image
-    src = /assets/article-cover/exit.jpg
+    src = article-cover/exit.jpg
     description = Exit Gatekeepers
 
 
@@ -277,15 +230,14 @@ Here are some steps you can apply:
     1. Once that's done, you can now hide the constructor, and you now have a proper Exit Gatekeeper for your type!
 """
       )
-
-  ,( ["articles", "moving-faster-with-tiny-steps"]
+    , ( [ "articles", "moving-faster-with-tiny-steps" ]
       , """|> Article
     title = Moving Faster with Tiny Steps in Elm
     description =
         How I learned to use elm-markup.
 
 |> Image
-    src = /assets/mountains.jpg
+    src = article-cover/mountains.jpg
     description = The Elm Architecture
 
 
@@ -437,15 +389,14 @@ You can sign up here for more tips on writing Elm code incrementally. When you s
 Let me know how this technique goes! I've gotten a lot of great feedback from my clients about this approach, and I love hearing success stories. I'd love to hear how you're able to apply this in your day-to-day work!
 """
       )
-
-  ,( ["articles", "to-test-or-not-to-test"]
+    , ( [ "articles", "to-test-or-not-to-test" ]
       , """|> Article
     title = To test, or not to test elm code?
     description =
         How I learned to use elm-markup.
 
 |> Image
-    src = /assets/article-cover/thinker.jpg
+    src = article-cover/thinker.jpg
     description = Cover
 
 That... is the question Richard Feldman's keynote at Elm in the Spring last week explored. Richard talked about the interplay between unit tests and the elm type system. His general advice is the same as I've described it:
@@ -497,5 +448,4 @@ Instead of testing the business logic that's accessible to test in your code, ma
 Writing unit tests before versus after writing your implementation is fundamentally different. One of the core benefits of Test-Driven Development is that it guides you to keep your business logic decoupled from your wiring and view logic. Because you're writing tests first, you will naturally write testable code, since you're thinking about how to test it */before/* you think about how to implement it.
 """
       )
-
     ]
