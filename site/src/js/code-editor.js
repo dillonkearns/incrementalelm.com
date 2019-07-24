@@ -2,7 +2,6 @@
 // import CodeMirror from "codemirror/lib/codemirror.js";
 import CodeMirror from "codemirror";
 
-import "codemirror/theme/idea.css";
 import "codemirror/lib/codemirror.css";
 import elm from "codemirror/mode/elm/elm.js";
 
@@ -39,7 +38,6 @@ customElements.define(
         identUnit: 4,
         viewportMargin: Infinity,
         mode: "elm",
-        theme: "idea",
         lineNumbers: false,
         readOnly: "nocursor",
         value: this._editorValue
