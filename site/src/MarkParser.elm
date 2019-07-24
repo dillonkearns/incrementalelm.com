@@ -7,6 +7,7 @@ import Html exposing (Html)
 import Html.Attributes as Attr
 import Mark
 import Mark.Error
+import View.CodeSnippet
 import View.DripSignupForm
 
 
@@ -115,16 +116,6 @@ titleText =
 
 {-| Render a text fragment.
 -}
-
-
-
--- textFragment : Mark.Text -> model -> Element msg
--- textFragment node model_ =
---     case node of
---         Mark.Text styles txt ->
---             Element.el (List.concatMap toStyles styles) (Element.text txt)
-
-
 applyTuple : (a -> b -> c) -> ( a, b ) -> c
 applyTuple fn ( one, two ) =
     fn one two
@@ -277,19 +268,26 @@ indexContent content =
 code : Mark.Block (Element msg)
 code =
     Mark.block "Code"
-        (\str ->
-            Html.pre
-                [ Attr.style "padding" "12px"
-                , Attr.style "background-color" "#eee"
-                ]
-                [ Html.text str ]
-                |> Element.html
-         -- TODO
+        (\codeSnippet ->
+            codeSnippet
+                |> View.CodeSnippet.codeEditor
+                |> Element.el [ Font.size 16 ]
         )
         Mark.string
 
 
 
+-- Mark.block "Code"
+--     (\str ->
+--         Html.pre
+--             [ Attr.style "padding" "12px"
+--             , Attr.style "background-color" "#eee"
+--             ]
+--             [ Html.text str ]
+--             |> Element.html
+--      -- TODO
+--     )
+--     Mark.string
 {- Handling bulleted and numbered lists -}
 
 
