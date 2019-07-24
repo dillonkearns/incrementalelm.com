@@ -136,9 +136,8 @@ Here's a simple implementation of our last 4 digits view:
 
 
 |> Signup
-    |> Config
-        buttonText = I want weekly elm tips!
-        formId = 906002494
+    buttonText = I want weekly elm tips!
+    formId = 906002494
 
 |> H2
     Takeaways

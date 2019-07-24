@@ -362,15 +362,15 @@ signupForm =
         body =
             [ Element.none ]
     in
-    Mark.block "Signup"
-        (\config ->
+    Mark.record "Signup"
+        (\buttonText formId ->
             [ Element.column
                 [ Font.center
                 , Element.spacing 30
                 , Element.centerX
                 ]
                 body
-            , View.DripSignupForm.viewNew config.buttonText config.formId { maybeReferenceId = Nothing }
+            , View.DripSignupForm.viewNew buttonText formId { maybeReferenceId = Nothing }
                 |> Element.html
                 |> Element.el [ Element.width Element.fill ]
             , [ Element.text "We'll never share your email. Unsubscribe any time." ]
@@ -392,12 +392,9 @@ signupForm =
                     ]
                 |> Element.el []
         )
-        (Mark.record "Config"
-            (\buttonText formId -> { buttonText = buttonText, formId = formId })
-            |> Mark.field "buttonText" Mark.string
-            |> Mark.field "formId" Mark.string
-            |> Mark.toBlock
-        )
+        |> Mark.field "buttonText" Mark.string
+        |> Mark.field "formId" Mark.string
+        |> Mark.toBlock
 
 
 

@@ -101,9 +101,8 @@ Here are some popular tips you can check out right away.
     - [How can I improve my elm-graphql codebase?]{link|url = /custom-scalar-checklist}
 
 |> Signup
-    |> Config
-        buttonText = I want weekly elm tips!
-        formId = 906002494
+    buttonText = I want weekly elm tips!
+    formId = 906002494
 
 |> H1
     How I can help your team level up
@@ -259,9 +258,8 @@ Here's a simple implementation of our last 4 digits view:
 
 
 |> Signup
-    |> Config
-        buttonText = I want weekly elm tips!
-        formId = 906002494
+    buttonText = I want weekly elm tips!
+    formId = 906002494
 
 |> H2
     Takeaways
@@ -487,9 +485,8 @@ Instead of testing the business logic that's accessible to test in your code, ma
     - Given your nice, independent business logic modules, write unit tests for those.
 
 |> Signup
-    |> Config
-        buttonText = I want weekly elm tips!
-        formId = 906002494
+    buttonText = I want weekly elm tips!
+    formId = 906002494
 
 |> H2
     Test-first guides you to decouple business logic

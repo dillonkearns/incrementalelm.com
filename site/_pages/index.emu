@@ -25,9 +25,8 @@ Here are some popular tips you can check out right away.
     - [How can I improve my elm-graphql codebase?]{link|url = /custom-scalar-checklist}
 
 |> Signup
-    |> Config
-        buttonText = I want weekly elm tips!
-        formId = 906002494
+    buttonText = I want weekly elm tips!
+    formId = 906002494
 
 |> H1
     How I can help your team level up
