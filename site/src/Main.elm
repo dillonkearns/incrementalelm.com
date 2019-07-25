@@ -41,7 +41,7 @@ main =
         , update = update
         , subscriptions = subscriptions
         , parser = MarkParser.document
-        , content = RawContent.rawContent
+        , content = RawContent.content
         }
 
 

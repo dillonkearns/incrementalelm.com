@@ -1,17 +1,18 @@
-module RawContent exposing (rawContent)
+module RawContent exposing (content)
 
 import Content exposing (Content)
 import Dict exposing (Dict)
 import Element exposing (Element)
 
 
-rawContent =
+content =
     { pages = pages, posts = posts }
 
 
 pages : List ( List String, String )
 pages =
-    [ ( [ "articles" ]
+    [
+    ( ["articles"]
       , """|> Article
     title = Articles
     description = Incremental Elm Consulting articles
@@ -20,13 +21,15 @@ pages =
     posts = articles
 """
       )
-    , ( [ "custom-scalar-checklist" ]
+
+  ,( ["custom-scalar-checklist"]
       , """|> Article
     title = Custom Scalar Checklist
     description = Custom Scalar Checklist
 """
       )
-    , ( []
+
+  ,( []
       , """|> Article
     title = Incremental Elm Consulting
     description = How I learned to use elm-markup.
@@ -69,7 +72,8 @@ I save your team time by teaching techniques to write elm like an expert. Spoile
 Learn more about how my [Elm Developer Support Packages]{link| url = /services#developer-support} can save your team time and help you deliver on Elm's promise of insanely reliable, easy to maintain applications. Or check out [my other service offerings]{link| url = /services}.
 """
       )
-    , ( [ "services" ]
+
+  ,( ["services"]
       , """|> Article
     title = Incremental Elm Services
     description = Incremental Elm Services
@@ -144,12 +148,14 @@ Want to discuss finding the right service to help you improve your elm codebase?
 <>
 """
       )
+
     ]
 
 
 posts : List ( List String, String )
 posts =
-    [ ( [ "articles", "exit-gatekeepers" ]
+    [
+    ( ["articles", "exit-gatekeepers"]
       , """|> Article
     title = Using elm types to prevent logging social security #'s
     description = TODO
@@ -310,7 +316,8 @@ Here are some steps you can apply:
     1. Once that's done, you can now hide the constructor, and you now have a proper Exit Gatekeeper for your type!
 """
       )
-    , ( [ "articles", "moving-faster-with-tiny-steps" ]
+
+  ,( ["articles", "moving-faster-with-tiny-steps"]
       , """|> Article
     title = Moving Faster with Tiny Steps in Elm
     description =
@@ -469,7 +476,8 @@ You can sign up here for more tips on writing Elm code incrementally. When you s
 Let me know how this technique goes! I've gotten a lot of great feedback from my clients about this approach, and I love hearing success stories. I'd love to hear how you're able to apply this in your day-to-day work!
 """
       )
-    , ( [ "articles", "to-test-or-not-to-test" ]
+
+  ,( ["articles", "to-test-or-not-to-test"]
       , """|> Article
     title = To test, or not to test elm code?
     description =
@@ -528,4 +536,5 @@ Instead of testing the business logic that's accessible to test in your code, ma
 Writing unit tests before versus after writing your implementation is fundamentally different. One of the core benefits of Test-Driven Development is that it guides you to keep your business logic decoupled from your wiring and view logic. Because you're writing tests first, you will naturally write testable code, since you're thinking about how to test it */before/* you think about how to implement it.
 """
       )
+
     ]
