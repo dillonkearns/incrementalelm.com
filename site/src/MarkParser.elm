@@ -396,8 +396,15 @@ indexContent content =
         |> Mark.toBlock
         |> Mark.verify
             (\value ->
-                Ok value
-             -- TODO
+                case content of
+                    Just msgElement ->
+                        Ok value
+
+                    Nothing ->
+                        Err
+                            { title = "IndexContent blocks are only valid in Pages"
+                            , message = [ "Try creating your index page in `_pages` instead of `_posts`." ]
+                            }
             )
 
 
