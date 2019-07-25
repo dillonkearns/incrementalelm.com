@@ -8,20 +8,9 @@ import Element exposing (Element)
 import Json.Decode
 import Mark
 import MarkParser
+import MarkupPages.Parser exposing (Metadata, PageOrPost(..))
 import Platform.Sub exposing (Sub)
 import Url exposing (Url)
-
-
-type alias PageOrPost msg =
-    { body : List (Element msg)
-    , metadata : Metadata msg
-    }
-
-
-type alias Metadata msg =
-    { description : String
-    , title : { styled : Element msg, raw : String }
-    }
 
 
 type alias Content =
@@ -39,7 +28,7 @@ type alias Program userFlags userModel userMsg =
 mainView :
     Content
     -> Parser userMsg
-    -> (userModel -> MarkParser.PageOrPost userMsg -> { title : String, body : Element userMsg })
+    -> (userModel -> PageOrPost userMsg (Metadata userMsg) (Metadata userMsg) -> { title : String, body : Element userMsg })
     -> Model userModel
     -> { title : String, body : Element userMsg }
 mainView content parser pageOrPostView (Model model) =
@@ -55,7 +44,7 @@ mainView content parser pageOrPostView (Model model) =
 
 pageView :
     Parser userMsg
-    -> (userModel -> MarkParser.PageOrPost userMsg -> { title : String, body : Element userMsg })
+    -> (userModel -> PageOrPost userMsg (Metadata userMsg) (Metadata userMsg) -> { title : String, body : Element userMsg })
     -> Model userModel
     -> Content.Content userMsg
     -> { title : String, body : Element userMsg }
@@ -81,7 +70,7 @@ pageView parser pageOrPostView (Model model) content =
 view :
     Content
     -> Parser userMsg
-    -> (userModel -> MarkParser.PageOrPost userMsg -> { title : String, body : Element userMsg })
+    -> (userModel -> PageOrPost userMsg (Metadata userMsg) (Metadata userMsg) -> { title : String, body : Element userMsg })
     -> Model userModel
     -> Browser.Document (Msg userMsg)
 view content parser pageOrPostView model =
@@ -178,14 +167,14 @@ type alias Parser userMsg =
     Dict String String
     -> List String
     -> Maybe (Element userMsg)
-    -> Mark.Document { body : List (Element userMsg), metadata : MarkParser.Metadata userMsg }
+    -> Mark.Document (PageOrPost userMsg (Metadata userMsg) (Metadata userMsg))
 
 
 program :
     { init : Flags userFlags -> ( userModel, Cmd userMsg )
     , update : userMsg -> userModel -> ( userModel, Cmd userMsg )
     , subscriptions : userModel -> Sub userMsg
-    , view : userModel -> MarkParser.PageOrPost userMsg -> { title : String, body : Element userMsg }
+    , view : userModel -> PageOrPost userMsg (Metadata userMsg) (Metadata userMsg) -> { title : String, body : Element userMsg }
     , parser : Parser userMsg
     , content : Content
     }

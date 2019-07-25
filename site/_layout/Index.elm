@@ -3,12 +3,13 @@ module Index exposing (view)
 import Element exposing (Element)
 import Element.Border
 import Element.Font
-import MarkParser exposing (PageOrPost)
+import MarkParser
+import MarkupPages.Parser exposing (Metadata, PageOrPost(..))
 import Style.Helpers
 
 
 view :
-    List ( List String, PageOrPost msg )
+    List ( List String, PageOrPost msg (Metadata msg) (Metadata msg) )
     -> Element msg
 view posts =
     Element.column [ Element.spacing 20 ]
@@ -18,7 +19,7 @@ view posts =
 
 
 postSummary :
-    ( List String, PageOrPost msg )
+    ( List String, PageOrPost msg (Metadata msg) (Metadata msg) )
     -> Element msg
 postSummary ( postPath, post ) =
     articleIndex post
@@ -49,26 +50,32 @@ title text =
             ]
 
 
-articleIndex : PageOrPost msg -> Element msg
+articleIndex : PageOrPost msg (Metadata msg) (Metadata msg) -> Element msg
 articleIndex resource =
-    Element.column
-        [ Element.centerX
-        , Element.width (Element.maximum 800 Element.fill)
-        , Element.centerX
-        , Element.padding 40
-        , Element.spacing 10
-        , Element.Border.width 1
-        , Element.Border.color (Element.rgba255 0 0 0 0.1)
-        , Element.mouseOver
-            [ Element.Border.color (Element.rgba255 0 0 0 1)
-            ]
-        ]
-        [ title resource.metadata.title.raw
-        , Element.column [ Element.spacing 20 ]
-            [ resource |> postPreview
-            , readMoreLink
-            ]
-        ]
+    case resource of
+        Page msgMetadata msgElementList ->
+            -- TODO this should never happen
+            Element.none
+
+        Post metadata msgElementList ->
+            Element.column
+                [ Element.centerX
+                , Element.width (Element.maximum 800 Element.fill)
+                , Element.centerX
+                , Element.padding 40
+                , Element.spacing 10
+                , Element.Border.width 1
+                , Element.Border.color (Element.rgba255 0 0 0 0.1)
+                , Element.mouseOver
+                    [ Element.Border.color (Element.rgba255 0 0 0 1)
+                    ]
+                ]
+                [ title metadata.title.raw
+                , Element.column [ Element.spacing 20 ]
+                    [ resource |> postPreview
+                    , readMoreLink
+                    ]
+                ]
 
 
 readMoreLink =
@@ -82,12 +89,18 @@ readMoreLink =
             ]
 
 
-postPreview : PageOrPost msg -> Element msg
+postPreview : PageOrPost msg (Metadata msg) (Metadata msg) -> Element msg
 postPreview post =
-    Element.textColumn
-        [ Element.centerX
-        , Element.width Element.fill
-        , Element.spacing 30
-        , Element.Font.size 18
-        ]
-        (post.body |> List.take 2)
+    case post of
+        Post metadata body ->
+            Element.textColumn
+                [ Element.centerX
+                , Element.width Element.fill
+                , Element.spacing 30
+                , Element.Font.size 18
+                ]
+                (body |> List.take 2)
+
+        Page _ _ ->
+            -- TODO this should never happen
+            Element.none

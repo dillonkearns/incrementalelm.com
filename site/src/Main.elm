@@ -19,6 +19,7 @@ import Mark
 import Mark.Error
 import MarkParser
 import MarkupPages
+import MarkupPages.Parser exposing (Metadata, PageOrPost(..))
 import RawContent
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
@@ -232,29 +233,57 @@ makeTranslated i polygon =
             ]
 
 
-pageOrPostView : Model -> MarkParser.PageOrPost Msg -> { title : String, body : Element Msg }
+pageOrPostView : Model -> PageOrPost Msg (Metadata Msg) (Metadata Msg) -> { title : String, body : Element Msg }
 pageOrPostView model pageOrPost =
-    { title = pageOrPost.metadata.title.raw
-    , body =
-        [ header model
-        , pageOrPost.body
-            |> Element.textColumn
-                [ Element.centerX
-                , Element.width Element.fill
-                , Element.spacing 30
-                , Font.size 18
-                ]
-            |> Element.el
-                [ if Dimensions.isMobile model.dimensions then
-                    Element.width (Element.fill |> Element.maximum 600)
+    case pageOrPost of
+        Page metadata body ->
+            { title = metadata.title.raw
+            , body =
+                [ header model
+                , body
+                    |> Element.textColumn
+                        [ Element.centerX
+                        , Element.width Element.fill
+                        , Element.spacing 30
+                        , Font.size 18
+                        ]
+                    |> Element.el
+                        [ if Dimensions.isMobile model.dimensions then
+                            Element.width (Element.fill |> Element.maximum 600)
 
-                  else
-                    Element.width (Element.fill |> Element.maximum 700)
-                , Element.height Element.fill
-                , Element.padding 20
-                , Element.spacing 20
-                , Element.centerX
+                          else
+                            Element.width (Element.fill |> Element.maximum 700)
+                        , Element.height Element.fill
+                        , Element.padding 20
+                        , Element.spacing 20
+                        , Element.centerX
+                        ]
                 ]
-        ]
-            |> Element.column [ Element.width Element.fill ]
-    }
+                    |> Element.column [ Element.width Element.fill ]
+            }
+
+        Post metadata body ->
+            { title = metadata.title.raw
+            , body =
+                [ header model
+                , body
+                    |> Element.textColumn
+                        [ Element.centerX
+                        , Element.width Element.fill
+                        , Element.spacing 30
+                        , Font.size 18
+                        ]
+                    |> Element.el
+                        [ if Dimensions.isMobile model.dimensions then
+                            Element.width (Element.fill |> Element.maximum 600)
+
+                          else
+                            Element.width (Element.fill |> Element.maximum 700)
+                        , Element.height Element.fill
+                        , Element.padding 20
+                        , Element.spacing 20
+                        , Element.centerX
+                        ]
+                ]
+                    |> Element.column [ Element.width Element.fill ]
+            }

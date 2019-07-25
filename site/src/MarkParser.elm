@@ -1,4 +1,4 @@
-module MarkParser exposing (Metadata, PageOrPost, document)
+module MarkParser exposing (Metadata, document)
 
 import Dict exposing (Dict)
 import Element exposing (Element)
@@ -9,7 +9,7 @@ import Html exposing (Html)
 import Html.Attributes as Attr
 import Mark
 import Mark.Error
-import MarkupPages.Parser
+import MarkupPages.Parser exposing (PageOrPost)
 import Style
 import Style.Helpers
 import View.CodeSnippet
@@ -24,21 +24,11 @@ normalizedUrl url =
         |> Maybe.withDefault ""
 
 
-type alias PageOrPost msg =
-    { body : List (Element msg)
-    , metadata : Metadata msg
-    }
-
-
 document :
     Dict String String
     -> List String
     -> Maybe (Element msg)
-    ->
-        Mark.Document
-            { body : List (Element msg)
-            , metadata : Metadata msg
-            }
+    -> Mark.Document (PageOrPost msg (Metadata msg) (Metadata msg))
 document imageAssets routes indexView =
     MarkupPages.Parser.document
         { imageAssets = imageAssets

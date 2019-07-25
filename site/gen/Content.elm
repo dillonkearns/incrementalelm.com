@@ -6,7 +6,8 @@ import Index
 import List.Extra
 import Mark
 import Mark.Error
-import MarkParser exposing (PageOrPost)
+import MarkParser
+import MarkupPages.Parser exposing (Metadata, PageOrPost(..))
 import Result.Extra
 import Url exposing (Url)
 
@@ -14,7 +15,7 @@ import Url exposing (Url)
 lookup :
     Content msg
     -> Url
-    -> Maybe (PageOrPost msg)
+    -> Maybe (PageOrPost msg (Metadata msg) (Metadata msg))
 lookup content url =
     List.Extra.find
         (\( path, markup ) ->
@@ -37,9 +38,9 @@ dropTrailingSlash path =
 
 type alias Content msg =
     { posts :
-        List ( List String, PageOrPost msg )
+        List ( List String, PageOrPost msg (Metadata msg) (Metadata msg) )
     , pages :
-        List ( List String, PageOrPost msg )
+        List ( List String, PageOrPost msg (Metadata msg) (Metadata msg) )
     }
 
 
@@ -55,7 +56,7 @@ buildAllData :
     (Dict String String
      -> List String
      -> Maybe (Element msg)
-     -> Mark.Document { body : List (Element msg), metadata : MarkParser.Metadata msg }
+     -> Mark.Document (PageOrPost msg (Metadata msg) (Metadata msg))
     )
     -> Dict String String
     -> { pages : List ( List String, String ), posts : List ( List String, String ) }
@@ -116,8 +117,8 @@ renderErrors ( path, errors ) =
 
 
 combineResults :
-    List ( List String, Mark.Outcome (List Mark.Error.Error) (Mark.Partial (PageOrPost msg)) (PageOrPost msg) )
-    -> Result ( List String, List Mark.Error.Error ) (List ( List String, PageOrPost msg ))
+    List ( List String, Mark.Outcome (List Mark.Error.Error) (Mark.Partial (PageOrPost msg (Metadata msg) (Metadata msg))) (PageOrPost msg (Metadata msg) (Metadata msg)) )
+    -> Result ( List String, List Mark.Error.Error ) (List ( List String, PageOrPost msg (Metadata msg) (Metadata msg) ))
 combineResults list =
     list
         |> List.map
