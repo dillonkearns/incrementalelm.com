@@ -43,7 +43,7 @@ mainView :
     -> Model userModel
     -> { title : String, body : Element userMsg }
 mainView content parser pageOrPostView (Model model) =
-    case Content.buildAllData model.imageAssets content of
+    case Content.buildAllData parser model.imageAssets content of
         Ok site ->
             pageView parser pageOrPostView (Model model) site
 

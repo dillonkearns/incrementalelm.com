@@ -52,17 +52,22 @@ routes record =
 
 
 buildAllData :
-    Dict String String
+    (Dict String String
+     -> List String
+     -> Element msg
+     -> Mark.Document { body : List (Element msg), metadata : MarkParser.Metadata msg }
+    )
+    -> Dict String String
     -> { pages : List ( List String, String ), posts : List ( List String, String ) }
     -> Result (Element msg) (Content msg)
-buildAllData imageAssets record =
+buildAllData parser imageAssets record =
     case
         record.posts
             |> List.map
                 (\( path, markup ) ->
                     ( path
                     , Mark.compile
-                        (MarkParser.document imageAssets
+                        (parser imageAssets
                             (routes record)
                             Element.none
                         )
@@ -79,7 +84,7 @@ buildAllData imageAssets record =
                             (\( path, markup ) ->
                                 ( path
                                 , Mark.compile
-                                    (MarkParser.document imageAssets (routes record) (Index.view postListings))
+                                    (parser imageAssets (routes record) (Index.view postListings))
                                     markup
                                 )
                             )
