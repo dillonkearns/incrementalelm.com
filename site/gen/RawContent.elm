@@ -1,8 +1,12 @@
-module RawContent exposing (content)
+module RawContent exposing (content, rawContent)
 
 import Content exposing (Content)
 import Dict exposing (Dict)
 import Element exposing (Element)
+
+
+rawContent =
+    { pages = pages, posts = posts }
 
 
 content : Dict String String -> Result (Element msg) (Content msg)
