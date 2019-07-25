@@ -16,6 +16,10 @@ import View.DripSignupForm
 import View.FontAwesome
 
 
+
+-- type PageOrPost = Page Metadata | Post Metadat
+
+
 normalizedUrl url =
     url
         |> String.split "#"
@@ -36,10 +40,15 @@ type alias PageOrPost msg =
     }
 
 
+type alias AppData msg =
+    { imageAssets : Dict String String
+    , routes : List String
+    , indexView : Element msg
+    }
+
+
 document :
-    Dict String String
-    -> List String
-    -> Element msg
+    AppData msg
     -> List (Mark.Block (Element msg))
     ->
         Mark.Document
@@ -47,7 +56,7 @@ document :
             , metadata : Metadata msg
             , preview : List (Element msg)
             }
-document imageAssets routes indexView blocks =
+document appData blocks =
     Mark.documentWith
         (\meta body ->
             { metadata = meta
@@ -66,7 +75,7 @@ document imageAssets routes indexView blocks =
         )
         -- We have some required metadata that starts our document.
         { metadata = metadata
-        , body = Mark.manyOf (image imageAssets :: blocks)
+        , body = Mark.manyOf (image appData.imageAssets :: blocks)
         }
 
 
