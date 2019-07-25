@@ -66,22 +66,6 @@ document imageAssets routes indexView =
         }
 
 
-titleView : Element msg -> Element msg
-titleView title =
-    Element.paragraph
-        [ Font.size 36
-        , Font.center
-        , Font.family [ Font.typeface "Raleway" ]
-        , Font.semiBold
-        ]
-        [ Element.el
-            [ Element.centerX
-            , Element.width Element.shrink
-            ]
-            title
-        ]
-
-
 
 {- Handle Text -}
 
