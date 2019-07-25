@@ -48,22 +48,29 @@ document imageAssets routes indexView =
         )
         -- We have some required metadata that starts our document.
         { metadata = metadata
-        , body =
-            Mark.manyOf
-                [ header
-                , h2
-                , image imageAssets
-                , list
-                , code
-                , indexContent indexView
-                , signupForm
-                , Mark.map
-                    (Element.paragraph
-                        [ Element.spacing 15 ]
-                    )
-                    text
-                ]
+        , body = Mark.manyOf (blocks imageAssets routes indexView)
         }
+
+
+blocks :
+    Dict String String
+    -> List String
+    -> Element msg
+    -> List (Mark.Block (Element msg))
+blocks imageAssets routes indexView =
+    [ header
+    , h2
+    , image imageAssets
+    , list
+    , code
+    , indexContent indexView
+    , signupForm
+    , Mark.map
+        (Element.paragraph
+            [ Element.spacing 15 ]
+        )
+        text
+    ]
 
 
 
