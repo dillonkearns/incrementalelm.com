@@ -9,6 +9,7 @@ import Html exposing (Html)
 import Html.Attributes as Attr
 import Mark
 import Mark.Error
+import MarkupPages.Parser
 import Style
 import Style.Helpers
 import View.CodeSnippet
@@ -60,6 +61,24 @@ document imageAssets routes indexView =
         { metadata = metadata
         , body = Mark.manyOf (blocks imageAssets routes indexView)
         }
+
+
+document2 :
+    Dict String String
+    -> List String
+    -> Element msg
+    ->
+        Mark.Document
+            { body : List (Element msg)
+            , metadata : Metadata msg
+            }
+document2 imageAssets routes indexView =
+    MarkupPages.Parser.document
+        { imageAssets = imageAssets
+        , routes = routes
+        , indexView = indexView
+        }
+        (blocks imageAssets routes indexView)
 
 
 blocks :
