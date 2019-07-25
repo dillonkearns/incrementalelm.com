@@ -16,8 +16,9 @@ import View.DripSignupForm
 import View.FontAwesome
 
 
-
--- type PageOrPost = Page Metadata | Post Metadat
+type PageOrPost msg pageMetadata postMetadata
+    = Page pageMetadata (Element msg)
+    | Post postMetadata (Element msg)
 
 
 normalizedUrl url =
@@ -30,13 +31,6 @@ normalizedUrl url =
 type alias Metadata msg =
     { description : String
     , title : { styled : Element msg, raw : String }
-    }
-
-
-type alias PageOrPost msg =
-    { body : List (Element msg)
-    , metadata : Metadata msg
-    , preview : List (Element msg)
     }
 
 
