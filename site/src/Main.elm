@@ -18,6 +18,7 @@ import List.Extra
 import Mark
 import Mark.Error
 import MarkParser
+import MarkupPages
 import RawContent
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
@@ -29,40 +30,31 @@ import View.Navbar
 
 
 type alias Flags =
-    { imageAssets : Json.Decode.Value
-    }
+    {}
 
 
-main : Program Flags Model Msg
+main : MarkupPages.Program Flags Model Msg
 main =
-    Browser.application
+    MarkupPages.program
         { init = init
-        , view = view
+        , view = pageOrPostView
         , update = update
         , subscriptions = subscriptions
-        , onUrlChange = UrlChanged
-        , onUrlRequest = LinkClicked
         }
 
 
 type alias Model =
-    { key : Nav.Key
-    , url : Url.Url
-    , menuBarAnimation : View.MenuBar.Model
+    { menuBarAnimation : View.MenuBar.Model
     , menuAnimation : Animation.State
     , dimensions : Dimensions
     , styles : List Animation.State
     , showMenu : Bool
-    , imageAssets : Dict String String
     }
 
 
-init : Flags -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
-init flags url key =
-    ( { key = key
-      , url = url
-      , imageAssets = Json.Decode.decodeValue (Json.Decode.dict Json.Decode.string) flags.imageAssets |> Result.withDefault Dict.empty
-      , styles = ElmLogo.polygons |> List.map Animation.style
+init : MarkupPages.Flags Flags -> ( Model, Cmd Msg )
+init flags =
+    ( { styles = ElmLogo.polygons |> List.map Animation.style
       , menuBarAnimation = View.MenuBar.init
       , menuAnimation =
             Animation.style
@@ -82,9 +74,7 @@ init flags url key =
 
 
 type Msg
-    = LinkClicked Browser.UrlRequest
-    | UrlChanged Url.Url
-    | StartAnimation
+    = StartAnimation
       -- | Animate Animation.Msg
     | InitialViewport Dom.Viewport
     | WindowResized Int Int
@@ -93,19 +83,6 @@ type Msg
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        LinkClicked urlRequest ->
-            case urlRequest of
-                Browser.Internal url ->
-                    ( model, Nav.pushUrl model.key (Url.toString url) )
-
-                Browser.External href ->
-                    ( model, Nav.load href )
-
-        UrlChanged url ->
-            ( { model | url = url }
-            , Cmd.none
-            )
-
         InitialViewport { viewport } ->
             ( { model
                 | dimensions =
@@ -195,58 +172,6 @@ subscriptions model =
     --         )
     -- ,
     Browser.Events.onResize WindowResized
-
-
-
---     ]
-
-
-view : Model -> Browser.Document Msg
-view model =
-    let
-        { title, body } =
-            mainView model
-    in
-    { title = title
-    , body =
-        [ body
-            |> Element.layout
-                [ Element.width Element.fill
-                ]
-        ]
-    }
-
-
-mainView : Model -> { title : String, body : Element Msg }
-mainView model =
-    case RawContent.content model.imageAssets of
-        Ok site ->
-            pageView model site
-
-        Err errorView ->
-            { title = "Error parsing"
-            , body = errorView
-            }
-
-
-pageView : Model -> Content Msg -> { title : String, body : Element Msg }
-pageView model content =
-    case Content.lookup content model.url of
-        Just pageOrPost ->
-            pageOrPostView model pageOrPost
-
-        Nothing ->
-            { title = "Page not found"
-            , body =
-                Element.column []
-                    [ Element.text "Page not found. Valid routes:\n\n"
-                    , (content.pages ++ content.posts)
-                        |> List.map Tuple.first
-                        |> List.map (String.join "/")
-                        |> String.join ", "
-                        |> Element.text
-                    ]
-            }
 
 
 header : Model -> Element Msg

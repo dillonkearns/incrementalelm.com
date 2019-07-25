@@ -1,4 +1,4 @@
-module MarkupPages exposing (program)
+module MarkupPages exposing (Flags, Program, program)
 
 import Browser
 import Browser.Navigation
@@ -152,7 +152,7 @@ update userUpdate msg (Model model) =
 program :
     { init : Flags userFlags -> ( userModel, Cmd userMsg )
     , update : userMsg -> userModel -> ( userModel, Cmd userMsg )
-    , subscriptions : Sub userMsg
+    , subscriptions : userModel -> Sub userMsg
     , view : userModel -> MarkParser.PageOrPost userMsg -> { title : String, body : Element userMsg }
     }
     -> Program userFlags userModel userMsg
