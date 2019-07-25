@@ -163,7 +163,7 @@ stylesFor styles =
 
 
 type alias Metadata msg =
-    { description : List (Element msg)
+    { description : String
     , title : { styled : Element msg, raw : String }
     }
 
@@ -176,7 +176,7 @@ metadata =
             , title = title
             }
         )
-        |> Mark.field "description" text
+        |> Mark.field "description" Mark.string
         |> Mark.field "title"
             (Mark.map
                 gather
