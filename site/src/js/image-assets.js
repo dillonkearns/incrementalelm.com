@@ -15,3 +15,11 @@ export const imageAssets = {
   "steps.jpg": require("../../images/steps.jpg"),
   "workspace.jpg": require("../../images/workspace.jpg")
 };
+
+export const routes = [
+  "/articles",
+  "/",
+  "/articles/exit-gatekeepers",
+  "/articles/moving-faster-with-tiny-steps",
+  "/articles/to-test-or-not-to-test"
+];

@@ -45,12 +45,13 @@ type alias Content msg =
 
 buildAllData :
     Dict String String
+    -> List String
     -> { pages : List ( List String, String ), posts : List ( List String, String ) }
     -> Result (Element msg) (Content msg)
-buildAllData imageAssets record =
+buildAllData imageAssets routes record =
     case
         record.posts
-            |> List.map (\( path, markup ) -> ( path, Mark.compile (MarkParser.document imageAssets Element.none) markup ))
+            |> List.map (\( path, markup ) -> ( path, Mark.compile (MarkParser.document imageAssets routes Element.none) markup ))
             |> combineResults
     of
         Ok postListings ->
@@ -61,7 +62,7 @@ buildAllData imageAssets record =
                             (\( path, markup ) ->
                                 ( path
                                 , Mark.compile
-                                    (MarkParser.document imageAssets (Index.view postListings))
+                                    (MarkParser.document imageAssets routes (Index.view postListings))
                                     markup
                                 )
                             )

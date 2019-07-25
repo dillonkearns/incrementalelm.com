@@ -21,6 +21,7 @@ type alias PageOrPost msg =
 
 document :
     Dict String String
+    -> List String
     -> Element msg
     ->
         Mark.Document
@@ -28,7 +29,7 @@ document :
             , metadata : Metadata msg
             , preview : List (Element msg)
             }
-document imageAssets indexView =
+document imageAssets routes indexView =
     Mark.documentWith
         (\meta body ->
             { metadata = meta

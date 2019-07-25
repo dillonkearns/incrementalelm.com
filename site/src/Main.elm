@@ -30,6 +30,7 @@ import View.Navbar
 
 type alias Flags =
     { imageAssets : Json.Decode.Value
+    , routes : List String
     }
 
 
@@ -54,6 +55,7 @@ type alias Model =
     , styles : List Animation.State
     , showMenu : Bool
     , imageAssets : Dict String String
+    , routes : List String
     }
 
 
@@ -62,6 +64,7 @@ init flags url key =
     ( { key = key
       , url = url
       , imageAssets = Json.Decode.decodeValue (Json.Decode.dict Json.Decode.string) flags.imageAssets |> Result.withDefault Dict.empty
+      , routes = flags.routes
       , styles = ElmLogo.polygons |> List.map Animation.style
       , menuBarAnimation = View.MenuBar.init
       , menuAnimation =
@@ -219,7 +222,7 @@ view model =
 
 mainView : Model -> { title : String, body : Element Msg }
 mainView model =
-    case RawContent.content model.imageAssets of
+    case RawContent.content model.imageAssets model.routes of
         Ok site ->
             pageView model site
 
