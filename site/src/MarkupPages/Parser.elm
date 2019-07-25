@@ -37,7 +37,7 @@ type alias Metadata msg =
 type alias AppData msg =
     { imageAssets : Dict String String
     , routes : List String
-    , indexView : Element msg
+    , indexView : Maybe (Element msg)
     }
 
 

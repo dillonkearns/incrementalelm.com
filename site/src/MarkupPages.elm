@@ -177,7 +177,7 @@ update userUpdate msg (Model model) =
 type alias Parser userMsg =
     Dict String String
     -> List String
-    -> Element userMsg
+    -> Maybe (Element userMsg)
     -> Mark.Document { body : List (Element userMsg), metadata : MarkParser.Metadata userMsg }
 
 

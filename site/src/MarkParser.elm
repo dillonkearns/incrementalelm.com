@@ -33,7 +33,7 @@ type alias PageOrPost msg =
 document :
     Dict String String
     -> List String
-    -> Element msg
+    -> Maybe (Element msg)
     ->
         Mark.Document
             { body : List (Element msg)
@@ -373,11 +373,11 @@ gather myList =
 {- Handle Blocks -}
 
 
-indexContent : Element msg -> Mark.Block (Element msg)
+indexContent : Maybe (Element msg) -> Mark.Block (Element msg)
 indexContent content =
     Mark.record "IndexContent"
         (\postsPath ->
-            content
+            content |> Maybe.withDefault Element.none
         )
         |> Mark.field "posts"
             (Mark.string
@@ -394,6 +394,11 @@ indexContent content =
                     )
             )
         |> Mark.toBlock
+        |> Mark.verify
+            (\value ->
+                Ok value
+             -- TODO
+            )
 
 
 code : Mark.Block (Element msg)
