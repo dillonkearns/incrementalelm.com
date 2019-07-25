@@ -12,6 +12,13 @@ import View.CodeSnippet
 import View.DripSignupForm
 
 
+normalizedUrl url =
+    url
+        |> String.split "#"
+        |> List.head
+        |> Maybe.withDefault ""
+
+
 type alias PageOrPost msg =
     { body : List (Element msg)
     , metadata : Metadata msg
@@ -58,9 +65,160 @@ blocks :
     -> Element msg
     -> List (Mark.Block (Element msg))
 blocks imageAssets routes indexView =
+    let
+        header : Mark.Block (Element msg)
+        header =
+            Mark.block "H1"
+                (\children ->
+                    Element.paragraph
+                        [ Font.size 24
+                        , Font.semiBold
+                        , Font.center
+                        , Font.family [ Font.typeface "Raleway" ]
+                        ]
+                        children
+                )
+                text
+
+        h2 : Mark.Block (Element msg)
+        h2 =
+            Mark.block "H2"
+                (\children ->
+                    Element.paragraph
+                        [ Font.size 18
+                        , Font.semiBold
+                        , Font.alignLeft
+                        , Font.family [ Font.typeface "Raleway" ]
+                        ]
+                        children
+                )
+                text
+
+        image : Mark.Block (Element msg)
+        image =
+            Mark.record "Image"
+                (\src description ->
+                    Element.image
+                        [ Element.width (Element.fill |> Element.maximum 600)
+                        , Element.centerX
+                        ]
+                        { src = src
+                        , description = description
+                        }
+                        |> Element.el [ Element.centerX ]
+                )
+                |> Mark.field "src"
+                    (Mark.string
+                        |> Mark.verify
+                            (\imageSrc ->
+                                case Dict.get imageSrc imageAssets of
+                                    Just hashedImagePath ->
+                                        Ok hashedImagePath
+
+                                    Nothing ->
+                                        Err
+                                            { title = "Could not image `" ++ imageSrc ++ "`"
+                                            , message =
+                                                [ "Must be one of\n"
+                                                , Dict.keys imageAssets |> String.join "\n"
+                                                ]
+                                            }
+                            )
+                    )
+                |> Mark.field "description" Mark.string
+                |> Mark.toBlock
+
+        signupForm : Mark.Block (Element msg)
+        signupForm =
+            Mark.record "Signup"
+                (\buttonText formId body ->
+                    [ Element.column
+                        [ Font.center
+                        , Element.spacing 30
+                        , Element.centerX
+                        ]
+                        body
+                    , View.DripSignupForm.viewNew buttonText formId { maybeReferenceId = Nothing }
+                        |> Element.html
+                        |> Element.el [ Element.width Element.fill ]
+                    , [ Element.text "We'll never share your email. Unsubscribe any time." ]
+                        |> Element.paragraph
+                            [ Font.color (Element.rgba255 0 0 0 0.5)
+                            , Font.size 14
+                            , Font.center
+                            ]
+                    ]
+                        |> Element.column
+                            [ Element.width Element.fill
+                            , Element.padding 20
+                            , Element.spacing 20
+                            , Element.Border.shadow { offset = ( 0, 0 ), size = 1, blur = 4, color = Element.rgb 0.8 0.8 0.8 }
+                            , Element.mouseOver
+                                [ Element.Border.shadow { offset = ( 0, 0 ), size = 1, blur = 4, color = Element.rgb 0.85 0.85 0.85 } ]
+                            , Element.width (Element.fill |> Element.maximum 500)
+                            , Element.centerX
+                            ]
+                        |> Element.el []
+                )
+                |> Mark.field "buttonText" Mark.string
+                |> Mark.field "formId" Mark.string
+                |> Mark.field "body"
+                    (Mark.manyOf
+                        [ header
+                        , list
+                        ]
+                    )
+                |> Mark.toBlock
+
+        text : Mark.Block (List (Element msg))
+        text =
+            Mark.textWith
+                { view =
+                    \styles string ->
+                        viewText styles string
+                , replacements = Mark.commonReplacements
+                , inlines =
+                    [ Mark.annotation "link"
+                        (\texts url ->
+                            Element.link []
+                                { url = url
+                                , label =
+                                    Element.row [ Element.htmlAttribute (Attr.style "display" "inline-flex") ]
+                                        (List.map (applyTuple viewText) texts)
+                                }
+                        )
+                        |> Mark.field "url"
+                            (Mark.string
+                                |> Mark.verify
+                                    (\url ->
+                                        if List.member (normalizedUrl url) routes then
+                                            Ok url
+
+                                        else
+                                            Err
+                                                { title = "Unknown relative URL " ++ url
+                                                , message =
+                                                    [ url
+                                                    , "\nMust be one of\n"
+                                                    , String.join "\n" routes
+                                                    ]
+                                                }
+                                    )
+                            )
+                    , Mark.verbatim "code"
+                        (\str ->
+                            Element.el [ Font.color (Element.rgb255 200 50 50) ] (Element.text str)
+                        )
+                    ]
+                }
+
+        list : Mark.Block (Element msg)
+        list =
+            Mark.tree "List" renderList (Mark.map (Element.paragraph []) text)
+    in
     [ header
     , h2
-    , image imageAssets
+    , image
     , list
     , code
     , indexContent indexView
@@ -75,32 +233,6 @@ blocks imageAssets routes indexView =
 
 
 {- Handle Text -}
-
-
-text : Mark.Block (List (Element msg))
-text =
-    Mark.textWith
-        { view =
-            \styles string ->
-                viewText styles string
-        , replacements = Mark.commonReplacements
-        , inlines =
-            [ Mark.annotation "link"
-                (\texts url ->
-                    Element.link []
-                        { url = url
-                        , label =
-                            Element.row [ Element.htmlAttribute (Attr.style "display" "inline-flex") ]
-                                (List.map (applyTuple viewText) texts)
-                        }
-                )
-                |> Mark.field "url" Mark.string
-            , Mark.verbatim "code"
-                (\str ->
-                    Element.el [ Font.color (Element.rgb255 200 50 50) ] (Element.text str)
-                )
-            ]
-        }
 
 
 titleText : Mark.Block (List { styled : Element msg, raw : String })
@@ -196,71 +328,6 @@ gather myList =
 {- Handle Blocks -}
 
 
-header : Mark.Block (Element msg)
-header =
-    Mark.block "H1"
-        (\children ->
-            Element.paragraph
-                [ Font.size 24
-                , Font.semiBold
-                , Font.center
-                , Font.family [ Font.typeface "Raleway" ]
-                ]
-                children
-        )
-        text
-
-
-h2 : Mark.Block (Element msg)
-h2 =
-    Mark.block "H2"
-        (\children ->
-            Element.paragraph
-                [ Font.size 18
-                , Font.semiBold
-                , Font.alignLeft
-                , Font.family [ Font.typeface "Raleway" ]
-                ]
-                children
-        )
-        text
-
-
-image : Dict String String -> Mark.Block (Element msg)
-image imageAssets =
-    Mark.record "Image"
-        (\src description ->
-            Element.image
-                [ Element.width (Element.fill |> Element.maximum 600)
-                , Element.centerX
-                ]
-                { src = src
-                , description = description
-                }
-                |> Element.el [ Element.centerX ]
-        )
-        |> Mark.field "src"
-            (Mark.string
-                |> Mark.verify
-                    (\imageSrc ->
-                        case Dict.get imageSrc imageAssets of
-                            Just hashedImagePath ->
-                                Ok hashedImagePath
-
-                            Nothing ->
-                                Err
-                                    { title = "Could not image `" ++ imageSrc ++ "`"
-                                    , message =
-                                        [ "Must be one of\n"
-                                        , Dict.keys imageAssets |> String.join "\n"
-                                        ]
-                                    }
-                    )
-            )
-        |> Mark.field "description" Mark.string
-        |> Mark.toBlock
-
-
 indexContent : Element msg -> Mark.Block (Element msg)
 indexContent content =
     Mark.record "IndexContent"
@@ -297,14 +364,6 @@ code =
 
 
 {- Handling bulleted and numbered lists -}
-
-
-list : Mark.Block (Element msg)
-list =
-    Mark.tree "List" renderList (Mark.map (Element.paragraph []) text)
-
-
-
 -- Note: we have to define this as a separate function because
 -- `Items` and `Node` are a pair of mutually recursive data structures.
 -- It's easiest to render them using two separate functions:
@@ -336,46 +395,3 @@ renderItem icon (Mark.Item item) =
             ]
         , renderList item.children
         ]
-
-
-signupForm : Mark.Block (Element msg)
-signupForm =
-    Mark.record "Signup"
-        (\buttonText formId body ->
-            [ Element.column
-                [ Font.center
-                , Element.spacing 30
-                , Element.centerX
-                ]
-                body
-            , View.DripSignupForm.viewNew buttonText formId { maybeReferenceId = Nothing }
-                |> Element.html
-                |> Element.el [ Element.width Element.fill ]
-            , [ Element.text "We'll never share your email. Unsubscribe any time." ]
-                |> Element.paragraph
-                    [ Font.color (Element.rgba255 0 0 0 0.5)
-                    , Font.size 14
-                    , Font.center
-                    ]
-            ]
-                |> Element.column
-                    [ Element.width Element.fill
-                    , Element.padding 20
-                    , Element.spacing 20
-                    , Element.Border.shadow { offset = ( 0, 0 ), size = 1, blur = 4, color = Element.rgb 0.8 0.8 0.8 }
-                    , Element.mouseOver
-                        [ Element.Border.shadow { offset = ( 0, 0 ), size = 1, blur = 4, color = Element.rgb 0.85 0.85 0.85 } ]
-                    , Element.width (Element.fill |> Element.maximum 500)
-                    , Element.centerX
-                    ]
-                |> Element.el []
-        )
-        |> Mark.field "buttonText" Mark.string
-        |> Mark.field "formId" Mark.string
-        |> Mark.field "body"
-            (Mark.manyOf
-                [ header
-                , list
-                ]
-            )
-        |> Mark.toBlock
