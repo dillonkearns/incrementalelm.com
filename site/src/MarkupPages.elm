@@ -1,4 +1,4 @@
-module MarkupPages exposing (Flags, Program, program)
+module MarkupPages exposing (Flags, Parser, Program, program)
 
 import Browser
 import Browser.Navigation
@@ -6,6 +6,7 @@ import Content exposing (Content)
 import Dict exposing (Dict)
 import Element exposing (Element)
 import Json.Decode
+import Mark
 import MarkParser
 import Platform.Sub exposing (Sub)
 import RawContent
@@ -17,13 +18,14 @@ type alias Program userFlags userModel userMsg =
 
 
 mainView :
-    (userModel -> MarkParser.PageOrPost userMsg -> { title : String, body : Element userMsg })
+    Parser userMsg
+    -> (userModel -> MarkParser.PageOrPost userMsg -> { title : String, body : Element userMsg })
     -> Model userModel
     -> { title : String, body : Element userMsg }
-mainView pageOrPostView (Model model) =
+mainView parser pageOrPostView (Model model) =
     case RawContent.content model.imageAssets of
         Ok site ->
-            pageView pageOrPostView (Model model) site
+            pageView parser pageOrPostView (Model model) site
 
         Err errorView ->
             { title = "Error parsing"
@@ -32,11 +34,12 @@ mainView pageOrPostView (Model model) =
 
 
 pageView :
-    (userModel -> MarkParser.PageOrPost msg -> { title : String, body : Element msg })
+    Parser userMsg
+    -> (userModel -> MarkParser.PageOrPost msg -> { title : String, body : Element msg })
     -> Model userModel
     -> Content msg
     -> { title : String, body : Element msg }
-pageView pageOrPostView (Model model) content =
+pageView parser pageOrPostView (Model model) content =
     case Content.lookup content model.url of
         Just pageOrPost ->
             pageOrPostView model.userModel pageOrPost
@@ -56,13 +59,14 @@ pageView pageOrPostView (Model model) content =
 
 
 view :
-    (userModel -> MarkParser.PageOrPost userMsg -> { title : String, body : Element userMsg })
+    Parser userMsg
+    -> (userModel -> MarkParser.PageOrPost userMsg -> { title : String, body : Element userMsg })
     -> Model userModel
     -> Browser.Document (Msg userMsg)
-view pageOrPostView model =
+view parser pageOrPostView model =
     let
         { title, body } =
-            mainView pageOrPostView model
+            mainView parser pageOrPostView model
     in
     { title = title
     , body =
@@ -149,17 +153,25 @@ update userUpdate msg (Model model) =
             ( Model { model | userModel = userModel }, userCmd |> Cmd.map UserMsg )
 
 
+type alias Parser userMsg =
+    Dict String String
+    -> List String
+    -> Element userMsg
+    -> Mark.Document { body : List (Element userMsg), metadata : MarkParser.Metadata userMsg }
+
+
 program :
     { init : Flags userFlags -> ( userModel, Cmd userMsg )
     , update : userMsg -> userModel -> ( userModel, Cmd userMsg )
     , subscriptions : userModel -> Sub userMsg
     , view : userModel -> MarkParser.PageOrPost userMsg -> { title : String, body : Element userMsg }
+    , parser : Parser userMsg
     }
     -> Program userFlags userModel userMsg
 program config =
     Browser.application
         { init = init config.init
-        , view = view config.view
+        , view = view config.parser config.view
         , update = update config.update
         , subscriptions = \_ -> Sub.none --config.subscriptions
         , onUrlChange = UrlChanged

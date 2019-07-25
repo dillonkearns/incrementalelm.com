@@ -40,6 +40,7 @@ main =
         , view = pageOrPostView
         , update = update
         , subscriptions = subscriptions
+        , parser = MarkParser.document
         }
 
 
