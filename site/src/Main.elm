@@ -305,17 +305,6 @@ makeTranslated i polygon =
             ]
 
 
-
--- Element.row [ Element.padding 20, Element.Border.width 2, Element.spaceEvenly ]
---     [ Element.el [ Font.size 30 ]
---         (Element.link [] { url = "/", label = Element.text "elm-markup-site" })
---     , Element.row [ Element.spacing 15 ]
---         [ Element.link [] { url = "/articles", label = Element.text "Articles" }
---         , Element.link [] { url = "/about", label = Element.text "About" }
---         ]
---     ]
-
-
 pageOrPostView : Model -> MarkParser.PageOrPost Msg -> { title : String, body : Element Msg }
 pageOrPostView model pageOrPost =
     { title = pageOrPost.metadata.title.raw
