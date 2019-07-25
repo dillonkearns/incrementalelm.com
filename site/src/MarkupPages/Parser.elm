@@ -54,14 +54,12 @@ document :
         Mark.Document
             { body : List (Element msg)
             , metadata : Metadata msg
-            , preview : List (Element msg)
             }
 document appData blocks =
     Mark.documentWith
         (\meta body ->
             { metadata = meta
             , body = body
-            , preview = body |> List.take 2
             }
         )
         -- We have some required metadata that starts our document.
