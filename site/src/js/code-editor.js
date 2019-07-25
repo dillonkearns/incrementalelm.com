@@ -1,17 +1,6 @@
-// import CodeMirror from "codemirror";
-// import CodeMirror from "codemirror/lib/codemirror.js";
 import CodeMirror from "codemirror";
-
 import "codemirror/lib/codemirror.css";
 import elm from "codemirror/mode/elm/elm.js";
-
-// import * as style from "../../lib/codemirror.css";
-// import * as CodeMirror from "../../lib/codemirror.js";
-// import * as elmHighlight from "../../lib/elm-highlighting.js";
-// <link rel="stylesheet" href="../lib/codemirror.css" />
-// <script type="text/javascript" src="../lib/codemirror.js"></script>
-// <script type="text/javascript" src="../lib/elm-highlighting.js"></script>
-// import * as CodeMirror from "codemirror";
 
 customElements.define(
   "code-editor",
