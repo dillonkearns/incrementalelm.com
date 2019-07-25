@@ -305,17 +305,6 @@ code =
 
 
 
--- Mark.block "Code"
---     (\str ->
---         Html.pre
---             [ Attr.style "padding" "12px"
---             , Attr.style "background-color" "#eee"
---             ]
---             [ Html.text str ]
---             |> Element.html
---      -- TODO
---     )
---     Mark.string
 {- Handling bulleted and numbered lists -}
 
 
