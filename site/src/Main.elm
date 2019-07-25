@@ -237,7 +237,7 @@ pageView model content =
             , body =
                 [ header model
                 , pageOrPost.body
-                    |> Element.column
+                    |> Element.el
                         [ if Dimensions.isMobile model.dimensions then
                             Element.width (Element.fill |> Element.maximum 600)
 
