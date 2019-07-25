@@ -1,4 +1,4 @@
-module MarkupPages.Parser exposing (PageOrPost, document, normalizedUrl)
+module MarkupPages.Parser exposing (AppData, PageOrPost, document, imageSrc, normalizedUrl)
 
 import Dict exposing (Dict)
 import Element exposing (Element)
@@ -64,30 +64,12 @@ document appData blocks =
         )
         -- We have some required metadata that starts our document.
         { metadata = metadata
-        , body = Mark.manyOf (image appData.imageAssets :: blocks)
+        , body = Mark.manyOf blocks
         }
 
 
-image : Dict String String -> Mark.Block (Element msg)
-image imageAssets =
-    Mark.record "Image"
-        (\src description ->
-            Element.image
-                [ Element.width (Element.fill |> Element.maximum 600)
-                , Element.centerX
-                ]
-                { src = src
-                , description = description
-                }
-                |> Element.el [ Element.centerX ]
-        )
-        |> Mark.field "src" (imageSrc imageAssets)
-        |> Mark.field "description" Mark.string
-        |> Mark.toBlock
-
-
-imageSrc : Dict String String -> Mark.Block String
-imageSrc imageAssets =
+imageSrc : AppData msg -> Mark.Block String
+imageSrc { imageAssets } =
     Mark.string
         |> Mark.verify
             (\src ->

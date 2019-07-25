@@ -40,42 +40,18 @@ document :
             , metadata : Metadata msg
             }
 document imageAssets routes indexView =
-    Mark.documentWith
-        (\meta body ->
-            { metadata = meta
-            , body = body
-            }
-        )
-        -- We have some required metadata that starts our document.
-        { metadata = metadata
-        , body = Mark.manyOf (blocks imageAssets routes indexView)
-        }
-
-
-document2 :
-    Dict String String
-    -> List String
-    -> Element msg
-    ->
-        Mark.Document
-            { body : List (Element msg)
-            , metadata : Metadata msg
-            }
-document2 imageAssets routes indexView =
     MarkupPages.Parser.document
         { imageAssets = imageAssets
         , routes = routes
         , indexView = indexView
         }
-        (blocks imageAssets routes indexView)
+        (blocks { imageAssets = imageAssets, routes = routes, indexView = indexView })
 
 
 blocks :
-    Dict String String
-    -> List String
-    -> Element msg
+    MarkupPages.Parser.AppData msg
     -> List (Mark.Block (Element msg))
-blocks imageAssets routes indexView =
+blocks appData =
     let
         header : Mark.Block (Element msg)
         header =
@@ -118,24 +94,7 @@ blocks imageAssets routes indexView =
                         }
                         |> Element.el [ Element.centerX ]
                 )
-                |> Mark.field "src"
-                    (Mark.string
-                        |> Mark.verify
-                            (\imageSrc ->
-                                case Dict.get imageSrc imageAssets of
-                                    Just hashedImagePath ->
-                                        Ok hashedImagePath
-
-                                    Nothing ->
-                                        Err
-                                            { title = "Could not image `" ++ imageSrc ++ "`"
-                                            , message =
-                                                [ "Must be one of\n"
-                                                , Dict.keys imageAssets |> String.join "\n"
-                                                ]
-                                            }
-                            )
-                    )
+                |> Mark.field "src" (MarkupPages.Parser.imageSrc appData)
                 |> Mark.field "description" Mark.string
                 |> Mark.toBlock
 
@@ -202,7 +161,7 @@ blocks imageAssets routes indexView =
                             (Mark.string
                                 |> Mark.verify
                                     (\url ->
-                                        if List.member (normalizedUrl url) routes then
+                                        if List.member (normalizedUrl url) appData.routes then
                                             Ok url
 
                                         else
@@ -211,7 +170,7 @@ blocks imageAssets routes indexView =
                                                 , message =
                                                     [ url
                                                     , "\nMust be one of\n"
-                                                    , String.join "\n" routes
+                                                    , String.join "\n" appData.routes
                                                     ]
                                                 }
                                     )
@@ -232,7 +191,7 @@ blocks imageAssets routes indexView =
     , image
     , list
     , code
-    , indexContent indexView
+    , indexContent appData.indexView
     , signupForm
     , button
     , contactButton
