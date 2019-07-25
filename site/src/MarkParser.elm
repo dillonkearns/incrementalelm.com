@@ -4,6 +4,7 @@ import Dict exposing (Dict)
 import Element exposing (Element)
 import Element.Border
 import Element.Font as Font
+import Element.Region
 import Html exposing (Html)
 import Html.Attributes as Attr
 import Mark
@@ -228,6 +229,13 @@ blocks imageAssets routes indexView =
     , signupForm
     , button
     , contactButton
+    , navHeader
+        [ Font.size 24
+        , Font.semiBold
+        , Font.alignLeft
+        , Font.family [ Font.typeface "Raleway" ]
+        ]
+        text
     , Mark.map
         (Element.paragraph
             [ Element.spacing 15 ]
@@ -239,6 +247,22 @@ blocks imageAssets routes indexView =
 contactButton : Mark.Block (Element msg)
 contactButton =
     Mark.record "ContactButton" contactButtonView
+        |> Mark.toBlock
+
+
+navHeader : List (Element.Attribute msg) -> Mark.Block (List (Element msg)) -> Mark.Block (Element msg)
+navHeader attrs textParser =
+    Mark.record "Navheader"
+        (\elements id ->
+            Element.paragraph
+                (Element.Region.heading 3
+                    :: Element.htmlAttribute (Attr.id id)
+                    :: attrs
+                )
+                elements
+        )
+        |> Mark.field "title" textParser
+        |> Mark.field "id" Mark.string
         |> Mark.toBlock
 
 
