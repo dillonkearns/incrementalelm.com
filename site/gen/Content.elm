@@ -43,15 +43,32 @@ type alias Content msg =
     }
 
 
+routes : { pages : List ( List String, String ), posts : List ( List String, String ) } -> List String
+routes record =
+    (record.pages ++ record.posts)
+        |> List.map Tuple.first
+        |> List.map (String.join "/")
+        |> List.map (\route -> "/" ++ route)
+
+
 buildAllData :
     Dict String String
-    -> List String
     -> { pages : List ( List String, String ), posts : List ( List String, String ) }
     -> Result (Element msg) (Content msg)
-buildAllData imageAssets routes record =
+buildAllData imageAssets record =
     case
         record.posts
-            |> List.map (\( path, markup ) -> ( path, Mark.compile (MarkParser.document imageAssets routes Element.none) markup ))
+            |> List.map
+                (\( path, markup ) ->
+                    ( path
+                    , Mark.compile
+                        (MarkParser.document imageAssets
+                            (routes record)
+                            Element.none
+                        )
+                        markup
+                    )
+                )
             |> combineResults
     of
         Ok postListings ->
@@ -62,7 +79,7 @@ buildAllData imageAssets routes record =
                             (\( path, markup ) ->
                                 ( path
                                 , Mark.compile
-                                    (MarkParser.document imageAssets routes (Index.view postListings))
+                                    (MarkParser.document imageAssets (routes record) (Index.view postListings))
                                     markup
                                 )
                             )
