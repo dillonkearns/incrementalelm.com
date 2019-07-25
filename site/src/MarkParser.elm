@@ -8,8 +8,11 @@ import Html exposing (Html)
 import Html.Attributes as Attr
 import Mark
 import Mark.Error
+import Style
+import Style.Helpers
 import View.CodeSnippet
 import View.DripSignupForm
+import View.FontAwesome
 
 
 normalizedUrl url =
@@ -223,12 +226,64 @@ blocks imageAssets routes indexView =
     , code
     , indexContent indexView
     , signupForm
+    , button
+    , contactButton
     , Mark.map
         (Element.paragraph
             [ Element.spacing 15 ]
         )
         text
     ]
+
+
+contactButton : Mark.Block (Element msg)
+contactButton =
+    Mark.record "ContactButton" contactButtonView
+        |> Mark.toBlock
+
+
+button : Mark.Block (Element msg)
+button =
+    Mark.record "Button"
+        (\body url -> buttonView { body = body, url = url })
+        |> Mark.field "body" Mark.string
+        |> Mark.field "url" Mark.string
+        |> Mark.toBlock
+
+
+contactButtonView : Element msg
+contactButtonView =
+    Element.newTabLink
+        [ Element.centerX ]
+        { url = "mailto:dillon@incrementalelm.com"
+        , label =
+            Style.Helpers.button
+                { fontColor = .mainBackground
+                , backgroundColor = .highlight
+                , size = Style.fontSize.body
+                }
+                [ View.FontAwesome.icon "far fa-envelope" |> Element.el []
+                , Element.text "dillon@incrementalelm.com"
+                ]
+        }
+        |> Element.el [ Element.centerX ]
+
+
+buttonView : { url : String, body : String } -> Element msg
+buttonView details =
+    Element.link
+        [ Element.centerX ]
+        { url = details.url
+        , label =
+            Style.Helpers.button
+                { fontColor = .mainBackground
+                , backgroundColor = .highlight
+                , size = Style.fontSize.body
+                }
+                [ Element.text details.body
+                ]
+        }
+        |> Element.el [ Element.centerX ]
 
 
 
