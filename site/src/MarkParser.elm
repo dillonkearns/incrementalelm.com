@@ -63,8 +63,6 @@ document imageAssets routes indexView =
                     )
                     text
                 ]
-
-        -- |> Mark.map (List.take 2)
         }
 
 
