@@ -90,4 +90,4 @@ postPreview post =
         , Element.spacing 30
         , Element.Font.size 18
         ]
-        post.preview
+        (post.body |> List.take 2)

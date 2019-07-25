@@ -25,9 +25,8 @@ normalizedUrl url =
 
 
 type alias PageOrPost msg =
-    { body : Element msg
+    { body : List (Element msg)
     , metadata : Metadata msg
-    , preview : List (Element msg)
     }
 
 
@@ -37,24 +36,14 @@ document :
     -> Element msg
     ->
         Mark.Document
-            { body : Element msg
+            { body : List (Element msg)
             , metadata : Metadata msg
-            , preview : List (Element msg)
             }
 document imageAssets routes indexView =
     Mark.documentWith
         (\meta body ->
             { metadata = meta
-            , body =
-                Element.textColumn
-                    [ Element.centerX
-                    , Element.width Element.fill
-                    , Element.spacing 30
-                    , Font.size 18
-                    ]
-                    body
-            , preview =
-                body |> List.take 2
+            , body = body
             }
         )
         -- We have some required metadata that starts our document.
