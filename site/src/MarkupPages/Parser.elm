@@ -60,17 +60,8 @@ document appData blocks =
     Mark.documentWith
         (\meta body ->
             { metadata = meta
-            , body =
-                [ Element.textColumn
-                    [ Element.centerX
-                    , Element.width Element.fill
-                    , Element.spacing 30
-                    , Font.size 18
-                    ]
-                    body
-                ]
-            , preview =
-                body |> List.take 2
+            , body = body
+            , preview = body |> List.take 2
             }
         )
         -- We have some required metadata that starts our document.
