@@ -184,7 +184,10 @@ program config =
         { init = init config.init
         , view = view config.content config.parser config.view
         , update = update config.update
-        , subscriptions = \_ -> Sub.none --config.subscriptions
+        , subscriptions =
+            \(Model model) ->
+                config.subscriptions model.userModel
+                    |> Sub.map UserMsg
         , onUrlChange = UrlChanged
         , onUrlRequest = LinkClicked
         }
