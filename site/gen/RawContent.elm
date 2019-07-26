@@ -263,6 +263,19 @@ Want to discuss finding the right service to help you improve your elm codebase?
 """
       )
 
+  ,( ["thank-you"]
+      , """|> Article
+    title = Sign up confirmation
+    description = Sign up confirmation
+  
+|> H1
+    Thank you!
+
+|> H2
+    Your message is on its way 📪
+"""
+      )
+
   ,( ["tips"]
       , """|> Article
     title = Weekly elm Tips!
