@@ -1,0 +1,35 @@
+|> Article
+    title = elm-graphql - Scalar Codecs Tutorial
+    description = elm-graphql - Scalar Codecs Tutorial
+
+|> Vimeo
+    329690102
+
+
+|> H1
+    Want to take elm-graphql to the next level?
+
+|> H2
+    Download the Custom Scalar Checklist ✅
+
+
+The *Custom Scalar Checklist* guides you through *simple*, *actionable* steps to identify where you should be using Custom Scalars in your schema.
+
+Download it now to get the descriptions and examples of all of these types of fields which should be turned into Custom Scalars:
+
+|> List
+    - Unit Contract
+    - Format Contract
+    - Context Contract
+    - Enumeration Contract
+
+|> Signup
+    buttonText = Download the checklist
+    formId = 573190762
+    body =
+        |> H1
+            ✅ Improve your Schema with this step-by-step checklist
+
+        |> List
+            - Simple steps that will improve your elm-graphql codebase!
+            - Learn the 4 kinds of Contracts that you can turn into Custom Scalars
