@@ -12,7 +12,46 @@ content =
 pages : List ( List String, String )
 pages =
     [
-    ( ["articles"]
+    ( ["accelerator-application"]
+      , """|> Article
+    title = Accelerator Application
+    description = Accelerator Application
+
+|> H2
+    🏋️\u{200D}♂️ 📚 Growing Elm Modules - Group Coaching Program
+
+Would you like to develop skills to help you with the following challenges?
+
+|> List
+    - What does the process of architecture look like for an in elm?
+    - How do know which parts of your elm code to split out and organize together?
+    - How do you keep your app easy to change and hard to break as you grow your non-trivial single-page apps?
+    - How do you make working with new elm libraries manageable?
+    - How can you use types to fix bugs and prevent new bugs?
+
+
+In my Growing Elm Modules program, you will develop the habits and skills to address these issues head-on. Because the program is structured around group coaching and battle-tested lessons and exercises, the program is relatively high on learning commitment, and relatively low on financial commitment. You'll come away with more than a knowledge dump. You'll come away with real skills and real improvements to your codebase.
+
+You'll learn through several mediums:
+
+|> List
+    - Group coaching calls every week
+    - Drills to practice core skills
+    - Exercises to apply to improve your codebase and get feedback in coaching hours
+    - Slack chat with your peers in your program
+
+The program is limited to 5 people, which means you get a good balance of coaching on your specific issues, and learning from other developer's experiences.
+
+
+If you're interested to learn more, fill out this form and I'll send you a link to schedule a call so we can explore whether this program can help you with your goals.
+
+
+|> GoogleForm
+    1FAIpQLSd7V15KXuoReco2xJzz70LD-d691hQJ-586XNjAmQVSkdYUsQ
+"""
+      )
+
+  ,( ["articles"]
       , """|> Article
     title = Articles
     description = Incremental Elm Consulting articles
