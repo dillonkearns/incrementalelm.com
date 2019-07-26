@@ -1,0 +1,12 @@
+|> Article
+    title = Contact
+    description = Contact
+
+|> H1
+    Contact Incremental Elm
+
+|> Image
+    src = contact.jpg
+    description = Contact Image
+
+|> ContactButton
