@@ -5,6 +5,7 @@ import Element exposing (Element)
 import Element.Border
 import Element.Font as Font
 import Element.Region
+import GoogleForm
 import Html exposing (Html)
 import Html.Attributes as Attr
 import Index
@@ -203,6 +204,7 @@ blocks appData =
     , signupForm
     , button
     , contactButton
+    , googleForm
     , navHeader
         [ Font.size 24
         , Font.semiBold
@@ -216,6 +218,13 @@ blocks appData =
         )
         text
     ]
+
+
+googleForm : Mark.Block (Element msg)
+googleForm =
+    Mark.block "GoogleForm"
+        (\formId -> GoogleForm.view formId)
+        Mark.string
 
 
 contactButton : Mark.Block (Element msg)
