@@ -307,6 +307,15 @@ If you're interested to learn more, fill out this form and I'll send you a link 
 """
       )
 
+  ,( ["incremental-weekly-unsubscribe"]
+      , """|> Article
+    title = Incremental Elm Weekly Unsubscribe
+    description = Incremental Elm Weekly Unsubscribe
+
+Got it! We won't send you any more weekly tips.
+"""
+      )
+
   ,( []
       , """|> Article
     title = Incremental Elm Consulting
