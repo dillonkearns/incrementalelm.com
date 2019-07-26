@@ -365,10 +365,10 @@ gather myList =
 
 
 indexContent : Maybe (List ( List String, PageOrPost msg (Metadata msg) (Metadata msg) )) -> Mark.Block (Element msg)
-indexContent content =
+indexContent posts =
     Mark.record "IndexContent"
         (\postsPath ->
-            content |> Maybe.map Index.view |> Maybe.withDefault Element.none
+            posts |> Maybe.map Index.view |> Maybe.withDefault Element.none
         )
         |> Mark.field "posts"
             (Mark.string
@@ -387,7 +387,7 @@ indexContent content =
         |> Mark.toBlock
         |> Mark.verify
             (\value ->
-                case content of
+                case posts of
                     Just msgElement ->
                         Ok value
 
