@@ -37,7 +37,7 @@ type alias Metadata msg =
 type alias AppData msg =
     { imageAssets : Dict String String
     , routes : List String
-    , indexView : Maybe (Element msg)
+    , indexView : Maybe (List ( List String, PageOrPost msg (Metadata msg) (Metadata msg) ))
     }
 
 

@@ -34,9 +34,9 @@ document imageAssets routes posts =
     MarkupPages.Parser.document
         { imageAssets = imageAssets
         , routes = routes
-        , indexView = posts |> Maybe.map Index.view
+        , indexView = posts
         }
-        (blocks { imageAssets = imageAssets, routes = routes, indexView = posts |> Maybe.map Index.view })
+        (blocks { imageAssets = imageAssets, routes = routes, indexView = posts })
 
 
 blocks :
@@ -364,11 +364,11 @@ gather myList =
 {- Handle Blocks -}
 
 
-indexContent : Maybe (Element msg) -> Mark.Block (Element msg)
+indexContent : Maybe (List ( List String, PageOrPost msg (Metadata msg) (Metadata msg) )) -> Mark.Block (Element msg)
 indexContent content =
     Mark.record "IndexContent"
         (\postsPath ->
-            content |> Maybe.withDefault Element.none
+            content |> Maybe.map Index.view |> Maybe.withDefault Element.none
         )
         |> Mark.field "posts"
             (Mark.string
