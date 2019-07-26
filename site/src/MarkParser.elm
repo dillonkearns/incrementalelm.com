@@ -170,7 +170,10 @@ blocks appData =
                             (Mark.string
                                 |> Mark.verify
                                     (\url ->
-                                        if List.member (normalizedUrl url) appData.routes then
+                                        if url |> String.startsWith "http" then
+                                            Ok url
+
+                                        else if List.member (normalizedUrl url) appData.routes then
                                             Ok url
 
                                         else
@@ -202,6 +205,7 @@ blocks appData =
     , code
     , indexContent appData.indexView
     , signupForm
+    , vimeo
     , button
     , contactButton
     , googleForm
@@ -225,6 +229,27 @@ googleForm =
     Mark.block "GoogleForm"
         (\formId -> GoogleForm.view formId)
         Mark.string
+
+
+vimeo : Mark.Block (Element msg)
+vimeo =
+    Mark.block "Vimeo" (\videoId -> vimeoView videoId) Mark.string
+
+
+vimeoView : String -> Element msg
+vimeoView videoId =
+    Html.div [ Attr.class "embed-container" ]
+        [ Html.iframe
+            [ Attr.src <| "https://player.vimeo.com/video/" ++ videoId
+            , Attr.attribute "width" "100%"
+            , Attr.attribute "height" "100%"
+            , Attr.attribute "allow" "autoplay; fullscreen"
+            , Attr.attribute "allowfullscreen" ""
+            ]
+            []
+        ]
+        |> Element.html
+        |> Element.el [ Element.width Element.fill ]
 
 
 contactButton : Mark.Block (Element msg)
