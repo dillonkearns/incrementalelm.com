@@ -1,0 +1,25 @@
+|> Article
+    title = Weekly elm Tips!
+    description = Weekly elm tips
+
+Here are some popular tips you can check out right away.
+
+|> List
+    - [Moving Faster with Tiny Steps in Elm]{link|url = /articles/moving-faster-with-tiny-steps}
+    - [Using elm types to prevent logging social security #'s]{link|url = /articles/exit-gatekeepers}
+
+|> H2
+    Want more?
+
+I send out practical elm tips every week! 👇
+
+|> Signup
+    buttonText = Get weekly elm tips!
+    formId = 906002494
+    body =
+        |> H1
+            Get tips to improve your elm code every week
+
+        |> List
+            - Go beyond learning what great elm code /looks like/. Learn */how to write it/*.
+            - Tips you won't find anywhere else to level up your elm skills
