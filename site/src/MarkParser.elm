@@ -17,6 +17,7 @@ import Style.Helpers
 import View.CodeSnippet
 import View.DripSignupForm
 import View.FontAwesome
+import View.Resource
 
 
 normalizedUrl url =
@@ -209,6 +210,7 @@ blocks appData =
     , button
     , contactButton
     , googleForm
+    , resource
     , navHeader
         [ Font.size 24
         , Font.semiBold
@@ -222,6 +224,47 @@ blocks appData =
         )
         text
     ]
+
+
+resource : Mark.Block (Element msg)
+resource =
+    Mark.record "Resource"
+        (\name resourceKind url ->
+            View.Resource.view { name = name, url = url, kind = resourceKind }
+        )
+        |> Mark.field "title" Mark.string
+        |> Mark.field "icon" iconBlock
+        |> Mark.field "url" Mark.string
+        |> Mark.toBlock
+
+
+icons =
+    [ ( "Video", View.Resource.Video )
+    , ( "Library", View.Resource.Library )
+    , ( "App", View.Resource.App )
+    , ( "Article", View.Resource.Article )
+    , ( "Exercise", View.Resource.Exercise )
+    , ( "Book", View.Resource.Book )
+    ]
+        |> Dict.fromList
+
+
+iconBlock : Mark.Block View.Resource.ResourceKind
+iconBlock =
+    -- Mark.oneOf
+    Mark.string
+        |> Mark.verify
+            (\iconName ->
+                case Dict.get iconName icons of
+                    Just myResource ->
+                        Ok myResource
+
+                    Nothing ->
+                        Err
+                            { title = "Invalid resource name"
+                            , message = []
+                            }
+            )
 
 
 googleForm : Mark.Block (Element msg)
