@@ -187,6 +187,46 @@ Learn more about how my [Elm Developer Support Packages]{link| url = /services#d
 """
       )
 
+  ,( ["introducing-custom-scalars-course"]
+      , """|> Article
+    title = Introducing Custom Scalars to your Codebase
+    description = Introducing Custom Scalars to your Codebase
+
+|> H1
+    Introducing Custom Scalars to your codebase
+
+I recommend downloading the [Custom Scalar Checklist]{link| url = https://incrementalelm.com/assets/custom-scalar-checklist.pdf } and printing it out or keeping it open as you go through this lesson. The videos below are the steps you'll go through after identifying the fields you want to turn into Custom Scalars from going through the checklist.
+
+
+|> H2
+    Part 0 - Intro to the Scalar Codecs module in elm-graphql
+
+
+Watch this intro to using `--scalar-codecs <ModuleName>`{code} in `elm-graphql`{code} if you haven't already.
+
+|> Vimeo
+    329690102
+
+|> H2
+    Part 1 - Benefits of using Custom Scalars
+
+|> Vimeo
+    329898472
+
+|> H2
+    Part 2 - Introducing the steps
+
+|> Vimeo
+    329896387
+
+|> H2
+    Part 3 - Executing the steps
+
+|> Vimeo
+    329888719
+"""
+      )
+
   ,( ["services"]
       , """|> Article
     title = Incremental Elm Services
