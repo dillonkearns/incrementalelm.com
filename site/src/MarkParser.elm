@@ -144,7 +144,24 @@ blocks appData =
                             Element.link []
                                 { url = url
                                 , label =
-                                    Element.row [ Element.htmlAttribute (Attr.style "display" "inline-flex") ]
+                                    Element.row
+                                        [ Font.color
+                                            (Element.rgb
+                                                (17 / 255)
+                                                (132 / 255)
+                                                (206 / 255)
+                                            )
+                                        , Element.mouseOver
+                                            [ Font.color
+                                                (Element.rgb
+                                                    (234 / 255)
+                                                    (21 / 255)
+                                                    (122 / 255)
+                                                )
+                                            ]
+                                        , Element.htmlAttribute
+                                            (Attr.style "display" "inline-flex")
+                                        ]
                                         (List.map (applyTuple viewText) texts)
                                 }
                         )
