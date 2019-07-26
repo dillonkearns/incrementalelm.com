@@ -166,7 +166,7 @@ update userUpdate msg (Model model) =
 type alias Parser userMsg =
     Dict String String
     -> List String
-    -> Maybe (Element userMsg)
+    -> Maybe (List ( List String, PageOrPost userMsg (Metadata userMsg) (Metadata userMsg) ))
     -> Mark.Document (PageOrPost userMsg (Metadata userMsg) (Metadata userMsg))
 
 

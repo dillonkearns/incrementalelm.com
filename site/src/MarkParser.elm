@@ -7,6 +7,7 @@ import Element.Font as Font
 import Element.Region
 import Html exposing (Html)
 import Html.Attributes as Attr
+import Index
 import Mark
 import Mark.Error
 import MarkupPages.Parser exposing (PageOrPost)
@@ -27,15 +28,15 @@ normalizedUrl url =
 document :
     Dict String String
     -> List String
-    -> Maybe (Element msg)
+    -> Maybe (List ( List String, PageOrPost msg (Metadata msg) (Metadata msg) ))
     -> Mark.Document (PageOrPost msg (Metadata msg) (Metadata msg))
-document imageAssets routes indexView =
+document imageAssets routes posts =
     MarkupPages.Parser.document
         { imageAssets = imageAssets
         , routes = routes
-        , indexView = indexView
+        , indexView = posts |> Maybe.map Index.view
         }
-        (blocks { imageAssets = imageAssets, routes = routes, indexView = indexView })
+        (blocks { imageAssets = imageAssets, routes = routes, indexView = posts |> Maybe.map Index.view })
 
 
 blocks :

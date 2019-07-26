@@ -3,7 +3,6 @@ module Index exposing (view)
 import Element exposing (Element)
 import Element.Border
 import Element.Font
-import MarkParser
 import MarkupPages.Parser exposing (Metadata, PageOrPost(..))
 import Style.Helpers
 

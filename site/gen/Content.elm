@@ -55,7 +55,7 @@ routes record =
 buildAllData :
     (Dict String String
      -> List String
-     -> Maybe (Element msg)
+     -> Maybe (List ( List String, PageOrPost msg (Metadata msg) (Metadata msg) ))
      -> Mark.Document (PageOrPost msg (Metadata msg) (Metadata msg))
     )
     -> Dict String String
@@ -85,7 +85,7 @@ buildAllData parser imageAssets record =
                             (\( path, markup ) ->
                                 ( path
                                 , Mark.compile
-                                    (parser imageAssets (routes record) (Index.view postListings |> Just))
+                                    (parser imageAssets (routes record) (postListings |> Just))
                                     markup
                                 )
                             )
