@@ -26,15 +26,13 @@ type alias Program userFlags userModel userMsg =
 
 
 mainView :
-    Content
-    -> Parser userMsg
-    -> (userModel -> PageOrPost userMsg (Metadata userMsg) (Metadata userMsg) -> { title : String, body : Element userMsg })
+    (userModel -> PageOrPost userMsg (Metadata userMsg) (Metadata userMsg) -> { title : String, body : Element userMsg })
     -> Model userModel userMsg
     -> { title : String, body : Element userMsg }
-mainView content parser pageOrPostView (Model model) =
+mainView pageOrPostView (Model model) =
     case model.parsedContent of
         Ok site ->
-            pageView parser pageOrPostView (Model model) site
+            pageView pageOrPostView (Model model) site
 
         Err errorView ->
             { title = "Error parsing"
@@ -43,12 +41,11 @@ mainView content parser pageOrPostView (Model model) =
 
 
 pageView :
-    Parser userMsg
-    -> (userModel -> PageOrPost userMsg (Metadata userMsg) (Metadata userMsg) -> { title : String, body : Element userMsg })
+    (userModel -> PageOrPost userMsg (Metadata userMsg) (Metadata userMsg) -> { title : String, body : Element userMsg })
     -> Model userModel userMsg
     -> Content.Content userMsg
     -> { title : String, body : Element userMsg }
-pageView parser pageOrPostView (Model model) content =
+pageView pageOrPostView (Model model) content =
     case Content.lookup content model.url of
         Just pageOrPost ->
             pageOrPostView model.userModel pageOrPost
@@ -76,7 +73,7 @@ view :
 view content parser pageOrPostView model =
     let
         { title, body } =
-            mainView content parser pageOrPostView model
+            mainView pageOrPostView model
     in
     { title = title
     , body =
