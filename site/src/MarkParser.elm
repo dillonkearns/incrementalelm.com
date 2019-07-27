@@ -27,13 +27,51 @@ normalizedUrl url =
         |> Maybe.withDefault ""
 
 
+type alias Metadata msg =
+    { description : String
+    , title : { styled : Element msg, raw : String }
+    }
+
+
+metadata : Mark.Block (Metadata msg)
+metadata =
+    Mark.oneOf
+        [ Mark.record "Article"
+            (\description title ->
+                { description = description
+                , title = title
+                }
+            )
+            |> Mark.field "description" Mark.string
+            |> Mark.field "title"
+                (Mark.map
+                    gather
+                    titleText
+                )
+            |> Mark.toBlock
+        , Mark.record "Page"
+            (\title ->
+                { description = title.raw
+                , title = title
+                }
+            )
+            |> Mark.field "title"
+                (Mark.map
+                    gather
+                    titleText
+                )
+            |> Mark.toBlock
+        ]
+
+
 document :
     Dict String String
     -> List String
-    -> Maybe (List ( List String, PageOrPost (Metadata msg) (List (Element msg)) ))
-    -> Mark.Document (PageOrPost (Metadata msg) (List (Element msg)))
+    -> Maybe (List ( List String, PageOrPost (Metadata msg) (Element msg) ))
+    -> Mark.Document (PageOrPost (Metadata msg) (Element msg))
 document imageAssets routes posts =
     MarkupPages.Parser.document
+        metadata
         { imageAssets = imageAssets
         , routes = routes
         , indexView = posts
@@ -42,7 +80,7 @@ document imageAssets routes posts =
 
 
 blocks :
-    MarkupPages.Parser.AppData msg
+    MarkupPages.Parser.AppData (Metadata msg) (Element msg)
     -> List (Mark.Block (Element msg))
 blocks appData =
     let
@@ -411,16 +449,6 @@ stylesFor styles =
         |> List.filterMap identity
 
 
-
-{- Handle Metadata -}
-
-
-type alias Metadata msg =
-    { description : String
-    , title : { styled : Element msg, raw : String }
-    }
-
-
 gather : List { styled : Element msg, raw : String } -> { styled : Element msg, raw : String }
 gather myList =
     let
@@ -441,7 +469,7 @@ gather myList =
 {- Handle Blocks -}
 
 
-indexContent : Maybe (List ( List String, PageOrPost (Metadata msg) (List (Element msg)) )) -> Mark.Block (Element msg)
+indexContent : Maybe (List ( List String, PageOrPost (Metadata msg) (Element msg) )) -> Mark.Block (Element msg)
 indexContent posts =
     Mark.record "IndexContent"
         (\postsPath ->

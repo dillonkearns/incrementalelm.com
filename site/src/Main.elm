@@ -17,9 +17,9 @@ import Json.Decode
 import List.Extra
 import Mark
 import Mark.Error
-import MarkParser
+import MarkParser exposing (Metadata)
 import MarkupPages
-import MarkupPages.Parser exposing (Metadata, PageOrPost)
+import MarkupPages.Parser exposing (PageOrPost)
 import RawContent
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
@@ -34,7 +34,7 @@ type alias Flags =
     {}
 
 
-main : MarkupPages.Program Flags Model Msg
+main : MarkupPages.Program Flags Model Msg (Metadata Msg) (Element Msg)
 main =
     MarkupPages.program
         { init = init
@@ -233,7 +233,7 @@ makeTranslated i polygon =
             ]
 
 
-pageOrPostView : Model -> PageOrPost (Metadata Msg) (List (Element Msg)) -> { title : String, body : Element Msg }
+pageOrPostView : Model -> PageOrPost (Metadata Msg) (Element Msg) -> { title : String, body : Element Msg }
 pageOrPostView model pageOrPost =
     -- case pageOrPost.metadata of
     --     Page metadata body ->

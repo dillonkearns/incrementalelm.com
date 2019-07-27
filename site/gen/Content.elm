@@ -6,16 +6,16 @@ import Index
 import List.Extra
 import Mark
 import Mark.Error
-import MarkParser
-import MarkupPages.Parser exposing (Metadata, PageOrPost)
+import MarkParser exposing (Metadata)
+import MarkupPages.Parser exposing (PageOrPost)
 import Result.Extra
 import Url exposing (Url)
 
 
 lookup :
-    Content msg
+    Content metadata view
     -> Url
-    -> Maybe (PageOrPost (Metadata msg) (List (Element msg)))
+    -> Maybe (PageOrPost metadata view)
 lookup content url =
     List.Extra.find
         (\( path, markup ) ->
@@ -36,11 +36,11 @@ dropTrailingSlash path =
         path
 
 
-type alias Content msg =
+type alias Content metadata view =
     { posts :
-        List ( List String, PageOrPost (Metadata msg) (List (Element msg)) )
+        List ( List String, PageOrPost metadata view )
     , pages :
-        List ( List String, PageOrPost (Metadata msg) (List (Element msg)) )
+        List ( List String, PageOrPost metadata view )
     }
 
 
@@ -55,12 +55,12 @@ routes record =
 buildAllData :
     (Dict String String
      -> List String
-     -> Maybe (List ( List String, PageOrPost (Metadata msg) (List (Element msg)) ))
-     -> Mark.Document (PageOrPost (Metadata msg) (List (Element msg)))
+     -> Maybe (List ( List String, PageOrPost metadata view ))
+     -> Mark.Document (PageOrPost metadata view)
     )
     -> Dict String String
     -> { pages : List ( List String, String ), posts : List ( List String, String ) }
-    -> Result (Element msg) (Content msg)
+    -> Result (Element msg) (Content metadata view)
 buildAllData parser imageAssets record =
     case
         record.posts
@@ -117,8 +117,8 @@ renderErrors ( path, errors ) =
 
 
 combineResults :
-    List ( List String, Mark.Outcome (List Mark.Error.Error) (Mark.Partial (PageOrPost (Metadata msg) (List (Element msg)))) (PageOrPost (Metadata msg) (List (Element msg))) )
-    -> Result ( List String, List Mark.Error.Error ) (List ( List String, PageOrPost (Metadata msg) (List (Element msg)) ))
+    List ( List String, Mark.Outcome (List Mark.Error.Error) (Mark.Partial (PageOrPost metadata view)) (PageOrPost metadata view) )
+    -> Result ( List String, List Mark.Error.Error ) (List ( List String, PageOrPost metadata view ))
 combineResults list =
     list
         |> List.map

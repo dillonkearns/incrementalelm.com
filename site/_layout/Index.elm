@@ -3,12 +3,13 @@ module Index exposing (view)
 import Element exposing (Element)
 import Element.Border
 import Element.Font
-import MarkupPages.Parser exposing (Metadata, PageOrPost)
+import MarkupPages.Parser exposing (PageOrPost)
+import Metadata exposing (Metadata)
 import Style.Helpers
 
 
 view :
-    List ( List String, PageOrPost (Metadata msg) (List (Element msg)) )
+    List ( List String, PageOrPost (Metadata msg) (Element msg) )
     -> Element msg
 view posts =
     Element.column [ Element.spacing 20 ]
@@ -18,7 +19,7 @@ view posts =
 
 
 postSummary :
-    ( List String, PageOrPost (Metadata msg) (List (Element msg)) )
+    ( List String, PageOrPost (Metadata msg) (Element msg) )
     -> Element msg
 postSummary ( postPath, post ) =
     articleIndex post
@@ -49,7 +50,7 @@ title text =
             ]
 
 
-articleIndex : PageOrPost (Metadata msg) (List (Element msg)) -> Element msg
+articleIndex : PageOrPost (Metadata msg) (Element msg) -> Element msg
 articleIndex resource =
     Element.column
         [ Element.centerX
@@ -82,7 +83,7 @@ readMoreLink =
             ]
 
 
-postPreview : PageOrPost (Metadata msg) (List (Element msg)) -> Element msg
+postPreview : PageOrPost (Metadata msg) (Element msg) -> Element msg
 postPreview post =
     Element.textColumn
         [ Element.centerX

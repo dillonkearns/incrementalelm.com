@@ -1,4 +1,4 @@
-module MarkupPages.Parser exposing (AppData, Metadata, PageOrPost, document, imageSrc, normalizedUrl)
+module MarkupPages.Parser exposing (AppData, PageOrPost, document, imageSrc, normalizedUrl)
 
 import Dict exposing (Dict)
 import Element exposing (Element)
@@ -18,7 +18,7 @@ import View.FontAwesome
 
 type alias PageOrPost metadata view =
     { metadata : metadata
-    , view : view
+    , view : List view
     }
 
 
@@ -30,24 +30,19 @@ normalizedUrl url =
         |> Maybe.withDefault ""
 
 
-type alias Metadata msg =
-    { description : String
-    , title : { styled : Element msg, raw : String }
-    }
-
-
-type alias AppData msg =
+type alias AppData metadata view =
     { imageAssets : Dict String String
     , routes : List String
-    , indexView : Maybe (List ( List String, PageOrPost (Metadata msg) (List (Element msg)) ))
+    , indexView : Maybe (List ( List String, PageOrPost metadata view ))
     }
 
 
 document :
-    AppData msg
-    -> List (Mark.Block (Element msg))
-    -> Mark.Document (PageOrPost (Metadata msg) (List (Element msg)))
-document appData blocks =
+    Mark.Block metadata
+    -> AppData metadata view
+    -> List (Mark.Block view)
+    -> Mark.Document (PageOrPost metadata view)
+document metadata appData blocks =
     Mark.documentWith
         (\meta body ->
             { metadata = meta, view = body }
@@ -58,7 +53,7 @@ document appData blocks =
         }
 
 
-imageSrc : AppData msg -> Mark.Block String
+imageSrc : AppData metadata view -> Mark.Block String
 imageSrc { imageAssets } =
     Mark.string
         |> Mark.verify
@@ -76,37 +71,6 @@ imageSrc { imageAssets } =
                                 ]
                             }
             )
-
-
-metadata : Mark.Block (Metadata msg)
-metadata =
-    Mark.oneOf
-        [ Mark.record "Article"
-            (\description title ->
-                { description = description
-                , title = title
-                }
-            )
-            |> Mark.field "description" Mark.string
-            |> Mark.field "title"
-                (Mark.map
-                    gather
-                    titleText
-                )
-            |> Mark.toBlock
-        , Mark.record "Page"
-            (\title ->
-                { description = title.raw
-                , title = title
-                }
-            )
-            |> Mark.field "title"
-                (Mark.map
-                    gather
-                    titleText
-                )
-            |> Mark.toBlock
-        ]
 
 
 titleText : Mark.Block (List { styled : Element msg, raw : String })

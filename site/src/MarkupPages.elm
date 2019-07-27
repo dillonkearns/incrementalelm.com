@@ -8,7 +8,7 @@ import Element exposing (Element)
 import Json.Decode
 import Mark
 import MarkParser
-import MarkupPages.Parser exposing (Metadata, PageOrPost)
+import MarkupPages.Parser exposing (PageOrPost)
 import Platform.Sub exposing (Sub)
 import Url exposing (Url)
 
@@ -21,13 +21,13 @@ type alias Content =
     }
 
 
-type alias Program userFlags userModel userMsg =
-    Platform.Program (Flags userFlags) (Model userModel userMsg) (Msg userMsg)
+type alias Program userFlags userModel userMsg metadata view =
+    Platform.Program (Flags userFlags) (Model userModel userMsg metadata view) (Msg userMsg)
 
 
 mainView :
-    (userModel -> PageOrPost (Metadata userMsg) (List (Element userMsg)) -> { title : String, body : Element userMsg })
-    -> Model userModel userMsg
+    (userModel -> PageOrPost metadata view -> { title : String, body : Element userMsg })
+    -> Model userModel userMsg metadata view
     -> { title : String, body : Element userMsg }
 mainView pageOrPostView (Model model) =
     case model.parsedContent of
@@ -41,9 +41,9 @@ mainView pageOrPostView (Model model) =
 
 
 pageView :
-    (userModel -> PageOrPost (Metadata userMsg) (List (Element userMsg)) -> { title : String, body : Element userMsg })
-    -> Model userModel userMsg
-    -> Content.Content userMsg
+    (userModel -> PageOrPost metadata view -> { title : String, body : Element userMsg })
+    -> Model userModel userMsg metadata view
+    -> Content.Content metadata view
     -> { title : String, body : Element userMsg }
 pageView pageOrPostView (Model model) content =
     case Content.lookup content model.url of
@@ -66,9 +66,9 @@ pageView pageOrPostView (Model model) content =
 
 view :
     Content
-    -> Parser userMsg
-    -> (userModel -> PageOrPost (Metadata userMsg) (List (Element userMsg)) -> { title : String, body : Element userMsg })
-    -> Model userModel userMsg
+    -> Parser metadata view
+    -> (userModel -> PageOrPost metadata view -> { title : String, body : Element userMsg })
+    -> Model userModel userMsg metadata view
     -> Browser.Document (Msg userMsg)
 view content parser pageOrPostView model =
     let
@@ -93,13 +93,13 @@ type alias Flags userFlags =
 
 
 init :
-    Parser userMsg
+    Parser metadata view
     -> Content
     -> (Flags userFlags -> ( userModel, Cmd userMsg ))
     -> Flags userFlags
     -> Url
     -> Browser.Navigation.Key
-    -> ( Model userModel userMsg, Cmd (Msg userMsg) )
+    -> ( Model userModel userMsg metadata view, Cmd (Msg userMsg) )
 init parser content initUserModel flags url key =
     let
         ( userModel, userCmd ) =
@@ -129,12 +129,12 @@ type Msg userMsg
     | UserMsg userMsg
 
 
-type Model userModel userMsg
+type Model userModel userMsg metadata view
     = Model
         { key : Browser.Navigation.Key
         , url : Url.Url
         , imageAssets : Dict String String
-        , parsedContent : Result (Element userMsg) (Content.Content userMsg)
+        , parsedContent : Result (Element userMsg) (Content.Content metadata view)
         , userModel : userModel
         }
 
@@ -142,8 +142,8 @@ type Model userModel userMsg
 update :
     (userMsg -> userModel -> ( userModel, Cmd userMsg ))
     -> Msg userMsg
-    -> Model userModel userMsg
-    -> ( Model userModel userMsg, Cmd (Msg userMsg) )
+    -> Model userModel userMsg metadata view
+    -> ( Model userModel userMsg metadata view, Cmd (Msg userMsg) )
 update userUpdate msg (Model model) =
     case msg of
         LinkClicked urlRequest ->
@@ -167,22 +167,22 @@ update userUpdate msg (Model model) =
             ( Model { model | userModel = userModel }, userCmd |> Cmd.map UserMsg )
 
 
-type alias Parser userMsg =
+type alias Parser metadata view =
     Dict String String
     -> List String
-    -> Maybe (List ( List String, PageOrPost (Metadata userMsg) (List (Element userMsg)) ))
-    -> Mark.Document (PageOrPost (Metadata userMsg) (List (Element userMsg)))
+    -> Maybe (List ( List String, PageOrPost metadata view ))
+    -> Mark.Document (PageOrPost metadata view)
 
 
 program :
     { init : Flags userFlags -> ( userModel, Cmd userMsg )
     , update : userMsg -> userModel -> ( userModel, Cmd userMsg )
     , subscriptions : userModel -> Sub userMsg
-    , view : userModel -> PageOrPost (Metadata userMsg) (List (Element userMsg)) -> { title : String, body : Element userMsg }
-    , parser : Parser userMsg
+    , view : userModel -> PageOrPost metadata view -> { title : String, body : Element userMsg }
+    , parser : Parser metadata view
     , content : Content
     }
-    -> Program userFlags userModel userMsg
+    -> Program userFlags userModel userMsg metadata view
 program config =
     Browser.application
         { init = init config.parser config.content config.init
