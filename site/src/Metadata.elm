@@ -1,13 +1,15 @@
-module Metadata exposing (Metadata, metadata)
+module Metadata exposing (Metadata(..), metadata)
 
 import Element exposing (Element)
 import Element.Font as Font
 import Mark
 
 
-type alias Metadata msg =
-    { title : { styled : Element msg, raw : String }
-    }
+type Metadata msg
+    = Page { title : String }
+    | Article
+        { title : { styled : Element msg, raw : String }
+        }
 
 
 metadata : Mark.Block (Metadata msg)
@@ -15,8 +17,9 @@ metadata =
     Mark.oneOf
         [ Mark.record "Article"
             (\title ->
-                { title = title
-                }
+                Article
+                    { title = title
+                    }
             )
             |> Mark.field "title"
                 (Mark.map
@@ -26,14 +29,10 @@ metadata =
             |> Mark.toBlock
         , Mark.record "Page"
             (\title ->
-                { title = title
-                }
+                Page
+                    { title = title }
             )
-            |> Mark.field "title"
-                (Mark.map
-                    gather
-                    titleText
-                )
+            |> Mark.field "title" Mark.string
             |> Mark.toBlock
         ]
 

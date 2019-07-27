@@ -64,7 +64,12 @@ articleIndex resource =
             [ Element.Border.color (Element.rgba255 0 0 0 1)
             ]
         ]
-        [ title resource.metadata.title.raw
+        [ case resource.metadata of
+            Metadata.Page metadata ->
+                title metadata.title
+
+            Metadata.Article metadata ->
+                title metadata.title.raw
         , Element.column [ Element.spacing 20 ]
             [ resource |> postPreview
             , readMoreLink
