@@ -1,6 +1,6 @@
-|> Article
+|> Page
     title = Elm GraphQL Workshop
-    description = Elm GraphQL Workshop
+    
 
 
 |> Image

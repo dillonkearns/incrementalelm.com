@@ -1,6 +1,6 @@
-|> Article
+|> Page
     title = Incremental Elm Services
-    description = Incremental Elm Services
+    
 
 |> H1
     Incremental Elm Services

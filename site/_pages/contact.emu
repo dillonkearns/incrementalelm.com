@@ -1,6 +1,6 @@
-|> Article
+|> Page
     title = Contact
-    description = Contact
+
 
 |> H1
     Contact Incremental Elm

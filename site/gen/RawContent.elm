@@ -13,9 +13,9 @@ pages : List ( List String, String )
 pages =
     [
     ( ["accelerator-application"]
-      , """|> Article
+      , """|> Page
     title = Accelerator Application
-    description = Accelerator Application
+    
 
 |> H2
     🏋️\u{200D}♂️ 📚 Growing Elm Modules - Group Coaching Program
@@ -52,9 +52,9 @@ If you're interested to learn more, fill out this form and I'll send you a link 
       )
 
   ,( ["accelerator-program"]
-      , """|> Article
+      , """|> Page
     title = Elm Accelerator Group Coaching Program
-    description = Elm Accelerator Group Coaching Program
+    
 
 |> H1
     Incremental Elm Accelerator Program
@@ -77,9 +77,9 @@ Breaking down the actual steps that elm experts take naturally when they're codi
       )
 
   ,( ["articles"]
-      , """|> Article
+      , """|> Page
     title = Articles
-    description = Incremental Elm Consulting articles
+    
 
 |> IndexContent
     posts = articles
@@ -87,9 +87,9 @@ Breaking down the actual steps that elm experts take naturally when they're codi
       )
 
   ,( ["contact"]
-      , """|> Article
+      , """|> Page
     title = Contact
-    description = Contact
+
 
 |> H1
     Contact Incremental Elm
@@ -103,9 +103,9 @@ Breaking down the actual steps that elm experts take naturally when they're codi
       )
 
   ,( ["core-skills-seminar"]
-      , """|> Article
+      , """|> Page
     title = Core Skills Seminar
-    description = Core Skills Seminar
+    
 |> H2
     🏋️\u{200D}♂️ 📚 Core Skills Seminar
 
@@ -140,9 +140,9 @@ If you're interested to learn more, fill out this form and I'll send you a link 
       )
 
   ,( ["custom-scalar-checklist"]
-      , """|> Article
+      , """|> Page
     title = Custom Scalar Checklist
-    description = Custom Scalar Checklist
+    
 
 |> H1
     How to improve your schema with Custom Scalars
@@ -286,9 +286,9 @@ Download it now to get the descriptions and examples of all of these types of fi
       )
 
   ,( ["elm-graphql-seminar"]
-      , """|> Article
+      , """|> Page
     title = Elm GraphQL Seminar
-    description = Elm GraphQL Seminar
+    
 
 |> H2
     The Elm GraphQL Seminar
@@ -324,9 +324,9 @@ If you're interested to learn more, fill out this form and I'll send you a link 
       )
 
   ,( ["elm-graphql-workshop"]
-      , """|> Article
+      , """|> Page
     title = Elm GraphQL Workshop
-    description = Elm GraphQL Workshop
+    
 
 
 |> Image
@@ -393,18 +393,18 @@ We'd love to hear from you! Let us know what you think of our workshop agenda. O
       )
 
   ,( ["incremental-weekly-unsubscribe"]
-      , """|> Article
+      , """|> Page
     title = Incremental Elm Weekly Unsubscribe
-    description = Incremental Elm Weekly Unsubscribe
+    
 
 Got it! We won't send you any more weekly tips.
 """
       )
 
   ,( []
-      , """|> Article
+      , """|> Page
     title = Incremental Elm Consulting
-    description = How I learned to use elm-markup.
+    
 
 |> H1
     Stop Learning Elm Best Practices */The Hard Way/*
@@ -446,9 +446,9 @@ Learn more about how my [Elm Developer Support Packages]{link| url = /services#d
       )
 
   ,( ["introducing-custom-scalars-course"]
-      , """|> Article
+      , """|> Page
     title = Introducing Custom Scalars to your Codebase
-    description = Introducing Custom Scalars to your Codebase
+    
 
 |> H1
     Introducing Custom Scalars to your codebase
@@ -486,9 +486,9 @@ Watch this intro to using `--scalar-codecs <ModuleName>`{code} in `elm-graphql`{
       )
 
   ,( ["scalar-codecs-tutorial"]
-      , """|> Article
+      , """|> Page
     title = elm-graphql - Scalar Codecs Tutorial
-    description = elm-graphql - Scalar Codecs Tutorial
+    
 
 |> Vimeo
     329690102
@@ -525,9 +525,9 @@ Download it now to get the descriptions and examples of all of these types of fi
       )
 
   ,( ["services"]
-      , """|> Article
+      , """|> Page
     title = Incremental Elm Services
-    description = Incremental Elm Services
+    
 
 |> H1
     Incremental Elm Services
@@ -601,9 +601,9 @@ Want to discuss finding the right service to help you improve your elm codebase?
       )
 
   ,( ["thank-you"]
-      , """|> Article
+      , """|> Page
     title = Sign up confirmation
-    description = Sign up confirmation
+    
   
 |> H1
     Thank you!
@@ -614,9 +614,8 @@ Want to discuss finding the right service to help you improve your elm codebase?
       )
 
   ,( ["tips"]
-      , """|> Article
+      , """|> Page
     title = Weekly elm Tips!
-    description = Weekly elm tips
 
 Here are some popular tips you can check out right away.
 

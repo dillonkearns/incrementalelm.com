@@ -1,6 +1,6 @@
-|> Article
+|> Page
     title = Introducing Custom Scalars to your Codebase
-    description = Introducing Custom Scalars to your Codebase
+    
 
 |> H1
     Introducing Custom Scalars to your codebase

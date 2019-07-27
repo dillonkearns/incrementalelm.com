@@ -1,6 +1,6 @@
-|> Article
+|> Page
     title = elm-graphql - Scalar Codecs Tutorial
-    description = elm-graphql - Scalar Codecs Tutorial
+    
 
 |> Vimeo
     329690102

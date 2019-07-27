@@ -1,6 +1,6 @@
-|> Article
+|> Page
     title = Articles
-    description = Incremental Elm Consulting articles
+    
 
 |> IndexContent
     posts = articles

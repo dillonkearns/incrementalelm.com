@@ -1,6 +1,6 @@
-|> Article
+|> Page
     title = Elm Accelerator Group Coaching Program
-    description = Elm Accelerator Group Coaching Program
+    
 
 |> H1
     Incremental Elm Accelerator Program

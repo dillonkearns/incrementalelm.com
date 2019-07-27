@@ -421,23 +421,6 @@ type alias Metadata msg =
     }
 
 
-metadata : Mark.Block (Metadata msg)
-metadata =
-    Mark.record "Article"
-        (\description title ->
-            { description = description
-            , title = title
-            }
-        )
-        |> Mark.field "description" Mark.string
-        |> Mark.field "title"
-            (Mark.map
-                gather
-                titleText
-            )
-        |> Mark.toBlock
-
-
 gather : List { styled : Element msg, raw : String } -> { styled : Element msg, raw : String }
 gather myList =
     let

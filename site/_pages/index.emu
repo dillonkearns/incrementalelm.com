@@ -1,6 +1,6 @@
-|> Article
+|> Page
     title = Incremental Elm Consulting
-    description = How I learned to use elm-markup.
+    
 
 |> H1
     Stop Learning Elm Best Practices */The Hard Way/*
