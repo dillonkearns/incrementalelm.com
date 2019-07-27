@@ -12,6 +12,7 @@ import Index
 import Mark
 import Mark.Error
 import MarkupPages.Parser exposing (PageOrPost)
+import Metadata
 import Style
 import Style.Helpers
 import View.CodeSnippet
@@ -33,37 +34,6 @@ type alias Metadata msg =
     }
 
 
-metadata : Mark.Block (Metadata msg)
-metadata =
-    Mark.oneOf
-        [ Mark.record "Article"
-            (\description title ->
-                { description = description
-                , title = title
-                }
-            )
-            |> Mark.field "description" Mark.string
-            |> Mark.field "title"
-                (Mark.map
-                    gather
-                    titleText
-                )
-            |> Mark.toBlock
-        , Mark.record "Page"
-            (\title ->
-                { description = title.raw
-                , title = title
-                }
-            )
-            |> Mark.field "title"
-                (Mark.map
-                    gather
-                    titleText
-                )
-            |> Mark.toBlock
-        ]
-
-
 document :
     Dict String String
     -> List String
@@ -71,7 +41,7 @@ document :
     -> Mark.Document (PageOrPost (Metadata msg) (Element msg))
 document imageAssets routes posts =
     MarkupPages.Parser.document
-        metadata
+        Metadata.metadata
         { imageAssets = imageAssets
         , routes = routes
         , indexView = posts
@@ -403,19 +373,6 @@ buttonView details =
 {- Handle Text -}
 
 
-titleText : Mark.Block (List { styled : Element msg, raw : String })
-titleText =
-    Mark.textWith
-        { view =
-            \styles string ->
-                { styled = viewText styles string
-                , raw = string
-                }
-        , replacements = Mark.commonReplacements
-        , inlines = []
-        }
-
-
 {-| Render a text fragment.
 -}
 applyTuple : (a -> b -> c) -> ( a, b ) -> c
@@ -447,22 +404,6 @@ stylesFor styles =
         Nothing
     ]
         |> List.filterMap identity
-
-
-gather : List { styled : Element msg, raw : String } -> { styled : Element msg, raw : String }
-gather myList =
-    let
-        styled =
-            myList
-                |> List.map .styled
-                |> Element.paragraph []
-
-        raw =
-            myList
-                |> List.map .raw
-                |> String.join " "
-    in
-    { styled = styled, raw = raw }
 
 
 
