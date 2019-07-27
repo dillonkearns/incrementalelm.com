@@ -1,4 +1,4 @@
-module MarkParser exposing (Metadata, document)
+module MarkParser exposing (document)
 
 import Dict exposing (Dict)
 import Element exposing (Element)
@@ -12,7 +12,7 @@ import Index
 import Mark
 import Mark.Error
 import MarkupPages.Parser exposing (PageOrPost)
-import Metadata
+import Metadata exposing (Metadata)
 import Style
 import Style.Helpers
 import View.CodeSnippet
@@ -26,12 +26,6 @@ normalizedUrl url =
         |> String.split "#"
         |> List.head
         |> Maybe.withDefault ""
-
-
-type alias Metadata msg =
-    { description : String
-    , title : { styled : Element msg, raw : String }
-    }
 
 
 document :

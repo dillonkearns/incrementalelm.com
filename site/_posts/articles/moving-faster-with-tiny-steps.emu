@@ -1,7 +1,5 @@
 |> Article
     title = Moving Faster with Tiny Steps in Elm
-    description =
-        How I learned to use elm-markup.
 
 |> Image
     src = article-cover/mountains.jpg

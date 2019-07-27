@@ -6,8 +6,9 @@ import Index
 import List.Extra
 import Mark
 import Mark.Error
-import MarkParser exposing (Metadata)
+import MarkParser
 import MarkupPages.Parser exposing (PageOrPost)
+import Metadata exposing (Metadata)
 import Result.Extra
 import Url exposing (Url)
 

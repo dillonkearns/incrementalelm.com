@@ -1,7 +1,5 @@
 |> Article
     title = To test, or not to test elm code?
-    description =
-        How I learned to use elm-markup.
 
 |> Image
     src = article-cover/thinker.jpg

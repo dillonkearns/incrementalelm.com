@@ -650,7 +650,6 @@ posts =
     ( ["articles", "exit-gatekeepers"]
       , """|> Article
     title = Using elm types to prevent logging social security #'s
-    description = TODO
 
 
 |> Image
@@ -812,8 +811,6 @@ Here are some steps you can apply:
   ,( ["articles", "moving-faster-with-tiny-steps"]
       , """|> Article
     title = Moving Faster with Tiny Steps in Elm
-    description =
-        How I learned to use elm-markup.
 
 |> Image
     src = article-cover/mountains.jpg
@@ -972,8 +969,6 @@ Let me know how this technique goes! I've gotten a lot of great feedback from my
   ,( ["articles", "to-test-or-not-to-test"]
       , """|> Article
     title = To test, or not to test elm code?
-    description =
-        How I learned to use elm-markup.
 
 |> Image
     src = article-cover/thinker.jpg
@@ -1032,7 +1027,6 @@ Writing unit tests before versus after writing your implementation is fundamenta
   ,( ["learn", "getting-started"]
       , """|> Article
     title = Getting Started Resources
-    description = Getting Started Resources
 
 
 Here are my favorite resources for learning the Elm fundamentals.

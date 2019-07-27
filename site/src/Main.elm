@@ -17,9 +17,10 @@ import Json.Decode
 import List.Extra
 import Mark
 import Mark.Error
-import MarkParser exposing (Metadata)
+import MarkParser
 import MarkupPages
 import MarkupPages.Parser exposing (PageOrPost)
+import Metadata exposing (Metadata)
 import RawContent
 import Svg exposing (..)
 import Svg.Attributes exposing (..)

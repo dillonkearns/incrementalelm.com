@@ -6,8 +6,7 @@ import Mark
 
 
 type alias Metadata msg =
-    { description : String
-    , title : { styled : Element msg, raw : String }
+    { title : { styled : Element msg, raw : String }
     }
 
 
@@ -15,12 +14,10 @@ metadata : Mark.Block (Metadata msg)
 metadata =
     Mark.oneOf
         [ Mark.record "Article"
-            (\description title ->
-                { description = description
-                , title = title
+            (\title ->
+                { title = title
                 }
             )
-            |> Mark.field "description" Mark.string
             |> Mark.field "title"
                 (Mark.map
                     gather
@@ -29,8 +26,7 @@ metadata =
             |> Mark.toBlock
         , Mark.record "Page"
             (\title ->
-                { description = title.raw
-                , title = title
+                { title = title
                 }
             )
             |> Mark.field "title"
