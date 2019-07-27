@@ -46,14 +46,6 @@ document :
     AppData msg
     -> List (Mark.Block (Element msg))
     -> Mark.Document (PageOrPost (Metadata msg) (List (Element msg)))
-
-
-
--- { body : List (Element msg)
--- , metadata : Metadata msg
--- }
-
-
 document appData blocks =
     Mark.documentWith
         (\meta body ->
