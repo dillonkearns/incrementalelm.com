@@ -22,6 +22,7 @@ type alias PageOrPost metadata view =
     }
 
 
+normalizedUrl : String -> String
 normalizedUrl url =
     url
         |> String.split "#"
