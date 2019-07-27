@@ -1,4 +1,4 @@
-module MarkupPages.Parser exposing (AppData, Metadata, PageOrPost(..), document, imageSrc, normalizedUrl)
+module MarkupPages.Parser exposing (AppData, Metadata, PageOrPost, document, imageSrc, normalizedUrl)
 
 import Dict exposing (Dict)
 import Element exposing (Element)
@@ -16,9 +16,10 @@ import View.DripSignupForm
 import View.FontAwesome
 
 
-type PageOrPost msg pageMetadata postMetadata
-    = Page pageMetadata (List (Element msg))
-    | Post postMetadata (List (Element msg))
+type alias PageOrPost metadata view =
+    { metadata : metadata
+    , view : view
+    }
 
 
 normalizedUrl url =
@@ -37,14 +38,14 @@ type alias Metadata msg =
 type alias AppData msg =
     { imageAssets : Dict String String
     , routes : List String
-    , indexView : Maybe (List ( List String, PageOrPost msg (Metadata msg) (Metadata msg) ))
+    , indexView : Maybe (List ( List String, PageOrPost (Metadata msg) (List (Element msg)) ))
     }
 
 
 document :
     AppData msg
     -> List (Mark.Block (Element msg))
-    -> Mark.Document (PageOrPost msg (Metadata msg) (Metadata msg))
+    -> Mark.Document (PageOrPost (Metadata msg) (List (Element msg)))
 
 
 
@@ -56,15 +57,7 @@ document :
 document appData blocks =
     Mark.documentWith
         (\meta body ->
-            case appData.indexView of
-                Just _ ->
-                    Page meta body
-
-                Nothing ->
-                    Post meta body
-         -- { metadata = meta
-         -- , body = body
-         -- }
+            { metadata = meta, view = body }
         )
         -- We have some required metadata that starts our document.
         { metadata = metadata

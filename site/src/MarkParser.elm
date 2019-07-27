@@ -30,8 +30,8 @@ normalizedUrl url =
 document :
     Dict String String
     -> List String
-    -> Maybe (List ( List String, PageOrPost msg (Metadata msg) (Metadata msg) ))
-    -> Mark.Document (PageOrPost msg (Metadata msg) (Metadata msg))
+    -> Maybe (List ( List String, PageOrPost (Metadata msg) (List (Element msg)) ))
+    -> Mark.Document (PageOrPost (Metadata msg) (List (Element msg)))
 document imageAssets routes posts =
     MarkupPages.Parser.document
         { imageAssets = imageAssets
@@ -441,7 +441,7 @@ gather myList =
 {- Handle Blocks -}
 
 
-indexContent : Maybe (List ( List String, PageOrPost msg (Metadata msg) (Metadata msg) )) -> Mark.Block (Element msg)
+indexContent : Maybe (List ( List String, PageOrPost (Metadata msg) (List (Element msg)) )) -> Mark.Block (Element msg)
 indexContent posts =
     Mark.record "IndexContent"
         (\postsPath ->
