@@ -22,17 +22,17 @@ type alias Content =
 
 
 type alias Program userFlags userModel userMsg =
-    Platform.Program (Flags userFlags) (Model userModel) (Msg userMsg)
+    Platform.Program (Flags userFlags) (Model userModel userMsg) (Msg userMsg)
 
 
 mainView :
     Content
     -> Parser userMsg
     -> (userModel -> PageOrPost userMsg (Metadata userMsg) (Metadata userMsg) -> { title : String, body : Element userMsg })
-    -> Model userModel
+    -> Model userModel userMsg
     -> { title : String, body : Element userMsg }
 mainView content parser pageOrPostView (Model model) =
-    case Content.buildAllData parser model.imageAssets content of
+    case model.parsedContent of
         Ok site ->
             pageView parser pageOrPostView (Model model) site
 
@@ -45,7 +45,7 @@ mainView content parser pageOrPostView (Model model) =
 pageView :
     Parser userMsg
     -> (userModel -> PageOrPost userMsg (Metadata userMsg) (Metadata userMsg) -> { title : String, body : Element userMsg })
-    -> Model userModel
+    -> Model userModel userMsg
     -> Content.Content userMsg
     -> { title : String, body : Element userMsg }
 pageView parser pageOrPostView (Model model) content =
@@ -71,7 +71,7 @@ view :
     Content
     -> Parser userMsg
     -> (userModel -> PageOrPost userMsg (Metadata userMsg) (Metadata userMsg) -> { title : String, body : Element userMsg })
-    -> Model userModel
+    -> Model userModel userMsg
     -> Browser.Document (Msg userMsg)
 view content parser pageOrPostView model =
     let
@@ -96,25 +96,31 @@ type alias Flags userFlags =
 
 
 init :
-    (Flags userFlags -> ( userModel, Cmd userMsg ))
+    Parser userMsg
+    -> Content
+    -> (Flags userFlags -> ( userModel, Cmd userMsg ))
     -> Flags userFlags
     -> Url
     -> Browser.Navigation.Key
-    -> ( Model userModel, Cmd (Msg userMsg) )
-init initUserModel flags url key =
+    -> ( Model userModel userMsg, Cmd (Msg userMsg) )
+init parser content initUserModel flags url key =
     let
         ( userModel, userCmd ) =
             initUserModel flags
-    in
-    ( Model
-        { key = key
-        , url = url
-        , imageAssets =
+
+        imageAssets =
             Json.Decode.decodeValue
                 (Json.Decode.dict Json.Decode.string)
                 flags.imageAssets
                 |> Result.withDefault Dict.empty
+    in
+    ( Model
+        { key = key
+        , url = url
+        , imageAssets = imageAssets
         , userModel = userModel
+        , parsedContent =
+            Content.buildAllData parser imageAssets content
         }
     , userCmd |> Cmd.map UserMsg
     )
@@ -126,11 +132,12 @@ type Msg userMsg
     | UserMsg userMsg
 
 
-type Model userModel
+type Model userModel userMsg
     = Model
         { key : Browser.Navigation.Key
         , url : Url.Url
         , imageAssets : Dict String String
+        , parsedContent : Result (Element userMsg) (Content.Content userMsg)
         , userModel : userModel
         }
 
@@ -138,8 +145,8 @@ type Model userModel
 update :
     (userMsg -> userModel -> ( userModel, Cmd userMsg ))
     -> Msg userMsg
-    -> Model userModel
-    -> ( Model userModel, Cmd (Msg userMsg) )
+    -> Model userModel userMsg
+    -> ( Model userModel userMsg, Cmd (Msg userMsg) )
 update userUpdate msg (Model model) =
     case msg of
         LinkClicked urlRequest ->
@@ -181,7 +188,7 @@ program :
     -> Program userFlags userModel userMsg
 program config =
     Browser.application
-        { init = init config.init
+        { init = init config.parser config.content config.init
         , view = view config.content config.parser config.view
         , update = update config.update
         , subscriptions =

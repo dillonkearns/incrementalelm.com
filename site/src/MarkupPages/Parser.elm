@@ -94,19 +94,33 @@ imageSrc { imageAssets } =
 
 metadata : Mark.Block (Metadata msg)
 metadata =
-    Mark.record "Article"
-        (\description title ->
-            { description = description
-            , title = title
-            }
-        )
-        |> Mark.field "description" Mark.string
-        |> Mark.field "title"
-            (Mark.map
-                gather
-                titleText
+    Mark.oneOf
+        [ Mark.record "Article"
+            (\description title ->
+                { description = description
+                , title = title
+                }
             )
-        |> Mark.toBlock
+            |> Mark.field "description" Mark.string
+            |> Mark.field "title"
+                (Mark.map
+                    gather
+                    titleText
+                )
+            |> Mark.toBlock
+        , Mark.record "Page"
+            (\title ->
+                { description = title.raw
+                , title = title
+                }
+            )
+            |> Mark.field "title"
+                (Mark.map
+                    gather
+                    titleText
+                )
+            |> Mark.toBlock
+        ]
 
 
 titleText : Mark.Block (List { styled : Element msg, raw : String })
