@@ -7,16 +7,15 @@ document.addEventListener("DOMContentLoaded", function() {
     flags: { imageAssets, routes }
   });
 
-  const elmHeadTagsContainer = document.getElementById("elm-head-tags");
-  if (elmHeadTagsContainer) {
-    if (navigator.userAgent.indexOf("Headless") >= 0) {
-      const firstMetaChild = document.getElementsByTagName("head")[0];
-      const headTags = elmHeadTagsContainer.children;
-      for (let headTag of headTags) {
-        firstMetaChild.appendChild(headTag);
-      }
-      // document.dispatchEvent(new Event("prerender-trigger"));
-    }
-    // elmHeadTagsContainer.remove();
+  if (navigator.userAgent.indexOf("Headless") >= 0) {
+    appendTag();
   }
+  document.dispatchEvent(new Event("prerender-trigger"));
 });
+
+function appendTag() {
+  const meta = document.createElement("meta");
+  meta.setAttribute("property", "hello");
+  meta.setAttribute("name", "world");
+  document.getElementsByTagName("head")[0].appendChild(meta);
+}
