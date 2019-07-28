@@ -53,6 +53,42 @@ routes record =
         |> List.map (\route -> "/" ++ route)
 
 
+parseMetadata :
+    (Dict String String
+     -> List String
+     -> Maybe (List ( List String, PageOrPost metadata view ))
+     -> Mark.Document (PageOrPost metadata view)
+    )
+    -> Dict String String
+    -> { pages : List ( List String, String ), posts : List ( List String, String ) }
+    -> Result (Element msg) (List ( List String, metadata ))
+parseMetadata parser imageAssets record =
+    case
+        (record.posts ++ record.pages)
+            |> List.map
+                (\( path, markup ) ->
+                    ( path
+                    , Mark.compile
+                        (parser imageAssets
+                            (routes record)
+                            (Just [])
+                        )
+                        markup
+                    )
+                )
+            |> combineResults
+    of
+        Ok pages ->
+            Ok
+                (pages
+                    |> List.map
+                        (Tuple.mapSecond .metadata)
+                )
+
+        Err errors ->
+            Err (renderErrors errors)
+
+
 buildAllData :
     (Dict String String
      -> List String
