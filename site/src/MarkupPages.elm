@@ -92,7 +92,7 @@ metaTagsContainer metaTags =
     Html.div
         [ Html.Attributes.id "elm-head-tags"
         ]
-        []
+        metaTags
 
 
 type alias Flags userFlags =
