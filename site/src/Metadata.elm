@@ -1,4 +1,4 @@
-module Metadata exposing (Metadata(..), metadata)
+module Metadata exposing (ArticleMetadata, Metadata(..), metadata)
 
 import Element exposing (Element)
 import Element.Font as Font
@@ -10,6 +10,11 @@ type Metadata msg
     | Article
         { title : { styled : Element msg, raw : String }
         }
+
+
+type alias ArticleMetadata msg =
+    { title : { styled : Element msg, raw : String }
+    }
 
 
 metadata : Mark.Block (Metadata msg)

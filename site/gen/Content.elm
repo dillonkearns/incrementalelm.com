@@ -1,4 +1,4 @@
-module Content exposing (Content, buildAllData, lookup)
+module Content exposing (Content, buildAllData, lookup, parseMetadata)
 
 import Dict exposing (Dict)
 import Element exposing (Element)
@@ -25,7 +25,7 @@ lookup content url =
             )
                 == path
         )
-        (content.pages ++ content.posts)
+        content
         |> Maybe.map Tuple.second
 
 
@@ -38,16 +38,12 @@ dropTrailingSlash path =
 
 
 type alias Content metadata view =
-    { posts :
-        List ( List String, PageOrPost metadata view )
-    , pages :
-        List ( List String, PageOrPost metadata view )
-    }
+    List ( List String, PageOrPost metadata view )
 
 
-routes : { pages : List ( List String, String ), posts : List ( List String, String ) } -> List String
+routes : List ( List String, String ) -> List String
 routes record =
-    (record.pages ++ record.posts)
+    record
         |> List.map Tuple.first
         |> List.map (String.join "/")
         |> List.map (\route -> "/" ++ route)
@@ -56,22 +52,22 @@ routes record =
 parseMetadata :
     (Dict String String
      -> List String
-     -> Maybe (List ( List String, PageOrPost metadata view ))
+     -> List ( List String, metadata )
      -> Mark.Document (PageOrPost metadata view)
     )
     -> Dict String String
-    -> { pages : List ( List String, String ), posts : List ( List String, String ) }
+    -> List ( List String, String )
     -> Result (Element msg) (List ( List String, metadata ))
 parseMetadata parser imageAssets record =
     case
-        (record.posts ++ record.pages)
+        record
             |> List.map
                 (\( path, markup ) ->
                     ( path
                     , Mark.compile
                         (parser imageAssets
                             (routes record)
-                            (Just [])
+                            []
                         )
                         markup
                     )
@@ -90,56 +86,31 @@ parseMetadata parser imageAssets record =
 
 
 buildAllData :
-    (Dict String String
-     -> List String
-     -> Maybe (List ( List String, PageOrPost metadata view ))
-     -> Mark.Document (PageOrPost metadata view)
-    )
+    List ( List String, metadata )
+    ->
+        (Dict String String
+         -> List String
+         -> List ( List String, metadata )
+         -> Mark.Document (PageOrPost metadata view)
+        )
     -> Dict String String
-    -> { pages : List ( List String, String ), posts : List ( List String, String ) }
+    -> List ( List String, String )
     -> Result (Element msg) (Content metadata view)
-buildAllData parser imageAssets record =
-    case
-        record.posts
-            |> List.map
-                (\( path, markup ) ->
-                    ( path
-                    , Mark.compile
-                        (parser imageAssets
-                            (routes record)
-                            Nothing
-                        )
-                        markup
+buildAllData metadata parser imageAssets record =
+    record
+        |> List.map
+            (\( path, markup ) ->
+                ( path
+                , Mark.compile
+                    (parser imageAssets
+                        (routes record)
+                        metadata
                     )
+                    markup
                 )
-            |> combineResults
-    of
-        Ok postListings ->
-            let
-                pageListings =
-                    record.pages
-                        |> List.map
-                            (\( path, markup ) ->
-                                ( path
-                                , Mark.compile
-                                    (parser imageAssets (routes record) (postListings |> Just))
-                                    markup
-                                )
-                            )
-                        |> combineResults
-            in
-            case pageListings of
-                Ok successPageListings ->
-                    Ok
-                        { posts = postListings
-                        , pages = successPageListings
-                        }
-
-                Err errors ->
-                    Err (renderErrors errors)
-
-        Err errors ->
-            Err (renderErrors errors)
+            )
+        |> combineResults
+        |> Result.mapError renderErrors
 
 
 renderErrors : ( List String, List Mark.Error.Error ) -> Element msg

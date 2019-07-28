@@ -14,11 +14,7 @@ import Url exposing (Url)
 
 
 type alias Content =
-    { posts :
-        List ( List String, String )
-    , pages :
-        List ( List String, String )
-    }
+    List ( List String, String )
 
 
 type alias Program userFlags userModel userMsg metadata view =
@@ -55,7 +51,7 @@ pageView pageOrPostView (Model model) content =
             , body =
                 Element.column []
                     [ Element.text "Page not found. Valid routes:\n\n"
-                    , (content.pages ++ content.posts)
+                    , content
                         |> List.map Tuple.first
                         |> List.map (String.join "/")
                         |> String.join ", "
@@ -110,6 +106,9 @@ init parser content initUserModel flags url key =
                 (Json.Decode.dict Json.Decode.string)
                 flags.imageAssets
                 |> Result.withDefault Dict.empty
+
+        metadata =
+            Content.parseMetadata parser imageAssets content
     in
     ( Model
         { key = key
@@ -117,7 +116,11 @@ init parser content initUserModel flags url key =
         , imageAssets = imageAssets
         , userModel = userModel
         , parsedContent =
-            Content.buildAllData parser imageAssets content
+            metadata
+                |> Result.andThen
+                    (\m ->
+                        Content.buildAllData m parser imageAssets content
+                    )
         }
     , userCmd |> Cmd.map UserMsg
     )
@@ -170,7 +173,7 @@ update userUpdate msg (Model model) =
 type alias Parser metadata view =
     Dict String String
     -> List String
-    -> Maybe (List ( List String, PageOrPost metadata view ))
+    -> List ( List String, metadata )
     -> Mark.Document (PageOrPost metadata view)
 
 

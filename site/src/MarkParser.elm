@@ -31,20 +31,20 @@ normalizedUrl url =
 document :
     Dict String String
     -> List String
-    -> Maybe (List ( List String, PageOrPost (Metadata msg) (Element msg) ))
+    -> List ( List String, Metadata msg )
     -> Mark.Document (PageOrPost (Metadata msg) (Element msg))
-document imageAssets routes posts =
+document imageAssets routes parsedMetadata =
     MarkupPages.Parser.document
         Metadata.metadata
         { imageAssets = imageAssets
         , routes = routes
-        , indexView = posts
+        , indexView = parsedMetadata
         }
-        (blocks { imageAssets = imageAssets, routes = routes, indexView = posts })
+        (blocks { imageAssets = imageAssets, routes = routes, indexView = parsedMetadata })
 
 
 blocks :
-    MarkupPages.Parser.AppData (Metadata msg) (Element msg)
+    MarkupPages.Parser.AppData (Metadata msg)
     -> List (Mark.Block (Element msg))
 blocks appData =
     let
@@ -404,12 +404,10 @@ stylesFor styles =
 {- Handle Blocks -}
 
 
-indexContent : Maybe (List ( List String, PageOrPost (Metadata msg) (Element msg) )) -> Mark.Block (Element msg)
+indexContent : List ( List String, Metadata msg ) -> Mark.Block (Element msg)
 indexContent posts =
     Mark.record "IndexContent"
-        (\postsPath ->
-            posts |> Maybe.map Index.view |> Maybe.withDefault Element.none
-        )
+        (\postsPath -> Index.view posts)
         |> Mark.field "posts"
             (Mark.string
                 |> Mark.verify
@@ -425,18 +423,6 @@ indexContent posts =
                     )
             )
         |> Mark.toBlock
-        |> Mark.verify
-            (\value ->
-                case posts of
-                    Just msgElement ->
-                        Ok value
-
-                    Nothing ->
-                        Err
-                            { title = "IndexContent blocks are only valid in Pages"
-                            , message = [ "Try creating your index page in `_pages` instead of `_posts`." ]
-                            }
-            )
 
 
 code : Mark.Block (Element msg)

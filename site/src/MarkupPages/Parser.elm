@@ -30,16 +30,16 @@ normalizedUrl url =
         |> Maybe.withDefault ""
 
 
-type alias AppData metadata view =
+type alias AppData metadata =
     { imageAssets : Dict String String
     , routes : List String
-    , indexView : Maybe (List ( List String, PageOrPost metadata view ))
+    , indexView : List ( List String, metadata )
     }
 
 
 document :
     Mark.Block metadata
-    -> AppData metadata view
+    -> AppData metadata
     -> List (Mark.Block view)
     -> Mark.Document (PageOrPost metadata view)
 document metadata appData blocks =
@@ -53,7 +53,7 @@ document metadata appData blocks =
         }
 
 
-imageSrc : AppData metadata view -> Mark.Block String
+imageSrc : AppData metadata -> Mark.Block String
 imageSrc { imageAssets } =
     Mark.string
         |> Mark.verify

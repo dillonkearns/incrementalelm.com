@@ -9,17 +9,26 @@ import Style.Helpers
 
 
 view :
-    List ( List String, PageOrPost (Metadata msg) (Element msg) )
+    List ( List String, Metadata msg )
     -> Element msg
 view posts =
     Element.column [ Element.spacing 20 ]
         (posts
+            |> List.filterMap
+                (\( path, metadata ) ->
+                    case metadata of
+                        Metadata.Page meta ->
+                            Nothing
+
+                        Metadata.Article meta ->
+                            Just ( path, meta )
+                )
             |> List.map postSummary
         )
 
 
 postSummary :
-    ( List String, PageOrPost (Metadata msg) (Element msg) )
+    ( List String, Metadata.ArticleMetadata msg )
     -> Element msg
 postSummary ( postPath, post ) =
     articleIndex post
@@ -50,8 +59,8 @@ title text =
             ]
 
 
-articleIndex : PageOrPost (Metadata msg) (Element msg) -> Element msg
-articleIndex resource =
+articleIndex : Metadata.ArticleMetadata msg -> Element msg
+articleIndex metadata =
     Element.column
         [ Element.centerX
         , Element.width (Element.maximum 800 Element.fill)
@@ -64,16 +73,7 @@ articleIndex resource =
             [ Element.Border.color (Element.rgba255 0 0 0 1)
             ]
         ]
-        [ case resource.metadata of
-            Metadata.Page metadata ->
-                title metadata.title
-
-            Metadata.Article metadata ->
-                title metadata.title.raw
-        , Element.column [ Element.spacing 20 ]
-            [ resource |> postPreview
-            , readMoreLink
-            ]
+        [ metadata |> postPreview
         ]
 
 
@@ -88,7 +88,7 @@ readMoreLink =
             ]
 
 
-postPreview : PageOrPost (Metadata msg) (Element msg) -> Element msg
+postPreview : Metadata.ArticleMetadata msg -> Element msg
 postPreview post =
     Element.textColumn
         [ Element.centerX
@@ -96,4 +96,13 @@ postPreview post =
         , Element.spacing 30
         , Element.Font.size 18
         ]
-        (post.view |> List.take 2)
+        [ Element.none ]
+
+
+
+-- , Element.column [ Element.spacing 20 ]
+--     [ metadata |> postPreview
+--     , readMoreLink
+--     ]
+-- @@@@@@@@ TODO
+-- (post.view |> List.take 2)
