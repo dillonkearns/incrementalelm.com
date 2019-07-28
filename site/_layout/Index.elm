@@ -37,7 +37,7 @@ postSummary ( postPath, post ) =
 
 linkToPost : List String -> Element msg -> Element msg
 linkToPost postPath content =
-    Element.link []
+    Element.link [ Element.width Element.fill ]
         { url = postUrl postPath, label = content }
 
 
@@ -61,10 +61,9 @@ title text =
 
 articleIndex : Metadata.ArticleMetadata msg -> Element msg
 articleIndex metadata =
-    Element.column
+    Element.el
         [ Element.centerX
         , Element.width (Element.maximum 800 Element.fill)
-        , Element.centerX
         , Element.padding 40
         , Element.spacing 10
         , Element.Border.width 1
@@ -73,8 +72,7 @@ articleIndex metadata =
             [ Element.Border.color (Element.rgba255 0 0 0 1)
             ]
         ]
-        [ metadata |> postPreview
-        ]
+        (postPreview metadata)
 
 
 readMoreLink =
@@ -96,7 +94,9 @@ postPreview post =
         , Element.spacing 30
         , Element.Font.size 18
         ]
-        [ Element.none ]
+        [ title post.title.raw
+        , readMoreLink
+        ]
 
 
 
