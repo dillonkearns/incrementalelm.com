@@ -98,8 +98,20 @@ postPreview post =
         , Element.Font.size 18
         ]
         [ title post.title.raw
+        , image post
         , readMoreLink
         ]
+
+
+image article =
+    Element.image
+        [ Element.width (Element.fill |> Element.maximum 600)
+        , Element.centerX
+        ]
+        { src = article.coverImage
+        , description = article.title.raw ++ " cover image"
+        }
+        |> Element.el [ Element.centerX ]
 
 
 

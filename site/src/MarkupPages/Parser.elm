@@ -53,8 +53,8 @@ document metadata appData blocks =
         }
 
 
-imageSrc : AppData metadata -> Mark.Block String
-imageSrc { imageAssets } =
+imageSrc : Dict String String -> Mark.Block String
+imageSrc imageAssets =
     Mark.string
         |> Mark.verify
             (\src ->

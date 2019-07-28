@@ -1,9 +1,6 @@
 |> Article
     title = Moving Faster with Tiny Steps in Elm
-
-|> Image
     src = article-cover/mountains.jpg
-    description = The Elm Architecture
 
 
 In this post, we're going to be looking up an Article in an Elm Dict, using the tiniest steps possible.

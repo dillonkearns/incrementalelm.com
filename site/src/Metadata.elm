@@ -1,30 +1,32 @@
 module Metadata exposing (ArticleMetadata, Metadata(..), metadata)
 
+import Dict exposing (Dict)
 import Element exposing (Element)
 import Element.Font as Font
 import Mark
+import MarkupPages.Parser
 
 
 type Metadata msg
     = Page { title : String }
-    | Article
-        { title : { styled : Element msg, raw : String }
-        }
+    | Article (ArticleMetadata msg)
     | Learn { title : String }
 
 
 type alias ArticleMetadata msg =
     { title : { styled : Element msg, raw : String }
+    , coverImage : String
     }
 
 
-metadata : Mark.Block (Metadata msg)
-metadata =
+metadata : Dict String String -> Mark.Block (Metadata msg)
+metadata imageAssets =
     Mark.oneOf
         [ Mark.record "Article"
-            (\title ->
+            (\title coverImage ->
                 Article
                     { title = title
+                    , coverImage = coverImage
                     }
             )
             |> Mark.field "title"
@@ -32,6 +34,7 @@ metadata =
                     gather
                     titleText
                 )
+            |> Mark.field "src" (MarkupPages.Parser.imageSrc imageAssets)
             |> Mark.toBlock
         , Mark.record "Page"
             (\title ->

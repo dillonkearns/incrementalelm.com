@@ -35,7 +35,7 @@ document :
     -> Mark.Document (PageOrPost (Metadata msg) (Element msg))
 document imageAssets routes parsedMetadata =
     MarkupPages.Parser.document
-        Metadata.metadata
+        (Metadata.metadata imageAssets)
         { imageAssets = imageAssets
         , routes = routes
         , indexView = parsedMetadata
@@ -89,7 +89,7 @@ blocks appData =
                         }
                         |> Element.el [ Element.centerX ]
                 )
-                |> Mark.field "src" (MarkupPages.Parser.imageSrc appData)
+                |> Mark.field "src" (MarkupPages.Parser.imageSrc appData.imageAssets)
                 |> Mark.field "description" Mark.string
                 |> Mark.toBlock
 
