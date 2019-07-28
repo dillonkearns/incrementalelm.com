@@ -7,16 +7,11 @@ import Element exposing (Element)
 
 content : List ( List String, String )
 content =
-    -- { pages = pages, posts = posts }
-    pages ++ posts
-
-
-pages : List ( List String, String )
-pages =
-    [ ( [ "accelerator-application" ]
+    [
+    ( ["accelerator-application"]
       , """|> Page
     title = Accelerator Application
-
+    
 
 |> H2
     🏋️\u{200D}♂️ 📚 Growing Elm Modules - Group Coaching Program
@@ -51,10 +46,11 @@ If you're interested to learn more, fill out this form and I'll send you a link 
     1FAIpQLSd7V15KXuoReco2xJzz70LD-d691hQJ-586XNjAmQVSkdYUsQ
 """
       )
-    , ( [ "accelerator-program" ]
+
+  ,( ["accelerator-program"]
       , """|> Page
     title = Elm Accelerator Group Coaching Program
-
+    
 
 |> H1
     Incremental Elm Accelerator Program
@@ -75,16 +71,18 @@ Breaking down the actual steps that elm experts take naturally when they're codi
     - You pay for 3 months at a time. $250 x 3 = $750 per quarter
 """
       )
-    , ( [ "articles" ]
+
+  ,( ["articles"]
       , """|> Page
     title = Articles
-
+    
 
 |> IndexContent
     posts = articles
 """
       )
-    , ( [ "contact" ]
+
+  ,( ["contact"]
       , """|> Page
     title = Contact
 
@@ -99,10 +97,11 @@ Breaking down the actual steps that elm experts take naturally when they're codi
 |> ContactButton
 """
       )
-    , ( [ "core-skills-seminar" ]
+
+  ,( ["core-skills-seminar"]
       , """|> Page
     title = Core Skills Seminar
-
+    
 |> H2
     🏋️\u{200D}♂️ 📚 Core Skills Seminar
 
@@ -135,10 +134,11 @@ If you're interested to learn more, fill out this form and I'll send you a link 
     1FAIpQLSd7V15KXuoReco2xJzz70LD-d691hQJ-586XNjAmQVSkdYUsQ
 """
       )
-    , ( [ "custom-scalar-checklist" ]
+
+  ,( ["custom-scalar-checklist"]
       , """|> Page
     title = Custom Scalar Checklist
-
+    
 
 |> H1
     How to improve your schema with Custom Scalars
@@ -280,10 +280,11 @@ Download it now to get the descriptions and examples of all of these types of fi
             - Learn the 4 kinds of Contracts that you can turn into Custom Scalars
 """
       )
-    , ( [ "elm-graphql-seminar" ]
+
+  ,( ["elm-graphql-seminar"]
       , """|> Page
     title = Elm GraphQL Seminar
-
+    
 
 |> H2
     The Elm GraphQL Seminar
@@ -317,10 +318,11 @@ If you're interested to learn more, fill out this form and I'll send you a link 
     1FAIpQLSdEVtyOcnO-oxtGSathg_LXqWD6ooKHAJc3P58srNtQwUL23Q
 """
       )
-    , ( [ "elm-graphql-workshop" ]
+
+  ,( ["elm-graphql-workshop"]
       , """|> Page
     title = Elm GraphQL Workshop
-
+    
 
 
 |> Image
@@ -385,18 +387,20 @@ We'd love to hear from you! Let us know what you think of our workshop agenda. O
     src = oslo-workshop1.jpg
 """
       )
-    , ( [ "incremental-weekly-unsubscribe" ]
+
+  ,( ["incremental-weekly-unsubscribe"]
       , """|> Page
     title = Incremental Elm Weekly Unsubscribe
-
+    
 
 Got it! We won't send you any more weekly tips.
 """
       )
-    , ( []
+
+  ,( []
       , """|> Page
     title = Incremental Elm Consulting
-
+    
 
 |> H1
     Stop Learning Elm Best Practices */The Hard Way/*
@@ -436,10 +440,11 @@ I save your team time by teaching techniques to write elm like an expert. Spoile
 Learn more about how my [Elm Developer Support Packages]{link| url = /services#developer-support} can save your team time and help you deliver on Elm's promise of insanely reliable, easy to maintain applications. Or check out [my other service offerings]{link| url = /services}.
 """
       )
-    , ( [ "introducing-custom-scalars-course" ]
+
+  ,( ["introducing-custom-scalars-course"]
       , """|> Page
     title = Introducing Custom Scalars to your Codebase
-
+    
 
 |> H1
     Introducing Custom Scalars to your codebase
@@ -475,10 +480,11 @@ Watch this intro to using `--scalar-codecs <ModuleName>`{code} in `elm-graphql`{
     329888719
 """
       )
-    , ( [ "scalar-codecs-tutorial" ]
+
+  ,( ["scalar-codecs-tutorial"]
       , """|> Page
     title = elm-graphql - Scalar Codecs Tutorial
-
+    
 
 |> Vimeo
     329690102
@@ -513,10 +519,11 @@ Download it now to get the descriptions and examples of all of these types of fi
             - Learn the 4 kinds of Contracts that you can turn into Custom Scalars
 """
       )
-    , ( [ "services" ]
+
+  ,( ["services"]
       , """|> Page
     title = Incremental Elm Services
-
+    
 
 |> H1
     Incremental Elm Services
@@ -588,11 +595,12 @@ Want to discuss finding the right service to help you improve your elm codebase?
 <>
 """
       )
-    , ( [ "thank-you" ]
+
+  ,( ["thank-you"]
       , """|> Page
     title = Sign up confirmation
-
-
+    
+  
 |> H1
     Thank you!
 
@@ -600,7 +608,8 @@ Want to discuss finding the right service to help you improve your elm codebase?
     Your message is on its way 📪
 """
       )
-    , ( [ "tips" ]
+
+  ,( ["tips"]
       , """|> Page
     title = Weekly elm Tips!
 
@@ -627,12 +636,8 @@ I send out practical elm tips every week! 👇
             - Tips you won't find anywhere else to level up your elm skills
 """
       )
-    ]
 
-
-posts : List ( List String, String )
-posts =
-    [ ( [ "articles", "exit-gatekeepers" ]
+  ,( ["articles", "exit-gatekeepers"]
       , """|> Article
     title = Using elm types to prevent logging social security #'s
 
@@ -792,7 +797,8 @@ Here are some steps you can apply:
     1. Once that's done, you can now hide the constructor, and you now have a proper Exit Gatekeeper for your type!
 """
       )
-    , ( [ "articles", "moving-faster-with-tiny-steps" ]
+
+  ,( ["articles", "moving-faster-with-tiny-steps"]
       , """|> Article
     title = Moving Faster with Tiny Steps in Elm
 
@@ -949,7 +955,8 @@ You can sign up here for more tips on writing Elm code incrementally. When you s
 Let me know how this technique goes! I've gotten a lot of great feedback from my clients about this approach, and I love hearing success stories. I'd love to hear how you're able to apply this in your day-to-day work!
 """
       )
-    , ( [ "articles", "to-test-or-not-to-test" ]
+
+  ,( ["articles", "to-test-or-not-to-test"]
       , """|> Article
     title = To test, or not to test elm code?
 
@@ -1006,8 +1013,9 @@ Instead of testing the business logic that's accessible to test in your code, ma
 Writing unit tests before versus after writing your implementation is fundamentally different. One of the core benefits of Test-Driven Development is that it guides you to keep your business logic decoupled from your wiring and view logic. Because you're writing tests first, you will naturally write testable code, since you're thinking about how to test it */before/* you think about how to implement it.
 """
       )
-    , ( [ "learn", "getting-started" ]
-      , """|> Article
+
+  ,( ["learn", "getting-started"]
+      , """|> Learn
     title = Getting Started Resources
 
 
@@ -1042,4 +1050,5 @@ If you want to thoroughly master the fundamentals, I highly recommend working th
 This is a great place to get help when you're starting out, there are lots of friendly people in #beginners.
 """
       )
+
     ]

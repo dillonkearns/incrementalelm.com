@@ -22,6 +22,9 @@ view posts =
 
                         Metadata.Article meta ->
                             Just ( path, meta )
+
+                        Metadata.Learn meta ->
+                            Nothing
                 )
             |> List.map postSummary
         )

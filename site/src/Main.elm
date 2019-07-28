@@ -288,3 +288,29 @@ pageOrPostView model pageOrPost =
                 ]
                     |> Element.column [ Element.width Element.fill ]
             }
+
+        Metadata.Learn metadata ->
+            { title = metadata.title
+            , body =
+                [ header model
+                , pageOrPost.view
+                    |> Element.textColumn
+                        [ Element.centerX
+                        , Element.width Element.fill
+                        , Element.spacing 30
+                        , Font.size 18
+                        ]
+                    |> Element.el
+                        [ if Dimensions.isMobile model.dimensions then
+                            Element.width (Element.fill |> Element.maximum 600)
+
+                          else
+                            Element.width (Element.fill |> Element.maximum 700)
+                        , Element.height Element.fill
+                        , Element.padding 20
+                        , Element.spacing 20
+                        , Element.centerX
+                        ]
+                ]
+                    |> Element.column [ Element.width Element.fill ]
+            }

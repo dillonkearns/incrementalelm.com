@@ -10,6 +10,7 @@ type Metadata msg
     | Article
         { title : { styled : Element msg, raw : String }
         }
+    | Learn { title : String }
 
 
 type alias ArticleMetadata msg =
@@ -33,6 +34,13 @@ metadata =
                 )
             |> Mark.toBlock
         , Mark.record "Page"
+            (\title ->
+                Page
+                    { title = title }
+            )
+            |> Mark.field "title" Mark.string
+            |> Mark.toBlock
+        , Mark.record "Learn"
             (\title ->
                 Page
                     { title = title }
