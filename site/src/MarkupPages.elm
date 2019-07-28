@@ -5,6 +5,8 @@ import Browser.Navigation
 import Content exposing (Content)
 import Dict exposing (Dict)
 import Element exposing (Element)
+import Html
+import Html.Attributes
 import Json.Decode
 import Mark
 import MarkParser
@@ -22,9 +24,9 @@ type alias Program userFlags userModel userMsg metadata view =
 
 
 mainView :
-    (userModel -> PageOrPost metadata view -> { title : String, body : Element userMsg })
+    (userModel -> PageOrPost metadata view -> { title : String, body : Element userMsg, headTags : List (Html.Html userMsg) })
     -> Model userModel userMsg metadata view
-    -> { title : String, body : Element userMsg }
+    -> { title : String, body : Element userMsg, headTags : List (Html.Html userMsg) }
 mainView pageOrPostView (Model model) =
     case model.parsedContent of
         Ok site ->
@@ -33,14 +35,15 @@ mainView pageOrPostView (Model model) =
         Err errorView ->
             { title = "Error parsing"
             , body = errorView
+            , headTags = []
             }
 
 
 pageView :
-    (userModel -> PageOrPost metadata view -> { title : String, body : Element userMsg })
+    (userModel -> PageOrPost metadata view -> { title : String, body : Element userMsg, headTags : List (Html.Html userMsg) })
     -> Model userModel userMsg metadata view
     -> Content.Content metadata view
-    -> { title : String, body : Element userMsg }
+    -> { title : String, body : Element userMsg, headTags : List (Html.Html userMsg) }
 pageView pageOrPostView (Model model) content =
     case Content.lookup content model.url of
         Just pageOrPost ->
@@ -57,29 +60,39 @@ pageView pageOrPostView (Model model) content =
                         |> String.join ", "
                         |> Element.text
                     ]
+            , headTags = []
             }
 
 
 view :
     Content
     -> Parser metadata view
-    -> (userModel -> PageOrPost metadata view -> { title : String, body : Element userMsg })
+    -> (userModel -> PageOrPost metadata view -> { title : String, body : Element userMsg, headTags : List (Html.Html userMsg) })
     -> Model userModel userMsg metadata view
     -> Browser.Document (Msg userMsg)
-view content parser pageOrPostView model =
+view content parser pageOrPostView (Model model) =
     let
-        { title, body } =
-            mainView pageOrPostView model
+        { title, body, headTags } =
+            mainView pageOrPostView (Model model)
     in
     { title = title
     , body =
-        [ body
+        [ metaTagsContainer headTags |> Html.map UserMsg
+        , body
             |> Element.map UserMsg
             |> Element.layout
                 [ Element.width Element.fill
                 ]
         ]
     }
+
+
+metaTagsContainer : List (Html.Html msg) -> Html.Html msg
+metaTagsContainer metaTags =
+    Html.div
+        [ Html.Attributes.id "elm-head-tags"
+        ]
+        []
 
 
 type alias Flags userFlags =
@@ -181,7 +194,7 @@ program :
     { init : Flags userFlags -> ( userModel, Cmd userMsg )
     , update : userMsg -> userModel -> ( userModel, Cmd userMsg )
     , subscriptions : userModel -> Sub userMsg
-    , view : userModel -> PageOrPost metadata view -> { title : String, body : Element userMsg }
+    , view : userModel -> PageOrPost metadata view -> { title : String, body : Element userMsg, headTags : List (Html.Html userMsg) }
     , parser : Parser metadata view
     , content : Content
     }

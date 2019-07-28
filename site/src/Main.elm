@@ -13,7 +13,10 @@ import Element exposing (Element)
 import Element.Border
 import Element.Font as Font
 import ElmLogo
+import Html
+import Html.Attributes
 import Json.Decode
+import Json.Encode
 import List.Extra
 import Mark
 import Mark.Error
@@ -234,7 +237,7 @@ makeTranslated i polygon =
             ]
 
 
-pageOrPostView : Model -> PageOrPost (Metadata Msg) (Element Msg) -> { title : String, body : Element Msg }
+pageOrPostView : Model -> PageOrPost (Metadata Msg) (Element Msg) -> { title : String, body : Element Msg, headTags : List (Html.Html Msg) }
 pageOrPostView model pageOrPost =
     case pageOrPost.metadata of
         Metadata.Page metadata ->
@@ -261,6 +264,7 @@ pageOrPostView model pageOrPost =
                         ]
                 ]
                     |> Element.column [ Element.width Element.fill ]
+            , headTags = []
             }
 
         Metadata.Article metadata ->
@@ -287,6 +291,7 @@ pageOrPostView model pageOrPost =
                         ]
                 ]
                     |> Element.column [ Element.width Element.fill ]
+            , headTags = articleMetaTags metadata
             }
 
         Metadata.Learn metadata ->
@@ -313,4 +318,25 @@ pageOrPostView model pageOrPost =
                         ]
                 ]
                     |> Element.column [ Element.width Element.fill ]
+            , headTags = []
             }
+
+
+articleMetaTags : Metadata.ArticleMetadata msg -> List (Html.Html msg)
+articleMetaTags metadata =
+    [ Html.node "meta"
+        [ Html.Attributes.attribute "property" "og:title"
+        , Html.Attributes.attribute "content" metadata.title.raw
+        ]
+        []
+    , Html.node "meta"
+        [ Html.Attributes.attribute "name" "description"
+        , Html.Attributes.attribute "content" metadata.title.raw
+        ]
+        []
+    , Html.node "meta"
+        [ Html.Attributes.attribute "property" "og:image"
+        , Html.Attributes.attribute "content" metadata.coverImage
+        ]
+        []
+    ]
