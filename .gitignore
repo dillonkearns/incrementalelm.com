@@ -2,3 +2,5 @@ elm-stuff
 node_modules
 elm.js
 markup.js
+dist/
+.cache/

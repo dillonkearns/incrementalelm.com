@@ -12,7 +12,6 @@ import Element.Border as Border
 import Element.Font
 import ElmLogo
 import Html exposing (Html)
-import Route
 import Style exposing (fontSize, fonts, palette)
 import Style.Helpers
 import Task

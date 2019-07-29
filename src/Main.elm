@@ -1,79 +1,113 @@
 port module Main exposing (main)
 
-import Animation exposing (backgroundColor)
+import Animation
 import Browser
 import Browser.Dom as Dom
 import Browser.Events
-import Browser.Navigation
+import Browser.Navigation as Nav
+import Dict exposing (Dict)
 import Dimensions exposing (Dimensions)
 import Ease
 import Element exposing (Element)
-import Element.Background as Background
 import Element.Border
-import Element.Font
-import Element.Lazy
+import Element.Font as Font
 import ElmLogo
 import Html exposing (Html)
-import Page
-import Page.Article
-import Page.CaseStudies
-import Page.Coaches
-import Page.Contact
-import Page.Events
-import Page.Feedback
-import Page.HomeOld
-import Page.Intros
-import Page.Learn
-import Page.Signup
-import Route exposing (Route)
-import Style exposing (fonts, palette)
+import Html.Attributes
+import Json.Decode
+import Json.Encode
+import List.Extra
+import Mark
+import Mark.Error
+import MarkParser
+import Metadata exposing (Metadata)
+import Pages
+import Pages.Content as Content exposing (Content)
+import Pages.HeadTag as HeadTag exposing (HeadTag)
+import Pages.Parser exposing (PageOrPost)
+import RawContent
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
 import Task
 import Time
 import Url exposing (Url)
 import Url.Builder
-import Url.Parser exposing (Parser)
 import View.MenuBar
 import View.Navbar
 
 
-port pageChanged : () -> Cmd msg
+port toJsPort : Json.Encode.Value -> Cmd msg
+
+
+type alias Flags =
+    {}
+
+
+main : Pages.Program Flags Model Msg (Metadata Msg) (Element Msg)
+main =
+    Pages.program
+        { init = init
+        , view = view
+        , update = update
+        , subscriptions = subscriptions
+        , parser = MarkParser.document
+        , content = RawContent.content
+        , toJsPort = toJsPort
+        , headTags = headTags
+        , siteUrl = "https://incrementalelm.com"
+        }
 
 
 type alias Model =
-    { styles : List Animation.State
-    , menuBarAnimation : View.MenuBar.Model
+    { menuBarAnimation : View.MenuBar.Model
     , menuAnimation : Animation.State
     , dimensions : Dimensions
-    , page : Maybe Route
-    , key : Browser.Navigation.Key
+    , styles : List Animation.State
     , showMenu : Bool
     }
 
 
+init : Pages.Flags Flags -> ( Model, Cmd Msg )
+init flags =
+    ( { styles = ElmLogo.polygons |> List.map Animation.style
+      , menuBarAnimation = View.MenuBar.init
+      , menuAnimation =
+            Animation.style
+                [ Animation.opacity 0
+                ]
+      , dimensions =
+            Dimensions.init
+                { width = 0
+                , height = 0
+                , device = Element.classifyDevice { height = 0, width = 0 }
+                }
+      , showMenu = False
+      }
+        |> updateStyles
+    , Dom.getViewport
+        |> Task.perform InitialViewport
+    )
+
+
+updateStyles : Model -> Model
+updateStyles model =
+    { model
+        | styles =
+            model.styles
+                |> List.indexedMap makeTranslated
+    }
+
+
 type Msg
-    = Animate Animation.Msg
+    = StartAnimation
+    | Animate Animation.Msg
     | InitialViewport Dom.Viewport
     | WindowResized Int Int
-    | UrlChanged Url
-    | UrlRequest Browser.UrlRequest
-    | StartAnimation
-    | NoOp
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
-update action model =
-    case action of
-        Animate time ->
-            ( { model
-                | styles = List.map (Animation.update time) model.styles
-                , menuBarAnimation = View.MenuBar.update time model.menuBarAnimation
-                , menuAnimation = Animation.update time model.menuAnimation
-              }
-            , Cmd.none
-            )
-
+update msg model =
+    case msg of
         InitialViewport { viewport } ->
             ( { model
                 | dimensions =
@@ -101,22 +135,6 @@ update action model =
               }
             , Cmd.none
             )
-
-        UrlChanged url ->
-            ( { model | page = Route.parse url }, Cmd.batch [ resetViewport, pageChanged () ] )
-
-        UrlRequest urlRequest ->
-            case urlRequest of
-                Browser.Internal url ->
-                    ( { model
-                        | showMenu = False
-                        , menuBarAnimation = View.MenuBar.init
-                      }
-                    , Browser.Navigation.pushUrl model.key (Url.toString url)
-                    )
-
-                Browser.External href ->
-                    ( model, Browser.Navigation.load href )
 
         StartAnimation ->
             case model.showMenu of
@@ -150,149 +168,14 @@ update action model =
                     , Cmd.none
                     )
 
-        NoOp ->
-            ( model, Cmd.none )
-
-
-updateStyles : Model -> Model
-updateStyles model =
-    { model
-        | styles =
-            model.styles
-                |> List.indexedMap makeTranslated
-    }
-
-
-view : Model -> Browser.Document Msg
-view ({ page } as model) =
-    { title = Route.title page
-    , body = [ mainView model ]
-    }
-
-
-mainView : Model -> Html Msg
-mainView ({ page } as model) =
-    (if model.showMenu then
-        Element.column
-            [ Element.height Element.fill
-            , Element.alignTop
-            , Element.width Element.fill
-            ]
-            [ View.Navbar.view model animationView StartAnimation
-            , View.Navbar.modalMenuView model.menuAnimation
-            ]
-
-     else
-        case page of
-            Just Route.Coaches ->
-                Element.column
-                    [ Element.height Element.fill
-                    , Element.alignTop
-                    , Element.width Element.fill
-                    ]
-                    [ View.Navbar.view model animationView StartAnimation
-                    , Page.Coaches.view model.dimensions
-                    ]
-
-            Just Route.Intros ->
-                Element.column
-                    [ Element.height Element.fill
-                    , Element.alignTop
-                    , Element.width Element.fill
-                    ]
-                    [ View.Navbar.view model animationView StartAnimation
-                    , Page.Intros.view model.dimensions
-                    ]
-
-            Just Route.CaseStudies ->
-                Element.column
-                    [ Element.height Element.fill
-                    , Element.alignTop
-                    , Element.width Element.fill
-                    ]
-                    [ View.Navbar.view model animationView StartAnimation
-                    , Page.CaseStudies.view model.dimensions
-                    ]
-
-            Just (Route.Signup signupDetails) ->
-                Element.column
-                    [ Element.height Element.fill
-                    , Element.alignTop
-                    , Element.width Element.fill
-                    ]
-                    [ View.Navbar.view model animationView StartAnimation
-                    , Page.Signup.view signupDetails model.dimensions
-                    ]
-
-            Just Route.Events ->
-                Element.column
-                    [ Element.height Element.fill
-                    , Element.alignTop
-                    , Element.width Element.fill
-                    ]
-                    [ View.Navbar.view model animationView StartAnimation
-                    , Page.Events.view model.dimensions
-                    ]
-
-            Just Route.Feedback ->
-                Element.column
-                    [ Element.height Element.fill
-                    , Element.alignTop
-                    , Element.width Element.fill
-                    ]
-                    [ View.Navbar.view model animationView StartAnimation
-                    , Page.Feedback.view model.dimensions
-                    ]
-
-            Just (Route.Learn maybeLearnTitle) ->
-                Element.column
-                    [ Element.height Element.fill
-                    , Element.alignTop
-                    , Element.width Element.fill
-                    ]
-                    [ View.Navbar.view model animationView StartAnimation
-                    , Element.Lazy.lazy2 Page.Learn.view model.dimensions maybeLearnTitle
-                    ]
-
-            Just (Route.Article maybePostTitle) ->
-                Element.column
-                    [ Element.height Element.fill
-                    , Element.alignTop
-                    , Element.width Element.fill
-                    ]
-                    [ View.Navbar.view model animationView StartAnimation
-                    , Element.Lazy.lazy2 Page.Article.view model.dimensions maybePostTitle
-                    ]
-
-            Just (Route.CustomPage thePage) ->
-                Element.column
-                    [ Element.height Element.shrink
-                    , Element.alignTop
-                    , Element.width Element.fill
-                    ]
-                    (View.Navbar.view model animationView StartAnimation
-                        :: [ Element.Lazy.lazy2 Page.view thePage model.dimensions ]
-                    )
-
-            Just Route.HomeOld ->
-                Element.column
-                    [ Element.height Element.shrink
-                    , Element.alignTop
-                    , Element.width Element.fill
-                    ]
-                    (View.Navbar.view model animationView StartAnimation
-                        :: Page.HomeOld.view model.dimensions
-                    )
-
-            Nothing ->
-                Element.text "Page not found!"
-    )
-        |> layout model
-
-
-resetViewport : Cmd Msg
-resetViewport =
-    Task.perform (\_ -> NoOp) (Dom.setViewport 0 0)
+        Animate time ->
+            ( { model
+                | styles = List.map (Animation.update time) model.styles
+                , menuBarAnimation = View.MenuBar.update time model.menuBarAnimation
+                , menuAnimation = Animation.update time model.menuAnimation
+              }
+            , Cmd.none
+            )
 
 
 interpolation =
@@ -302,14 +185,21 @@ interpolation =
         }
 
 
-layout model =
-    Element.layout
-        (if model.showMenu then
-            []
+subscriptions : Model -> Sub Msg
+subscriptions model =
+    Sub.batch
+        [ Animation.subscription Animate
+            (model.styles
+                ++ View.MenuBar.animationStates model.menuBarAnimation
+                ++ [ model.menuAnimation ]
+            )
+        , Browser.Events.onResize WindowResized
+        ]
 
-         else
-            []
-        )
+
+header : Model -> Element Msg
+header model =
+    View.Navbar.view model animationView StartAnimation
 
 
 animationView model =
@@ -363,49 +253,328 @@ makeTranslated i polygon =
             ]
 
 
-init : () -> Url.Url -> Browser.Navigation.Key -> ( Model, Cmd Msg )
-init _ url navigationKey =
-    ( { styles = ElmLogo.polygons |> List.map Animation.style
-      , menuBarAnimation = View.MenuBar.init
-      , menuAnimation =
-            Animation.style
-                [ Animation.opacity 0
+view : Model -> PageOrPost (Metadata Msg) (Element Msg) -> { title : String, body : Html Msg }
+view model pageOrPost =
+    let
+        { title, body } =
+            pageOrPostView model pageOrPost
+    in
+    { title = title
+    , body =
+        body
+            |> Element.layout
+                [ Element.width Element.fill
                 ]
-      , dimensions =
-            Dimensions.init
-                { width = 0
-                , height = 0
-                , device = Element.classifyDevice { height = 0, width = 0 }
-                }
-      , page = Route.parse url
-      , key = navigationKey
-      , showMenu = False
-      }
-        |> updateStyles
-    , Dom.getViewport
-        |> Task.perform InitialViewport
-    )
+    }
 
 
-subscriptions : Model -> Sub Msg
-subscriptions model =
-    Sub.batch
-        [ Animation.subscription Animate
-            (model.styles
-                ++ View.MenuBar.animationStates model.menuBarAnimation
-                ++ [ model.menuAnimation ]
-            )
-        , Browser.Events.onResize WindowResized
+pageOrPostView : Model -> PageOrPost (Metadata Msg) (Element Msg) -> { title : String, body : Element Msg }
+pageOrPostView model pageOrPost =
+    case pageOrPost.metadata of
+        Metadata.Page metadata ->
+            { title = metadata.title
+            , body =
+                [ header model
+                , pageOrPost.view
+                    |> Element.textColumn
+                        [ Element.centerX
+                        , Element.width Element.fill
+                        , Element.spacing 30
+                        , Font.size 18
+                        ]
+                    |> Element.el
+                        [ if Dimensions.isMobile model.dimensions then
+                            Element.width (Element.fill |> Element.maximum 600)
+
+                          else
+                            Element.width Element.fill
+                        , Element.height Element.fill
+                        , if Dimensions.isMobile model.dimensions then
+                            Element.padding 20
+
+                          else
+                            Element.paddingXY 200 50
+                        , Element.spacing 30
+                        ]
+                ]
+                    |> Element.column [ Element.width Element.fill ]
+            }
+
+        Metadata.Article metadata ->
+            { title = metadata.title.raw
+            , body =
+                [ header model
+                , ((metadata.title.styled
+                        |> Element.paragraph [ Font.size 36, Font.center, Font.family [ Font.typeface "Raleway" ], Font.bold ]
+                   )
+                    :: (Element.image
+                            [ Element.width (Element.fill |> Element.maximum 600)
+                            , Element.centerX
+                            ]
+                            { src = metadata.coverImage
+                            , description = metadata.title.raw
+                            }
+                            |> Element.el [ Element.centerX ]
+                       )
+                    :: pageOrPost.view
+                  )
+                    |> Element.textColumn
+                        [ Element.centerX
+                        , Element.width Element.fill
+                        , Element.spacing 30
+                        , Font.size 18
+                        ]
+                    |> Element.el
+                        [ if Dimensions.isMobile model.dimensions then
+                            Element.width (Element.fill |> Element.maximum 600)
+
+                          else
+                            Element.width (Element.fill |> Element.maximum 700)
+                        , Element.height Element.fill
+                        , Element.padding 30
+                        , Element.spacing 20
+                        , Element.centerX
+                        ]
+                ]
+                    |> Element.column [ Element.width Element.fill ]
+            }
+
+        Metadata.Learn metadata ->
+            { title = metadata.title
+            , body =
+                [ header model
+                , pageOrPost.view
+                    |> Element.textColumn
+                        [ Element.centerX
+                        , Element.width Element.fill
+                        , Element.spacing 30
+                        , Font.size 18
+                        ]
+                    |> Element.el
+                        [ if Dimensions.isMobile model.dimensions then
+                            Element.width (Element.fill |> Element.maximum 600)
+
+                          else
+                            Element.width (Element.fill |> Element.maximum 700)
+                        , Element.height Element.fill
+                        , Element.padding 20
+                        , Element.spacing 20
+                        , Element.centerX
+                        ]
+                ]
+                    |> Element.column [ Element.width Element.fill ]
+            }
+
+
+{-| <https://developer.twitter.com/en/docs/tweets/optimize-with-cards/overview/abouts-cards>
+<https://htmlhead.dev>
+<https://html.spec.whatwg.org/multipage/semantics.html#standard-metadata-names>
+<https://ogp.me/>
+-}
+headTags : String -> Metadata.Metadata msg -> List HeadTag
+headTags canonicalUrl metadata =
+    let
+        siteName =
+            "Incremental Elm Consulting"
+
+        themeColor =
+            "#ffffff"
+    in
+    [ HeadTag.node "meta" [ ( "name", "theme-color" ), ( "content", themeColor ) ]
+    , HeadTag.node "meta"
+        [ ( "property", "og:site_name" )
+        , ( "content", siteName )
         ]
+    , HeadTag.node "meta"
+        [ ( "property", "og:url" )
+        , ( "content", canonicalUrl )
+        ]
+    , HeadTag.node "link"
+        [ ( "rel", "canonical" )
+        , ( "href", canonicalUrl )
+        ]
+    ]
+        ++ pageTags metadata
 
 
-main : Program () Model Msg
-main =
-    Browser.application
-        { init = init
-        , onUrlChange = UrlChanged
-        , onUrlRequest = UrlRequest
-        , view = view
-        , update = update
-        , subscriptions = subscriptions
-        }
+ensureAtPrefix : String -> String
+ensureAtPrefix twitterUsername =
+    if twitterUsername |> String.startsWith "@" then
+        twitterUsername
+
+    else
+        "@" ++ twitterUsername
+
+
+pageTags metadata =
+    case metadata of
+        Metadata.Page record ->
+            []
+
+        Metadata.Article meta ->
+            let
+                description =
+                    meta.description.raw
+
+                title =
+                    meta.title.raw
+
+                twitterUsername =
+                    "dillontkearns"
+
+                twitterSiteAccount =
+                    "incrementalelm"
+
+                image =
+                    meta.coverImage
+            in
+            [ HeadTag.node "meta"
+                [ ( "property", "og:title" )
+                , ( "content", title )
+                ]
+            , HeadTag.node "meta"
+                [ ( "name", "description" )
+                , ( "content", description )
+                ]
+            , HeadTag.node "meta"
+                [ ( "property", "og:description" )
+                , ( "content", description )
+                ]
+            , HeadTag.node "meta"
+                [ ( "property", "og:image" )
+                , ( "content", image )
+                ]
+            , HeadTag.node "meta"
+                [ ( "name", "image" )
+                , ( "content", image )
+                ]
+            , HeadTag.node "meta"
+                [ ( "property", "og:type" )
+                , ( "content", "article" )
+                ]
+            , HeadTag.node "meta"
+                [ ( "name", "twitter:card" )
+                , ( "content", "summary_large_image" )
+                ]
+            , HeadTag.node "meta"
+                [ ( "name", "twitter:creator" )
+                , ( "content", ensureAtPrefix twitterUsername )
+                ]
+            , HeadTag.node "meta"
+                [ ( "name", "twitter:site" )
+                , ( "content", ensureAtPrefix twitterSiteAccount )
+                ]
+            , HeadTag.node "meta"
+                [ ( "name", "twitter:description" )
+                , ( "content", meta.title.raw )
+                ]
+            , HeadTag.node "meta"
+                [ ( "name", "twitter:image" )
+                , ( "content", image )
+                ]
+            , HeadTag.node "meta"
+                [ ( "name", "twitter:image:alt" )
+                , ( "content", description )
+                ]
+            ]
+
+        Metadata.Learn meta ->
+            let
+                description =
+                    meta.title
+
+                title =
+                    meta.title
+
+                twitterUsername =
+                    "dillontkearns"
+
+                twitterSiteAccount =
+                    "incrementalelm"
+
+                image =
+                    Nothing
+            in
+            [ HeadTag.node
+                "meta"
+                [ ( "property", "og:title" )
+                , ( "content", title )
+                ]
+                |> Just
+            , HeadTag.node
+                "meta"
+                [ ( "name", "description" )
+                , ( "content", description )
+                ]
+                |> Just
+            , HeadTag.node
+                "meta"
+                [ ( "property", "og:description" )
+                , ( "content", description )
+                ]
+                |> Just
+            , image
+                |> Maybe.map
+                    (\i ->
+                        HeadTag.node
+                            "meta"
+                            [ ( "property", "og:image" )
+                            , ( "content", i )
+                            ]
+                    )
+            , image
+                |> Maybe.map
+                    (\i ->
+                        HeadTag.node
+                            "meta"
+                            [ ( "name", "image" )
+                            , ( "content", i )
+                            ]
+                    )
+            , HeadTag.node
+                "meta"
+                [ ( "property", "og:type" )
+                , ( "content", "article" )
+                ]
+                |> Just
+            , HeadTag.node
+                "meta"
+                [ ( "name", "twitter:card" )
+                , ( "content", "summary_large_image" )
+                ]
+                |> Just
+            , HeadTag.node
+                "meta"
+                [ ( "name", "twitter:creator" )
+                , ( "content", ensureAtPrefix twitterUsername )
+                ]
+                |> Just
+            , HeadTag.node
+                "meta"
+                [ ( "name", "twitter:site" )
+                , ( "content", ensureAtPrefix twitterSiteAccount )
+                ]
+                |> Just
+            , HeadTag.node
+                "meta"
+                [ ( "name", "twitter:description" )
+                , ( "content", description )
+                ]
+                |> Just
+            , image
+                |> Maybe.map
+                    (\i ->
+                        HeadTag.node
+                            "meta"
+                            [ ( "name", "twitter:image" )
+                            , ( "content", i )
+                            ]
+                    )
+            , HeadTag.node
+                "meta"
+                [ ( "name", "twitter:image:alt" )
+                , ( "content", description )
+                ]
+                |> Just
+            ]
+                |> List.filterMap identity

@@ -9,7 +9,6 @@ install:
   - npm install
 
 script:
-  - npx elm-test
   - travis_retry npm run build
 deploy:
   provider: pages
