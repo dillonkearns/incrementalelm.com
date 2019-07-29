@@ -5,7 +5,6 @@ import Browser
 import Browser.Dom as Dom
 import Browser.Events
 import Browser.Navigation as Nav
-import Content exposing (Content)
 import Dict exposing (Dict)
 import Dimensions exposing (Dimensions)
 import Ease
@@ -23,6 +22,7 @@ import Mark.Error
 import MarkParser
 import Metadata exposing (Metadata)
 import Pages
+import Pages.Content as Content exposing (Content)
 import Pages.HeadTag as HeadTag exposing (HeadTag)
 import Pages.Parser exposing (PageOrPost)
 import RawContent

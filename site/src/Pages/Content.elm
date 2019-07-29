@@ -1,4 +1,4 @@
-module Content exposing (Content, buildAllData, lookup, parseMetadata)
+module Pages.Content exposing (Content, buildAllData, lookup, parseMetadata)
 
 import Dict exposing (Dict)
 import Html exposing (Html)

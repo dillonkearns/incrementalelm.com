@@ -2,7 +2,6 @@ module Pages exposing (Flags, Parser, Program, program)
 
 import Browser
 import Browser.Navigation
-import Content exposing (Content)
 import Dict exposing (Dict)
 import Html exposing (Html)
 import Html.Attributes
@@ -10,6 +9,7 @@ import Json.Decode
 import Json.Encode
 import Mark
 import MarkParser
+import Pages.Content as Content exposing (Content)
 import Pages.HeadTag exposing (HeadTag)
 import Pages.Parser exposing (PageOrPost)
 import Platform.Sub exposing (Sub)
