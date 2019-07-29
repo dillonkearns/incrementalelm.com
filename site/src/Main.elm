@@ -326,7 +326,9 @@ pageOrPostView model pageOrPost =
 
 
 {-| <https://developer.twitter.com/en/docs/tweets/optimize-with-cards/overview/abouts-cards>
-<https://htmlhead.dev/>
+<https://htmlhead.dev>
+<https://html.spec.whatwg.org/multipage/semantics.html#standard-metadata-names>
+<https://ogp.me/>
 -}
 headTags : Metadata.Metadata msg -> List HeadTag
 headTags metadata =
