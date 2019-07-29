@@ -162,6 +162,7 @@ init toJsPort headTags parser content initUserModel flags url key =
             , Cmd.batch
                 [ userCmd |> Cmd.map UserMsg
                 ]
+              -- TODO handle errors better
             )
 
 
