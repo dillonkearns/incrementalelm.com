@@ -345,14 +345,14 @@ pageOrPostView model pageOrPost =
 <https://html.spec.whatwg.org/multipage/semantics.html#standard-metadata-names>
 <https://ogp.me/>
 -}
-headTags : Metadata.Metadata msg -> List HeadTag
-headTags metadata =
+headTags : Url -> Metadata.Metadata msg -> List HeadTag
+headTags url metadata =
     let
         siteName =
             "Incremental Elm Consulting"
 
         canonicalUrl =
-            ""
+            Url.toString url
 
         themeColor =
             "#ffffff"

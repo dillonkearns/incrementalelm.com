@@ -95,7 +95,7 @@ type alias Flags userFlags =
 
 init :
     (Json.Encode.Value -> Cmd (Msg userMsg))
-    -> (metadata -> List HeadTag)
+    -> (Url -> metadata -> List HeadTag)
     -> Parser metadata view
     -> Content
     -> (Flags userFlags -> ( userModel, Cmd userMsg ))
@@ -133,7 +133,7 @@ init toJsPort headTags parser content initUserModel flags url key =
                 }
             , Cmd.batch
                 ([ Content.lookup okMetadata url
-                    |> Maybe.map headTags
+                    |> Maybe.map (headTags url)
                     |> Maybe.map encodeHeadTags
                     |> Maybe.map toJsPort
                  , userCmd |> Cmd.map UserMsg |> Just
@@ -221,7 +221,7 @@ program :
     , parser : Parser metadata view
     , content : Content
     , toJsPort : Json.Encode.Value -> Cmd (Msg userMsg)
-    , headTags : metadata -> List HeadTag
+    , headTags : Url -> metadata -> List HeadTag
     }
     -> Program userFlags userModel userMsg metadata view
 program config =
