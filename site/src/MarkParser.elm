@@ -2,6 +2,7 @@ module MarkParser exposing (document)
 
 import Dict exposing (Dict)
 import Element exposing (Element)
+import Element.Background
 import Element.Border
 import Element.Font as Font
 import Element.Region
@@ -193,7 +194,18 @@ blocks appData =
                             )
                     , Mark.verbatim "code"
                         (\str ->
-                            Element.el [ Font.color (Element.rgb255 200 50 50) ] (Element.text str)
+                            Element.el
+                                [ Element.Background.color
+                                    (Element.rgba 0 0 0 0.04)
+                                , Element.Border.rounded 2
+                                , Element.paddingXY 5 3
+                                , Font.size 16
+                                , Font.color (Element.rgba255 210 40 130 1)
+
+                                -- , Font.bold
+                                , Style.fonts.code
+                                ]
+                                (Element.text str)
                         )
                     ]
                 }
