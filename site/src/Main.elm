@@ -330,7 +330,26 @@ pageOrPostView model pageOrPost =
 -}
 headTags : Metadata.Metadata msg -> List HeadTag
 headTags metadata =
+    let
+        siteName =
+            "Incremental Elm Consulting"
+
+        canonicalUrl =
+            ""
+    in
     [ HeadTag.node "meta" [ ( "name", "theme-color" ), ( "content", "#ffffff" ) ]
+    , HeadTag.node "meta"
+        [ ( "property", "og:site_name" )
+        , ( "content", siteName )
+        ]
+    , HeadTag.node "meta"
+        [ ( "property", "og:url" )
+        , ( "content", canonicalUrl )
+        ]
+    , HeadTag.node "link"
+        [ ( "rel", "canonical" )
+        , ( "href", canonicalUrl )
+        ]
     ]
         ++ pageTags metadata
 
