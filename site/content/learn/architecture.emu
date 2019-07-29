@@ -1,5 +1,5 @@
 |> Learn
-    title = "The Elm Architecture"
+    title = The Elm Architecture
 
 |> Image
     src = architecture.jpg

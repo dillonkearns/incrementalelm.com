@@ -1,4 +1,4 @@
-module Metadata exposing (ArticleMetadata, Metadata(..), metadata)
+module Metadata exposing (ArticleMetadata, LearnMetadata, Metadata(..), metadata)
 
 import Dict exposing (Dict)
 import Element exposing (Element)
@@ -10,7 +10,11 @@ import Pages.Parser
 type Metadata msg
     = Page { title : String }
     | Article (ArticleMetadata msg)
-    | Learn { title : String }
+    | Learn LearnMetadata
+
+
+type alias LearnMetadata =
+    { title : String }
 
 
 type alias ArticleMetadata msg =
@@ -52,7 +56,7 @@ metadata imageAssets =
             |> Mark.toBlock
         , Mark.record "Learn"
             (\title ->
-                Page
+                Learn
                     { title = title }
             )
             |> Mark.field "title" Mark.string

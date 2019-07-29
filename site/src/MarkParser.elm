@@ -10,6 +10,7 @@ import GoogleForm
 import Html exposing (Html)
 import Html.Attributes as Attr
 import Index
+import LearnIndex
 import Mark
 import Mark.Error
 import Metadata exposing (Metadata)
@@ -220,6 +221,7 @@ blocks appData =
     , list
     , code
     , indexContent appData.indexView
+    , learnIndex appData.indexView
     , signupForm
     , vimeo
     , button
@@ -462,6 +464,12 @@ indexContent posts =
                                 }
                     )
             )
+        |> Mark.toBlock
+
+
+learnIndex : List ( List String, Metadata msg ) -> Mark.Block (Element msg)
+learnIndex posts =
+    Mark.record "LearnIndex" (LearnIndex.view posts)
         |> Mark.toBlock
 
 

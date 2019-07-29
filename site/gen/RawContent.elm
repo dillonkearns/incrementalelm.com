@@ -851,7 +851,7 @@ Watch this intro to using `--scalar-codecs <ModuleName>`{code} in `elm-graphql`{
 
   ,( ["learn", "architecture"]
       , """|> Learn
-    title = "The Elm Architecture"
+    title = The Elm Architecture
 
 |> Image
     src = architecture.jpg
@@ -953,6 +953,15 @@ If you want to thoroughly master the fundamentals, I highly recommend working th
     icon = App
 
 This is a great place to get help when you're starting out, there are lots of friendly people in #beginners.
+"""
+      )
+
+  ,( ["learn"]
+      , """|> Page
+    title = Learning Resources
+
+
+|> LearnIndex
 """
       )
 
