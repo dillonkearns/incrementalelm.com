@@ -31,6 +31,7 @@ import Svg.Attributes exposing (..)
 import Task
 import Time
 import Url exposing (Url)
+import Url.Builder
 import View.MenuBar
 import View.Navbar
 
@@ -53,6 +54,7 @@ main =
         , content = RawContent.content
         , toJsPort = toJsPort
         , headTags = headTags
+        , siteUrl = "https://incrementalelm.com"
         }
 
 
@@ -345,14 +347,11 @@ pageOrPostView model pageOrPost =
 <https://html.spec.whatwg.org/multipage/semantics.html#standard-metadata-names>
 <https://ogp.me/>
 -}
-headTags : Url -> Metadata.Metadata msg -> List HeadTag
-headTags url metadata =
+headTags : String -> Metadata.Metadata msg -> List HeadTag
+headTags canonicalUrl metadata =
     let
         siteName =
             "Incremental Elm Consulting"
-
-        canonicalUrl =
-            Url.toString url
 
         themeColor =
             "#ffffff"

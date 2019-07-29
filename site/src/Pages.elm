@@ -94,8 +94,9 @@ type alias Flags userFlags =
 
 
 init :
-    (Json.Encode.Value -> Cmd (Msg userMsg))
-    -> (Url -> metadata -> List HeadTag)
+    String
+    -> (Json.Encode.Value -> Cmd (Msg userMsg))
+    -> (String -> metadata -> List HeadTag)
     -> Parser metadata view
     -> Content
     -> (Flags userFlags -> ( userModel, Cmd userMsg ))
@@ -103,7 +104,7 @@ init :
     -> Url
     -> Browser.Navigation.Key
     -> ( Model userModel userMsg metadata view, Cmd (Msg userMsg) )
-init toJsPort headTags parser content initUserModel flags url key =
+init siteUrl toJsPort headTags parser content initUserModel flags url key =
     let
         ( userModel, userCmd ) =
             initUserModel flags
@@ -133,7 +134,10 @@ init toJsPort headTags parser content initUserModel flags url key =
                 }
             , Cmd.batch
                 ([ Content.lookup okMetadata url
-                    |> Maybe.map (headTags url)
+                    |> Maybe.map
+                        (headTags
+                            (siteUrl ++ url.path)
+                        )
                     |> Maybe.map encodeHeadTags
                     |> Maybe.map toJsPort
                  , userCmd |> Cmd.map UserMsg |> Just
@@ -221,12 +225,13 @@ program :
     , parser : Parser metadata view
     , content : Content
     , toJsPort : Json.Encode.Value -> Cmd (Msg userMsg)
-    , headTags : Url -> metadata -> List HeadTag
+    , headTags : String -> metadata -> List HeadTag
+    , siteUrl : String
     }
     -> Program userFlags userModel userMsg metadata view
 program config =
     Browser.application
-        { init = init config.toJsPort config.headTags config.parser config.content config.init
+        { init = init config.siteUrl config.toJsPort config.headTags config.parser config.content config.init
         , view = view config.content config.parser config.view
         , update = update config.update
         , subscriptions =
