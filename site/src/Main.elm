@@ -399,6 +399,10 @@ headTags metadata =
                 [ ( "name", "twitter:image:alt" )
                 , ( "content", description )
                 ]
+            , HeadTag.node "meta"
+                [ ( "name", "theme-color" )
+                , ( "content", "#ffffff" )
+                ]
             ]
 
         Metadata.Learn record ->
