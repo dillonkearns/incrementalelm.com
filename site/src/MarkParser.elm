@@ -11,8 +11,8 @@ import Html.Attributes as Attr
 import Index
 import Mark
 import Mark.Error
-import Pages.Parser exposing (PageOrPost)
 import Metadata exposing (Metadata)
+import Pages.Parser exposing (PageOrPost)
 import Style
 import Style.Helpers
 import View.CodeSnippet
