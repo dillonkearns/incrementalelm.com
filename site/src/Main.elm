@@ -330,6 +330,21 @@ pageOrPostView model pageOrPost =
 -}
 headTags : Metadata.Metadata msg -> List HeadTag
 headTags metadata =
+    [ HeadTag.node "meta" [ ( "name", "theme-color" ), ( "content", "#ffffff" ) ]
+    ]
+        ++ pageTags metadata
+
+
+ensureAtPrefix : String -> String
+ensureAtPrefix twitterUsername =
+    if twitterUsername |> String.startsWith "@" then
+        twitterUsername
+
+    else
+        "@" ++ twitterUsername
+
+
+pageTags metadata =
     case metadata of
         Metadata.Page record ->
             []
@@ -399,20 +414,7 @@ headTags metadata =
                 [ ( "name", "twitter:image:alt" )
                 , ( "content", description )
                 ]
-            , HeadTag.node "meta"
-                [ ( "name", "theme-color" )
-                , ( "content", "#ffffff" )
-                ]
             ]
 
         Metadata.Learn record ->
             []
-
-
-ensureAtPrefix : String -> String
-ensureAtPrefix twitterUsername =
-    if twitterUsername |> String.startsWith "@" then
-        twitterUsername
-
-    else
-        "@" ++ twitterUsername
