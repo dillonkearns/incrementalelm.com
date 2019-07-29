@@ -279,11 +279,14 @@ pageOrPostView model pageOrPost =
                             Element.width (Element.fill |> Element.maximum 600)
 
                           else
-                            Element.width (Element.fill |> Element.maximum 700)
+                            Element.width Element.fill
                         , Element.height Element.fill
-                        , Element.padding 20
-                        , Element.spacing 20
-                        , Element.centerX
+                        , if Dimensions.isMobile model.dimensions then
+                            Element.padding 20
+
+                          else
+                            Element.paddingXY 200 50
+                        , Element.spacing 30
                         ]
                 ]
                     |> Element.column [ Element.width Element.fill ]
