@@ -17,6 +17,7 @@ import Style
 import Style.Helpers
 import View.CodeSnippet
 import View.DripSignupForm
+import View.Ellie
 import View.FontAwesome
 import View.Resource
 
@@ -213,6 +214,8 @@ blocks appData =
     , contactButton
     , googleForm
     , resource
+    , resources
+    , ellie
     , navHeader
         [ Font.size 24
         , Font.semiBold
@@ -226,6 +229,31 @@ blocks appData =
         )
         text
     ]
+
+
+ellie : Mark.Block (Element msg)
+ellie =
+    Mark.block "Ellie"
+        (\id -> View.Ellie.view id)
+        Mark.string
+
+
+resources : Mark.Block (Element msg)
+resources =
+    Mark.block "Resources"
+        (\resourceElements ->
+            Element.column
+                [ Element.spacing 16
+                , Element.centerX
+                , Element.padding 30
+                , Element.width Element.fill
+                ]
+                resourceElements
+        )
+        (Mark.manyOf
+            [ resource
+            ]
+        )
 
 
 resource : Mark.Block (Element msg)
