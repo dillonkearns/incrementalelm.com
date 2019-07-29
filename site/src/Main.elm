@@ -83,14 +83,24 @@ init flags =
                 }
       , showMenu = False
       }
+        |> updateStyles
     , Dom.getViewport
         |> Task.perform InitialViewport
     )
 
 
+updateStyles : Model -> Model
+updateStyles model =
+    { model
+        | styles =
+            model.styles
+                |> List.indexedMap makeTranslated
+    }
+
+
 type Msg
     = StartAnimation
-      -- | Animate Animation.Msg
+    | Animate Animation.Msg
     | InitialViewport Dom.Viewport
     | WindowResized Int Int
 
@@ -158,16 +168,14 @@ update msg model =
                     , Cmd.none
                     )
 
-
-
--- Animate time ->
---     ( { model
---         | styles = List.map (Animation.update time) model.styles
---         , menuBarAnimation = View.MenuBar.update time model.menuBarAnimation
---         , menuAnimation = Animation.update time model.menuAnimation
---       }
---     , Cmd.none
---     )
+        Animate time ->
+            ( { model
+                | styles = List.map (Animation.update time) model.styles
+                , menuBarAnimation = View.MenuBar.update time model.menuBarAnimation
+                , menuAnimation = Animation.update time model.menuAnimation
+              }
+            , Cmd.none
+            )
 
 
 interpolation =
@@ -179,14 +187,14 @@ interpolation =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    -- Sub.batch
-    --     [ Animation.subscription Animate
-    --         (model.styles
-    --             ++ View.MenuBar.animationStates model.menuBarAnimation
-    --             ++ [ model.menuAnimation ]
-    --         )
-    -- ,
-    Browser.Events.onResize WindowResized
+    Sub.batch
+        [ Animation.subscription Animate
+            (model.styles
+                ++ View.MenuBar.animationStates model.menuBarAnimation
+                ++ [ model.menuAnimation ]
+            )
+        , Browser.Events.onResize WindowResized
+        ]
 
 
 header : Model -> Element Msg
