@@ -1,10 +1,7 @@
 // @ts-ignore
 import { Elm } from "../Main.elm";
-// const { Elm } = require("../Main.elm");
-// import { Elm } from "../Main.elm";
 // @ts-ignore
 import { imageAssets, routes } from "./image-assets";
-// const { imageAssets, routes } = require("./image-assets");
 
 document.addEventListener("DOMContentLoaded", function() {
   let app = Elm.Main.init({
@@ -18,7 +15,6 @@ document.addEventListener("DOMContentLoaded", function() {
         appendTag(headTag);
       });
     }
-    console.log("headTags", headTags);
     document.dispatchEvent(new Event("prerender-trigger"));
   });
 });
@@ -30,7 +26,5 @@ function appendTag(tagDetails: headTag) {
   tagDetails.attributes.forEach(([name, value]) => {
     meta.setAttribute(name, value);
   });
-  // meta.setAttribute("property", "hello");
-  // meta.setAttribute("name", "world");
   document.getElementsByTagName("head")[0].appendChild(meta);
 }
