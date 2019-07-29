@@ -14,7 +14,8 @@ type Metadata msg
 
 
 type alias ArticleMetadata msg =
-    { title : { styled : Element msg, raw : String }
+    { title : { styled : List (Element msg), raw : String }
+    , description : { styled : List (Element msg), raw : String }
     , coverImage : String
     }
 
@@ -23,13 +24,19 @@ metadata : Dict String String -> Mark.Block (Metadata msg)
 metadata imageAssets =
     Mark.oneOf
         [ Mark.record "Article"
-            (\title coverImage ->
+            (\title description coverImage ->
                 Article
                     { title = title
                     , coverImage = coverImage
+                    , description = description
                     }
             )
             |> Mark.field "title"
+                (Mark.map
+                    gather
+                    titleText
+                )
+            |> Mark.field "description"
                 (Mark.map
                     gather
                     titleText
@@ -53,13 +60,12 @@ metadata imageAssets =
         ]
 
 
-gather : List { styled : Element msg, raw : String } -> { styled : Element msg, raw : String }
+gather : List { styled : Element msg, raw : String } -> { styled : List (Element msg), raw : String }
 gather myList =
     let
         styled =
             myList
                 |> List.map .styled
-                |> Element.paragraph [ Font.size 36, Font.center, Font.family [ Font.typeface "Raleway" ], Font.bold ]
 
         raw =
             myList

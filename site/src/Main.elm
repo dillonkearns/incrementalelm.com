@@ -296,7 +296,9 @@ pageOrPostView model pageOrPost =
             { title = metadata.title.raw
             , body =
                 [ header model
-                , (metadata.title.styled
+                , ((metadata.title.styled
+                        |> Element.paragraph [ Font.size 36, Font.center, Font.family [ Font.typeface "Raleway" ], Font.bold ]
+                   )
                     :: (Element.image
                             [ Element.width (Element.fill |> Element.maximum 600)
                             , Element.centerX

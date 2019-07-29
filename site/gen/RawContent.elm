@@ -76,6 +76,7 @@ Breaking down the actual steps that elm experts take naturally when they're codi
       , """|> Article
     title = Using elm types to prevent logging social security #'s
     src = article-cover/exit.jpg
+    description = One of the most successful techniques I've seen for making sure you don't break elm code the next time you touch it is a technique I call an *Exit Gatekeeper*.
 
 One of the most successful techniques I've seen for making sure you don't break elm code the next time you touch it is a technique I call an *Exit Gatekeeper*.
 
@@ -242,7 +243,7 @@ Here are some steps you can apply:
       , """|> Article
     title = Moving Faster with Tiny Steps in Elm
     src = article-cover/mountains.jpg
-
+    description = In this post, we're going to be looking up an Article in an Elm Dict, using the tiniest steps possible.
 
 In this post, we're going to be looking up an Article in an Elm Dict, using the tiniest steps possible.
 
@@ -397,6 +398,7 @@ Let me know how this technique goes! I've gotten a lot of great feedback from my
       , """|> Article
     title = To test, or not to test elm code?
     src = article-cover/thinker.jpg
+    description = Is it as simple as "only test your business logic?"
 
 That... is the question Richard Feldman's keynote at Elm in the Spring last week explored. Richard talked about the interplay between unit tests and the elm type system. His general advice is the same as I've described it:
 

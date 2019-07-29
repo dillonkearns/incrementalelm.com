@@ -100,6 +100,12 @@ postPreview post =
         ]
         [ title post.title.raw
         , image post
+        , post.description.styled
+            |> Element.paragraph
+                [ Element.Font.size 22
+                , Element.Font.center
+                , Element.Font.family [ Element.Font.typeface "Raleway" ]
+                ]
         , readMoreLink
         ]
 
