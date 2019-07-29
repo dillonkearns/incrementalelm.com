@@ -338,8 +338,11 @@ headTags metadata =
 
         canonicalUrl =
             ""
+
+        themeColor =
+            "#ffffff"
     in
-    [ HeadTag.node "meta" [ ( "name", "theme-color" ), ( "content", "#ffffff" ) ]
+    [ HeadTag.node "meta" [ ( "name", "theme-color" ), ( "content", themeColor ) ]
     , HeadTag.node "meta"
         [ ( "property", "og:site_name" )
         , ( "content", siteName )
