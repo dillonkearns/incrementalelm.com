@@ -8,9 +8,11 @@ import Element exposing (Element)
 import Html
 import Html.Attributes
 import Json.Decode
+import Json.Encode
 import Mark
 import MarkParser
 import MarkupPages.Parser exposing (PageOrPost)
+import Pages.HeadTag exposing (HeadTag)
 import Platform.Sub exposing (Sub)
 import Url exposing (Url)
 
@@ -24,9 +26,9 @@ type alias Program userFlags userModel userMsg metadata view =
 
 
 mainView :
-    (userModel -> PageOrPost metadata view -> { title : String, body : Element userMsg, headTags : List (Html.Html userMsg) })
+    (userModel -> PageOrPost metadata view -> { title : String, body : Element userMsg })
     -> Model userModel userMsg metadata view
-    -> { title : String, body : Element userMsg, headTags : List (Html.Html userMsg) }
+    -> { title : String, body : Element userMsg }
 mainView pageOrPostView (Model model) =
     case model.parsedContent of
         Ok site ->
@@ -35,15 +37,14 @@ mainView pageOrPostView (Model model) =
         Err errorView ->
             { title = "Error parsing"
             , body = errorView
-            , headTags = []
             }
 
 
 pageView :
-    (userModel -> PageOrPost metadata view -> { title : String, body : Element userMsg, headTags : List (Html.Html userMsg) })
+    (userModel -> PageOrPost metadata view -> { title : String, body : Element userMsg })
     -> Model userModel userMsg metadata view
     -> Content.Content metadata view
-    -> { title : String, body : Element userMsg, headTags : List (Html.Html userMsg) }
+    -> { title : String, body : Element userMsg }
 pageView pageOrPostView (Model model) content =
     case Content.lookup content model.url of
         Just pageOrPost ->
@@ -60,25 +61,23 @@ pageView pageOrPostView (Model model) content =
                         |> String.join ", "
                         |> Element.text
                     ]
-            , headTags = []
             }
 
 
 view :
     Content
     -> Parser metadata view
-    -> (userModel -> PageOrPost metadata view -> { title : String, body : Element userMsg, headTags : List (Html.Html userMsg) })
+    -> (userModel -> PageOrPost metadata view -> { title : String, body : Element userMsg })
     -> Model userModel userMsg metadata view
     -> Browser.Document (Msg userMsg)
 view content parser pageOrPostView (Model model) =
     let
-        { title, body, headTags } =
+        { title, body } =
             mainView pageOrPostView (Model model)
     in
     { title = title
     , body =
-        [ metaTagsContainer headTags |> Html.map UserMsg
-        , body
+        [ body
             |> Element.map UserMsg
             |> Element.layout
                 [ Element.width Element.fill
@@ -87,12 +86,9 @@ view content parser pageOrPostView (Model model) =
     }
 
 
-metaTagsContainer : List (Html.Html msg) -> Html.Html msg
-metaTagsContainer metaTags =
-    Html.div
-        [ Html.Attributes.id "elm-head-tags"
-        ]
-        metaTags
+encodeHeadTags : List HeadTag -> Json.Encode.Value
+encodeHeadTags headTags =
+    Json.Encode.list Pages.HeadTag.toJson headTags
 
 
 type alias Flags userFlags =
@@ -102,14 +98,16 @@ type alias Flags userFlags =
 
 
 init :
-    Parser metadata view
+    (Json.Encode.Value -> Cmd (Msg userMsg))
+    -> (metadata -> List HeadTag)
+    -> Parser metadata view
     -> Content
     -> (Flags userFlags -> ( userModel, Cmd userMsg ))
     -> Flags userFlags
     -> Url
     -> Browser.Navigation.Key
     -> ( Model userModel userMsg metadata view, Cmd (Msg userMsg) )
-init parser content initUserModel flags url key =
+init toJsPort headTags parser content initUserModel flags url key =
     let
         ( userModel, userCmd ) =
             initUserModel flags
@@ -123,20 +121,48 @@ init parser content initUserModel flags url key =
         metadata =
             Content.parseMetadata parser imageAssets content
     in
-    ( Model
-        { key = key
-        , url = url
-        , imageAssets = imageAssets
-        , userModel = userModel
-        , parsedContent =
-            metadata
-                |> Result.andThen
-                    (\m ->
-                        Content.buildAllData m parser imageAssets content
-                    )
-        }
-    , userCmd |> Cmd.map UserMsg
-    )
+    case metadata of
+        Ok okMetadata ->
+            ( Model
+                { key = key
+                , url = url
+                , imageAssets = imageAssets
+                , userModel = userModel
+                , parsedContent =
+                    metadata
+                        |> Result.andThen
+                            (\m ->
+                                Content.buildAllData m parser imageAssets content
+                            )
+                }
+            , Cmd.batch
+                ([ Content.lookup okMetadata url
+                    |> Maybe.map headTags
+                    |> Maybe.map encodeHeadTags
+                    |> Maybe.map toJsPort
+                 , userCmd |> Cmd.map UserMsg |> Just
+                 ]
+                    |> List.filterMap identity
+                )
+            )
+
+        Err _ ->
+            ( Model
+                { key = key
+                , url = url
+                , imageAssets = imageAssets
+                , userModel = userModel
+                , parsedContent =
+                    metadata
+                        |> Result.andThen
+                            (\m ->
+                                Content.buildAllData m parser imageAssets content
+                            )
+                }
+            , Cmd.batch
+                [ userCmd |> Cmd.map UserMsg
+                ]
+            )
 
 
 type Msg userMsg
@@ -194,14 +220,16 @@ program :
     { init : Flags userFlags -> ( userModel, Cmd userMsg )
     , update : userMsg -> userModel -> ( userModel, Cmd userMsg )
     , subscriptions : userModel -> Sub userMsg
-    , view : userModel -> PageOrPost metadata view -> { title : String, body : Element userMsg, headTags : List (Html.Html userMsg) }
+    , view : userModel -> PageOrPost metadata view -> { title : String, body : Element userMsg }
     , parser : Parser metadata view
     , content : Content
+    , toJsPort : Json.Encode.Value -> Cmd (Msg userMsg)
+    , headTags : metadata -> List HeadTag
     }
     -> Program userFlags userModel userMsg metadata view
 program config =
     Browser.application
-        { init = init config.parser config.content config.init
+        { init = init config.toJsPort config.headTags config.parser config.content config.init
         , view = view config.content config.parser config.view
         , update = update config.update
         , subscriptions =

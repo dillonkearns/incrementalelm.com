@@ -14,9 +14,9 @@ import Url exposing (Url)
 
 
 lookup :
-    Content metadata view
+    List ( List String, lookupResult )
     -> Url
-    -> Maybe (PageOrPost metadata view)
+    -> Maybe lookupResult
 lookup content url =
     List.Extra.find
         (\( path, markup ) ->

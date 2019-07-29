@@ -2,15 +2,18 @@ import { Elm } from "../Main.elm";
 import { imageAssets, routes } from "./image-assets";
 
 document.addEventListener("DOMContentLoaded", function() {
-  Elm.Main.init({
+  let app = Elm.Main.init({
     node: document.getElementById("app"),
     flags: { imageAssets, routes }
   });
 
-  if (navigator.userAgent.indexOf("Headless") >= 0) {
-    appendTag();
-  }
-  document.dispatchEvent(new Event("prerender-trigger"));
+  app.ports.toJsPort.subscribe(stuff => {
+    if (navigator.userAgent.indexOf("Headless") >= 0) {
+      appendTag();
+    }
+    console.log("stuff", stuff);
+    document.dispatchEvent(new Event("prerender-trigger"));
+  });
 });
 
 function appendTag() {

@@ -1,4 +1,4 @@
-module Main exposing (main)
+port module Main exposing (main)
 
 import Animation
 import Browser
@@ -24,6 +24,7 @@ import MarkParser
 import MarkupPages
 import MarkupPages.Parser exposing (PageOrPost)
 import Metadata exposing (Metadata)
+import Pages.HeadTag as HeadTag exposing (HeadTag)
 import RawContent
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
@@ -32,6 +33,9 @@ import Time
 import Url exposing (Url)
 import View.MenuBar
 import View.Navbar
+
+
+port toJsPort : Json.Encode.Value -> Cmd msg
 
 
 type alias Flags =
@@ -47,6 +51,8 @@ main =
         , subscriptions = subscriptions
         , parser = MarkParser.document
         , content = RawContent.content
+        , toJsPort = toJsPort
+        , headTags = headTags
         }
 
 
@@ -237,7 +243,7 @@ makeTranslated i polygon =
             ]
 
 
-pageOrPostView : Model -> PageOrPost (Metadata Msg) (Element Msg) -> { title : String, body : Element Msg, headTags : List (Html.Html Msg) }
+pageOrPostView : Model -> PageOrPost (Metadata Msg) (Element Msg) -> { title : String, body : Element Msg }
 pageOrPostView model pageOrPost =
     case pageOrPost.metadata of
         Metadata.Page metadata ->
@@ -264,7 +270,6 @@ pageOrPostView model pageOrPost =
                         ]
                 ]
                     |> Element.column [ Element.width Element.fill ]
-            , headTags = []
             }
 
         Metadata.Article metadata ->
@@ -291,7 +296,6 @@ pageOrPostView model pageOrPost =
                         ]
                 ]
                     |> Element.column [ Element.width Element.fill ]
-            , headTags = articleMetaTags metadata
             }
 
         Metadata.Learn metadata ->
@@ -318,25 +322,29 @@ pageOrPostView model pageOrPost =
                         ]
                 ]
                     |> Element.column [ Element.width Element.fill ]
-            , headTags = []
             }
 
 
-articleMetaTags : Metadata.ArticleMetadata msg -> List (Html.Html msg)
-articleMetaTags metadata =
-    [ Html.node "meta"
-        [ Html.Attributes.attribute "property" "og:title"
-        , Html.Attributes.attribute "content" metadata.title.raw
-        ]
-        []
-    , Html.node "meta"
-        [ Html.Attributes.attribute "name" "description"
-        , Html.Attributes.attribute "content" metadata.title.raw
-        ]
-        []
-    , Html.node "meta"
-        [ Html.Attributes.attribute "property" "og:image"
-        , Html.Attributes.attribute "content" metadata.coverImage
-        ]
-        []
-    ]
+headTags : Metadata.Metadata msg -> List HeadTag
+headTags metadata =
+    case metadata of
+        Metadata.Page record ->
+            []
+
+        Metadata.Article meta ->
+            [ HeadTag.node "meta"
+                [ ( "property", "og:title" )
+                , ( "content", meta.title.raw )
+                ]
+            , HeadTag.node "meta"
+                [ ( "name", "description" )
+                , ( "content", meta.title.raw )
+                ]
+            , HeadTag.node "meta"
+                [ ( "property", "og:image" )
+                , ( "content", meta.coverImage )
+                ]
+            ]
+
+        Metadata.Learn record ->
+            []
