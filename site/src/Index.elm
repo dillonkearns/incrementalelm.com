@@ -119,12 +119,3 @@ image article =
         , description = article.title.raw ++ " cover image"
         }
         |> Element.el [ Element.centerX ]
-
-
-
--- , Element.column [ Element.spacing 20 ]
---     [ metadata |> postPreview
---     , readMoreLink
---     ]
--- @@@@@@@@ TODO
--- (post.view |> List.take 2)
