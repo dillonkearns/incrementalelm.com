@@ -318,7 +318,7 @@ pageOrPostView model pageOrPost =
                           else
                             Element.width (Element.fill |> Element.maximum 700)
                         , Element.height Element.fill
-                        , Element.padding 20
+                        , Element.padding 30
                         , Element.spacing 20
                         , Element.centerX
                         ]
