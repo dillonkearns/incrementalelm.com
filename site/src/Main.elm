@@ -440,5 +440,103 @@ pageTags metadata =
                 ]
             ]
 
-        Metadata.Learn record ->
-            []
+        Metadata.Learn meta ->
+            let
+                description =
+                    meta.title
+
+                title =
+                    meta.title
+
+                twitterUsername =
+                    "dillontkearns"
+
+                twitterSiteAccount =
+                    "incrementalelm"
+
+                image =
+                    Nothing
+            in
+            [ HeadTag.node
+                "meta"
+                [ ( "property", "og:title" )
+                , ( "content", title )
+                ]
+                |> Just
+            , HeadTag.node
+                "meta"
+                [ ( "name", "description" )
+                , ( "content", description )
+                ]
+                |> Just
+            , HeadTag.node
+                "meta"
+                [ ( "property", "og:description" )
+                , ( "content", description )
+                ]
+                |> Just
+            , image
+                |> Maybe.map
+                    (\i ->
+                        HeadTag.node
+                            "meta"
+                            [ ( "property", "og:image" )
+                            , ( "content", i )
+                            ]
+                    )
+            , image
+                |> Maybe.map
+                    (\i ->
+                        HeadTag.node
+                            "meta"
+                            [ ( "name", "image" )
+                            , ( "content", i )
+                            ]
+                    )
+            , HeadTag.node
+                "meta"
+                [ ( "property", "og:type" )
+                , ( "content", "article" )
+                ]
+                |> Just
+            , HeadTag.node
+                "meta"
+                [ ( "name", "twitter:card" )
+                , ( "content", "summary_large_image" )
+                ]
+                |> Just
+            , HeadTag.node
+                "meta"
+                [ ( "name", "twitter:creator" )
+                , ( "content", ensureAtPrefix twitterUsername )
+                ]
+                |> Just
+            , HeadTag.node
+                "meta"
+                [ ( "name", "twitter:site" )
+                , ( "content", ensureAtPrefix twitterSiteAccount )
+                ]
+                |> Just
+            , HeadTag.node
+                "meta"
+                [ ( "name", "twitter:description" )
+                , ( "content", description )
+                ]
+                |> Just
+            , image
+                |> Maybe.map
+                    (\i ->
+                        HeadTag.node
+                            "meta"
+                            [ ( "name", "twitter:image" )
+                            , ( "content", i )
+                            ]
+                    )
+            , HeadTag.node
+                "meta"
+                [ ( "name", "twitter:image:alt" )
+                , ( "content", description )
+                ]
+                |> Just
+            ]
+                |> List.filterMap identity
