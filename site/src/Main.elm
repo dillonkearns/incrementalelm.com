@@ -325,6 +325,9 @@ pageOrPostView model pageOrPost =
             }
 
 
+{-| <https://developer.twitter.com/en/docs/tweets/optimize-with-cards/overview/abouts-cards>
+<https://htmlhead.dev/>
+-}
 headTags : Metadata.Metadata msg -> List HeadTag
 headTags metadata =
     case metadata of
@@ -332,19 +335,80 @@ headTags metadata =
             []
 
         Metadata.Article meta ->
+            let
+                description =
+                    meta.title.raw
+
+                title =
+                    meta.title.raw
+
+                twitterUsername =
+                    "dillontkearns"
+
+                twitterSiteAccount =
+                    "incrementalelm"
+
+                image =
+                    meta.coverImage
+            in
             [ HeadTag.node "meta"
                 [ ( "property", "og:title" )
-                , ( "content", meta.title.raw )
+                , ( "content", title )
                 ]
             , HeadTag.node "meta"
                 [ ( "name", "description" )
-                , ( "content", meta.title.raw )
+                , ( "content", description )
+                ]
+            , HeadTag.node "meta"
+                [ ( "property", "og:description" )
+                , ( "content", description )
                 ]
             , HeadTag.node "meta"
                 [ ( "property", "og:image" )
-                , ( "content", meta.coverImage )
+                , ( "content", image )
+                ]
+            , HeadTag.node "meta"
+                [ ( "name", "image" )
+                , ( "content", image )
+                ]
+            , HeadTag.node "meta"
+                [ ( "property", "og:type" )
+                , ( "content", "article" )
+                ]
+            , HeadTag.node "meta"
+                [ ( "name", "twitter:card" )
+                , ( "content", "summary_large_image" )
+                ]
+            , HeadTag.node "meta"
+                [ ( "name", "twitter:creator" )
+                , ( "content", ensureAtPrefix twitterUsername )
+                ]
+            , HeadTag.node "meta"
+                [ ( "name", "twitter:site" )
+                , ( "content", ensureAtPrefix twitterSiteAccount )
+                ]
+            , HeadTag.node "meta"
+                [ ( "name", "twitter:description" )
+                , ( "content", meta.title.raw )
+                ]
+            , HeadTag.node "meta"
+                [ ( "name", "twitter:image" )
+                , ( "content", image )
+                ]
+            , HeadTag.node "meta"
+                [ ( "name", "twitter:image:alt" )
+                , ( "content", description )
                 ]
             ]
 
         Metadata.Learn record ->
             []
+
+
+ensureAtPrefix : String -> String
+ensureAtPrefix twitterUsername =
+    if twitterUsername |> String.startsWith "@" then
+        twitterUsername
+
+    else
+        "@" ++ twitterUsername
