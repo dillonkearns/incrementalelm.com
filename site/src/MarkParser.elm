@@ -54,8 +54,8 @@ blocks appData =
             Mark.block "H1"
                 (\children ->
                     Element.paragraph
-                        [ Font.size 24
-                        , Font.semiBold
+                        [ Font.size 36
+                        , Font.bold
                         , Font.center
                         , Font.family [ Font.typeface "Raleway" ]
                         ]
