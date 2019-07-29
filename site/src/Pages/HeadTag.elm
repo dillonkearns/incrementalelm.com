@@ -13,6 +13,7 @@ type alias Details =
     }
 
 
+node : String -> List ( String, String ) -> HeadTag
 node name attributes =
     HeadTag
         { name = name
