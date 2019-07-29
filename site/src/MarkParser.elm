@@ -69,7 +69,7 @@ blocks appData =
             Mark.block "H2"
                 (\children ->
                     Element.paragraph
-                        [ Font.size 18
+                        [ Font.size 24
                         , Font.semiBold
                         , Font.alignLeft
                         , Font.family [ Font.typeface "Raleway" ]
