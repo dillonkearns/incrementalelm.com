@@ -294,6 +294,15 @@ pageOrPostView model pageOrPost =
             , body =
                 [ header model
                 , (metadata.title.styled
+                    :: (Element.image
+                            [ Element.width (Element.fill |> Element.maximum 600)
+                            , Element.centerX
+                            ]
+                            { src = metadata.coverImage
+                            , description = metadata.title.raw
+                            }
+                            |> Element.el [ Element.centerX ]
+                       )
                     :: pageOrPost.view
                   )
                     |> Element.textColumn
