@@ -406,7 +406,7 @@ pageTags metadata =
         Metadata.Article meta ->
             let
                 description =
-                    meta.title.raw
+                    meta.description.raw
 
                 title =
                     meta.title.raw
