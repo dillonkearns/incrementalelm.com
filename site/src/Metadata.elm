@@ -4,7 +4,7 @@ import Dict exposing (Dict)
 import Element exposing (Element)
 import Element.Font as Font
 import Mark
-import MarkupPages.Parser
+import Pages.Parser
 
 
 type Metadata msg
@@ -34,7 +34,7 @@ metadata imageAssets =
                     gather
                     titleText
                 )
-            |> Mark.field "src" (MarkupPages.Parser.imageSrc imageAssets)
+            |> Mark.field "src" (Pages.Parser.imageSrc imageAssets)
             |> Mark.toBlock
         , Mark.record "Page"
             (\title ->

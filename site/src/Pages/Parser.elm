@@ -1,4 +1,4 @@
-module MarkupPages.Parser exposing (AppData, PageOrPost, document, imageSrc, normalizedUrl)
+module Pages.Parser exposing (AppData, PageOrPost, document, imageSrc, normalizedUrl)
 
 import Dict exposing (Dict)
 import Element exposing (Element)

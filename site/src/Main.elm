@@ -21,10 +21,10 @@ import List.Extra
 import Mark
 import Mark.Error
 import MarkParser
-import MarkupPages
-import MarkupPages.Parser exposing (PageOrPost)
 import Metadata exposing (Metadata)
+import Pages
 import Pages.HeadTag as HeadTag exposing (HeadTag)
+import Pages.Parser exposing (PageOrPost)
 import RawContent
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
@@ -42,9 +42,9 @@ type alias Flags =
     {}
 
 
-main : MarkupPages.Program Flags Model Msg (Metadata Msg) (Element Msg)
+main : Pages.Program Flags Model Msg (Metadata Msg) (Element Msg)
 main =
-    MarkupPages.program
+    Pages.program
         { init = init
         , view = view
         , update = update
@@ -65,7 +65,7 @@ type alias Model =
     }
 
 
-init : MarkupPages.Flags Flags -> ( Model, Cmd Msg )
+init : Pages.Flags Flags -> ( Model, Cmd Msg )
 init flags =
     ( { styles = ElmLogo.polygons |> List.map Animation.style
       , menuBarAnimation = View.MenuBar.init

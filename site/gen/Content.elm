@@ -7,8 +7,8 @@ import List.Extra
 import Mark
 import Mark.Error
 import MarkParser
-import MarkupPages.Parser exposing (PageOrPost)
 import Metadata exposing (Metadata)
+import Pages.Parser exposing (PageOrPost)
 import Result.Extra
 import Url exposing (Url)
 

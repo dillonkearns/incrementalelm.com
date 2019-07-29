@@ -11,7 +11,7 @@ import Html.Attributes as Attr
 import Index
 import Mark
 import Mark.Error
-import MarkupPages.Parser exposing (PageOrPost)
+import Pages.Parser exposing (PageOrPost)
 import Metadata exposing (Metadata)
 import Style
 import Style.Helpers
@@ -34,7 +34,7 @@ document :
     -> List ( List String, Metadata msg )
     -> Mark.Document (PageOrPost (Metadata msg) (Element msg))
 document imageAssets routes parsedMetadata =
-    MarkupPages.Parser.document
+    Pages.Parser.document
         (Metadata.metadata imageAssets)
         { imageAssets = imageAssets
         , routes = routes
@@ -44,7 +44,7 @@ document imageAssets routes parsedMetadata =
 
 
 blocks :
-    MarkupPages.Parser.AppData (Metadata msg)
+    Pages.Parser.AppData (Metadata msg)
     -> List (Mark.Block (Element msg))
 blocks appData =
     let
@@ -89,7 +89,7 @@ blocks appData =
                         }
                         |> Element.el [ Element.centerX ]
                 )
-                |> Mark.field "src" (MarkupPages.Parser.imageSrc appData.imageAssets)
+                |> Mark.field "src" (Pages.Parser.imageSrc appData.imageAssets)
                 |> Mark.field "description" Mark.string
                 |> Mark.toBlock
 
