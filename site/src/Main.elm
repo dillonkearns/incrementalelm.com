@@ -13,7 +13,7 @@ import Element exposing (Element)
 import Element.Border
 import Element.Font as Font
 import ElmLogo
-import Html
+import Html exposing (Html)
 import Html.Attributes
 import Json.Decode
 import Json.Encode
@@ -46,7 +46,7 @@ main : MarkupPages.Program Flags Model Msg (Metadata Msg) (Element Msg)
 main =
     MarkupPages.program
         { init = init
-        , view = pageOrPostView
+        , view = view
         , update = update
         , subscriptions = subscriptions
         , parser = MarkParser.document
@@ -241,6 +241,21 @@ makeTranslated i polygon =
                 , Animation.scale 1
                 ]
             ]
+
+
+view : Model -> PageOrPost (Metadata Msg) (Element Msg) -> { title : String, body : Html Msg }
+view model pageOrPost =
+    let
+        { title, body } =
+            pageOrPostView model pageOrPost
+    in
+    { title = title
+    , body =
+        body
+            |> Element.layout
+                [ Element.width Element.fill
+                ]
+    }
 
 
 pageOrPostView : Model -> PageOrPost (Metadata Msg) (Element Msg) -> { title : String, body : Element Msg }

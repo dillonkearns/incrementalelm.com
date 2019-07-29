@@ -1,7 +1,7 @@
 module Content exposing (Content, buildAllData, lookup, parseMetadata)
 
 import Dict exposing (Dict)
-import Element exposing (Element)
+import Html exposing (Html)
 import Index
 import List.Extra
 import Mark
@@ -57,7 +57,7 @@ parseMetadata :
     )
     -> Dict String String
     -> List ( List String, String )
-    -> Result (Element msg) (List ( List String, metadata ))
+    -> Result (Html msg) (List ( List String, metadata ))
 parseMetadata parser imageAssets record =
     case
         record
@@ -95,7 +95,7 @@ buildAllData :
         )
     -> Dict String String
     -> List ( List String, String )
-    -> Result (Element msg) (Content metadata view)
+    -> Result (Html msg) (Content metadata view)
 buildAllData metadata parser imageAssets record =
     record
         |> List.map
@@ -113,14 +113,13 @@ buildAllData metadata parser imageAssets record =
         |> Result.mapError renderErrors
 
 
-renderErrors : ( List String, List Mark.Error.Error ) -> Element msg
+renderErrors : ( List String, List Mark.Error.Error ) -> Html msg
 renderErrors ( path, errors ) =
-    Element.column []
-        [ Element.text (path |> String.join "/")
+    Html.div []
+        [ Html.text (path |> String.join "/")
         , errors
             |> List.map (Mark.Error.toHtml Mark.Error.Light)
-            |> List.map Element.html
-            |> Element.column []
+            |> Html.div []
         ]
 
 

@@ -4,8 +4,7 @@ import Browser
 import Browser.Navigation
 import Content exposing (Content)
 import Dict exposing (Dict)
-import Element exposing (Element)
-import Html
+import Html exposing (Html)
 import Html.Attributes
 import Json.Decode
 import Json.Encode
@@ -26,9 +25,9 @@ type alias Program userFlags userModel userMsg metadata view =
 
 
 mainView :
-    (userModel -> PageOrPost metadata view -> { title : String, body : Element userMsg })
+    (userModel -> PageOrPost metadata view -> { title : String, body : Html userMsg })
     -> Model userModel userMsg metadata view
-    -> { title : String, body : Element userMsg }
+    -> { title : String, body : Html userMsg }
 mainView pageOrPostView (Model model) =
     case model.parsedContent of
         Ok site ->
@@ -41,10 +40,10 @@ mainView pageOrPostView (Model model) =
 
 
 pageView :
-    (userModel -> PageOrPost metadata view -> { title : String, body : Element userMsg })
+    (userModel -> PageOrPost metadata view -> { title : String, body : Html userMsg })
     -> Model userModel userMsg metadata view
     -> Content.Content metadata view
-    -> { title : String, body : Element userMsg }
+    -> { title : String, body : Html userMsg }
 pageView pageOrPostView (Model model) content =
     case Content.lookup content model.url of
         Just pageOrPost ->
@@ -53,13 +52,13 @@ pageView pageOrPostView (Model model) content =
         Nothing ->
             { title = "Page not found"
             , body =
-                Element.column []
-                    [ Element.text "Page not found. Valid routes:\n\n"
+                Html.div []
+                    [ Html.text "Page not found. Valid routes:\n\n"
                     , content
                         |> List.map Tuple.first
                         |> List.map (String.join "/")
                         |> String.join ", "
-                        |> Element.text
+                        |> Html.text
                     ]
             }
 
@@ -67,7 +66,7 @@ pageView pageOrPostView (Model model) content =
 view :
     Content
     -> Parser metadata view
-    -> (userModel -> PageOrPost metadata view -> { title : String, body : Element userMsg })
+    -> (userModel -> PageOrPost metadata view -> { title : String, body : Html userMsg })
     -> Model userModel userMsg metadata view
     -> Browser.Document (Msg userMsg)
 view content parser pageOrPostView (Model model) =
@@ -78,10 +77,7 @@ view content parser pageOrPostView (Model model) =
     { title = title
     , body =
         [ body
-            |> Element.map UserMsg
-            |> Element.layout
-                [ Element.width Element.fill
-                ]
+            |> Html.map UserMsg
         ]
     }
 
@@ -177,7 +173,7 @@ type Model userModel userMsg metadata view
         { key : Browser.Navigation.Key
         , url : Url.Url
         , imageAssets : Dict String String
-        , parsedContent : Result (Element userMsg) (Content.Content metadata view)
+        , parsedContent : Result (Html userMsg) (Content.Content metadata view)
         , userModel : userModel
         }
 
@@ -221,7 +217,7 @@ program :
     { init : Flags userFlags -> ( userModel, Cmd userMsg )
     , update : userMsg -> userModel -> ( userModel, Cmd userMsg )
     , subscriptions : userModel -> Sub userMsg
-    , view : userModel -> PageOrPost metadata view -> { title : String, body : Element userMsg }
+    , view : userModel -> PageOrPost metadata view -> { title : String, body : Html userMsg }
     , parser : Parser metadata view
     , content : Content
     , toJsPort : Json.Encode.Value -> Cmd (Msg userMsg)
