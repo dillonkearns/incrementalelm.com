@@ -86,6 +86,7 @@ readMoreLink =
             , Element.alpha 0.6
             , Element.mouseOver [ Element.alpha 1 ]
             , Element.Font.underline
+            , Element.Font.center
             ]
 
 
