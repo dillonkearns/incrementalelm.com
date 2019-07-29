@@ -5,14 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="manifest" href="../manifest.webmanifest" />
     <script src="./js/app.ts" type="text/javascript"></script>
-    <script>
-      if ("serviceWorker" in navigator) {
-        let swName = "service-worker";
-        navigator.serviceWorker.register(`/${swName}.js`).then(function() {
-          // console.log("Service Worker Registered");
-        });
-      }
-    </script>
     <style>
       @import url("https://fonts.googleapis.com/css?family=Open+Sans|Raleway:400,600,700|Roboto+Mono&display=swap");
       .CodeMirror {
