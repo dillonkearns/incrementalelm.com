@@ -59,7 +59,7 @@ gather myList =
         styled =
             myList
                 |> List.map .styled
-                |> Element.paragraph []
+                |> Element.paragraph [ Font.size 36, Font.center, Font.family [ Font.typeface "Raleway" ], Font.bold ]
 
         raw =
             myList

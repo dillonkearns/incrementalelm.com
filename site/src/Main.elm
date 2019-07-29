@@ -293,7 +293,9 @@ pageOrPostView model pageOrPost =
             { title = metadata.title.raw
             , body =
                 [ header model
-                , pageOrPost.view
+                , (metadata.title.styled
+                    :: pageOrPost.view
+                  )
                     |> Element.textColumn
                         [ Element.centerX
                         , Element.width Element.fill
