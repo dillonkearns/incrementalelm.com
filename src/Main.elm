@@ -479,7 +479,7 @@ pageTags metadata =
                 ]
             , HeadTag.node "meta"
                 [ ( "name", "twitter:description" )
-                , ( "content", meta.title.raw )
+                , ( "content", description )
                 ]
             , HeadTag.node "meta"
                 [ ( "name", "twitter:image" )
