@@ -406,6 +406,19 @@ ensureAtPrefix twitterUsername =
         "@" ++ twitterUsername
 
 
+fullyQualifiedUrl : String -> String
+fullyQualifiedUrl url =
+    let
+        urlWithoutLeadingSlash =
+            if url |> String.startsWith "/" then
+                url |> String.dropLeft 1
+
+            else
+                url
+    in
+    "https://incrementalelm.com" ++ url
+
+
 pageTags metadata =
     case metadata of
         Metadata.Page record ->
@@ -426,7 +439,7 @@ pageTags metadata =
                     "incrementalelm"
 
                 image =
-                    meta.coverImage
+                    fullyQualifiedUrl meta.coverImage
             in
             [ HeadTag.node "meta"
                 [ ( "property", "og:title" )
