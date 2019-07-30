@@ -261,7 +261,19 @@ view model pageOrPost =
     in
     { title = title
     , body =
-        body
+        (if model.showMenu then
+            Element.column
+                [ Element.height Element.fill
+                , Element.alignTop
+                , Element.width Element.fill
+                ]
+                [ View.Navbar.view model animationView StartAnimation
+                , View.Navbar.modalMenuView model.menuAnimation
+                ]
+
+         else
+            body
+        )
             |> Element.layout
                 [ Element.width Element.fill
                 ]
