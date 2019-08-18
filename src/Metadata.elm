@@ -45,7 +45,8 @@ metadata imageAssets =
                     gather
                     titleText
                 )
-            |> Mark.field "src" (Pages.Parser.imageSrc imageAssets)
+            -- |> Mark.field "src" (Pages.Parser.imageSrc imageAssets)
+            |> Mark.field "src" (Mark.string |> Mark.map (\src -> "/" ++ src))
             |> Mark.toBlock
         , Mark.record "Page"
             (\title ->

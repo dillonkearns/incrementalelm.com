@@ -860,6 +860,33 @@ Watch this intro to using `--scalar-codecs <ModuleName>`{code} in `elm-graphql`{
 """
       )
 
+  ,( ["learn", "architecture"]
+      , """|> Learn
+    title = The Elm Architecture
+
+|> Image
+    src = architecture.jpg
+    description = The Elm Architecture
+
+
+|> Ellie
+    3xfc59cYsd6a1
+
+|> H1
+    Further Reading and Exercises
+
+|> Resources
+    |> Resource
+        title = Architecture section of The Official Elm Guide
+        url = https://guide.elm-lang.org/architecture/
+        icon = Article
+    |> Resource
+        title = Add a -1 button to the Ellie example
+        url = https://ellie-app.com/3xfc59cYsd6a1
+        icon = Exercise
+"""
+      )
+
   ,( ["learn", "editor-config"]
       , """|> Learn
     title = Recommended Editor Configuration
