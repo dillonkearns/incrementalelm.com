@@ -165,20 +165,13 @@ init markdownToHtml frontmatterParser toJsPort head parser content initUserModel
                     )
 
         metadata =
-            [ Content.parseMetadata parser imageAssets content.markup
-            , parsedMarkdown
-                |> List.map (Tuple.mapSecond (Result.map (\{ parsedFrontmatter } -> parsedFrontmatter)))
-                |> combineTupleResults
-            ]
-                |> Result.Extra.combine
-                |> Result.map List.concat
+            ContentCache.extractMetadata contentCache
+
+        contentCache =
+            ContentCache.init frontmatterParser content parser imageAssets
     in
-    case metadata of
-        Ok okMetadata ->
-            let
-                contentCache =
-                    ContentCache.init frontmatterParser content parser imageAssets
-            in
+    case contentCache of
+        Ok _ ->
             ( { key = key
               , url = url
               , imageAssets = imageAssets
@@ -186,7 +179,7 @@ init markdownToHtml frontmatterParser toJsPort head parser content initUserModel
               , contentCache = contentCache
               }
             , Cmd.batch
-                ([ Content.lookup okMetadata url
+                ([ Content.lookup metadata url
                     |> Maybe.map head
                     |> Maybe.map encodeHeads
                     |> Maybe.map toJsPort
@@ -200,12 +193,12 @@ init markdownToHtml frontmatterParser toJsPort head parser content initUserModel
                 )
             )
 
-        Err _ ->
+        Err error ->
             ( { key = key
               , url = url
               , imageAssets = imageAssets
               , userModel = userModel
-              , contentCache = Ok Dict.empty -- TODO use ContentCache.init
+              , contentCache = contentCache
               }
             , Cmd.batch
                 [ userCmd |> Cmd.map UserMsg
