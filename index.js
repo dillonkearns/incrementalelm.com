@@ -1,4 +1,5 @@
 import "./lib/codemirror.css";
+import "./style.css";
 const { Elm } = require("./src/Main.elm");
 const pagesInit = require("elm-pages");
 
