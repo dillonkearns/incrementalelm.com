@@ -5,8 +5,19 @@ import Dict exposing (Dict)
 import Element exposing (Element)
 
 
-content : List ( List String, String )
+content : { markdown : List ( List String, { frontMatter : String, body : Maybe String } ), markup : List ( List String, String ) }
 content =
+    { markdown = markdown, markup = markup }
+
+
+markdown : List ( List String, { frontMatter : String, body : Maybe String } )
+markdown =
+    [ 
+    ]
+
+
+markup : List ( List String, String )
+markup =
     [
     ( ["accelerator-application"]
       , """|> Page

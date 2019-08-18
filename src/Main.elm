@@ -54,8 +54,9 @@ main =
         , parser = MarkParser.document
         , content = RawContent.content
         , toJsPort = toJsPort
-        , headTags = headTags
-        , siteUrl = "https://incrementalelm.com"
+        , head = head
+        , frontmatterParser = Json.Decode.fail "No markdown expected in this app."
+        , markdownToHtml = \markdown -> Element.text "No markdown in this app."
         }
 
 
@@ -254,8 +255,8 @@ makeTranslated i polygon =
             ]
 
 
-view : Model -> Page (Metadata Msg) (Element Msg) -> { title : String, body : Html Msg }
-view model pageOrPost =
+view : Model -> List ( List String, Metadata Msg ) -> Page (Metadata Msg) (Element Msg) -> { title : String, body : Html Msg }
+view model allMetadata pageOrPost =
     let
         { title, body } =
             pageOrPostView model pageOrPost
@@ -384,13 +385,13 @@ pageOrPostView model pageOrPost =
 <https://html.spec.whatwg.org/multipage/semantics.html#standard-metadata-names>
 <https://ogp.me/>
 -}
-headTags : String -> Metadata.Metadata msg -> List Head.Tag
-headTags canonicalUrl metadata =
+head : Metadata.Metadata msg -> List Head.Tag
+head metadata =
     let
         themeColor =
             "#ffffff"
     in
-    [ Head.canonicalLink canonicalUrl
+    [ Head.canonicalLink "https://incrementalelm.com"
 
     -- Head.node "meta" [ ( "name", "theme-color" ), ( "content", themeColor ) ]
     -- , Head.node "meta"
