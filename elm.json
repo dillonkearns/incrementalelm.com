@@ -17,12 +17,12 @@
             "elm/svg": "1.0.1",
             "elm/time": "1.0.0",
             "elm/url": "1.0.0",
-            "elm-community/list-extra": "8.2.0",
+            "elm-community/list-extra": "8.2.2",
             "elm-community/result-extra": "2.2.1",
-            "lukewestby/elm-string-interpolate": "1.0.3",
+            "lukewestby/elm-string-interpolate": "1.0.4",
             "mdgriffith/elm-markup": "3.0.1",
             "mdgriffith/elm-style-animation": "4.0.0",
-            "mdgriffith/elm-ui": "1.1.2"
+            "mdgriffith/elm-ui": "1.1.5"
         },
         "indirect": {
             "elm/bytes": "1.0.8",
