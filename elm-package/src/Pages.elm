@@ -142,28 +142,6 @@ init markdownToHtml frontmatterParser toJsPort head parser content initUserModel
                 flags.imageAssets
                 |> Result.withDefault Dict.empty
 
-        parsedMarkdown =
-            content.markdown
-                |> List.map
-                    (\(( path, details ) as full) ->
-                        Tuple.mapSecond
-                            (\{ frontMatter, body } ->
-                                Json.Decode.decodeString frontmatterParser frontMatter
-                                    |> Result.map (\parsedFrontmatter -> { parsedFrontmatter = parsedFrontmatter, body = body |> Maybe.withDefault "TODO get rid of this" })
-                                    |> Result.mapError
-                                        (\error ->
-                                            Html.div []
-                                                [ Html.h1 []
-                                                    [ Html.text ("Error with page /" ++ String.join "/" path)
-                                                    ]
-                                                , Html.text
-                                                    (Json.Decode.errorToString error)
-                                                ]
-                                        )
-                            )
-                            full
-                    )
-
         metadata =
             ContentCache.extractMetadata contentCache
 
