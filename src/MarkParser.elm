@@ -14,7 +14,7 @@ import LearnIndex
 import Mark
 import Mark.Error
 import Metadata exposing (Metadata)
-import Pages.Parser exposing (PageOrPost)
+import Pages.Parser exposing (Page)
 import Style
 import Style.Helpers
 import View.CodeSnippet
@@ -35,7 +35,7 @@ document :
     Dict String String
     -> List String
     -> List ( List String, Metadata msg )
-    -> Mark.Document (PageOrPost (Metadata msg) (Element msg))
+    -> Mark.Document (Page (Metadata msg) (Element msg))
 document imageAssets routes parsedMetadata =
     Pages.Parser.document
         (Metadata.metadata imageAssets)

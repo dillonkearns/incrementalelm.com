@@ -2,13 +2,10 @@ module Pages.Content exposing (Content, buildAllData, lookup, parseMetadata)
 
 import Dict exposing (Dict)
 import Html exposing (Html)
-import Index
 import List.Extra
 import Mark
 import Mark.Error
-import MarkParser
-import Metadata exposing (Metadata)
-import Pages.Parser exposing (PageOrPost)
+import Pages.Parser exposing (Page)
 import Result.Extra
 import Url exposing (Url)
 
@@ -38,7 +35,7 @@ dropTrailingSlash path =
 
 
 type alias Content metadata view =
-    List ( List String, PageOrPost metadata view )
+    List ( List String, Page metadata view )
 
 
 routes : List ( List String, String ) -> List String
@@ -53,7 +50,7 @@ parseMetadata :
     (Dict String String
      -> List String
      -> List ( List String, metadata )
-     -> Mark.Document (PageOrPost metadata view)
+     -> Mark.Document (Page metadata view)
     )
     -> Dict String String
     -> List ( List String, String )
@@ -91,7 +88,7 @@ buildAllData :
         (Dict String String
          -> List String
          -> List ( List String, metadata )
-         -> Mark.Document (PageOrPost metadata view)
+         -> Mark.Document (Page metadata view)
         )
     -> Dict String String
     -> List ( List String, String )
@@ -124,8 +121,8 @@ renderErrors ( path, errors ) =
 
 
 combineResults :
-    List ( List String, Mark.Outcome (List Mark.Error.Error) (Mark.Partial (PageOrPost metadata view)) (PageOrPost metadata view) )
-    -> Result ( List String, List Mark.Error.Error ) (List ( List String, PageOrPost metadata view ))
+    List ( List String, Mark.Outcome (List Mark.Error.Error) (Mark.Partial (Page metadata view)) (Page metadata view) )
+    -> Result ( List String, List Mark.Error.Error ) (List ( List String, Page metadata view ))
 combineResults list =
     list
         |> List.map
