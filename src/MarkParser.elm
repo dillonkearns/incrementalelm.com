@@ -93,7 +93,7 @@ blocks appData =
                         |> Element.el [ Element.centerX ]
                 )
                 -- |> Mark.field "src" (Pages.Parser.imageSrc appData.imageAssets)
-                |> Mark.field "src" Mark.string
+                |> Mark.field "src" (Mark.string |> Mark.map (\src -> "/images/" ++ src))
                 |> Mark.field "description" Mark.string
                 |> Mark.toBlock
 
