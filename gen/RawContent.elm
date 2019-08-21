@@ -1,8 +1,6 @@
 module RawContent exposing (content)
 
-import Pages.Content as Content exposing (Content)
 import Dict exposing (Dict)
-import Element exposing (Element)
 
 
 content : { markdown : List ( List String, { frontMatter : String, body : Maybe String } ), markup : List ( List String, String ) }

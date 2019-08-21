@@ -5,6 +5,7 @@ import Browser
 import Browser.Dom as Dom
 import Browser.Events
 import Browser.Navigation as Nav
+import Color
 import Dict exposing (Dict)
 import Dimensions exposing (Dimensions)
 import Ease
@@ -25,7 +26,10 @@ import MarkParser
 import Metadata exposing (Metadata)
 import Pages
 import Pages.Content as Content exposing (Content)
+import Pages.Manifest as Manifest
+import Pages.Manifest.Category
 import Pages.Parser exposing (Page)
+import PagesNew exposing (images, pages)
 import RawContent
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
@@ -44,20 +48,38 @@ type alias Flags =
     {}
 
 
-main : Pages.Program Flags Model Msg (Metadata Msg) (Element Msg)
+main : Pages.Program Model Msg (Metadata Msg) (Element Msg)
 main =
-    Pages.application
+    PagesNew.application
         { init = init
         , view = view
         , update = update
         , subscriptions = subscriptions
         , parser = MarkParser.document
-        , content = RawContent.content
-        , toJsPort = toJsPort
         , head = head
         , frontmatterParser = Json.Decode.fail "No markdown expected in this app."
         , markdownToHtml = \markdown -> Element.text "No markdown in this app."
+        , manifest = manifest
         }
+
+
+manifest =
+    { backgroundColor = Just Color.white
+    , categories = [ Pages.Manifest.Category.education ]
+    , displayMode = Manifest.MinimalUi
+    , orientation = Manifest.Portrait
+    , description = siteTagline
+    , iarcRatingId = Nothing
+    , name = "Incremental Elm Consulting"
+    , themeColor = Just Color.white
+    , startUrl = pages.index
+    , shortName = Just "Incremental Elm"
+    , sourceIcon = images.icon
+    }
+
+
+siteTagline =
+    "Incremental Elm Consulting"
 
 
 type alias Model =
@@ -69,8 +91,8 @@ type alias Model =
     }
 
 
-init : Pages.Flags Flags -> ( Model, Cmd Msg )
-init flags =
+init : ( Model, Cmd Msg )
+init =
     ( { styles = ElmLogo.polygons |> List.map Animation.style
       , menuBarAnimation = View.MenuBar.init
       , menuAnimation =

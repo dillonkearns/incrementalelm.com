@@ -1,4 +1,4 @@
-module Pages exposing (Flags, Parser, Program, application)
+module Pages exposing (Flags, Parser, Program, application, cliApplication)
 
 import Browser
 import Browser.Navigation
@@ -11,6 +11,7 @@ import Json.Encode
 import Mark
 import Pages.Content as Content exposing (Content)
 import Pages.ContentCache as ContentCache exposing (ContentCache)
+import Pages.Manifest as Manifest
 import Pages.Parser exposing (Page)
 import Result.Extra
 import Task exposing (Task)
@@ -21,8 +22,8 @@ type alias Content =
     { markdown : List ( List String, { frontMatter : String, body : Maybe String } ), markup : List ( List String, String ) }
 
 
-type alias Program userFlags userModel userMsg metadata view =
-    Platform.Program (Flags userFlags) (Model userModel userMsg metadata view) (Msg userMsg metadata view)
+type alias Program userModel userMsg metadata view =
+    Platform.Program Flags (Model userModel userMsg metadata view) (Msg userMsg metadata view)
 
 
 mainView :
@@ -58,10 +59,10 @@ pageViewOrError pageView model cache =
                         }
 
                 ContentCache.NeedContent _ ->
-                    { title = "Error", body = Html.text "TODO NeedContent" }
+                    { title = "", body = Html.text "" }
 
                 ContentCache.Unparsed _ _ ->
-                    { title = "Error", body = Html.text "TODO Unparsed" }
+                    { title = "", body = Html.text "" }
 
         Nothing ->
             { title = "Page not found"
@@ -100,9 +101,8 @@ encodeHeads head =
     Json.Encode.list Head.toJson head
 
 
-type alias Flags userFlags =
-    { userFlags
-        | imageAssets : Json.Decode.Value
+type alias Flags =
+    { imageAssets : Json.Decode.Value
     }
 
 
@@ -126,15 +126,15 @@ init :
     -> (metadata -> List Head.Tag)
     -> Parser metadata view
     -> Content
-    -> (Flags userFlags -> ( userModel, Cmd userMsg ))
-    -> Flags userFlags
+    -> ( userModel, Cmd userMsg )
+    -> Flags
     -> Url
     -> Browser.Navigation.Key
     -> ( ModelDetails userModel userMsg metadata view, Cmd (Msg userMsg metadata view) )
 init markdownToHtml frontmatterParser toJsPort head parser content initUserModel flags url key =
     let
         ( userModel, userCmd ) =
-            initUserModel flags
+            initUserModel
 
         imageAssets =
             Json.Decode.decodeValue
@@ -142,14 +142,43 @@ init markdownToHtml frontmatterParser toJsPort head parser content initUserModel
                 flags.imageAssets
                 |> Result.withDefault Dict.empty
 
-        metadata =
-            ContentCache.extractMetadata contentCache
+        parsedMarkdown =
+            content.markdown
+                |> List.map
+                    (\(( path, details ) as full) ->
+                        Tuple.mapSecond
+                            (\{ frontMatter, body } ->
+                                Json.Decode.decodeString frontmatterParser frontMatter
+                                    |> Result.map (\parsedFrontmatter -> { parsedFrontmatter = parsedFrontmatter, body = body |> Maybe.withDefault "TODO get rid of this" })
+                                    |> Result.mapError
+                                        (\error ->
+                                            Html.div []
+                                                [ Html.h1 []
+                                                    [ Html.text ("Error with page /" ++ String.join "/" path)
+                                                    ]
+                                                , Html.text
+                                                    (Json.Decode.errorToString error)
+                                                ]
+                                        )
+                            )
+                            full
+                    )
 
-        contentCache =
-            ContentCache.init frontmatterParser content parser imageAssets
+        metadata =
+            [ Content.parseMetadata parser imageAssets content.markup
+            , parsedMarkdown
+                |> List.map (Tuple.mapSecond (Result.map (\{ parsedFrontmatter } -> parsedFrontmatter)))
+                |> combineTupleResults
+            ]
+                |> Result.Extra.combine
+                |> Result.map List.concat
     in
-    case contentCache of
-        Ok _ ->
+    case metadata of
+        Ok okMetadata ->
+            let
+                contentCache =
+                    ContentCache.init frontmatterParser content parser imageAssets
+            in
             ( { key = key
               , url = url
               , imageAssets = imageAssets
@@ -157,7 +186,7 @@ init markdownToHtml frontmatterParser toJsPort head parser content initUserModel
               , contentCache = contentCache
               }
             , Cmd.batch
-                ([ Content.lookup metadata url
+                ([ Content.lookup okMetadata url
                     |> Maybe.map head
                     |> Maybe.map encodeHeads
                     |> Maybe.map toJsPort
@@ -171,12 +200,12 @@ init markdownToHtml frontmatterParser toJsPort head parser content initUserModel
                 )
             )
 
-        Err error ->
+        Err _ ->
             ( { key = key
               , url = url
               , imageAssets = imageAssets
               , userModel = userModel
-              , contentCache = contentCache
+              , contentCache = Ok Dict.empty -- TODO use ContentCache.init
               }
             , Cmd.batch
                 [ userCmd |> Cmd.map UserMsg
@@ -195,6 +224,7 @@ type Msg userMsg metadata view
 
 type Model userModel userMsg metadata view
     = Model (ModelDetails userModel userMsg metadata view)
+    | CliModel
 
 
 type alias ModelDetails userModel userMsg metadata view =
@@ -278,7 +308,7 @@ type alias Parser metadata view =
 
 
 application :
-    { init : Flags userFlags -> ( userModel, Cmd userMsg )
+    { init : ( userModel, Cmd userMsg )
     , update : userMsg -> userModel -> ( userModel, Cmd userMsg )
     , subscriptions : userModel -> Sub userMsg
     , view : userModel -> List ( List String, metadata ) -> Page metadata view -> { title : String, body : Html userMsg }
@@ -288,20 +318,68 @@ application :
     , head : metadata -> List Head.Tag
     , frontmatterParser : Json.Decode.Decoder metadata
     , markdownToHtml : String -> view
+    , manifest : Manifest.Config
     }
-    -> Program userFlags userModel userMsg metadata view
+    -> Program userModel userMsg metadata view
 application config =
     Browser.application
         { init =
             \flags url key ->
                 init config.markdownToHtml config.frontmatterParser config.toJsPort config.head config.parser config.content config.init flags url key
                     |> Tuple.mapFirst Model
-        , view = \(Model model) -> view config.content config.parser config.view model
-        , update = \msg (Model model) -> update config.parser config.markdownToHtml config.update msg model |> Tuple.mapFirst Model
+        , view =
+            \outerModel ->
+                case outerModel of
+                    Model model ->
+                        view config.content config.parser config.view model
+
+                    CliModel ->
+                        { title = "Error"
+                        , body = [ Html.text "Unexpected state" ]
+                        }
+        , update =
+            \msg outerModel ->
+                case outerModel of
+                    Model model ->
+                        update config.parser config.markdownToHtml config.update msg model |> Tuple.mapFirst Model
+
+                    CliModel ->
+                        ( outerModel, Cmd.none )
         , subscriptions =
-            \(Model model) ->
-                config.subscriptions model.userModel
-                    |> Sub.map UserMsg
+            \outerModel ->
+                case outerModel of
+                    Model model ->
+                        config.subscriptions model.userModel
+                            |> Sub.map UserMsg
+
+                    CliModel ->
+                        Sub.none
         , onUrlChange = UrlChanged
         , onUrlRequest = LinkClicked
+        }
+
+
+cliApplication :
+    { init : ( userModel, Cmd userMsg )
+    , update : userMsg -> userModel -> ( userModel, Cmd userMsg )
+    , subscriptions : userModel -> Sub userMsg
+    , view : userModel -> List ( List String, metadata ) -> Page metadata view -> { title : String, body : Html userMsg }
+    , parser : Parser metadata view
+    , content : Content
+    , toJsPort : Json.Encode.Value -> Cmd (Msg userMsg metadata view)
+    , head : metadata -> List Head.Tag
+    , frontmatterParser : Json.Decode.Decoder metadata
+    , markdownToHtml : String -> view
+    , manifest : Manifest.Config
+    }
+    -> Program userModel userMsg metadata view
+cliApplication config =
+    Platform.worker
+        { init =
+            \flags ->
+                ( CliModel
+                , config.toJsPort (Manifest.toJson config.manifest)
+                )
+        , update = \msg model -> ( model, Cmd.none )
+        , subscriptions = \_ -> Sub.none
         }
