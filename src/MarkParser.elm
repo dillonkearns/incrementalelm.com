@@ -1,4 +1,4 @@
-module MarkParser exposing (document)
+module MarkParser exposing (document, newDocument)
 
 import Dict exposing (Dict)
 import Element exposing (Element)
@@ -44,6 +44,16 @@ document imageAssets routes parsedMetadata =
         , indexView = parsedMetadata
         }
         (blocks { imageAssets = imageAssets, routes = routes, indexView = parsedMetadata })
+
+
+newDocument :
+    Dict String String
+    -> List String
+    -> List ( List String, Metadata msg )
+    -> Mark.Document (Element msg)
+newDocument imageAssets routes parsedMetadata =
+    Mark.document identity
+        (Mark.oneOf (blocks { imageAssets = imageAssets, routes = routes, indexView = parsedMetadata }))
 
 
 blocks :
@@ -177,21 +187,20 @@ blocks appData =
                             (Mark.string
                                 |> Mark.verify
                                     (\url ->
-                                        if url |> String.startsWith "http" then
-                                            Ok url
-
-                                        else if List.member (normalizedUrl url) appData.routes then
-                                            Ok url
-
-                                        else
-                                            Err
-                                                { title = "Unknown relative URL " ++ url
-                                                , message =
-                                                    [ url
-                                                    , "\nMust be one of\n"
-                                                    , String.join "\n" appData.routes
-                                                    ]
-                                                }
+                                        -- if url |> String.startsWith "http" then
+                                        Ok url
+                                     -- else if List.member (normalizedUrl url) appData.routes then
+                                     --     Ok url
+                                     --
+                                     -- else
+                                     --     Err
+                                     --         { title = "Unknown relative URL " ++ url
+                                     --         , message =
+                                     --             [ url
+                                     --             , "\nMust be one of\n"
+                                     --             , String.join "\n" appData.routes
+                                     --             ]
+                                     --         }
                                     )
                             )
                     , Mark.verbatim "code"

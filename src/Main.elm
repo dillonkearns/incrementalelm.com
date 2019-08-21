@@ -26,6 +26,7 @@ import MarkParser
 import Metadata exposing (Metadata)
 import Pages
 import Pages.Content as Content exposing (Content)
+import Pages.Document
 import Pages.Manifest as Manifest
 import Pages.Manifest.Category
 import Pages.Parser exposing (Page)
@@ -55,12 +56,28 @@ main =
         , view = view
         , update = update
         , subscriptions = subscriptions
-        , parser = MarkParser.document
+        , document = document
         , head = head
-        , frontmatterParser = Json.Decode.fail "No markdown expected in this app."
-        , markdownToHtml = \markdown -> Element.text "No markdown in this app."
         , manifest = manifest
         }
+
+
+document : Pages.Document.Document (Metadata Msg) (Element Msg)
+document =
+    -- Dict.empty
+    {-
+           { frontmatterParser : String -> metadata
+       , contentParser : String -> view
+       }
+
+    -}
+    Dict.fromList
+        [ ( "emu"
+          , { contentParser = \_ -> Element.text "Hey!!!!"
+            , frontmatterParser = \_ -> Metadata.Page { title = "Hello!!!!!" }
+            }
+          )
+        ]
 
 
 manifest =
