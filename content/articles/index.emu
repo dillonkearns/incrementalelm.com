@@ -1,6 +1,8 @@
+---
 |> Page
     title = Articles
-    
+---
+
 
 |> IndexContent
     posts = articles

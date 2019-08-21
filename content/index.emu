@@ -1,6 +1,8 @@
+---
 |> Page
     title = Incremental Elm Consulting
-    
+---
+
 
 |> H1
     Stop Learning Elm Best Practices */The Hard Way/*

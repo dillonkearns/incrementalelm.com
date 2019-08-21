@@ -1,6 +1,8 @@
+---
 |> Page
     title = elm-graphql - Scalar Codecs Tutorial
-    
+---
+
 
 |> Vimeo
     329690102

@@ -1,6 +1,8 @@
+---
 |> Page
     title = Elm GraphQL Seminar
-    
+---
+
 
 |> H2
     The Elm GraphQL Seminar

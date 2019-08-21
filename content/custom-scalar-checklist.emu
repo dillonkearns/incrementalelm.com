@@ -1,6 +1,8 @@
+---
 |> Page
     title = Custom Scalar Checklist
-    
+---
+
 
 |> H1
     How to improve your schema with Custom Scalars

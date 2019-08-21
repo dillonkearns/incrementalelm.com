@@ -1,7 +1,9 @@
+---
 |> Article
     title = Moving Faster with Tiny Steps in Elm
     src = article-cover/mountains.jpg
     description = In this post, we're going to be looking up an Article in an Elm Dict, using the tiniest steps possible.
+---
 
 In this post, we're going to be looking up an Article in an Elm Dict, using the tiniest steps possible.
 

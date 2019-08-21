@@ -1,6 +1,8 @@
+---
 |> Page
     title = Elm GraphQL Workshop
-    
+---
+
 
 
 |> Image

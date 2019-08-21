@@ -1,5 +1,7 @@
+---
 |> Learn
     title = Recommended Editor Configuration
+---
 
 Right now, our editor of choice is Atom because of the excellent Elm tools available in that editor.
 
