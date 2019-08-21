@@ -33,7 +33,7 @@ type Entry metadata view
     = NeedContent String metadata
     | Unparsed String metadata String
       -- TODO need to have an UnparsedMarkup entry type so the right parser is applied
-    | Parsed metadata (List view)
+    | Parsed metadata view
 
 
 type alias Path =
@@ -99,7 +99,7 @@ routesForCache cacheResult =
 
 type alias Page metadata view =
     { metadata : metadata
-    , view : List view
+    , view : view
     }
 
 
@@ -230,7 +230,7 @@ update cacheResult renderer url rawContent =
                             entry
 
                         Just (Unparsed extension metadata content) ->
-                            case renderer content |> Result.map List.singleton of
+                            case renderer content of
                                 Ok value ->
                                     Just (Parsed metadata value)
 
@@ -238,7 +238,7 @@ update cacheResult renderer url rawContent =
                                     Nothing
 
                         Just (NeedContent extension metadata) ->
-                            case renderer rawContent |> Result.map List.singleton of
+                            case renderer rawContent of
                                 Ok value ->
                                     Just (Parsed metadata value)
 

@@ -35,7 +35,7 @@ document :
     Dict String String
     -> List String
     -> List ( List String, Metadata msg )
-    -> Mark.Document (Page (Metadata msg) (Element msg))
+    -> Mark.Document (Page (Metadata msg) (List (Element msg)))
 document imageAssets routes parsedMetadata =
     Pages.Parser.document
         (Metadata.metadata imageAssets)
@@ -50,10 +50,10 @@ newDocument :
     Dict String String
     -> List String
     -> List ( List String, Metadata msg )
-    -> Mark.Document (Element msg)
+    -> Mark.Document (List (Element msg))
 newDocument imageAssets routes parsedMetadata =
     Mark.document identity
-        (Mark.oneOf (blocks { imageAssets = imageAssets, routes = routes, indexView = parsedMetadata }))
+        (Mark.manyOf (blocks { imageAssets = imageAssets, routes = routes, indexView = parsedMetadata }))
 
 
 blocks :

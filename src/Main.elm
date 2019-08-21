@@ -49,7 +49,7 @@ type alias Flags =
     {}
 
 
-main : Pages.Program Model Msg (Metadata Msg) (Element Msg)
+main : Pages.Program Model Msg (Metadata Msg) (List (Element Msg))
 main =
     PagesNew.application
         { init = init
@@ -62,22 +62,42 @@ main =
         }
 
 
-document : Pages.Document.Document (Metadata Msg) (Element Msg)
+document : Pages.Document.Document (Metadata Msg) (List (Element Msg))
 document =
-    -- Dict.empty
-    {-
-           { frontmatterParser : String -> metadata
-       , contentParser : String -> view
-       }
-
-    -}
     Dict.fromList
         [ ( "emu"
-          , { contentParser = \_ -> Element.text "Hey!!!!"
-            , frontmatterParser = \_ -> Metadata.Page { title = "Hello!!!!!" }
+          , { contentParser =
+                \content ->
+                    markdownToHtml content
+            , frontmatterParser =
+                \frontMatter ->
+                    Metadata.Page { title = "Hello!!!!!" }
             }
           )
         ]
+
+
+markdownToHtml : String -> List (Element Msg)
+markdownToHtml markupBody =
+    Mark.compile
+        -- TODO pass in static data for image assets and routes
+        (MarkParser.newDocument Dict.empty [] [])
+        (markupBody |> String.trimLeft)
+        |> (\outcome ->
+                case outcome of
+                    Mark.Success renderedView ->
+                        renderedView
+
+                    Mark.Failure failure ->
+                        [ failure
+                            |> List.map (Mark.Error.toHtml Mark.Error.Light)
+                            |> Html.div []
+                            |> Element.html
+                        ]
+
+                    Mark.Almost failure ->
+                        [ Element.text "TODO almost failure" ]
+           )
 
 
 manifest =
@@ -294,7 +314,7 @@ makeTranslated i polygon =
             ]
 
 
-view : Model -> List ( List String, Metadata Msg ) -> Page (Metadata Msg) (Element Msg) -> { title : String, body : Html Msg }
+view : Model -> List ( List String, Metadata Msg ) -> Page (Metadata Msg) (List (Element Msg)) -> { title : String, body : Html Msg }
 view model allMetadata pageOrPost =
     let
         { title, body } =
@@ -321,7 +341,7 @@ view model allMetadata pageOrPost =
     }
 
 
-pageOrPostView : Model -> Page (Metadata Msg) (Element Msg) -> { title : String, body : Element Msg }
+pageOrPostView : Model -> Page (Metadata Msg) (List (Element Msg)) -> { title : String, body : Element Msg }
 pageOrPostView model pageOrPost =
     case pageOrPost.metadata of
         Metadata.Page metadata ->
