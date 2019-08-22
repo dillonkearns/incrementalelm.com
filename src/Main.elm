@@ -68,17 +68,33 @@ document =
         [ ( "emu"
           , { contentParser =
                 \content ->
-                    markdownToHtml content
+                    renderMarkup content
             , frontmatterParser =
                 \frontMatter ->
-                    Metadata.Page { title = "Hello!!!!!" }
+                    -- TODO pass in static assets
+                    Mark.compile
+                        (Metadata.metadata Dict.empty |> Mark.document identity)
+                        frontMatter
+                        |> (\outcome ->
+                                case outcome of
+                                    Mark.Success parsedMetadata ->
+                                        parsedMetadata
+
+                                    Mark.Failure failure ->
+                                        -- Debug.todo "Failure"
+                                        Metadata.Page { title = "Failure TODO" }
+
+                                    Mark.Almost failure ->
+                                        -- Debug.todo "Almost failure"
+                                        Metadata.Page { title = "Almost Failure TODO" }
+                           )
             }
           )
         ]
 
 
-markdownToHtml : String -> List (Element Msg)
-markdownToHtml markupBody =
+renderMarkup : String -> List (Element Msg)
+renderMarkup markupBody =
     Mark.compile
         -- TODO pass in static data for image assets and routes
         (MarkParser.newDocument Dict.empty [] [])
