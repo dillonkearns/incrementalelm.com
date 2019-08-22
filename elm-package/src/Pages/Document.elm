@@ -8,8 +8,8 @@ import Mark.Error
 
 type alias Document metadata view =
     Dict String
-        { frontmatterParser : String -> metadata
-        , contentParser : String -> view
+        { frontmatterParser : String -> Result String metadata
+        , contentParser : String -> Result String view
         }
 
 
@@ -19,14 +19,13 @@ init =
 
 
 withMarkup :
-    (Html msg -> view)
-    -> Mark.Document metadata
+    Mark.Document metadata
     -> Mark.Document view
     -> Document metadata view
     -> Document metadata view
-withMarkup toView metadataParser markBodyParser document =
+withMarkup metadataParser markBodyParser document =
     Dict.insert "emu"
-        { contentParser = renderMarkup toView markBodyParser
+        { contentParser = renderMarkup markBodyParser
         , frontmatterParser =
             \frontMatter ->
                 Mark.compile metadataParser
@@ -34,40 +33,36 @@ withMarkup toView metadataParser markBodyParser document =
                     |> (\outcome ->
                             case outcome of
                                 Mark.Success parsedMetadata ->
-                                    parsedMetadata
+                                    Ok parsedMetadata
 
                                 Mark.Failure failure ->
-                                    Debug.todo "Failure"
+                                    Err "Failure"
 
-                                -- Metadata.Page { title = "Failure TODO" }
                                 Mark.Almost failure ->
-                                    Debug.todo "Almost failure"
-                        -- Metadata.Page { title = "Almost Failure TODO" }
+                                    Err "Almost failure"
                        )
         }
         document
 
 
-renderMarkup : (Html msg -> view) -> Mark.Document view -> String -> view
-renderMarkup toView markBodyParser markupBody =
+renderMarkup : Mark.Document view -> String -> Result String view
+renderMarkup markBodyParser markupBody =
     Mark.compile
-        -- TODO pass in static data for image assets and routes
         markBodyParser
         (markupBody |> String.trimLeft)
         |> (\outcome ->
                 case outcome of
                     Mark.Success renderedView ->
-                        renderedView
+                        Ok renderedView
 
-                    Mark.Failure failure ->
-                        failure
-                            |> List.map (Mark.Error.toHtml Mark.Error.Light)
-                            |> Html.div []
-                            |> toView
+                    Mark.Failure failures ->
+                        failures
+                            |> List.map Mark.Error.toString
+                            |> String.join "\n"
+                            |> Err
 
                     Mark.Almost failure ->
-                        Html.text "TODO almost failure"
-                            |> toView
+                        Err "TODO almost failure"
            )
 
 
@@ -86,10 +81,14 @@ parseMetadata document content =
                     in
                     case maybeDocumentEntry of
                         Just documentEntry ->
-                            { metadata = documentEntry.frontmatterParser frontMatter
-                            , extension = extension
-                            }
-                                |> Ok
+                            frontMatter
+                                |> documentEntry.frontmatterParser
+                                |> Result.map
+                                    (\metadata ->
+                                        { metadata = metadata
+                                        , extension = extension
+                                        }
+                                    )
 
                         Nothing ->
                             Err ("Could not find extension '" ++ extension ++ "'")
@@ -110,7 +109,6 @@ parseContent extension body document =
     case maybeDocumentEntry of
         Just documentEntry ->
             documentEntry.contentParser body
-                |> Ok
 
         Nothing ->
             Err ("Could not find extension '" ++ extension ++ "'")

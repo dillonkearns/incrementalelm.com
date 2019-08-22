@@ -59,7 +59,6 @@ document : Pages.Document.Document (Metadata Msg) (List (Element Msg))
 document =
     Pages.Document.init
         |> Pages.Document.withMarkup
-            (Element.html >> List.singleton)
             (Metadata.metadata Dict.empty |> Mark.document identity)
             (MarkParser.newDocument Dict.empty [] [])
 
