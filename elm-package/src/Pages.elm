@@ -142,10 +142,6 @@ init document toJsPort head content initUserModel flags url key =
                 flags.imageAssets
                 |> Result.withDefault Dict.empty
 
-        -- metadata =
-        --     Pages.Document.parseMetadata document
-        --         content
-        --         |> combineTupleResults
         contentCache =
             ContentCache.init document content
     in
