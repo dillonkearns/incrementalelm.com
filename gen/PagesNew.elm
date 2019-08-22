@@ -25,7 +25,7 @@ application :
     , subscriptions : userModel -> Sub userMsg
     , view : userModel -> List ( List String, metadata ) -> Page metadata view -> { title : String, body : Html userMsg }
     , head : metadata -> List Head.Tag
-    , document : Pages.Document.Document metadata view
+    , documents : List (Pages.Document.DocumentParser metadata view)
     , manifest :
         { backgroundColor : Maybe Color
         , categories : List Category
@@ -47,7 +47,7 @@ application config =
         , view = config.view
         , update = config.update
         , subscriptions = config.subscriptions
-        , document = config.document
+        , document = Dict.fromList config.documents
         , content = RawContent.content
         , toJsPort = toJsPort
         , head = config.head

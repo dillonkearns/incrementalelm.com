@@ -49,18 +49,17 @@ main =
         , view = view
         , update = update
         , subscriptions = subscriptions
-        , document = document
+        , documents = [ markupDocument ]
         , head = head
         , manifest = manifest
         }
 
 
-document : Pages.Document.Document (Metadata Msg) (List (Element Msg))
-document =
-    Pages.Document.init
-        |> Pages.Document.withMarkup
-            (Metadata.metadata Dict.empty |> Mark.document identity)
-            (MarkParser.newDocument Dict.empty [] [])
+markupDocument : Pages.Document.DocumentParser (Metadata Msg) (List (Element Msg))
+markupDocument =
+    Pages.Document.markupParser
+        (Metadata.metadata Dict.empty |> Mark.document identity)
+        (MarkParser.newDocument Dict.empty [] [])
 
 
 manifest =

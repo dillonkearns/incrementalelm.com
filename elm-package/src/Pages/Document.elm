@@ -1,7 +1,15 @@
-module Pages.Document exposing (..)
+module Pages.Document exposing
+    ( Document
+    , DocumentParser
+    , markupParser
+    , parseContent
+    , parseMetadata
+    , parser
+    )
 
 import Dict exposing (Dict)
 import Html exposing (Html)
+import Json.Decode
 import Mark
 import Mark.Error
 
@@ -13,20 +21,40 @@ type alias Document metadata view =
         }
 
 
-init : Document metadata view
-init =
-    Dict.empty
+type alias DocumentParser metadata view =
+    ( String
+    , { frontmatterParser : String -> Result String metadata
+      , contentParser : String -> Result String view
+      }
+    )
 
 
-withMarkup :
+parser :
+    { extension : String
+    , metadata : Json.Decode.Decoder metadata
+    , body : String -> Result String view
+    }
+    -> DocumentParser metadata view
+parser { extension, body, metadata } =
+    ( extension
+    , { contentParser = body
+      , frontmatterParser =
+            \frontmatter ->
+                frontmatter
+                    |> Json.Decode.decodeString metadata
+                    |> Result.mapError Json.Decode.errorToString
+      }
+    )
+
+
+markupParser :
     Mark.Document metadata
     -> Mark.Document view
-    -> Document metadata view
-    -> Document metadata view
-withMarkup metadataParser markBodyParser document =
-    Dict.insert "emu"
-        { contentParser = renderMarkup markBodyParser
-        , frontmatterParser =
+    -> DocumentParser metadata view
+markupParser metadataParser markBodyParser =
+    ( "emu"
+    , { contentParser = renderMarkup markBodyParser
+      , frontmatterParser =
             \frontMatter ->
                 Mark.compile metadataParser
                     frontMatter
@@ -41,8 +69,8 @@ withMarkup metadataParser markBodyParser document =
                                 Mark.Almost failure ->
                                     Err "Almost failure"
                        )
-        }
-        document
+      }
+    )
 
 
 renderMarkup : Mark.Document view -> String -> Result String view
