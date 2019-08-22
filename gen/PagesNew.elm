@@ -1,4 +1,4 @@
-port module PagesNew exposing (application, PageRoute, all, pages, routeToString, Image, imageUrl, images)
+port module PagesNew exposing (application, PageRoute, all, pages, routeToString, Image, imageUrl, images, allImages)
 
 import Dict exposing (Dict)
 import Color exposing (Color)
@@ -183,6 +183,26 @@ images =
     , workspace = (Image [ "workspace.jpg" ])
     , all = [ (Image [ "architecture.jpg" ]), (Image [ "buildr-cropped.jpg" ]), (Image [ "contact.jpg" ]), (Image [ "custom-scalar-checklist.pdf" ]), (Image [ "dillon.jpg" ]), (Image [ "dillon2.jpg" ]), (Image [ "ed-gonzalez.png" ]), (Image [ "elm-graphql-workshop-header.jpg" ]), (Image [ "graphql-workshop.png" ]), (Image [ "icon.svg" ]), (Image [ "oslo-workshop1.jpg" ]), (Image [ "steps.jpg" ]), (Image [ "workspace.jpg" ]) ]
     }
+
+allImages : List Image
+allImages =
+    [(Image [ "architecture.jpg" ])
+    , (Image [ "article-cover", "exit.jpg" ])
+    , (Image [ "article-cover", "mountains.jpg" ])
+    , (Image [ "article-cover", "thinker.jpg" ])
+    , (Image [ "buildr-cropped.jpg" ])
+    , (Image [ "contact.jpg" ])
+    , (Image [ "custom-scalar-checklist.pdf" ])
+    , (Image [ "dillon.jpg" ])
+    , (Image [ "dillon2.jpg" ])
+    , (Image [ "ed-gonzalez.png" ])
+    , (Image [ "elm-graphql-workshop-header.jpg" ])
+    , (Image [ "graphql-workshop.png" ])
+    , (Image [ "icon.svg" ])
+    , (Image [ "oslo-workshop1.jpg" ])
+    , (Image [ "steps.jpg" ])
+    , (Image [ "workspace.jpg" ])
+    ]
 
 routeToString : PageRoute -> String
 routeToString (PageRoute route) =

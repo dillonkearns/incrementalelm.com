@@ -1,5 +1,6 @@
 module MarkParser exposing (document, newDocument)
 
+import BlockHelpers
 import Dict exposing (Dict)
 import Element exposing (Element)
 import Element.Background
@@ -15,7 +16,6 @@ import Mark
 import Mark.Error
 import Metadata exposing (Metadata)
 import Pages.Parser exposing (Page)
-import PagesNew
 import Style
 import Style.Helpers
 import View.CodeSnippet
@@ -23,13 +23,6 @@ import View.DripSignupForm
 import View.Ellie
 import View.FontAwesome
 import View.Resource
-
-
-normalizedUrl url =
-    url
-        |> String.split "#"
-        |> List.head
-        |> Maybe.withDefault ""
 
 
 document :
@@ -97,8 +90,7 @@ blocks =
                         }
                         |> Element.el [ Element.centerX ]
                 )
-                -- |> Mark.field "src" (Pages.Parser.imageSrc appData.imageAssets)
-                |> Mark.field "src" (Mark.string |> Mark.map (\src -> "/images/" ++ src))
+                |> Mark.field "src" BlockHelpers.imageSrc
                 |> Mark.field "description" Mark.string
                 |> Mark.toBlock
 
@@ -179,30 +171,7 @@ blocks =
                                 }
                         )
                         |> Mark.field "url"
-                            (Mark.string
-                                |> Mark.verify
-                                    (\url ->
-                                        let
-                                            validRoutes =
-                                                PagesNew.all |> List.map PagesNew.routeToString
-                                        in
-                                        if url |> String.startsWith "http" then
-                                            Ok url
-
-                                        else if List.member (normalizedUrl url) validRoutes then
-                                            Ok url
-
-                                        else
-                                            Err
-                                                { title = "Unknown relative URL " ++ url
-                                                , message =
-                                                    [ url
-                                                    , "\nMust be one of\n"
-                                                    , String.join "\n" validRoutes
-                                                    ]
-                                                }
-                                    )
-                            )
+                            BlockHelpers.route
                     , Mark.verbatim "code"
                         (\str ->
                             Element.el

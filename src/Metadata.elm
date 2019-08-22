@@ -1,5 +1,6 @@
 module Metadata exposing (ArticleMetadata, LearnMetadata, Metadata(..), metadata)
 
+import BlockHelpers
 import Dict exposing (Dict)
 import Element exposing (Element)
 import Element.Font as Font
@@ -45,8 +46,9 @@ metadata imageAssets =
                     gather
                     titleText
                 )
+            |> Mark.field "src" BlockHelpers.imageSrc
             -- |> Mark.field "src" (Pages.Parser.imageSrc imageAssets)
-            |> Mark.field "src" (Mark.string |> Mark.map (\src -> "/images/" ++ src))
+            -- |> Mark.field "src" (Mark.string |> Mark.map (\src -> "/images/" ++ src))
             |> Mark.toBlock
         , Mark.record "Page"
             (\title ->
