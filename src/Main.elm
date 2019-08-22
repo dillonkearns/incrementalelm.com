@@ -408,27 +408,7 @@ pageOrPostView model pageOrPost =
 -}
 head : Metadata.Metadata msg -> List Head.Tag
 head metadata =
-    let
-        themeColor =
-            "#ffffff"
-    in
-    [ Head.canonicalLink "https://incrementalelm.com"
-
-    -- Head.node "meta" [ ( "name", "theme-color" ), ( "content", themeColor ) ]
-    -- , Head.node "meta"
-    --     [ ( "property", "og:site_name" )
-    --     , ( "content", siteName )
-    --     ]
-    -- , Head.node "meta"
-    --     [ ( "property", "og:url" )
-    --     , ( "content", canonicalUrl )
-    --     ]
-    -- , Head.node "link"
-    --     [ ( "rel", "canonical" )
-    --     , ( "href", canonicalUrl )
-    --     ]
-    ]
-        ++ pageTags metadata
+    pageTags metadata
 
 
 ensureAtPrefix : String -> String
@@ -475,71 +455,28 @@ pageTags metadata =
                 image =
                     fullyQualifiedUrl meta.coverImage
             in
-            Head.OpenGraph.article
-                (Head.OpenGraph.buildCommon
-                    { url = ""
-                    , siteName = siteName
-                    , image = { url = image, alt = description }
-                    , description = description
-                    , title = title
+            Head.OpenGraph.summaryLarge
+                { url = ""
+                , siteName = siteName
+                , image =
+                    { url = image
+                    , alt = description
+                    , dimensions = Nothing
+                    , mimeType = Nothing
+                    , secureUrl = Nothing
                     }
-                )
-                { tags = []
-                , section = Nothing
-                , publishedTime = Nothing
-                , modifiedTime = Nothing
-                , expirationTime = Nothing
+                , description = description
+                , title = title
+                , locale = Nothing
                 }
+                |> Head.OpenGraph.article
+                    { tags = []
+                    , section = Nothing
+                    , publishedTime = Nothing
+                    , modifiedTime = Nothing
+                    , expirationTime = Nothing
+                    }
 
-        -- [ Head.node "meta"
-        --     [ ( "property", "og:title" )
-        --     , ( "content", title )
-        --     ]
-        -- , Head.node "meta"
-        --     [ ( "name", "description" )
-        --     , ( "content", description )
-        --     ]
-        -- , Head.node "meta"
-        --     [ ( "property", "og:description" )
-        --     , ( "content", description )
-        --     ]
-        -- , Head.node "meta"
-        --     [ ( "property", "og:image" )
-        --     , ( "content", image )
-        --     ]
-        -- , Head.node "meta"
-        --     [ ( "name", "image" )
-        --     , ( "content", image )
-        --     ]
-        -- , Head.node "meta"
-        --     [ ( "property", "og:type" )
-        --     , ( "content", "article" )
-        --     ]
-        -- , Head.node "meta"
-        --     [ ( "name", "twitter:card" )
-        --     , ( "content", "summary_large_image" )
-        --     ]
-        -- , Head.node "meta"
-        --     [ ( "name", "twitter:creator" )
-        --     , ( "content", ensureAtPrefix twitterUsername )
-        --     ]
-        -- , Head.node "meta"
-        --     [ ( "name", "twitter:site" )
-        --     , ( "content", ensureAtPrefix twitterSiteAccount )
-        --     ]
-        -- , Head.node "meta"
-        --     [ ( "name", "twitter:description" )
-        --     , ( "content", description )
-        --     ]
-        -- , Head.node "meta"
-        --     [ ( "name", "twitter:image" )
-        --     , ( "content", image )
-        --     ]
-        -- , Head.node "meta"
-        --     [ ( "name", "twitter:image:alt" )
-        --     , ( "content", description )
-        --     ]
-        -- ]
         Metadata.Learn meta ->
             let
                 description =
@@ -557,89 +494,6 @@ pageTags metadata =
                 image =
                     Nothing
             in
-            -- [ Head.node
-            --     "meta"
-            --     [ ( "property", "og:title" )
-            --     , ( "content", title )
-            --     ]
-            --     |> Just
-            -- , Head.node
-            --     "meta"
-            --     [ ( "name", "description" )
-            --     , ( "content", description )
-            --     ]
-            --     |> Just
-            -- , Head.node
-            --     "meta"
-            --     [ ( "property", "og:description" )
-            --     , ( "content", description )
-            --     ]
-            --     |> Just
-            -- , image
-            --     |> Maybe.map
-            --         (\i ->
-            --             Head.node
-            --                 "meta"
-            --                 [ ( "property", "og:image" )
-            --                 , ( "content", i )
-            --                 ]
-            --         )
-            -- , image
-            --     |> Maybe.map
-            --         (\i ->
-            --             Head.node
-            --                 "meta"
-            --                 [ ( "name", "image" )
-            --                 , ( "content", i )
-            --                 ]
-            --         )
-            -- , Head.node
-            --     "meta"
-            --     [ ( "property", "og:type" )
-            --     , ( "content", "article" )
-            --     ]
-            --     |> Just
-            -- , Head.node
-            --     "meta"
-            --     [ ( "name", "twitter:card" )
-            --     , ( "content", "summary_large_image" )
-            --     ]
-            --     |> Just
-            -- , Head.node
-            --     "meta"
-            --     [ ( "name", "twitter:creator" )
-            --     , ( "content", ensureAtPrefix twitterUsername )
-            --     ]
-            --     |> Just
-            -- , Head.node
-            --     "meta"
-            --     [ ( "name", "twitter:site" )
-            --     , ( "content", ensureAtPrefix twitterSiteAccount )
-            --     ]
-            --     |> Just
-            -- , Head.node
-            --     "meta"
-            --     [ ( "name", "twitter:description" )
-            --     , ( "content", description )
-            --     ]
-            --     |> Just
-            -- , image
-            --     |> Maybe.map
-            --         (\i ->
-            --             Head.node
-            --                 "meta"
-            --                 [ ( "name", "twitter:image" )
-            --                 , ( "content", i )
-            --                 ]
-            --         )
-            -- , Head.node
-            --     "meta"
-            --     [ ( "name", "twitter:image:alt" )
-            --     , ( "content", description )
-            --     ]
-            --     |> Just
-            -- ]
-            --     |> List.filterMap identity
             []
 
 
