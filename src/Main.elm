@@ -59,7 +59,7 @@ markupDocument : Pages.Document.DocumentParser (Metadata Msg) (List (Element Msg
 markupDocument =
     Pages.Document.markupParser
         (Metadata.metadata Dict.empty |> Mark.document identity)
-        (MarkParser.newDocument Dict.empty [] [])
+        MarkParser.newDocument
 
 
 manifest =

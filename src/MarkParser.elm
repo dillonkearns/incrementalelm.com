@@ -15,6 +15,7 @@ import Mark
 import Mark.Error
 import Metadata exposing (Metadata)
 import Pages.Parser exposing (Page)
+import PagesNew
 import Style
 import Style.Helpers
 import View.CodeSnippet
@@ -43,23 +44,17 @@ document imageAssets routes parsedMetadata =
         , routes = routes
         , indexView = parsedMetadata
         }
-        (blocks { imageAssets = imageAssets, routes = routes, indexView = parsedMetadata })
+        blocks
 
 
-newDocument :
-    Dict String String
-    -> List String
-    -> List ( List String, Metadata msg )
-    -> Mark.Document (List (Element msg))
-newDocument imageAssets routes parsedMetadata =
+newDocument : Mark.Document (List (Element msg))
+newDocument =
     Mark.document identity
-        (Mark.manyOf (blocks { imageAssets = imageAssets, routes = routes, indexView = parsedMetadata }))
+        (Mark.manyOf blocks)
 
 
-blocks :
-    Pages.Parser.AppData (Metadata msg)
-    -> List (Mark.Block (Element msg))
-blocks appData =
+blocks : List (Mark.Block (Element msg))
+blocks =
     let
         header : Mark.Block (Element msg)
         header =
@@ -187,20 +182,25 @@ blocks appData =
                             (Mark.string
                                 |> Mark.verify
                                     (\url ->
-                                        -- if url |> String.startsWith "http" then
-                                        Ok url
-                                     -- else if List.member (normalizedUrl url) appData.routes then
-                                     --     Ok url
-                                     --
-                                     -- else
-                                     --     Err
-                                     --         { title = "Unknown relative URL " ++ url
-                                     --         , message =
-                                     --             [ url
-                                     --             , "\nMust be one of\n"
-                                     --             , String.join "\n" appData.routes
-                                     --             ]
-                                     --         }
+                                        let
+                                            validRoutes =
+                                                PagesNew.all |> List.map PagesNew.routeToString
+                                        in
+                                        if url |> String.startsWith "http" then
+                                            Ok url
+
+                                        else if List.member (normalizedUrl url) validRoutes then
+                                            Ok url
+
+                                        else
+                                            Err
+                                                { title = "Unknown relative URL " ++ url
+                                                , message =
+                                                    [ url
+                                                    , "\nMust be one of\n"
+                                                    , String.join "\n" validRoutes
+                                                    ]
+                                                }
                                     )
                             )
                     , Mark.verbatim "code"
@@ -230,8 +230,8 @@ blocks appData =
     , image
     , list
     , code
-    , indexContent appData.indexView
-    , learnIndex appData.indexView
+    , indexContent [] -- TODO pass in metadata
+    , learnIndex [] -- TODO pass in metadata
     , signupForm
     , vimeo
     , button
