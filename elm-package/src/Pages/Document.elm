@@ -1,6 +1,9 @@
 module Pages.Document exposing (..)
 
 import Dict exposing (Dict)
+import Html exposing (Html)
+import Mark
+import Mark.Error
 
 
 type alias Document metadata view =
@@ -8,6 +11,64 @@ type alias Document metadata view =
         { frontmatterParser : String -> metadata
         , contentParser : String -> view
         }
+
+
+init : Document metadata view
+init =
+    Dict.empty
+
+
+withMarkup :
+    (Html msg -> view)
+    -> Mark.Document metadata
+    -> Mark.Document view
+    -> Document metadata view
+    -> Document metadata view
+withMarkup toView metadataParser markBodyParser document =
+    Dict.insert "emu"
+        { contentParser = renderMarkup toView markBodyParser
+        , frontmatterParser =
+            \frontMatter ->
+                Mark.compile metadataParser
+                    frontMatter
+                    |> (\outcome ->
+                            case outcome of
+                                Mark.Success parsedMetadata ->
+                                    parsedMetadata
+
+                                Mark.Failure failure ->
+                                    Debug.todo "Failure"
+
+                                -- Metadata.Page { title = "Failure TODO" }
+                                Mark.Almost failure ->
+                                    Debug.todo "Almost failure"
+                        -- Metadata.Page { title = "Almost Failure TODO" }
+                       )
+        }
+        document
+
+
+renderMarkup : (Html msg -> view) -> Mark.Document view -> String -> view
+renderMarkup toView markBodyParser markupBody =
+    Mark.compile
+        -- TODO pass in static data for image assets and routes
+        markBodyParser
+        (markupBody |> String.trimLeft)
+        |> (\outcome ->
+                case outcome of
+                    Mark.Success renderedView ->
+                        renderedView
+
+                    Mark.Failure failure ->
+                        failure
+                            |> List.map (Mark.Error.toHtml Mark.Error.Light)
+                            |> Html.div []
+                            |> toView
+
+                    Mark.Almost failure ->
+                        Html.text "TODO almost failure"
+                            |> toView
+           )
 
 
 parseMetadata :

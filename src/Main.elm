@@ -57,56 +57,11 @@ main =
 
 document : Pages.Document.Document (Metadata Msg) (List (Element Msg))
 document =
-    Dict.fromList
-        [ ( "emu"
-          , { contentParser =
-                \content ->
-                    renderMarkup content
-            , frontmatterParser =
-                \frontMatter ->
-                    -- TODO pass in static assets
-                    Mark.compile
-                        (Metadata.metadata Dict.empty |> Mark.document identity)
-                        frontMatter
-                        |> (\outcome ->
-                                case outcome of
-                                    Mark.Success parsedMetadata ->
-                                        parsedMetadata
-
-                                    Mark.Failure failure ->
-                                        -- Debug.todo "Failure"
-                                        Metadata.Page { title = "Failure TODO" }
-
-                                    Mark.Almost failure ->
-                                        -- Debug.todo "Almost failure"
-                                        Metadata.Page { title = "Almost Failure TODO" }
-                           )
-            }
-          )
-        ]
-
-
-renderMarkup : String -> List (Element Msg)
-renderMarkup markupBody =
-    Mark.compile
-        -- TODO pass in static data for image assets and routes
-        (MarkParser.newDocument Dict.empty [] [])
-        (markupBody |> String.trimLeft)
-        |> (\outcome ->
-                case outcome of
-                    Mark.Success renderedView ->
-                        renderedView
-
-                    Mark.Failure failure ->
-                        [ failure
-                            |> List.map (Mark.Error.toHtml Mark.Error.Light)
-                            |> Html.div []
-                            |> Element.html
-                        ]
-
-                    Mark.Almost failure ->
-                        [ Element.text "TODO almost failure" ]
-           )
+    Pages.Document.init
+        |> Pages.Document.withMarkup
+            (Element.html >> List.singleton)
+            (Metadata.metadata Dict.empty |> Mark.document identity)
+            (MarkParser.newDocument Dict.empty [] [])
 
 
 manifest =
