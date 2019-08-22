@@ -42,13 +42,6 @@ import View.MenuBar
 import View.Navbar
 
 
-port toJsPort : Json.Encode.Value -> Cmd msg
-
-
-type alias Flags =
-    {}
-
-
 main : Pages.Program Model Msg (Metadata Msg) (List (Element Msg))
 main =
     PagesNew.application
