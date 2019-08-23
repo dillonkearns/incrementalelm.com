@@ -463,7 +463,6 @@ pageTags metadata =
                     , alt = description
                     , dimensions = Nothing
                     , mimeType = Nothing
-                    , secureUrl = Nothing
                     }
                 , description = description
                 , title = title

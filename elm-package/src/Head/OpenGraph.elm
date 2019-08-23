@@ -277,15 +277,13 @@ tagsForCommon common =
 {-| See the audio section in <https://ogp.me/#structured>
 Example:
 
-    { url = "http://example.com/sound.mp3"
-    , secureUrl = Just "https://secure.example.com/sound.mp3"
+    { url = "https://example.com/sound.mp3"
      mimeType = Just "audio/mpeg"
     }
 
 -}
 type alias Audio =
     { url : String
-    , secureUrl : Maybe String
     , mimeType : Maybe MimeType
     }
 
@@ -293,7 +291,7 @@ type alias Audio =
 tagsForAudio : Audio -> List ( String, Maybe String )
 tagsForAudio audio =
     [ ( "og:audio", Just audio.url )
-    , ( "og:audio:secure_url", audio.secureUrl )
+    , ( "og:audio:secure_url", Just audio.url )
     , ( "og:audio:type", audio.mimeType )
     ]
 
@@ -356,14 +354,13 @@ type alias Image =
     , alt : String
     , dimensions : Maybe { width : Int, height : Int }
     , mimeType : Maybe MimeType
-    , secureUrl : Maybe String
     }
 
 
 tagsForImage : Image -> List ( String, Maybe String )
 tagsForImage image =
     [ ( "og:image", Just image.url )
-    , ( "og:image:secure_url", image.secureUrl )
+    , ( "og:image:secure_url", Just image.url )
     , ( "og:image:alt", Just image.alt )
     , ( "og:image:width", image.dimensions |> Maybe.map .width |> Maybe.map String.fromInt )
     , ( "og:image:height", image.dimensions |> Maybe.map .height |> Maybe.map String.fromInt )
@@ -376,14 +373,13 @@ type alias Video =
     { url : String
     , mimeType : Maybe MimeType
     , dimensions : Maybe { width : Int, height : Int }
-    , secureUrl : Maybe String
     }
 
 
 tagsForVideo : Video -> List ( String, Maybe String )
 tagsForVideo video =
     [ ( "og:video", Just video.url )
-    , ( "og:video:secure_url", video.secureUrl )
+    , ( "og:video:secure_url", Just video.url )
     , ( "og:video:width", video.dimensions |> Maybe.map .width |> Maybe.map String.fromInt )
     , ( "og:video:height", video.dimensions |> Maybe.map .height |> Maybe.map String.fromInt )
     ]
