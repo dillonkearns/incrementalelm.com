@@ -408,32 +408,6 @@ pageOrPostView model pageOrPost =
 -}
 head : Metadata.Metadata msg -> List Head.Tag
 head metadata =
-    pageTags metadata
-
-
-ensureAtPrefix : String -> String
-ensureAtPrefix twitterUsername =
-    if twitterUsername |> String.startsWith "@" then
-        twitterUsername
-
-    else
-        "@" ++ twitterUsername
-
-
-fullyQualifiedUrl : String -> String
-fullyQualifiedUrl url =
-    let
-        urlWithoutLeadingSlash =
-            if url |> String.startsWith "/" then
-                url |> String.dropLeft 1
-
-            else
-                url
-    in
-    "https://incrementalelm.com" ++ url
-
-
-pageTags metadata =
     case metadata of
         Metadata.Page record ->
             []
@@ -494,6 +468,28 @@ pageTags metadata =
                     Nothing
             in
             []
+
+
+ensureAtPrefix : String -> String
+ensureAtPrefix twitterUsername =
+    if twitterUsername |> String.startsWith "@" then
+        twitterUsername
+
+    else
+        "@" ++ twitterUsername
+
+
+fullyQualifiedUrl : String -> String
+fullyQualifiedUrl url =
+    let
+        urlWithoutLeadingSlash =
+            if url |> String.startsWith "/" then
+                url |> String.dropLeft 1
+
+            else
+                url
+    in
+    "https://incrementalelm.com" ++ url
 
 
 siteName =
