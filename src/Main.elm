@@ -14,7 +14,7 @@ import Element.Border
 import Element.Font as Font
 import ElmLogo
 import Head as Head exposing (Tag)
-import Head.OpenGraph
+import Head.Seo
 import Html exposing (Html)
 import Html.Attributes
 import Json.Decode
@@ -24,12 +24,10 @@ import Mark
 import Mark.Error
 import MarkParser
 import Metadata exposing (Metadata)
-import Pages
-import Pages.Content as Content exposing (Content)
+import Pages exposing (Page)
 import Pages.Document
 import Pages.Manifest as Manifest
 import Pages.Manifest.Category
-import Pages.Parser exposing (Page)
 import PagesNew exposing (images, pages)
 import RawContent
 import Svg exposing (..)
@@ -52,6 +50,7 @@ main =
         , documents = [ markupDocument ]
         , head = head
         , manifest = manifest
+        , canonicalSiteUrl = "https://incrementalelm.com"
         }
 
 
@@ -406,20 +405,27 @@ pageOrPostView model pageOrPost =
 <https://html.spec.whatwg.org/multipage/semantics.html#standard-metadata-names>
 <https://ogp.me/>
 -}
-head : Metadata.Metadata msg -> List Head.Tag
+head : Metadata.Metadata msg -> List (Head.Tag PagesNew.PathKey)
 head metadata =
     case metadata of
-        Metadata.Page record ->
-            []
+        Metadata.Page meta ->
+            Head.Seo.summaryLarge
+                { canonicalUrlOverride = Nothing
+                , siteName = siteName
+                , image =
+                    { url = PagesNew.images.icon
+                    , alt = meta.title
+                    , dimensions = Nothing
+                    , mimeType = Nothing
+                    }
+                , description = meta.title
+                , title = meta.title
+                , locale = Nothing
+                }
+                |> Head.Seo.website
 
         Metadata.Article meta ->
             let
-                description =
-                    meta.description.raw
-
-                title =
-                    meta.title.raw
-
                 twitterUsername =
                     "dillontkearns"
 
@@ -429,20 +435,21 @@ head metadata =
                 image =
                     fullyQualifiedUrl meta.coverImage
             in
-            Head.OpenGraph.summaryLarge
-                { url = ""
+            Head.Seo.summaryLarge
+                { canonicalUrlOverride = Nothing
                 , siteName = siteName
                 , image =
-                    { url = image
-                    , alt = description
+                    -- TODO fix image
+                    { url = PagesNew.images.architecture
+                    , alt = meta.description.raw
                     , dimensions = Nothing
                     , mimeType = Nothing
                     }
-                , description = description
-                , title = title
+                , description = meta.description.raw
+                , title = meta.title.raw
                 , locale = Nothing
                 }
-                |> Head.OpenGraph.article
+                |> Head.Seo.article
                     { tags = []
                     , section = Nothing
                     , publishedTime = Nothing
@@ -451,22 +458,6 @@ head metadata =
                     }
 
         Metadata.Learn meta ->
-            let
-                description =
-                    meta.title
-
-                title =
-                    meta.title
-
-                twitterUsername =
-                    "dillontkearns"
-
-                twitterSiteAccount =
-                    "incrementalelm"
-
-                image =
-                    Nothing
-            in
             []
 
 

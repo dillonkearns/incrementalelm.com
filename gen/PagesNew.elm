@@ -1,4 +1,4 @@
-port module PagesNew exposing (application, PageRoute, all, pages, routeToString, Image, imageUrl, images, allImages)
+port module PagesNew exposing (PathKey, allPages, allImages, application, images, isValidRoute, pages)
 
 import Dict exposing (Dict)
 import Color exposing (Color)
@@ -11,11 +11,24 @@ import Pages
 import Pages.ContentCache exposing (Page)
 import Pages.Manifest exposing (DisplayMode, Orientation)
 import Pages.Manifest.Category as Category exposing (Category)
-import RawContent
 import Url.Parser as Url exposing ((</>), s)
 import Pages.Document
+import Pages.Path as Path exposing (Path)
 
 
+type PathKey
+    = PathKey
+
+
+buildImage : List String -> Path PathKey Path.ToImage
+buildImage path =
+    Path.buildImage PathKey ("images" :: path)
+
+
+
+buildPage : List String -> Path PathKey Path.ToPage
+buildPage path =
+    Path.buildPage PathKey path
 port toJsPort : Json.Encode.Value -> Cmd msg
 
 
@@ -24,21 +37,10 @@ application :
     , update : userMsg -> userModel -> ( userModel, Cmd userMsg )
     , subscriptions : userModel -> Sub userMsg
     , view : userModel -> List ( List String, metadata ) -> Page metadata view -> { title : String, body : Html userMsg }
-    , head : metadata -> List Head.Tag
+    , head : metadata -> List (Head.Tag PathKey)
     , documents : List (Pages.Document.DocumentParser metadata view)
-    , manifest :
-        { backgroundColor : Maybe Color
-        , categories : List Category
-        , displayMode : DisplayMode
-        , orientation : Orientation
-        , description : String
-        , iarcRatingId : Maybe String
-        , name : String
-        , themeColor : Maybe Color
-        , startUrl : PageRoute
-        , shortName : Maybe String
-        , sourceIcon : Image
-        }
+    , manifest : Pages.Manifest.Config PathKey
+    , canonicalSiteUrl : String
     }
     -> Pages.Program userModel userMsg metadata view
 application config =
@@ -48,164 +50,321 @@ application config =
         , update = config.update
         , subscriptions = config.subscriptions
         , document = Dict.fromList config.documents
-        , content = RawContent.content
+        , content = content
         , toJsPort = toJsPort
         , head = config.head
-        , manifest =
-            { backgroundColor = config.manifest.backgroundColor
-            , categories = config.manifest.categories
-            , displayMode = config.manifest.displayMode
-            , orientation = config.manifest.orientation
-            , description = config.manifest.description
-            , iarcRatingId = config.manifest.iarcRatingId
-            , name = config.manifest.name
-            , themeColor = config.manifest.themeColor
-            , startUrl = Just (routeToString config.manifest.startUrl)
-            , shortName = config.manifest.shortName
-            , sourceIcon = "./" ++ imageUrl config.manifest.sourceIcon
-            }
+        , manifest = config.manifest
+        , canonicalSiteUrl = config.canonicalSiteUrl
         }
 
 
-type PageRoute = PageRoute (List String)
 
-type Image = Image (List String)
-
-imageUrl : Image -> String
-imageUrl (Image path) =
-    "/"
-        ++ String.join "/" ("images" :: path)
-
-all : List PageRoute
-all =
-    [ (PageRoute [ "accelerator-application" ])
-    , (PageRoute [ "accelerator-program" ])
-    , (PageRoute [ "articles", "exit-gatekeepers" ])
-    , (PageRoute [ "articles" ])
-    , (PageRoute [ "articles", "moving-faster-with-tiny-steps" ])
-    , (PageRoute [ "articles", "to-test-or-not-to-test" ])
-    , (PageRoute [ "contact" ])
-    , (PageRoute [ "core-skills-seminar" ])
-    , (PageRoute [ "custom-scalar-checklist" ])
-    , (PageRoute [ "elm-graphql-seminar" ])
-    , (PageRoute [ "elm-graphql-workshop" ])
-    , (PageRoute [ "incremental-weekly-unsubscribe" ])
-    , (PageRoute [  ])
-    , (PageRoute [ "introducing-custom-scalars-course" ])
-    , (PageRoute [ "learn", "architecture" ])
-    , (PageRoute [ "learn", "editor-config" ])
-    , (PageRoute [ "learn", "getting-started" ])
-    , (PageRoute [ "learn" ])
-    , (PageRoute [ "scalar-codecs-tutorial" ])
-    , (PageRoute [ "services" ])
-    , (PageRoute [ "thank-you" ])
-    , (PageRoute [ "tips" ])
+allPages : List (Path PathKey Path.ToPage)
+allPages =
+    [ (buildPage [ "accelerator-application" ])
+    , (buildPage [ "accelerator-program" ])
+    , (buildPage [ "articles", "exit-gatekeepers" ])
+    , (buildPage [ "articles" ])
+    , (buildPage [ "articles", "moving-faster-with-tiny-steps" ])
+    , (buildPage [ "articles", "to-test-or-not-to-test" ])
+    , (buildPage [ "contact" ])
+    , (buildPage [ "core-skills-seminar" ])
+    , (buildPage [ "custom-scalar-checklist" ])
+    , (buildPage [ "elm-graphql-seminar" ])
+    , (buildPage [ "elm-graphql-workshop" ])
+    , (buildPage [ "incremental-weekly-unsubscribe" ])
+    , (buildPage [  ])
+    , (buildPage [ "introducing-custom-scalars-course" ])
+    , (buildPage [ "learn", "architecture" ])
+    , (buildPage [ "learn", "editor-config" ])
+    , (buildPage [ "learn", "getting-started" ])
+    , (buildPage [ "learn" ])
+    , (buildPage [ "scalar-codecs-tutorial" ])
+    , (buildPage [ "services" ])
+    , (buildPage [ "thank-you" ])
+    , (buildPage [ "tips" ])
     ]
 
 pages =
-    { acceleratorApplication = (PageRoute [ "accelerator-application" ])
-    , acceleratorProgram = (PageRoute [ "accelerator-program" ])
+    { acceleratorApplication = (buildPage [ "accelerator-application" ])
+    , acceleratorProgram = (buildPage [ "accelerator-program" ])
     , articles =
-        { exitGatekeepers = (PageRoute [ "articles", "exit-gatekeepers" ])
-        , index = (PageRoute [ "articles" ])
-        , movingFasterWithTinySteps = (PageRoute [ "articles", "moving-faster-with-tiny-steps" ])
-        , toTestOrNotToTest = (PageRoute [ "articles", "to-test-or-not-to-test" ])
-        , all = [ (PageRoute [ "articles", "exit-gatekeepers" ]), (PageRoute [ "articles" ]), (PageRoute [ "articles", "moving-faster-with-tiny-steps" ]), (PageRoute [ "articles", "to-test-or-not-to-test" ]) ]
+        { exitGatekeepers = (buildPage [ "articles", "exit-gatekeepers" ])
+        , index = (buildPage [ "articles" ])
+        , movingFasterWithTinySteps = (buildPage [ "articles", "moving-faster-with-tiny-steps" ])
+        , toTestOrNotToTest = (buildPage [ "articles", "to-test-or-not-to-test" ])
+        , all = [ (buildPage [ "articles", "exit-gatekeepers" ]), (buildPage [ "articles" ]), (buildPage [ "articles", "moving-faster-with-tiny-steps" ]), (buildPage [ "articles", "to-test-or-not-to-test" ]) ]
         }
-    , contact = (PageRoute [ "contact" ])
-    , coreSkillsSeminar = (PageRoute [ "core-skills-seminar" ])
-    , customScalarChecklist = (PageRoute [ "custom-scalar-checklist" ])
-    , elmGraphqlSeminar = (PageRoute [ "elm-graphql-seminar" ])
-    , elmGraphqlWorkshop = (PageRoute [ "elm-graphql-workshop" ])
-    , incrementalWeeklyUnsubscribe = (PageRoute [ "incremental-weekly-unsubscribe" ])
-    , index = (PageRoute [  ])
-    , introducingCustomScalarsCourse = (PageRoute [ "introducing-custom-scalars-course" ])
+    , contact = (buildPage [ "contact" ])
+    , coreSkillsSeminar = (buildPage [ "core-skills-seminar" ])
+    , customScalarChecklist = (buildPage [ "custom-scalar-checklist" ])
+    , elmGraphqlSeminar = (buildPage [ "elm-graphql-seminar" ])
+    , elmGraphqlWorkshop = (buildPage [ "elm-graphql-workshop" ])
+    , incrementalWeeklyUnsubscribe = (buildPage [ "incremental-weekly-unsubscribe" ])
+    , index = (buildPage [  ])
+    , introducingCustomScalarsCourse = (buildPage [ "introducing-custom-scalars-course" ])
     , learn =
-        { architecture = (PageRoute [ "learn", "architecture" ])
-        , editorConfig = (PageRoute [ "learn", "editor-config" ])
-        , gettingStarted = (PageRoute [ "learn", "getting-started" ])
-        , index = (PageRoute [ "learn" ])
-        , all = [ (PageRoute [ "learn", "architecture" ]), (PageRoute [ "learn", "editor-config" ]), (PageRoute [ "learn", "getting-started" ]), (PageRoute [ "learn" ]) ]
+        { architecture = (buildPage [ "learn", "architecture" ])
+        , editorConfig = (buildPage [ "learn", "editor-config" ])
+        , gettingStarted = (buildPage [ "learn", "getting-started" ])
+        , index = (buildPage [ "learn" ])
+        , all = [ (buildPage [ "learn", "architecture" ]), (buildPage [ "learn", "editor-config" ]), (buildPage [ "learn", "getting-started" ]), (buildPage [ "learn" ]) ]
         }
-    , scalarCodecsTutorial = (PageRoute [ "scalar-codecs-tutorial" ])
-    , services = (PageRoute [ "services" ])
-    , thankYou = (PageRoute [ "thank-you" ])
-    , tips = (PageRoute [ "tips" ])
-    , all = [ (PageRoute [ "accelerator-application" ]), (PageRoute [ "accelerator-program" ]), (PageRoute [ "contact" ]), (PageRoute [ "core-skills-seminar" ]), (PageRoute [ "custom-scalar-checklist" ]), (PageRoute [ "elm-graphql-seminar" ]), (PageRoute [ "elm-graphql-workshop" ]), (PageRoute [ "incremental-weekly-unsubscribe" ]), (PageRoute [  ]), (PageRoute [ "introducing-custom-scalars-course" ]), (PageRoute [ "scalar-codecs-tutorial" ]), (PageRoute [ "services" ]), (PageRoute [ "thank-you" ]), (PageRoute [ "tips" ]) ]
+    , scalarCodecsTutorial = (buildPage [ "scalar-codecs-tutorial" ])
+    , services = (buildPage [ "services" ])
+    , thankYou = (buildPage [ "thank-you" ])
+    , tips = (buildPage [ "tips" ])
+    , all = [ (buildPage [ "accelerator-application" ]), (buildPage [ "accelerator-program" ]), (buildPage [ "contact" ]), (buildPage [ "core-skills-seminar" ]), (buildPage [ "custom-scalar-checklist" ]), (buildPage [ "elm-graphql-seminar" ]), (buildPage [ "elm-graphql-workshop" ]), (buildPage [ "incremental-weekly-unsubscribe" ]), (buildPage [  ]), (buildPage [ "introducing-custom-scalars-course" ]), (buildPage [ "scalar-codecs-tutorial" ]), (buildPage [ "services" ]), (buildPage [ "thank-you" ]), (buildPage [ "tips" ]) ]
     }
-
-urlParser : Url.Parser (PageRoute -> a) a
-urlParser =
-    Url.oneOf
-        [ Url.map (PageRoute [ "accelerator-application" ]) (s "accelerator-application")
-        , Url.map (PageRoute [ "accelerator-program" ]) (s "accelerator-program")
-        , Url.map (PageRoute [ "articles", "exit-gatekeepers" ]) (s "articles" </> s "exit-gatekeepers")
-        , Url.map (PageRoute [ "articles" ]) (s "articles" </> s "index")
-        , Url.map (PageRoute [ "articles", "moving-faster-with-tiny-steps" ]) (s "articles" </> s "moving-faster-with-tiny-steps")
-        , Url.map (PageRoute [ "articles", "to-test-or-not-to-test" ]) (s "articles" </> s "to-test-or-not-to-test")
-        , Url.map (PageRoute [ "contact" ]) (s "contact")
-        , Url.map (PageRoute [ "core-skills-seminar" ]) (s "core-skills-seminar")
-        , Url.map (PageRoute [ "custom-scalar-checklist" ]) (s "custom-scalar-checklist")
-        , Url.map (PageRoute [ "elm-graphql-seminar" ]) (s "elm-graphql-seminar")
-        , Url.map (PageRoute [ "elm-graphql-workshop" ]) (s "elm-graphql-workshop")
-        , Url.map (PageRoute [ "incremental-weekly-unsubscribe" ]) (s "incremental-weekly-unsubscribe")
-        , Url.map (PageRoute [  ]) (s "index")
-        , Url.map (PageRoute [ "introducing-custom-scalars-course" ]) (s "introducing-custom-scalars-course")
-        , Url.map (PageRoute [ "learn", "architecture" ]) (s "learn" </> s "architecture")
-        , Url.map (PageRoute [ "learn", "editor-config" ]) (s "learn" </> s "editor-config")
-        , Url.map (PageRoute [ "learn", "getting-started" ]) (s "learn" </> s "getting-started")
-        , Url.map (PageRoute [ "learn" ]) (s "learn" </> s "index")
-        , Url.map (PageRoute [ "scalar-codecs-tutorial" ]) (s "scalar-codecs-tutorial")
-        , Url.map (PageRoute [ "services" ]) (s "services")
-        , Url.map (PageRoute [ "thank-you" ]) (s "thank-you")
-        , Url.map (PageRoute [ "tips" ]) (s "tips")
-        ] 
 
 images =
-    { architecture = (Image [ "architecture.jpg" ])
+    { architecture = (buildImage [ "architecture.jpg" ])
     , articleCover =
-        { exit = (Image [ "article-cover", "exit.jpg" ])
-        , mountains = (Image [ "article-cover", "mountains.jpg" ])
-        , thinker = (Image [ "article-cover", "thinker.jpg" ])
-        , all = [ (Image [ "article-cover", "exit.jpg" ]), (Image [ "article-cover", "mountains.jpg" ]), (Image [ "article-cover", "thinker.jpg" ]) ]
+        { exit = (buildImage [ "article-cover", "exit.jpg" ])
+        , mountains = (buildImage [ "article-cover", "mountains.jpg" ])
+        , thinker = (buildImage [ "article-cover", "thinker.jpg" ])
+        , all = [ (buildImage [ "article-cover", "exit.jpg" ]), (buildImage [ "article-cover", "mountains.jpg" ]), (buildImage [ "article-cover", "thinker.jpg" ]) ]
         }
-    , buildrCropped = (Image [ "buildr-cropped.jpg" ])
-    , contact = (Image [ "contact.jpg" ])
-    , customScalarChecklist = (Image [ "custom-scalar-checklist.pdf" ])
-    , dillon = (Image [ "dillon.jpg" ])
-    , dillon2 = (Image [ "dillon2.jpg" ])
-    , edGonzalez = (Image [ "ed-gonzalez.png" ])
-    , elmGraphqlWorkshopHeader = (Image [ "elm-graphql-workshop-header.jpg" ])
-    , graphqlWorkshop = (Image [ "graphql-workshop.png" ])
-    , icon = (Image [ "icon.svg" ])
-    , osloWorkshop1 = (Image [ "oslo-workshop1.jpg" ])
-    , steps = (Image [ "steps.jpg" ])
-    , workspace = (Image [ "workspace.jpg" ])
-    , all = [ (Image [ "architecture.jpg" ]), (Image [ "buildr-cropped.jpg" ]), (Image [ "contact.jpg" ]), (Image [ "custom-scalar-checklist.pdf" ]), (Image [ "dillon.jpg" ]), (Image [ "dillon2.jpg" ]), (Image [ "ed-gonzalez.png" ]), (Image [ "elm-graphql-workshop-header.jpg" ]), (Image [ "graphql-workshop.png" ]), (Image [ "icon.svg" ]), (Image [ "oslo-workshop1.jpg" ]), (Image [ "steps.jpg" ]), (Image [ "workspace.jpg" ]) ]
+    , buildrCropped = (buildImage [ "buildr-cropped.jpg" ])
+    , contact = (buildImage [ "contact.jpg" ])
+    , customScalarChecklist = (buildImage [ "custom-scalar-checklist.pdf" ])
+    , dillon = (buildImage [ "dillon.jpg" ])
+    , dillon2 = (buildImage [ "dillon2.jpg" ])
+    , edGonzalez = (buildImage [ "ed-gonzalez.png" ])
+    , elmGraphqlWorkshopHeader = (buildImage [ "elm-graphql-workshop-header.jpg" ])
+    , graphqlWorkshop = (buildImage [ "graphql-workshop.png" ])
+    , icon = (buildImage [ "icon.svg" ])
+    , osloWorkshop1 = (buildImage [ "oslo-workshop1.jpg" ])
+    , steps = (buildImage [ "steps.jpg" ])
+    , workspace = (buildImage [ "workspace.jpg" ])
+    , all = [ (buildImage [ "architecture.jpg" ]), (buildImage [ "buildr-cropped.jpg" ]), (buildImage [ "contact.jpg" ]), (buildImage [ "custom-scalar-checklist.pdf" ]), (buildImage [ "dillon.jpg" ]), (buildImage [ "dillon2.jpg" ]), (buildImage [ "ed-gonzalez.png" ]), (buildImage [ "elm-graphql-workshop-header.jpg" ]), (buildImage [ "graphql-workshop.png" ]), (buildImage [ "icon.svg" ]), (buildImage [ "oslo-workshop1.jpg" ]), (buildImage [ "steps.jpg" ]), (buildImage [ "workspace.jpg" ]) ]
     }
 
-allImages : List Image
+allImages : List (Path PathKey Path.ToImage)
 allImages =
-    [(Image [ "architecture.jpg" ])
-    , (Image [ "article-cover", "exit.jpg" ])
-    , (Image [ "article-cover", "mountains.jpg" ])
-    , (Image [ "article-cover", "thinker.jpg" ])
-    , (Image [ "buildr-cropped.jpg" ])
-    , (Image [ "contact.jpg" ])
-    , (Image [ "custom-scalar-checklist.pdf" ])
-    , (Image [ "dillon.jpg" ])
-    , (Image [ "dillon2.jpg" ])
-    , (Image [ "ed-gonzalez.png" ])
-    , (Image [ "elm-graphql-workshop-header.jpg" ])
-    , (Image [ "graphql-workshop.png" ])
-    , (Image [ "icon.svg" ])
-    , (Image [ "oslo-workshop1.jpg" ])
-    , (Image [ "steps.jpg" ])
-    , (Image [ "workspace.jpg" ])
+    [(buildImage [ "architecture.jpg" ])
+    , (buildImage [ "article-cover", "exit.jpg" ])
+    , (buildImage [ "article-cover", "mountains.jpg" ])
+    , (buildImage [ "article-cover", "thinker.jpg" ])
+    , (buildImage [ "buildr-cropped.jpg" ])
+    , (buildImage [ "contact.jpg" ])
+    , (buildImage [ "custom-scalar-checklist.pdf" ])
+    , (buildImage [ "dillon.jpg" ])
+    , (buildImage [ "dillon2.jpg" ])
+    , (buildImage [ "ed-gonzalez.png" ])
+    , (buildImage [ "elm-graphql-workshop-header.jpg" ])
+    , (buildImage [ "graphql-workshop.png" ])
+    , (buildImage [ "icon.svg" ])
+    , (buildImage [ "oslo-workshop1.jpg" ])
+    , (buildImage [ "steps.jpg" ])
+    , (buildImage [ "workspace.jpg" ])
     ]
 
-routeToString : PageRoute -> String
-routeToString (PageRoute route) =
-    "/"
-      ++ (route |> String.join "/")
 
+isValidRoute : String -> Result String ()
+isValidRoute route =
+    let
+        validRoutes =
+            List.map Path.toString allPages
+    in
+    if
+        (route |> String.startsWith "http://")
+            || (route |> String.startsWith "https://")
+            || (route |> String.startsWith "#")
+            || (validRoutes |> List.member route)
+    then
+        Ok ()
+
+    else
+        ("Valid routes:\n"
+            ++ String.join "\n\n" validRoutes
+        )
+            |> Err
+
+
+content : List ( List String, { extension: String, frontMatter : String, body : Maybe String } )
+content =
+    [ 
+  ( ["accelerator-application"]
+    , { frontMatter = """
+|> Page
+    title = Accelerator Application
+""" , body = Nothing
+    , extension = "emu"
+    } )
+  ,
+  ( ["accelerator-program"]
+    , { frontMatter = """
+|> Page
+    title = Elm Accelerator Group Coaching Program
+""" , body = Nothing
+    , extension = "emu"
+    } )
+  ,
+  ( ["articles", "exit-gatekeepers"]
+    , { frontMatter = """
+|> Article
+    title = Using elm types to prevent logging social security #'s
+    src = article-cover/exit.jpg
+    description = One of the most successful techniques I've seen for making sure you don't break elm code the next time you touch it is a technique I call an *Exit Gatekeeper*.
+""" , body = Nothing
+    , extension = "emu"
+    } )
+  ,
+  ( ["articles"]
+    , { frontMatter = """
+|> Page
+    title = Articles
+""" , body = Nothing
+    , extension = "emu"
+    } )
+  ,
+  ( ["articles", "moving-faster-with-tiny-steps"]
+    , { frontMatter = """
+|> Article
+    title = Moving Faster with Tiny Steps in Elm
+    src = article-cover/mountains.jpg
+    description = In this post, we're going to be looking up an Article in an Elm Dict, using the tiniest steps possible.
+""" , body = Nothing
+    , extension = "emu"
+    } )
+  ,
+  ( ["articles", "to-test-or-not-to-test"]
+    , { frontMatter = """
+|> Article
+    title = To test, or not to test elm code?
+    src = article-cover/thinker.jpg
+    description = Is it as simple as "only test your business logic?"
+""" , body = Nothing
+    , extension = "emu"
+    } )
+  ,
+  ( ["contact"]
+    , { frontMatter = """
+|> Page
+    title = Contact
+""" , body = Nothing
+    , extension = "emu"
+    } )
+  ,
+  ( ["core-skills-seminar"]
+    , { frontMatter = """
+|> Page
+    title = Core Skills Seminar
+""" , body = Nothing
+    , extension = "emu"
+    } )
+  ,
+  ( ["custom-scalar-checklist"]
+    , { frontMatter = """
+|> Page
+    title = Custom Scalar Checklist
+""" , body = Nothing
+    , extension = "emu"
+    } )
+  ,
+  ( ["elm-graphql-seminar"]
+    , { frontMatter = """
+|> Page
+    title = Elm GraphQL Seminar
+""" , body = Nothing
+    , extension = "emu"
+    } )
+  ,
+  ( ["elm-graphql-workshop"]
+    , { frontMatter = """
+|> Page
+    title = Elm GraphQL Workshop
+""" , body = Nothing
+    , extension = "emu"
+    } )
+  ,
+  ( ["incremental-weekly-unsubscribe"]
+    , { frontMatter = """
+|> Page
+    title = Incremental Elm Weekly Unsubscribe
+""" , body = Nothing
+    , extension = "emu"
+    } )
+  ,
+  ( []
+    , { frontMatter = """
+|> Page
+    title = Incremental Elm Consulting
+""" , body = Nothing
+    , extension = "emu"
+    } )
+  ,
+  ( ["introducing-custom-scalars-course"]
+    , { frontMatter = """
+|> Page
+    title = Introducing Custom Scalars to your Codebase
+""" , body = Nothing
+    , extension = "emu"
+    } )
+  ,
+  ( ["learn", "architecture"]
+    , { frontMatter = """
+|> Learn
+    title = The Elm Architecture
+""" , body = Nothing
+    , extension = "emu"
+    } )
+  ,
+  ( ["learn", "editor-config"]
+    , { frontMatter = """
+|> Learn
+    title = Recommended Editor Configuration
+""" , body = Nothing
+    , extension = "emu"
+    } )
+  ,
+  ( ["learn", "getting-started"]
+    , { frontMatter = """
+|> Learn
+    title = Getting Started Resources
+""" , body = Nothing
+    , extension = "emu"
+    } )
+  ,
+  ( ["learn"]
+    , { frontMatter = """
+|> Page
+    title = Learning Resources
+""" , body = Nothing
+    , extension = "emu"
+    } )
+  ,
+  ( ["scalar-codecs-tutorial"]
+    , { frontMatter = """
+|> Page
+    title = elm-graphql - Scalar Codecs Tutorial
+""" , body = Nothing
+    , extension = "emu"
+    } )
+  ,
+  ( ["services"]
+    , { frontMatter = """
+|> Page
+    title = Incremental Elm Services
+""" , body = Nothing
+    , extension = "emu"
+    } )
+  ,
+  ( ["thank-you"]
+    , { frontMatter = """
+|> Page
+    title = Sign up confirmation
+""" , body = Nothing
+    , extension = "emu"
+    } )
+  ,
+  ( ["tips"]
+    , { frontMatter = """
+|> Page
+    title = Weekly elm Tips!
+""" , body = Nothing
+    , extension = "emu"
+    } )
+  
+    ]

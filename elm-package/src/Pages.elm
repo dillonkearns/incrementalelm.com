@@ -1,4 +1,4 @@
-module Pages exposing (Flags, Parser, Program, application, cliApplication)
+module Pages exposing (Flags, Model, Msg, Page, Parser, Program, application, cliApplication)
 
 import Browser
 import Browser.Navigation
@@ -8,15 +8,44 @@ import Html exposing (Html)
 import Http
 import Json.Decode
 import Json.Encode
+import List.Extra
 import Mark
-import Pages.Content as Content exposing (Content)
 import Pages.ContentCache as ContentCache exposing (ContentCache)
 import Pages.Document
 import Pages.Manifest as Manifest
-import Pages.Parser exposing (Page)
 import Result.Extra
 import Task exposing (Task)
 import Url exposing (Url)
+
+
+lookup :
+    List ( List String, lookupResult )
+    -> Url
+    -> Maybe lookupResult
+lookup content url =
+    List.Extra.find
+        (\( path, markup ) ->
+            (String.split "/" (url.path |> dropTrailingSlash)
+                |> List.drop 1
+            )
+                == path
+        )
+        content
+        |> Maybe.map Tuple.second
+
+
+dropTrailingSlash path =
+    if path |> String.endsWith "/" then
+        String.dropRight 1 path
+
+    else
+        path
+
+
+type alias Page metadata view =
+    { metadata : metadata
+    , view : view
+    }
 
 
 type alias Content =
@@ -29,37 +58,45 @@ type alias Program userModel userMsg metadata view =
 
 mainView :
     (userModel -> List ( List String, metadata ) -> Page metadata view -> { title : String, body : Html userMsg })
-    -> ModelDetails userModel userMsg metadata view
+    -> ModelDetails userModel metadata view
     -> { title : String, body : Html userMsg }
 mainView pageView model =
     case model.contentCache of
         Ok site ->
-            pageViewOrError pageView model (Ok site)
+            pageViewOrError pageView model model.contentCache
 
         -- TODO these lookup helpers should not need it to be a Result
-        Err errorView ->
+        Err errors ->
             { title = "Error parsing"
-            , body = errorView
+            , body = ContentCache.errorView errors
             }
 
 
 pageViewOrError :
     (userModel -> List ( List String, metadata ) -> Page metadata view -> { title : String, body : Html userMsg })
-    -> ModelDetails userModel userMsg metadata view
-    -> ContentCache userMsg metadata view
+    -> ModelDetails userModel metadata view
+    -> ContentCache metadata view
     -> { title : String, body : Html userMsg }
 pageViewOrError pageView model cache =
     case ContentCache.lookup cache model.url of
         Just entry ->
             case entry of
-                ContentCache.Parsed metadata viewList ->
-                    pageView model.userModel
-                        (Result.map ContentCache.extractMetadata cache |> Result.withDefault []
-                         -- TODO handle error better
-                        )
-                        { metadata = metadata
-                        , view = viewList
-                        }
+                ContentCache.Parsed metadata viewResult ->
+                    case viewResult of
+                        Ok viewList ->
+                            pageView model.userModel
+                                (Result.map ContentCache.extractMetadata cache
+                                    |> Result.withDefault []
+                                 -- TODO handle error better
+                                )
+                                { metadata = metadata
+                                , view = viewList
+                                }
+
+                        Err error ->
+                            { title = "Parsing error"
+                            , body = Html.text error
+                            }
 
                 ContentCache.NeedContent extension _ ->
                     { title = "", body = Html.text "" }
@@ -83,7 +120,7 @@ pageViewOrError pageView model cache =
 view :
     Content
     -> (userModel -> List ( List String, metadata ) -> Page metadata view -> { title : String, body : Html userMsg })
-    -> ModelDetails userModel userMsg metadata view
+    -> ModelDetails userModel metadata view
     -> Browser.Document (Msg userMsg metadata view)
 view content pageView model =
     let
@@ -98,14 +135,13 @@ view content pageView model =
     }
 
 
-encodeHeads : List Head.Tag -> Json.Encode.Value
-encodeHeads head =
-    Json.Encode.list Head.toJson head
+encodeHeads : String -> String -> List (Head.Tag pathKey) -> Json.Encode.Value
+encodeHeads canonicalSiteUrl currentPagePath head =
+    Json.Encode.list (Head.toJson canonicalSiteUrl currentPagePath) head
 
 
 type alias Flags =
-    { imageAssets : Json.Decode.Value
-    }
+    {}
 
 
 combineTupleResults :
@@ -122,25 +158,20 @@ combineTupleResults input =
 
 
 init :
-    Pages.Document.Document metadata view
+    String
+    -> Pages.Document.Document metadata view
     -> (Json.Encode.Value -> Cmd (Msg userMsg metadata view))
-    -> (metadata -> List Head.Tag)
+    -> (metadata -> List (Head.Tag pathKey))
     -> Content
     -> ( userModel, Cmd userMsg )
     -> Flags
     -> Url
     -> Browser.Navigation.Key
-    -> ( ModelDetails userModel userMsg metadata view, Cmd (Msg userMsg metadata view) )
-init document toJsPort head content initUserModel flags url key =
+    -> ( ModelDetails userModel metadata view, Cmd (Msg userMsg metadata view) )
+init canonicalSiteUrl document toJsPort head content initUserModel flags url key =
     let
         ( userModel, userCmd ) =
             initUserModel
-
-        imageAssets =
-            Json.Decode.decodeValue
-                (Json.Decode.dict Json.Decode.string)
-                flags.imageAssets
-                |> Result.withDefault Dict.empty
 
         contentCache =
             ContentCache.init document content
@@ -149,14 +180,13 @@ init document toJsPort head content initUserModel flags url key =
         Ok okCache ->
             ( { key = key
               , url = url
-              , imageAssets = imageAssets
               , userModel = userModel
               , contentCache = contentCache
               }
             , Cmd.batch
-                ([ Content.lookup (ContentCache.extractMetadata okCache) url
+                ([ lookup (ContentCache.extractMetadata okCache) url
                     |> Maybe.map head
-                    |> Maybe.map encodeHeads
+                    |> Maybe.map (encodeHeads canonicalSiteUrl url.path)
                     |> Maybe.map toJsPort
                  , userCmd |> Cmd.map UserMsg |> Just
                  , contentCache
@@ -171,9 +201,8 @@ init document toJsPort head content initUserModel flags url key =
         Err _ ->
             ( { key = key
               , url = url
-              , imageAssets = imageAssets
               , userModel = userModel
-              , contentCache = Ok Dict.empty -- TODO use ContentCache.init
+              , contentCache = contentCache
               }
             , Cmd.batch
                 [ userCmd |> Cmd.map UserMsg
@@ -186,20 +215,19 @@ type Msg userMsg metadata view
     = LinkClicked Browser.UrlRequest
     | UrlChanged Url.Url
     | UserMsg userMsg
-    | UpdateCache (Result Http.Error (ContentCache userMsg metadata view))
-    | UpdateCacheAndUrl Url (Result Http.Error (ContentCache userMsg metadata view))
+    | UpdateCache (Result Http.Error (ContentCache metadata view))
+    | UpdateCacheAndUrl Url (Result Http.Error (ContentCache metadata view))
 
 
 type Model userModel userMsg metadata view
-    = Model (ModelDetails userModel userMsg metadata view)
+    = Model (ModelDetails userModel metadata view)
     | CliModel
 
 
-type alias ModelDetails userModel userMsg metadata view =
+type alias ModelDetails userModel metadata view =
     { key : Browser.Navigation.Key
     , url : Url.Url
-    , imageAssets : Dict String String
-    , contentCache : ContentCache userMsg metadata view
+    , contentCache : ContentCache metadata view
     , userModel : userModel
     }
 
@@ -208,8 +236,8 @@ update :
     Pages.Document.Document metadata view
     -> (userMsg -> userModel -> ( userModel, Cmd userMsg ))
     -> Msg userMsg metadata view
-    -> ModelDetails userModel userMsg metadata view
-    -> ( ModelDetails userModel userMsg metadata view, Cmd (Msg userMsg metadata view) )
+    -> ModelDetails userModel metadata view
+    -> ( ModelDetails userModel metadata view, Cmd (Msg userMsg metadata view) )
 update document userUpdate msg model =
     case msg of
         LinkClicked urlRequest ->
@@ -282,15 +310,16 @@ application :
     , document : Pages.Document.Document metadata view
     , content : Content
     , toJsPort : Json.Encode.Value -> Cmd (Msg userMsg metadata view)
-    , head : metadata -> List Head.Tag
-    , manifest : Manifest.Config
+    , head : metadata -> List (Head.Tag pathKey)
+    , manifest : Manifest.Config pathKey
+    , canonicalSiteUrl : String
     }
     -> Program userModel userMsg metadata view
 application config =
     Browser.application
         { init =
             \flags url key ->
-                init config.document config.toJsPort config.head config.content config.init flags url key
+                init config.canonicalSiteUrl config.document config.toJsPort config.head config.content config.init flags url key
                     |> Tuple.mapFirst Model
         , view =
             \outerModel ->
@@ -332,17 +361,53 @@ cliApplication :
     , document : Pages.Document.Document metadata view
     , content : Content
     , toJsPort : Json.Encode.Value -> Cmd (Msg userMsg metadata view)
-    , head : metadata -> List Head.Tag
-    , manifest : Manifest.Config
+    , head : metadata -> List (Head.Tag pathKey)
+    , manifest : Manifest.Config pathKey
+    , canonicalSiteUrl : String
     }
     -> Program userModel userMsg metadata view
 cliApplication config =
+    let
+        contentCache =
+            ContentCache.init config.document config.content
+    in
     Platform.worker
         { init =
             \flags ->
                 ( CliModel
-                , config.toJsPort (Manifest.toJson config.manifest)
+                , case contentCache of
+                    Ok _ ->
+                        case contentCache |> ContentCache.pagesWithErrors of
+                            Just pageErrors ->
+                                config.toJsPort
+                                    (Json.Encode.object
+                                        [ ( "errors", encodeErrors pageErrors )
+                                        , ( "manifest", Manifest.toJson config.manifest )
+                                        ]
+                                    )
+
+                            Nothing ->
+                                config.toJsPort
+                                    (Json.Encode.object
+                                        [ ( "manifest", Manifest.toJson config.manifest )
+                                        ]
+                                    )
+
+                    Err error ->
+                        config.toJsPort
+                            (Json.Encode.object
+                                [ ( "errors", encodeErrors error )
+                                , ( "manifest", Manifest.toJson config.manifest )
+                                ]
+                            )
                 )
         , update = \msg model -> ( model, Cmd.none )
         , subscriptions = \_ -> Sub.none
         }
+
+
+encodeErrors errors =
+    errors
+        |> Json.Encode.dict
+            (\path -> "/" ++ String.join "/" path)
+            (\errorsForPath -> Json.Encode.string errorsForPath)

@@ -1,6 +1,5 @@
-module MarkParser exposing (document, newDocument)
+module MarkParser exposing (newDocument)
 
-import BlockHelpers
 import Dict exposing (Dict)
 import Element exposing (Element)
 import Element.Background
@@ -15,7 +14,7 @@ import LearnIndex
 import Mark
 import Mark.Error
 import Metadata exposing (Metadata)
-import Pages.Parser exposing (Page)
+import Pages exposing (Page)
 import Style
 import Style.Helpers
 import View.CodeSnippet
@@ -23,21 +22,6 @@ import View.DripSignupForm
 import View.Ellie
 import View.FontAwesome
 import View.Resource
-
-
-document :
-    Dict String String
-    -> List String
-    -> List ( List String, Metadata msg )
-    -> Mark.Document (Page (Metadata msg) (List (Element msg)))
-document imageAssets routes parsedMetadata =
-    Pages.Parser.document
-        (Metadata.metadata imageAssets)
-        { imageAssets = imageAssets
-        , routes = routes
-        , indexView = parsedMetadata
-        }
-        blocks
 
 
 newDocument : Mark.Document (List (Element msg))
@@ -90,7 +74,9 @@ blocks =
                         }
                         |> Element.el [ Element.centerX ]
                 )
-                |> Mark.field "src" BlockHelpers.imageSrc
+                -- |> Mark.field "src" BlockHelpers.imageSrc
+                -- TODO restore image path checking
+                |> Mark.field "src" (Mark.string |> Mark.map (\src -> "/images/" ++ src))
                 |> Mark.field "description" Mark.string
                 |> Mark.toBlock
 
@@ -170,8 +156,8 @@ blocks =
                                         (List.map (applyTuple viewText) texts)
                                 }
                         )
-                        |> Mark.field "url"
-                            BlockHelpers.route
+                        -- TODO restore url checker
+                        |> Mark.field "url" Mark.string
                     , Mark.verbatim "code"
                         (\str ->
                             Element.el

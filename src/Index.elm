@@ -4,7 +4,6 @@ import Element exposing (Element)
 import Element.Border
 import Element.Font
 import Metadata exposing (Metadata)
-import Pages.Parser
 import Style.Helpers
 
 
@@ -13,7 +12,7 @@ view :
     -> Element msg
 view posts =
     Element.column [ Element.spacing 20 ]
-        (posts
+        ((posts
             |> List.filterMap
                 (\( path, metadata ) ->
                     case metadata of
@@ -26,6 +25,7 @@ view posts =
                         Metadata.Learn meta ->
                             Nothing
                 )
+         )
             |> List.map postSummary
         )
 

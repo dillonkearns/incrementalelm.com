@@ -1,11 +1,9 @@
 module Metadata exposing (ArticleMetadata, LearnMetadata, Metadata(..), metadata)
 
-import BlockHelpers
 import Dict exposing (Dict)
 import Element exposing (Element)
 import Element.Font as Font
 import Mark
-import Pages.Parser
 
 
 type Metadata msg
@@ -46,9 +44,10 @@ metadata imageAssets =
                     gather
                     titleText
                 )
-            |> Mark.field "src" BlockHelpers.imageSrc
+            -- |> Mark.field "src" BlockHelpers.imageSrc
             -- |> Mark.field "src" (Pages.Parser.imageSrc imageAssets)
-            -- |> Mark.field "src" (Mark.string |> Mark.map (\src -> "/images/" ++ src))
+            -- TODO restore image path checking
+            |> Mark.field "src" (Mark.string |> Mark.map (\src -> "/images/" ++ src))
             |> Mark.toBlock
         , Mark.record "Page"
             (\title ->

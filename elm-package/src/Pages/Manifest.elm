@@ -4,7 +4,7 @@ import Color exposing (Color)
 import Color.Convert
 import Json.Encode as Encode
 import Pages.Manifest.Category as Category exposing (Category)
-import Platform.Sub
+import Pages.Path as Path exposing (Path)
 
 
 
@@ -71,7 +71,7 @@ orientationToString orientation =
             "portrait-secondary"
 
 
-type alias Config =
+type alias Config pathKey =
     { backgroundColor : Maybe Color
     , categories : List Category
     , displayMode : DisplayMode
@@ -82,11 +82,11 @@ type alias Config =
     , themeColor : Maybe Color
 
     -- https://developer.mozilla.org/en-US/docs/Web/Manifest/start_url
-    , startUrl : Maybe String
+    , startUrl : Path pathKey Path.ToPage
 
     -- https://developer.mozilla.org/en-US/docs/Web/Manifest/short_name
     , shortName : Maybe String
-    , sourceIcon : String
+    , sourceIcon : Path pathKey Path.ToImage
     }
 
 
@@ -106,10 +106,11 @@ displayModeToAttribute displayMode =
             "browser"
 
 
-toJson : Config -> Encode.Value
+toJson : Config pathKey -> Encode.Value
 toJson config =
     [ ( "sourceIcon"
       , config.sourceIcon
+            |> Path.toString
             |> Encode.string
             |> Just
       )
@@ -167,7 +168,9 @@ toJson config =
       )
     , ( "start_url"
       , config.startUrl
-            |> Maybe.map Encode.string
+            |> Path.toString
+            |> Encode.string
+            |> Just
       )
     , ( "short_name"
       , config.shortName |> Maybe.map Encode.string
