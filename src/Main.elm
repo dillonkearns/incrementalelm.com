@@ -48,7 +48,7 @@ main =
         , view = view
         , update = update
         , subscriptions = subscriptions
-        , documents = [ markupDocument ]
+        , documents = [ markupDocument, markdownDocument ]
         , head = head
         , manifest = manifest
         , canonicalSiteUrl = "https://incrementalelm.com"
@@ -60,6 +60,18 @@ markupDocument =
     Pages.Document.markupParser
         (Metadata.metadata Dict.empty |> Mark.document identity)
         MarkParser.newDocument
+
+
+markdownDocument : ( String, Pages.Document.DocumentHandler (Metadata Msg) (List (Element Msg)) )
+markdownDocument =
+    Pages.Document.parser
+        { extension = "md"
+        , metadata = Json.Decode.succeed <| Metadata.Page { title = "TODO" }
+        , body =
+            \string ->
+                Ok
+                    []
+        }
 
 
 manifest =

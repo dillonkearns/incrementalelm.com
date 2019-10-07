@@ -199,6 +199,12 @@ isValidRoute route =
 content : List ( List String, { extension: String, frontMatter : String, body : Maybe String } )
 content =
     [ 
+  ( ["articles"]
+    , { frontMatter = """{"type":"page"}
+""" , body = Nothing
+    , extension = "md"
+    } )
+  ,
   ( ["accelerator-application"]
     , { frontMatter = """
 |> Page
@@ -221,14 +227,6 @@ content =
     title = Using elm types to prevent logging social security #'s
     src = article-cover/exit.jpg
     description = One of the most successful techniques I've seen for making sure you don't break elm code the next time you touch it is a technique I call an *Exit Gatekeeper*.
-""" , body = Nothing
-    , extension = "emu"
-    } )
-  ,
-  ( ["articles"]
-    , { frontMatter = """
-|> Page
-    title = Articles
 """ , body = Nothing
     , extension = "emu"
     } )
