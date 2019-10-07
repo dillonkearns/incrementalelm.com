@@ -8,6 +8,7 @@ module Pages.ContentCache exposing
     , init
     , lazyLoad
     , lookup
+    , lookupMetadata
     , pagesWithErrors
     , pathForUrl
     , routesForCache
@@ -22,6 +23,7 @@ import Json.Decode
 import Mark
 import Mark.Error
 import Pages.Document as Document exposing (Document)
+import Pages.PagePath as PagePath exposing (PagePath)
 import Result.Extra
 import Task exposing (Task)
 import Url exposing (Url)
@@ -59,11 +61,11 @@ type alias Path =
     List String
 
 
-extractMetadata : ContentCacheInner metadata view -> List ( Path, metadata )
-extractMetadata cache =
+extractMetadata : pathKey -> ContentCacheInner metadata view -> List ( PagePath pathKey, metadata )
+extractMetadata pathKey cache =
     cache
         |> Dict.toList
-        |> List.map (\( path, entry ) -> ( path, getMetadata entry ))
+        |> List.map (\( path, entry ) -> ( PagePath.build pathKey path, getMetadata entry ))
 
 
 getMetadata : Entry metadata view -> metadata
@@ -141,7 +143,7 @@ parseMetadata document content =
                 (\{ frontMatter, extension, body } ->
                     let
                         maybeDocumentEntry =
-                            Dict.get extension document
+                            Document.get extension document
                     in
                     case maybeDocumentEntry of
                         Just documentEntry ->
@@ -172,7 +174,7 @@ parseContent :
 parseContent extension body document =
     let
         maybeDocumentEntry =
-            Dict.get extension document
+            Document.get extension document
     in
     case maybeDocumentEntry of
         Just documentEntry ->
@@ -223,8 +225,9 @@ routesForCache cacheResult =
             []
 
 
-type alias Page metadata view =
+type alias Page metadata view pathKey =
     { metadata : metadata
+    , path : PagePath pathKey
     , view : view
     }
 
@@ -407,16 +410,45 @@ pathForUrl url =
 
 
 lookup :
-    ContentCache metadata view
+    pathKey
+    -> ContentCache metadata view
     -> Url
-    -> Maybe (Entry metadata view)
-lookup content url =
+    -> Maybe ( PagePath pathKey, Entry metadata view )
+lookup pathKey content url =
     case content of
         Ok dict ->
-            Dict.get (pathForUrl url) dict
+            let
+                path =
+                    pathForUrl url
+            in
+            Dict.get path dict
+                |> Maybe.map
+                    (\entry ->
+                        ( PagePath.build pathKey path, entry )
+                    )
 
         Err _ ->
             Nothing
+
+
+lookupMetadata :
+    ContentCache metadata view
+    -> Url
+    -> Maybe metadata
+lookupMetadata content url =
+    lookup () content url
+        |> Maybe.map
+            (\( pagePath, entry ) ->
+                case entry of
+                    NeedContent _ metadata ->
+                        metadata
+
+                    Unparsed _ metadata _ ->
+                        metadata
+
+                    Parsed metadata _ ->
+                        metadata
+            )
 
 
 dropTrailingSlash path =

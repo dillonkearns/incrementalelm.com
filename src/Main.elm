@@ -24,11 +24,12 @@ import Mark
 import Mark.Error
 import MarkParser
 import Metadata exposing (Metadata)
-import Pages exposing (Page)
+import Pages exposing (images, pages)
 import Pages.Document
 import Pages.Manifest as Manifest
 import Pages.Manifest.Category
-import PagesNew exposing (images, pages)
+import Pages.PagePath exposing (PagePath)
+import Pages.Platform exposing (Page)
 import RawContent
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
@@ -40,9 +41,9 @@ import View.MenuBar
 import View.Navbar
 
 
-main : Pages.Program Model Msg (Metadata Msg) (List (Element Msg))
+main : Pages.Platform.Program Model Msg (Metadata Msg) (List (Element Msg))
 main =
-    PagesNew.application
+    Pages.application
         { init = init
         , view = view
         , update = update
@@ -54,7 +55,7 @@ main =
         }
 
 
-markupDocument : Pages.Document.DocumentParser (Metadata Msg) (List (Element Msg))
+markupDocument : ( String, Pages.Document.DocumentHandler (Metadata Msg) (List (Element Msg)) )
 markupDocument =
     Pages.Document.markupParser
         (Metadata.metadata Dict.empty |> Mark.document identity)
@@ -275,7 +276,7 @@ makeTranslated i polygon =
             ]
 
 
-view : Model -> List ( List String, Metadata Msg ) -> Page (Metadata Msg) (List (Element Msg)) -> { title : String, body : Html Msg }
+view : Model -> List ( PagePath Pages.PathKey, Metadata Msg ) -> Page (Metadata Msg) (List (Element Msg)) Pages.PathKey -> { title : String, body : Html Msg }
 view model allMetadata pageOrPost =
     let
         { title, body } =
@@ -302,7 +303,7 @@ view model allMetadata pageOrPost =
     }
 
 
-pageOrPostView : Model -> Page (Metadata Msg) (List (Element Msg)) -> { title : String, body : Element Msg }
+pageOrPostView : Model -> Page (Metadata Msg) (List (Element Msg)) Pages.PathKey -> { title : String, body : Element Msg }
 pageOrPostView model pageOrPost =
     case pageOrPost.metadata of
         Metadata.Page metadata ->
@@ -405,7 +406,7 @@ pageOrPostView model pageOrPost =
 <https://html.spec.whatwg.org/multipage/semantics.html#standard-metadata-names>
 <https://ogp.me/>
 -}
-head : Metadata.Metadata msg -> List (Head.Tag PagesNew.PathKey)
+head : Metadata.Metadata msg -> List (Head.Tag Pages.PathKey)
 head metadata =
     case metadata of
         Metadata.Page meta ->
@@ -413,7 +414,7 @@ head metadata =
                 { canonicalUrlOverride = Nothing
                 , siteName = siteName
                 , image =
-                    { url = PagesNew.images.icon
+                    { url = Pages.images.icon
                     , alt = meta.title
                     , dimensions = Nothing
                     , mimeType = Nothing
@@ -440,7 +441,7 @@ head metadata =
                 , siteName = siteName
                 , image =
                     -- TODO fix image
-                    { url = PagesNew.images.architecture
+                    { url = Pages.images.architecture
                     , alt = meta.description.raw
                     , dimensions = Nothing
                     , mimeType = Nothing

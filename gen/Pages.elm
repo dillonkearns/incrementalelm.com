@@ -1,34 +1,47 @@
-port module PagesNew exposing (PathKey, allPages, allImages, application, images, isValidRoute, pages)
+port module Pages exposing (PathKey, allPages, allImages, application, images, isValidRoute, pages)
 
-import Dict exposing (Dict)
 import Color exposing (Color)
 import Head
 import Html exposing (Html)
 import Json.Decode
 import Json.Encode
 import Mark
-import Pages
+import Pages.Platform
 import Pages.ContentCache exposing (Page)
 import Pages.Manifest exposing (DisplayMode, Orientation)
 import Pages.Manifest.Category as Category exposing (Category)
 import Url.Parser as Url exposing ((</>), s)
-import Pages.Document
-import Pages.Path as Path exposing (Path)
+import Pages.Document as Document
+import Pages.ImagePath as ImagePath exposing (ImagePath)
+import Pages.PagePath as PagePath exposing (PagePath)
+import Pages.Directory as Directory exposing (Directory)
 
 
 type PathKey
     = PathKey
 
 
-buildImage : List String -> Path PathKey Path.ToImage
+buildImage : List String -> ImagePath PathKey
 buildImage path =
-    Path.buildImage PathKey ("images" :: path)
+    ImagePath.build PathKey ("images" :: path)
 
 
 
-buildPage : List String -> Path PathKey Path.ToPage
+buildPage : List String -> PagePath PathKey
 buildPage path =
-    Path.buildPage PathKey path
+    PagePath.build PathKey path
+
+
+directoryWithIndex : List String -> Directory PathKey Directory.WithIndex
+directoryWithIndex path =
+    Directory.withIndex PathKey allPages path
+
+
+directoryWithoutIndex : List String -> Directory PathKey Directory.WithoutIndex
+directoryWithoutIndex path =
+    Directory.withoutIndex PathKey allPages path
+
+
 port toJsPort : Json.Encode.Value -> Cmd msg
 
 
@@ -36,30 +49,31 @@ application :
     { init : ( userModel, Cmd userMsg )
     , update : userMsg -> userModel -> ( userModel, Cmd userMsg )
     , subscriptions : userModel -> Sub userMsg
-    , view : userModel -> List ( List String, metadata ) -> Page metadata view -> { title : String, body : Html userMsg }
+    , view : userModel -> List ( PagePath PathKey, metadata ) -> Page metadata view PathKey -> { title : String, body : Html userMsg }
     , head : metadata -> List (Head.Tag PathKey)
-    , documents : List (Pages.Document.DocumentParser metadata view)
+    , documents : List ( String, Document.DocumentHandler metadata view )
     , manifest : Pages.Manifest.Config PathKey
     , canonicalSiteUrl : String
     }
-    -> Pages.Program userModel userMsg metadata view
+    -> Pages.Platform.Program userModel userMsg metadata view
 application config =
-    Pages.application
+    Pages.Platform.application
         { init = config.init
         , view = config.view
         , update = config.update
         , subscriptions = config.subscriptions
-        , document = Dict.fromList config.documents
+        , document = Document.fromList config.documents
         , content = content
         , toJsPort = toJsPort
         , head = config.head
         , manifest = config.manifest
         , canonicalSiteUrl = config.canonicalSiteUrl
+        , pathKey = PathKey
         }
 
 
 
-allPages : List (Path PathKey Path.ToPage)
+allPages : List (PagePath PathKey)
 allPages =
     [ (buildPage [ "accelerator-application" ])
     , (buildPage [ "accelerator-program" ])
@@ -93,7 +107,7 @@ pages =
         , index = (buildPage [ "articles" ])
         , movingFasterWithTinySteps = (buildPage [ "articles", "moving-faster-with-tiny-steps" ])
         , toTestOrNotToTest = (buildPage [ "articles", "to-test-or-not-to-test" ])
-        , all = [ (buildPage [ "articles", "exit-gatekeepers" ]), (buildPage [ "articles" ]), (buildPage [ "articles", "moving-faster-with-tiny-steps" ]), (buildPage [ "articles", "to-test-or-not-to-test" ]) ]
+        , directory = directoryWithIndex ["articles"]
         }
     , contact = (buildPage [ "contact" ])
     , coreSkillsSeminar = (buildPage [ "core-skills-seminar" ])
@@ -108,13 +122,13 @@ pages =
         , editorConfig = (buildPage [ "learn", "editor-config" ])
         , gettingStarted = (buildPage [ "learn", "getting-started" ])
         , index = (buildPage [ "learn" ])
-        , all = [ (buildPage [ "learn", "architecture" ]), (buildPage [ "learn", "editor-config" ]), (buildPage [ "learn", "getting-started" ]), (buildPage [ "learn" ]) ]
+        , directory = directoryWithIndex ["learn"]
         }
     , scalarCodecsTutorial = (buildPage [ "scalar-codecs-tutorial" ])
     , services = (buildPage [ "services" ])
     , thankYou = (buildPage [ "thank-you" ])
     , tips = (buildPage [ "tips" ])
-    , all = [ (buildPage [ "accelerator-application" ]), (buildPage [ "accelerator-program" ]), (buildPage [ "contact" ]), (buildPage [ "core-skills-seminar" ]), (buildPage [ "custom-scalar-checklist" ]), (buildPage [ "elm-graphql-seminar" ]), (buildPage [ "elm-graphql-workshop" ]), (buildPage [ "incremental-weekly-unsubscribe" ]), (buildPage [  ]), (buildPage [ "introducing-custom-scalars-course" ]), (buildPage [ "scalar-codecs-tutorial" ]), (buildPage [ "services" ]), (buildPage [ "thank-you" ]), (buildPage [ "tips" ]) ]
+    , directory = directoryWithIndex []
     }
 
 images =
@@ -123,7 +137,7 @@ images =
         { exit = (buildImage [ "article-cover", "exit.jpg" ])
         , mountains = (buildImage [ "article-cover", "mountains.jpg" ])
         , thinker = (buildImage [ "article-cover", "thinker.jpg" ])
-        , all = [ (buildImage [ "article-cover", "exit.jpg" ]), (buildImage [ "article-cover", "mountains.jpg" ]), (buildImage [ "article-cover", "thinker.jpg" ]) ]
+        , directory = directoryWithoutIndex ["articleCover"]
         }
     , buildrCropped = (buildImage [ "buildr-cropped.jpg" ])
     , contact = (buildImage [ "contact.jpg" ])
@@ -137,10 +151,10 @@ images =
     , osloWorkshop1 = (buildImage [ "oslo-workshop1.jpg" ])
     , steps = (buildImage [ "steps.jpg" ])
     , workspace = (buildImage [ "workspace.jpg" ])
-    , all = [ (buildImage [ "architecture.jpg" ]), (buildImage [ "buildr-cropped.jpg" ]), (buildImage [ "contact.jpg" ]), (buildImage [ "custom-scalar-checklist.pdf" ]), (buildImage [ "dillon.jpg" ]), (buildImage [ "dillon2.jpg" ]), (buildImage [ "ed-gonzalez.png" ]), (buildImage [ "elm-graphql-workshop-header.jpg" ]), (buildImage [ "graphql-workshop.png" ]), (buildImage [ "icon.svg" ]), (buildImage [ "oslo-workshop1.jpg" ]), (buildImage [ "steps.jpg" ]), (buildImage [ "workspace.jpg" ]) ]
+    , directory = directoryWithoutIndex []
     }
 
-allImages : List (Path PathKey Path.ToImage)
+allImages : List (ImagePath PathKey)
 allImages =
     [(buildImage [ "architecture.jpg" ])
     , (buildImage [ "article-cover", "exit.jpg" ])
@@ -165,7 +179,7 @@ isValidRoute : String -> Result String ()
 isValidRoute route =
     let
         validRoutes =
-            List.map Path.toString allPages
+            List.map PagePath.toString allPages
     in
     if
         (route |> String.startsWith "http://")

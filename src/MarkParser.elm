@@ -14,7 +14,8 @@ import LearnIndex
 import Mark
 import Mark.Error
 import Metadata exposing (Metadata)
-import Pages exposing (Page)
+import Pages
+import Pages.Platform exposing (Page)
 import Style
 import Style.Helpers
 import View.CodeSnippet
