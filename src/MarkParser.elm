@@ -186,7 +186,6 @@ blocks =
     , image
     , list
     , code
-    , indexContent [] -- TODO pass in metadata
     , learnIndex [] -- TODO pass in metadata
     , signupForm
     , vimeo
@@ -406,31 +405,6 @@ stylesFor styles =
         Nothing
     ]
         |> List.filterMap identity
-
-
-
-{- Handle Blocks -}
-
-
-indexContent : List ( List String, Metadata msg ) -> Mark.Block (Element msg)
-indexContent posts =
-    Mark.record "IndexContent"
-        (\postsPath -> Index.view posts)
-        |> Mark.field "posts"
-            (Mark.string
-                |> Mark.verify
-                    (\postDirectory ->
-                        if postDirectory == "articles" then
-                            Ok "articles"
-
-                        else
-                            Err
-                                { title = "Could not find posts path `" ++ postDirectory ++ "`"
-                                , message = "Must be one of " :: [ "articles" ]
-                                }
-                    )
-            )
-        |> Mark.toBlock
 
 
 learnIndex : List ( List String, Metadata msg ) -> Mark.Block (Element msg)

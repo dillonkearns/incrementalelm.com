@@ -17,6 +17,7 @@ import Head as Head exposing (Tag)
 import Head.Seo
 import Html exposing (Html)
 import Html.Attributes
+import Index
 import Json.Decode
 import Json.Encode
 import List.Extra
@@ -292,7 +293,7 @@ view : Model -> List ( PagePath Pages.PathKey, Metadata Msg ) -> Page (Metadata 
 view model allMetadata pageOrPost =
     let
         { title, body } =
-            pageOrPostView model pageOrPost
+            pageOrPostView allMetadata model pageOrPost
     in
     { title = title
     , body =
@@ -315,14 +316,19 @@ view model allMetadata pageOrPost =
     }
 
 
-pageOrPostView : Model -> Page (Metadata Msg) (List (Element Msg)) Pages.PathKey -> { title : String, body : Element Msg }
-pageOrPostView model pageOrPost =
+pageOrPostView : List ( PagePath Pages.PathKey, Metadata Msg ) -> Model -> Page (Metadata Msg) (List (Element Msg)) Pages.PathKey -> { title : String, body : Element Msg }
+pageOrPostView allMetadata model pageOrPost =
     case pageOrPost.metadata of
         Metadata.Page metadata ->
             { title = metadata.title
             , body =
                 [ header model
-                , pageOrPost.view
+                , (if pageOrPost.path == Pages.pages.articles.index then
+                    [ Index.view allMetadata ]
+
+                   else
+                    pageOrPost.view
+                  )
                     |> Element.textColumn
                         [ Element.centerX
                         , Element.width Element.fill
