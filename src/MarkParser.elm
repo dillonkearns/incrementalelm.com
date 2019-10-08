@@ -186,7 +186,6 @@ blocks =
     , image
     , list
     , code
-    , learnIndex [] -- TODO pass in metadata
     , signupForm
     , vimeo
     , button
@@ -405,12 +404,6 @@ stylesFor styles =
         Nothing
     ]
         |> List.filterMap identity
-
-
-learnIndex : List ( List String, Metadata msg ) -> Mark.Block (Element msg)
-learnIndex posts =
-    Mark.record "LearnIndex" (LearnIndex.view posts)
-        |> Mark.toBlock
 
 
 code : Mark.Block (Element msg)

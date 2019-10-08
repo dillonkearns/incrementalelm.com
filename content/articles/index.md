@@ -3,6 +3,3 @@
   "type": "page",
 }
 ---
-
-
-## Hello!

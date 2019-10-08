@@ -20,6 +20,7 @@ import Html.Attributes
 import Index
 import Json.Decode
 import Json.Encode
+import LearnIndex
 import List.Extra
 import Mark
 import Mark.Error
@@ -325,6 +326,9 @@ pageOrPostView allMetadata model pageOrPost =
                 [ header model
                 , (if pageOrPost.path == Pages.pages.articles.index then
                     [ Index.view allMetadata ]
+
+                   else if pageOrPost.path == Pages.pages.learn.index then
+                    [ LearnIndex.view allMetadata ]
 
                    else
                     pageOrPost.view

@@ -205,6 +205,12 @@ content =
     , extension = "md"
     } )
   ,
+  ( ["learn"]
+    , { frontMatter = """{"type":"page","title":"Learning Resources"}
+""" , body = Nothing
+    , extension = "md"
+    } )
+  ,
   ( ["accelerator-application"]
     , { frontMatter = """
 |> Page
@@ -335,14 +341,6 @@ content =
     , { frontMatter = """
 |> Learn
     title = Getting Started Resources
-""" , body = Nothing
-    , extension = "emu"
-    } )
-  ,
-  ( ["learn"]
-    , { frontMatter = """
-|> Page
-    title = Learning Resources
 """ , body = Nothing
     , extension = "emu"
     } )
