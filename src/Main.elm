@@ -25,6 +25,8 @@ import List.Extra
 import Mark
 import Mark.Error
 import MarkParser
+import Markdown.Parser as Markdown
+import MarkdownRenderer
 import Metadata exposing (Metadata)
 import Pages exposing (images, pages)
 import Pages.Document
@@ -57,22 +59,23 @@ main =
         }
 
 
-markupDocument : ( String, Pages.Document.DocumentHandler (Metadata Msg) (List (Element Msg)) )
+type alias View =
+    List (Element Msg)
+
+
+markupDocument : ( String, Pages.Document.DocumentHandler (Metadata Msg) View )
 markupDocument =
     Pages.Document.markupParser
         (Metadata.metadata Dict.empty |> Mark.document identity)
         MarkParser.newDocument
 
 
-markdownDocument : ( String, Pages.Document.DocumentHandler (Metadata Msg) (List (Element Msg)) )
+markdownDocument : ( String, Pages.Document.DocumentHandler (Metadata Msg) View )
 markdownDocument =
     Pages.Document.parser
         { extension = "md"
         , metadata = Json.Decode.succeed <| Metadata.Page { title = "TODO" }
-        , body =
-            \string ->
-                Ok
-                    []
+        , body = MarkdownRenderer.view
         }
 
 

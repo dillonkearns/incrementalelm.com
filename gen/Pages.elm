@@ -205,6 +205,12 @@ content =
     , extension = "md"
     } )
   ,
+  ( []
+    , { frontMatter = """{"type":"page","title":"Incremental Elm Consulting"}
+""" , body = Nothing
+    , extension = "md"
+    } )
+  ,
   ( ["learn"]
     , { frontMatter = """{"type":"page","title":"Learning Resources"}
 """ , body = Nothing
@@ -301,14 +307,6 @@ content =
     , { frontMatter = """
 |> Page
     title = Incremental Elm Weekly Unsubscribe
-""" , body = Nothing
-    , extension = "emu"
-    } )
-  ,
-  ( []
-    , { frontMatter = """
-|> Page
-    title = Incremental Elm Consulting
 """ , body = Nothing
     , extension = "emu"
     } )
