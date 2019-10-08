@@ -34,7 +34,6 @@ import Pages.Manifest as Manifest
 import Pages.Manifest.Category
 import Pages.PagePath exposing (PagePath)
 import Pages.Platform exposing (Page)
-import RawContent
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
 import Task
