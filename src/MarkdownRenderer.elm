@@ -104,7 +104,7 @@ renderer =
         Element.paragraph
             [ Element.spacing 15 ]
     , thematicBreak = Element.none
-    , plain = Element.text
+    , plain = \content -> Element.el [] (Element.text content)
     , bold = \content -> Element.el [ Font.bold ] (Element.text content)
     , italic = \content -> Element.el [ Font.italic ] (Element.text content)
     , code = code
@@ -117,7 +117,7 @@ renderer =
                 []
                 { url = link.destination
                 , label =
-                    Element.paragraph
+                    Element.row
                         [ Font.color
                             (Element.rgb255
                                 17
@@ -132,7 +132,7 @@ renderer =
                                     122
                                 )
                             ]
-                        , Element.htmlAttribute (Html.Attributes.style "display" "inline")
+                        , Element.htmlAttribute (Html.Attributes.style "display" "inline-flex")
                         ]
                         body
                 }
