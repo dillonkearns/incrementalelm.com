@@ -3,6 +3,7 @@ module Metadata exposing (ArticleMetadata, LearnMetadata, Metadata(..), metadata
 import Dict exposing (Dict)
 import Element exposing (Element)
 import Element.Font as Font
+import Json.Decode as Decode exposing (Decoder)
 import Mark
 
 
@@ -22,6 +23,17 @@ type alias ArticleMetadata msg =
     , coverImage : String
     }
 
+decoder : Decoder (Metadata msg)
+decoder =
+    Decode.field "type" Decode.string
+    |> Decode.andThen (\type_ ->
+    case type_ of
+        "page"->
+             (Decode.field "title" Decode.string) |> Decode.map (\title -> Page { title = title })
+
+        _ ->
+             Decode.fail "Unhandled page type"
+    )
 
 metadata : Dict String String -> Mark.Block (Metadata msg)
 metadata imageAssets =

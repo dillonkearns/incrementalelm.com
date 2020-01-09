@@ -1,8 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e1232547-c783-45fc-b2ff-512520840b91" name="Default" comment="" />
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <list default="true" id="e1232547-c783-45fc-b2ff-512520840b91" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/content/accelerator-application.emu" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/content/accelerator-program.emu" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/content/articles/exit-gatekeepers.emu" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/content/articles/moving-faster-with-tiny-steps.emu" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/content/articles/to-test-or-not-to-test.emu" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/content/contact.emu" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/content/core-skills-seminar.emu" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/content/custom-scalar-checklist.emu" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/content/elm-graphql-seminar.emu" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/content/elm-graphql-workshop.emu" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/content/incremental-weekly-unsubscribe.emu" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/content/introducing-custom-scalars-course.emu" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/content/learn/architecture.emu" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/content/learn/editor-config.emu" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/content/learn/getting-started.emu" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/content/scalar-codecs-tutorial.emu" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/content/services.emu" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/content/thank-you.emu" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/content/tips.emu" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/elm.json" beforeDir="false" afterPath="$PROJECT_DIR$/elm.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gen/Pages.elm" beforeDir="false" afterPath="$PROJECT_DIR$/gen/Pages.elm" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gen/Pages/ContentCache.elm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gen/Pages/Platform.elm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Main.elm" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.elm" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Metadata.elm" beforeDir="false" afterPath="$PROJECT_DIR$/src/Metadata.elm" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -17,107 +45,21 @@
   <component name="FavoritesManager">
     <favorites_list name="incremental-elm" />
   </component>
-  <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Dimensions.elm">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="306">
-              <caret line="18" selection-start-line="18" selection-end-line="18" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Route.elm">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="748">
-              <caret line="48" column="24" selection-start-line="48" selection-start-column="24" selection-end-line="48" selection-end-column="24" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/MarkParser.elm">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="459">
-              <caret line="33" lean-forward="true" selection-start-line="33" selection-end-line="33" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/GoogleForm.elm">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="136">
-              <caret line="8" selection-start-line="8" selection-end-line="8" />
-              <folding>
-                <element signature="e#35#49#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
-  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="IdeDocumentHistory">
-    <option name="CHANGED_PATHS">
-      <list>
-        <option value="$PROJECT_DIR$/src/MarkParser.elm" />
-        <option value="$PROJECT_DIR$/src/Dimensions.elm" />
-      </list>
-    </option>
-  </component>
-  <component name="ProjectFrameBounds">
-    <option name="y" value="23" />
-    <option name="width" value="1440" />
-    <option name="height" value="877" />
-  </component>
-  <component name="ProjectView">
-    <navigator proportions="" version="1">
-      <foldersAlwaysOnTop value="true" />
-    </navigator>
-    <panes>
-      <pane id="PackagesPane" />
-      <pane id="ProjectPane">
-        <subPane>
-          <expand>
-            <path>
-              <item name="incremental-elm" type="b2602c69:ProjectViewProjectNode" />
-              <item name="incremental-elm" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="incremental-elm" type="b2602c69:ProjectViewProjectNode" />
-              <item name="incremental-elm" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
-      <pane id="Scope" />
-    </panes>
+  <component name="ProjectId" id="1W8thPlvvLAroW4YrYHR6YEHmgC" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SearchEverywhereHistoryKey" value="version control&#9;ACTION&#9;Vcs.KeymapGroup" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/elm.json" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
     <property name="settings.editor.selected.configurable" value="org.elm.workspace.ui.ElmWorkspaceConfigurable" />
-  </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
-      <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
-      </list>
-    </option>
   </component>
   <component name="RunManager">
     <configuration default="true" type="Applet">
@@ -158,6 +100,18 @@
       </method>
     </configuration>
   </component>
+  <component name="ServiceViewManager">
+    <option name="viewStates">
+      <list>
+        <serviceView>
+          <treeState>
+            <expand />
+            <select />
+          </treeState>
+        </serviceView>
+      </list>
+    </option>
+  </component>
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -171,75 +125,19 @@
     </task>
     <servers />
   </component>
-  <component name="ToolWindowManager">
-    <frame x="0" y="23" width="1440" height="877" extended-state="0" />
-    <editor active="true" />
-    <layout>
-      <window_info content_ui="combo" id="Project" order="0" weight="0.25679544" />
-      <window_info id="Structure" order="1" weight="0.25" />
-      <window_info id="Image Layers" order="2" />
-      <window_info id="Designer" order="3" />
-      <window_info id="UI Designer" order="4" />
-      <window_info id="Capture Tool" order="5" />
-      <window_info id="Favorites" order="6" side_tool="true" weight="0.3298611" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Terminal" order="7" />
-      <window_info anchor="bottom" id="Event Log" order="8" side_tool="true" />
-      <window_info anchor="bottom" id="Version Control" order="9" />
-      <window_info anchor="bottom" id="Inspection Results" order="10" weight="0.32919255" />
-      <window_info anchor="bottom" id="Elm Compiler" order="11" />
-      <window_info anchor="right" id="Commander" order="0" weight="0.4" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="right" id="Palette" order="3" />
-      <window_info anchor="right" id="Capture Analysis" order="4" />
-      <window_info anchor="right" id="Theme Preview" order="5" />
-      <window_info anchor="right" id="Elm" order="6" weight="0.3298611" />
-      <window_info anchor="right" id="Palette&#9;" order="7" />
-      <window_info anchor="right" id="Maven Projects" order="8" />
-      <window_info anchor="right" id="Maven" order="9" />
-    </layout>
-  </component>
-  <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/elm.json">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Dimensions.elm">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="18" selection-start-line="18" selection-end-line="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Route.elm">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="748">
-          <caret line="48" column="24" selection-start-line="48" selection-start-column="24" selection-end-line="48" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/MarkParser.elm">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="459">
-          <caret line="33" lean-forward="true" selection-start-line="33" selection-end-line="33" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/GoogleForm.elm">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="8" selection-start-line="8" selection-end-line="8" />
-          <folding>
-            <element signature="e#35#49#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+  <component name="WindowStateProjectService">
+    <state x="435" y="199" key="SettingsEditor" timestamp="1578543913880">
+      <screen x="0" y="0" width="1792" height="1120" />
+    </state>
+    <state x="435" y="199" key="SettingsEditor/0.0.1792.1120@0.0.1792.1120" timestamp="1578543913880" />
+    <state x="565" y="324" width="662" height="472" key="find.popup" timestamp="1578543729873">
+      <screen x="0" y="0" width="1792" height="1120" />
+    </state>
+    <state x="565" y="324" width="662" height="472" key="find.popup/0.0.1792.1120@0.0.1792.1120" timestamp="1578543729873" />
+    <state x="662" y="257" width="670" height="526" key="search.everywhere.popup" timestamp="1578544304883">
+      <screen x="0" y="0" width="1792" height="1120" />
+    </state>
+    <state x="662" y="257" width="670" height="526" key="search.everywhere.popup/0.0.1792.1120@0.0.1792.1120" timestamp="1578544304883" />
+    <state x="945" y="331" width="670" height="676" key="search.everywhere.popup/0.0.2560.1440@0.0.2560.1440" timestamp="1578433102259" />
   </component>
 </project>

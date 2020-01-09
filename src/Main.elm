@@ -1,4 +1,4 @@
-port module Main exposing (main)
+module Main exposing (main)
 
 import Animation
 import Browser
@@ -34,6 +34,7 @@ import Pages.Manifest as Manifest
 import Pages.Manifest.Category
 import Pages.PagePath exposing (PagePath)
 import Pages.Platform exposing (Page)
+import Pages.StaticHttp as StaticHttp
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
 import Task
@@ -46,17 +47,18 @@ import View.Navbar
 
 main : Pages.Platform.Program Model Msg (Metadata Msg) (List (Element Msg))
 main =
-    Pages.application
+    Pages.Platform.application
         { init = init
         , view = view
         , update = update
         , subscriptions = subscriptions
         , documents = [ markupDocument, markdownDocument ]
-        , head = head
         , manifest = manifest
         , canonicalSiteUrl = "https://incrementalelm.com"
+        , onPageChange = \_ -> StartAnimation
+        , internals = Pages.internals
         }
-
+--config =Debug.todo ""
 
 type alias View =
     List (Element Msg)
@@ -64,9 +66,11 @@ type alias View =
 
 markupDocument : ( String, Pages.Document.DocumentHandler (Metadata Msg) View )
 markupDocument =
-    Pages.Document.markupParser
-        (Metadata.metadata Dict.empty |> Mark.document identity)
-        MarkParser.newDocument
+    Pages.Document.parser
+        { extension = "emu"
+        , metadata = Json.Decode.succeed <| Metadata.Page { title = "TODO - convert to md" }
+        , body = \_ -> Ok [Element.text "TODO - convert to markdown."]
+        }
 
 
 markdownDocument : ( String, Pages.Document.DocumentHandler (Metadata Msg) View )
@@ -78,6 +82,7 @@ markdownDocument =
         }
 
 
+manifest : Manifest.Config Pages.PathKey
 manifest =
     { backgroundColor = Just Color.white
     , categories = [ Pages.Manifest.Category.education ]
@@ -87,9 +92,9 @@ manifest =
     , iarcRatingId = Nothing
     , name = "Incremental Elm Consulting"
     , themeColor = Just Color.white
-    , startUrl = pages.index
+    , startUrl = Pages.pages.index
     , shortName = Just "Incremental Elm"
-    , sourceIcon = images.icon
+    , sourceIcon = Pages.images.icon
     }
 
 
@@ -106,8 +111,8 @@ type alias Model =
     }
 
 
-init : ( Model, Cmd Msg )
-init =
+--init : ( Model, Cmd Msg )
+init initialPage =
     ( { styles = ElmLogo.polygons |> List.map Animation.style
       , menuBarAnimation = View.MenuBar.init
       , menuAnimation =
@@ -142,6 +147,7 @@ type Msg
     | Animate Animation.Msg
     | InitialViewport Dom.Viewport
     | WindowResized Int Int
+
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -292,48 +298,51 @@ makeTranslated i polygon =
             ]
 
 
-view : Model -> List ( PagePath Pages.PathKey, Metadata Msg ) -> Page (Metadata Msg) (List (Element Msg)) Pages.PathKey -> { title : String, body : Html Msg }
-view model allMetadata pageOrPost =
-    let
-        { title, body } =
-            pageOrPostView allMetadata model pageOrPost
-    in
-    { title = title
-    , body =
-        (if model.showMenu then
-            Element.column
-                [ Element.height Element.fill
-                , Element.alignTop
-                , Element.width Element.fill
-                ]
-                [ View.Navbar.view model animationView StartAnimation
-                , View.Navbar.modalMenuView model.menuAnimation
-                ]
+--view :  List ( PagePath Pages.PathKey, Metadata Msg ) -> Page (Metadata Msg) (List (Element Msg)) Pages.PathKey -> { title : String, body : Html Msg }
+view   allMetadata  page =
+    StaticHttp.succeed ({
+    head = head page.frontmatter,
+    view = \model viewForPage ->
+        let
+            { title, body } =
+                pageOrPostView allMetadata model page viewForPage
+        in
+            { title = title
+            , body =
+                (if model.showMenu then
+                    Element.column
+                        [ Element.height Element.fill
+                        , Element.alignTop
+                        , Element.width Element.fill
+                        ]
+                        [ View.Navbar.view model animationView StartAnimation
+                        , View.Navbar.modalMenuView model.menuAnimation
+                        ]
 
-         else
-            body
-        )
-            |> Element.layout
-                [ Element.width Element.fill
-                ]
-    }
+                 else
+                    body
+                )
+                    |> Element.layout
+                        [ Element.width Element.fill
+                        ]
+            } })
 
 
-pageOrPostView : List ( PagePath Pages.PathKey, Metadata Msg ) -> Model -> Page (Metadata Msg) (List (Element Msg)) Pages.PathKey -> { title : String, body : Element Msg }
-pageOrPostView allMetadata model pageOrPost =
-    case pageOrPost.metadata of
+--pageOrPostView : List ( PagePath Pages.PathKey, Metadata Msg ) -> Model -> Page (Metadata Msg) (List (Element Msg)) Pages.PathKey -> { title : String, body : Element Msg }
+pageOrPostView allMetadata model page viewForPage =
+    case page.frontmatter of
         Metadata.Page metadata ->
             { title = metadata.title
             , body =
                 [ header model
-                , (if pageOrPost.path == Pages.pages.articles.index then
+                , (if page.path == Pages.pages.articles.index then
                     [ Index.view allMetadata ]
 
-                   else if pageOrPost.path == Pages.pages.learn.index then
+                   else if page.path == Pages.pages.learn.index then
                     [ LearnIndex.view allMetadata ]
 
                    else
-                    pageOrPost.view
+                    viewForPage
                   )
                     |> Element.textColumn
                         [ Element.centerX
@@ -375,7 +384,7 @@ pageOrPostView allMetadata model pageOrPost =
                             }
                             |> Element.el [ Element.centerX ]
                        )
-                    :: pageOrPost.view
+                    :: viewForPage
                   )
                     |> Element.textColumn
                         [ Element.centerX
@@ -402,7 +411,7 @@ pageOrPostView allMetadata model pageOrPost =
             { title = metadata.title
             , body =
                 [ header model
-                , pageOrPost.view
+                , viewForPage
                     |> Element.textColumn
                         [ Element.centerX
                         , Element.width Element.fill
