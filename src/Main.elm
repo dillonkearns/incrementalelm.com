@@ -94,7 +94,7 @@ manifest =
     , themeColor = Just Color.white
     , startUrl = Pages.pages.index
     , shortName = Just "Incremental Elm"
-    , sourceIcon = Pages.images.icon
+    , sourceIcon = Pages.images.iconPng
     }
 
 

@@ -20,7 +20,7 @@ import Time
 
 builtAt : Time.Posix
 builtAt =
-    Time.millisToPosix 1578545322
+    Time.millisToPosix 1578635417
 
 type PathKey
     = PathKey
@@ -63,14 +63,17 @@ internals =
 
 allPages : List (PagePath PathKey)
 allPages =
-    [ (buildPage [ "articles" ])
+    [ (buildPage [ "articles", "exit-gatekeepers" ])
+    , (buildPage [ "articles" ])
     , (buildPage [  ])
     , (buildPage [ "learn" ])
+    , (buildPage [ "tips" ])
     ]
 
 pages =
     { articles =
-        { index = (buildPage [ "articles" ])
+        { exitGatekeepers = (buildPage [ "articles", "exit-gatekeepers" ])
+        , index = (buildPage [ "articles" ])
         , directory = directoryWithIndex ["articles"]
         }
     , index = (buildPage [  ])
@@ -78,6 +81,7 @@ pages =
         { index = (buildPage [ "learn" ])
         , directory = directoryWithIndex ["learn"]
         }
+    , tips = (buildPage [ "tips" ])
     , directory = directoryWithIndex []
     }
 
@@ -97,6 +101,7 @@ images =
     , edGonzalez = (buildImage [ "ed-gonzalez.png" ])
     , elmGraphqlWorkshopHeader = (buildImage [ "elm-graphql-workshop-header.jpg" ])
     , graphqlWorkshop = (buildImage [ "graphql-workshop.png" ])
+    , iconPng = (buildImage [ "icon-png.png" ])
     , icon = (buildImage [ "icon.svg" ])
     , osloWorkshop1 = (buildImage [ "oslo-workshop1.jpg" ])
     , steps = (buildImage [ "steps.jpg" ])
@@ -118,6 +123,7 @@ allImages =
     , (buildImage [ "ed-gonzalez.png" ])
     , (buildImage [ "elm-graphql-workshop-header.jpg" ])
     , (buildImage [ "graphql-workshop.png" ])
+    , (buildImage [ "icon-png.png" ])
     , (buildImage [ "icon.svg" ])
     , (buildImage [ "oslo-workshop1.jpg" ])
     , (buildImage [ "steps.jpg" ])
@@ -151,6 +157,18 @@ content =
     [ 
   ( []
     , { frontMatter = """{"type":"page","title":"Incremental Elm Consulting"}
+""" , body = Nothing
+    , extension = "md"
+    } )
+  ,
+  ( ["tips"]
+    , { frontMatter = """{"type":"page","title":"Weekly elm Tips!"}
+""" , body = Nothing
+    , extension = "md"
+    } )
+  ,
+  ( ["articles", "exit-gatekeepers"]
+    , { frontMatter = """{"type":"article","title":"Using elm types to prevent logging social security #'s","src":"article-cover/exit.jpg","description":"One of the most successful techniques I've seen for making sure you don't break elm code the next time you touch it is a technique I call an *Exit Gatekeeper*."}
 """ , body = Nothing
     , extension = "md"
     } )
