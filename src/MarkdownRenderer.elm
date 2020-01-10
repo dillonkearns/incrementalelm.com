@@ -148,7 +148,7 @@ renderer =
                 |> Ok
 
     -- )
-    , list =
+    , unorderedList =
         \items ->
             Element.column [ Element.spacing 15 ]
                 (items
@@ -158,10 +158,25 @@ renderer =
                                 [ Element.spacing 5
                                 , Element.paddingEach { top = 0, right = 0, bottom = 0, left = 20 }
                                 ]
-                                [ Element.el
+                                [ Element.paragraph
                                     [ Element.alignTop ]
-                                    (Element.text "•")
-                                , itemBlocks
+                                    (Element.text " • " :: itemBlocks)
+                                ]
+                        )
+                )
+    , orderedList =
+        \startingIndex items ->
+            Element.column [ Element.spacing 15 ]
+                (items
+                    |> List.indexedMap
+                        (\index itemBlocks ->
+                            Element.wrappedRow
+                                [ Element.spacing 5
+                                , Element.paddingEach { top = 0, right = 0, bottom = 0, left = 20 }
+                                ]
+                                [ Element.paragraph
+                                    [ Element.alignTop ]
+                                    (Element.text (String.fromInt (startingIndex + index) ++ ". ") :: itemBlocks)
                                 ]
                         )
                 )
