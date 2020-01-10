@@ -55,7 +55,7 @@ main =
         , documents = [ markupDocument, markdownDocument ]
         , manifest = manifest
         , canonicalSiteUrl = "https://incrementalelm.com"
-        , onPageChange = \_ -> StartAnimation
+        , onPageChange = \_ -> OnPageChange
         , internals = Pages.internals
         }
 --config =Debug.todo ""
@@ -147,6 +147,7 @@ type Msg
     | Animate Animation.Msg
     | InitialViewport Dom.Viewport
     | WindowResized Int Int
+    | OnPageChange
 
 
 
@@ -221,6 +222,10 @@ update msg model =
               }
             , Cmd.none
             )
+
+        OnPageChange ->
+            (model, Cmd.none)
+
 
 
 interpolation =
