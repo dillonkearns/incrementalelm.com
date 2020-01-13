@@ -58,7 +58,11 @@ main =
         , onPageChange = \_ -> OnPageChange
         , internals = Pages.internals
         }
+
+
+
 --config =Debug.todo ""
+
 
 type alias View =
     List (Element Msg)
@@ -69,7 +73,7 @@ markupDocument =
     Pages.Document.parser
         { extension = "emu"
         , metadata = Json.Decode.succeed <| Metadata.Page { title = "TODO - convert to md" }
-        , body = \_ -> Ok [Element.text "TODO - convert to markdown."]
+        , body = \_ -> Ok [ Element.text "TODO - convert to markdown." ]
         }
 
 
@@ -77,7 +81,7 @@ markdownDocument : ( String, Pages.Document.DocumentHandler (Metadata Msg) View 
 markdownDocument =
     Pages.Document.parser
         { extension = "md"
-        , metadata = Json.Decode.succeed <| Metadata.Page { title = "TODO" }
+        , metadata = Metadata.decoder
         , body = MarkdownRenderer.view
         }
 
@@ -111,7 +115,10 @@ type alias Model =
     }
 
 
+
 --init : ( Model, Cmd Msg )
+
+
 init initialPage =
     ( { styles = ElmLogo.polygons |> List.map Animation.style
       , menuBarAnimation = View.MenuBar.init
@@ -148,7 +155,6 @@ type Msg
     | InitialViewport Dom.Viewport
     | WindowResized Int Int
     | OnPageChange
-
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -224,8 +230,7 @@ update msg model =
             )
 
         OnPageChange ->
-            (model, Cmd.none)
-
+            ( model, Cmd.none )
 
 
 interpolation =
@@ -303,37 +308,45 @@ makeTranslated i polygon =
             ]
 
 
---view :  List ( PagePath Pages.PathKey, Metadata Msg ) -> Page (Metadata Msg) (List (Element Msg)) Pages.PathKey -> { title : String, body : Html Msg }
-view   allMetadata  page =
-    StaticHttp.succeed ({
-    head = head page.frontmatter,
-    view = \model viewForPage ->
-        let
-            { title, body } =
-                pageOrPostView allMetadata model page viewForPage
-        in
-            { title = title
-            , body =
-                (if model.showMenu then
-                    Element.column
-                        [ Element.height Element.fill
-                        , Element.alignTop
-                        , Element.width Element.fill
-                        ]
-                        [ View.Navbar.view model animationView StartAnimation
-                        , View.Navbar.modalMenuView model.menuAnimation
-                        ]
 
-                 else
-                    body
-                )
-                    |> Element.layout
-                        [ Element.width Element.fill
-                        ]
-            } })
+--view :  List ( PagePath Pages.PathKey, Metadata Msg ) -> Page (Metadata Msg) (List (Element Msg)) Pages.PathKey -> { title : String, body : Html Msg }
+
+
+view allMetadata page =
+    StaticHttp.succeed
+        { head = head page.frontmatter
+        , view =
+            \model viewForPage ->
+                let
+                    { title, body } =
+                        pageOrPostView allMetadata model page viewForPage
+                in
+                { title = title
+                , body =
+                    (if model.showMenu then
+                        Element.column
+                            [ Element.height Element.fill
+                            , Element.alignTop
+                            , Element.width Element.fill
+                            ]
+                            [ View.Navbar.view model animationView StartAnimation
+                            , View.Navbar.modalMenuView model.menuAnimation
+                            ]
+
+                     else
+                        body
+                    )
+                        |> Element.layout
+                            [ Element.width Element.fill
+                            ]
+                }
+        }
+
 
 
 --pageOrPostView : List ( PagePath Pages.PathKey, Metadata Msg ) -> Model -> Page (Metadata Msg) (List (Element Msg)) Pages.PathKey -> { title : String, body : Element Msg }
+
+
 pageOrPostView allMetadata model page viewForPage =
     case page.frontmatter of
         Metadata.Page metadata ->

@@ -20,7 +20,7 @@ import Time
 
 builtAt : Time.Posix
 builtAt =
-    Time.millisToPosix 1578635417
+    Time.millisToPosix 1578882731
 
 type PathKey
     = PathKey
@@ -65,6 +65,7 @@ allPages : List (PagePath PathKey)
 allPages =
     [ (buildPage [ "articles", "exit-gatekeepers" ])
     , (buildPage [ "articles" ])
+    , (buildPage [ "articles", "moving-faster-with-tiny-steps" ])
     , (buildPage [  ])
     , (buildPage [ "learn" ])
     , (buildPage [ "tips" ])
@@ -74,6 +75,7 @@ pages =
     { articles =
         { exitGatekeepers = (buildPage [ "articles", "exit-gatekeepers" ])
         , index = (buildPage [ "articles" ])
+        , movingFasterWithTinySteps = (buildPage [ "articles", "moving-faster-with-tiny-steps" ])
         , directory = directoryWithIndex ["articles"]
         }
     , index = (buildPage [  ])
@@ -174,7 +176,13 @@ content =
     } )
   ,
   ( ["articles"]
-    , { frontMatter = """{"type":"page"}
+    , { frontMatter = """{"type":"page","title":"Incremental Elm Articles"}
+""" , body = Nothing
+    , extension = "md"
+    } )
+  ,
+  ( ["articles", "moving-faster-with-tiny-steps"]
+    , { frontMatter = """{"type":"article","title":"Moving Faster with Tiny Steps in Elm","src":"article-cover/mountains.jpg","description":"In this post, we're going to be looking up an Article in an Elm Dict, using the tiniest steps possible."}
 """ , body = Nothing
     , extension = "md"
     } )

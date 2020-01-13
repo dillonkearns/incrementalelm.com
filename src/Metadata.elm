@@ -1,4 +1,4 @@
-module Metadata exposing (ArticleMetadata, LearnMetadata, Metadata(..), metadata)
+module Metadata exposing (ArticleMetadata, LearnMetadata, Metadata(..), decoder, metadata)
 
 import Dict exposing (Dict)
 import Element exposing (Element)
@@ -23,17 +23,56 @@ type alias ArticleMetadata msg =
     , coverImage : String
     }
 
+
+articleDecoder : Decoder (ArticleMetadata msg)
+articleDecoder =
+    Decode.map3 ArticleMetadata
+        (Decode.field "title" markdownString)
+        (Decode.field "description" markdownString)
+        (Decode.field "src"
+            (Decode.string |> Decode.map (\src -> "/images/" ++ src))
+        )
+
+
+markdownString : Decoder { styled : List (Element msg), raw : String }
+markdownString =
+    Decode.string
+        |> Decode.andThen
+            (\string ->
+                Decode.succeed
+                    { styled = [ Element.text string ]
+                    , raw = string
+                    }
+            )
+
+
+
+--(Decode.field "title" Decode.string) |> Decode.map (\title -> Page { title = title })
+
+
 decoder : Decoder (Metadata msg)
 decoder =
     Decode.field "type" Decode.string
-    |> Decode.andThen (\type_ ->
-    case type_ of
-        "page"->
-             (Decode.field "title" Decode.string) |> Decode.map (\title -> Page { title = title })
+        |> Decode.andThen
+            (\type_ ->
+                case type_ of
+                    {-
 
-        _ ->
-             Decode.fail "Unhandled page type"
-    )
+                       "type": "article",
+                       "title": "Moving Faster with Tiny Steps in Elm",
+                       "src": "article-cover/mountains.jpg",
+                       "description": "In this post, we're going to be looking up an Article in an Elm Dict, using the tiniest steps possible."
+                    -}
+                    "page" ->
+                        Decode.field "title" Decode.string |> Decode.map (\title -> Page { title = title })
+
+                    "article" ->
+                        Decode.map Article articleDecoder
+
+                    _ ->
+                        Decode.fail "Unhandled page type"
+            )
+
 
 metadata : Dict String String -> Mark.Block (Metadata msg)
 metadata imageAssets =
