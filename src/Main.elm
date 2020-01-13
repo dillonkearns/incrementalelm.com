@@ -1,46 +1,31 @@
 module Main exposing (main)
 
 import Animation
-import Browser
 import Browser.Dom as Dom
 import Browser.Events
-import Browser.Navigation as Nav
 import Color
-import Dict exposing (Dict)
 import Dimensions exposing (Dimensions)
 import Ease
 import Element exposing (Element)
-import Element.Border
 import Element.Font as Font
 import ElmLogo
 import Head as Head exposing (Tag)
 import Head.Seo
-import Html exposing (Html)
-import Html.Attributes
 import Index
 import Json.Decode
-import Json.Encode
 import LearnIndex
-import List.Extra
-import Mark
-import Mark.Error
-import MarkParser
-import Markdown.Parser as Markdown
 import MarkdownRenderer
 import Metadata exposing (Metadata)
-import Pages exposing (images, pages)
+import Pages
 import Pages.Document
 import Pages.Manifest as Manifest
 import Pages.Manifest.Category
-import Pages.PagePath exposing (PagePath)
 import Pages.Platform exposing (Page)
 import Pages.StaticHttp as StaticHttp
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
 import Task
 import Time
-import Url exposing (Url)
-import Url.Builder
 import View.MenuBar
 import View.Navbar
 
@@ -58,10 +43,6 @@ main =
         , onPageChange = \_ -> OnPageChange
         , internals = Pages.internals
         }
-
-
-
---config =Debug.todo ""
 
 
 type alias View =
