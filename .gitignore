@@ -4,3 +4,5 @@ elm.js
 markup.js
 dist/
 .cache/
+gen/Pages.elm
+
