@@ -103,8 +103,10 @@ renderer : Markdown.Parser.Renderer (Element msg)
 renderer =
     { heading = heading
     , raw =
-        Element.paragraph
-            [ Element.spacing 15 ]
+        Element.textColumn
+            [ Element.spacing 15
+            , Element.width Element.fill
+            ]
     , thematicBreak = Element.none
     , plain = \content -> Element.el [] (Element.text content)
     , bold = \content -> Element.el [ Font.bold ] (Element.text content)
@@ -146,7 +148,14 @@ renderer =
             -- Pages.isValidRoute image.src
             --     |> Result.map
             -- (\() ->
-            Element.image [ Element.width Element.fill ] { src = image.src, description = body }
+            Element.image
+                [ Element.width (Element.fill |> Element.maximum 600)
+                , Element.centerX
+                ]
+                { src = image.src, description = body }
+                |> Element.el
+                    [ Element.centerX
+                    ]
                 |> Ok
 
     -- )
