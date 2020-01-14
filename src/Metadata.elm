@@ -34,6 +34,12 @@ articleDecoder =
         )
 
 
+learnDecoder : Decoder LearnMetadata
+learnDecoder =
+    Decode.map LearnMetadata
+        (Decode.field "title" Decode.string)
+
+
 markdownString : Decoder { styled : List (Element msg), raw : String }
 markdownString =
     Decode.string
@@ -68,6 +74,9 @@ decoder =
 
                     "article" ->
                         Decode.map Article articleDecoder
+
+                    "learn" ->
+                        Decode.map Learn learnDecoder
 
                     _ ->
                         Decode.fail "Unhandled page type"

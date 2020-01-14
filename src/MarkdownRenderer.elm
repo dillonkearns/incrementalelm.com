@@ -1,7 +1,8 @@
 module MarkdownRenderer exposing (TableOfContents, view)
 
--- import Ellie
+--import Ellie
 
+import Dict
 import Element exposing (Element)
 import Element.Background
 import Element.Border
@@ -18,7 +19,9 @@ import Pages
 import Style
 import Style.Helpers
 import View.DripSignupForm
+import View.Ellie
 import View.FontAwesome
+import View.Resource
 import View.SignupForm
 
 
@@ -232,6 +235,41 @@ renderer =
             , Markdown.Html.tag "Vimeo"
                 (\id children -> vimeoView id)
                 |> Markdown.Html.withAttribute "id"
+            , Markdown.Html.tag "Ellie"
+                (\id children -> View.Ellie.view id)
+                |> Markdown.Html.withAttribute "id"
+            , Markdown.Html.tag "Resources"
+                (\children ->
+                    Element.column
+                        [ Element.spacing 16
+                        , Element.centerX
+                        , Element.padding 30
+                        , Element.width Element.fill
+                        ]
+                        children
+                )
+            , Markdown.Html.tag "Resource"
+                (\name resourceKind url children ->
+                    let
+                        kind =
+                            case Dict.get resourceKind icons of
+                                Just myResource ->
+                                    --Ok myResource
+                                    myResource
+
+                                Nothing ->
+                                    --Err
+                                    --    { title = "Invalid resource name"
+                                    --    , message = []
+                                    --    }
+                                    Debug.todo ""
+                    in
+                    View.Resource.view { name = name, url = url, kind = kind }
+                 --Debug.todo ""
+                )
+                |> Markdown.Html.withAttribute "title"
+                |> Markdown.Html.withAttribute "icon"
+                |> Markdown.Html.withAttribute "url"
             , Markdown.Html.tag "ContactButton" (\body -> contactButtonView)
 
             -- , Markdown.Html.tag "Oembed"
@@ -253,6 +291,17 @@ renderer =
             --     |> Markdown.Html.withAttribute "id"
             ]
     }
+
+
+icons =
+    [ ( "Video", View.Resource.Video )
+    , ( "Library", View.Resource.Library )
+    , ( "App", View.Resource.App )
+    , ( "Article", View.Resource.Article )
+    , ( "Exercise", View.Resource.Exercise )
+    , ( "Book", View.Resource.Book )
+    ]
+        |> Dict.fromList
 
 
 buttonView : { url : String, children : List (Element msg) } -> Element msg

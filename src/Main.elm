@@ -410,24 +410,33 @@ pageOrPostView allMetadata model page viewForPage =
             { title = metadata.title
             , body =
                 [ header model
-                , viewForPage
-                    |> Element.textColumn
-                        [ Element.centerX
-                        , Element.width Element.fill
-                        , Element.spacing 30
-                        , Font.size 18
+                , Element.textColumn [ Element.spacing 15, Element.centerX, Element.paddingXY 0 50 ]
+                    [ Element.paragraph
+                        [ Font.size 36
+                        , Font.center
+                        , Font.family [ Font.typeface "Raleway" ]
+                        , Font.bold
                         ]
-                    |> Element.el
-                        [ if Dimensions.isMobile model.dimensions then
-                            Element.width (Element.fill |> Element.maximum 600)
+                        [ Element.text metadata.title ]
+                    , viewForPage
+                        |> Element.textColumn
+                            [ Element.centerX
+                            , Element.width Element.fill
+                            , Element.spacing 30
+                            , Font.size 18
+                            ]
+                        |> Element.el
+                            [ if Dimensions.isMobile model.dimensions then
+                                Element.width (Element.fill |> Element.maximum 600)
 
-                          else
-                            Element.width (Element.fill |> Element.maximum 700)
-                        , Element.height Element.fill
-                        , Element.padding 20
-                        , Element.spacing 20
-                        , Element.centerX
-                        ]
+                              else
+                                Element.width (Element.fill |> Element.maximum 700)
+                            , Element.height Element.fill
+                            , Element.padding 20
+                            , Element.spacing 20
+                            , Element.centerX
+                            ]
+                    ]
                 ]
                     |> Element.column [ Element.width Element.fill ]
             }
