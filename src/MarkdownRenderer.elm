@@ -16,7 +16,9 @@ import Markdown.Html
 import Markdown.Parser
 import Pages
 import Style
+import Style.Helpers
 import View.DripSignupForm
+import View.FontAwesome
 import View.SignupForm
 
 
@@ -215,6 +217,10 @@ renderer =
                 )
                 |> Markdown.Html.withAttribute "buttonText"
                 |> Markdown.Html.withAttribute "formId"
+            , Markdown.Html.tag "Button"
+                (\url children -> buttonView { url = url, children = children })
+                |> Markdown.Html.withAttribute "url"
+            , Markdown.Html.tag "ContactButton" (\body -> contactButtonView)
 
             -- , Markdown.Html.tag "Oembed"
             --     (\url children ->
@@ -235,6 +241,40 @@ renderer =
             --     |> Markdown.Html.withAttribute "id"
             ]
     }
+
+
+buttonView : { url : String, children : List (Element msg) } -> Element msg
+buttonView details =
+    Element.link
+        [ Element.centerX ]
+        { url = details.url
+        , label =
+            Style.Helpers.button
+                { fontColor = .mainBackground
+                , backgroundColor = .highlight
+                , size = Style.fontSize.body
+                }
+                details.children
+        }
+        |> Element.el [ Element.centerX ]
+
+
+contactButtonView : Element msg
+contactButtonView =
+    Element.newTabLink
+        [ Element.centerX ]
+        { url = "mailto:dillon@incrementalelm.com"
+        , label =
+            Style.Helpers.button
+                { fontColor = .mainBackground
+                , backgroundColor = .highlight
+                , size = Style.fontSize.body
+                }
+                [ View.FontAwesome.icon "far fa-envelope" |> Element.el []
+                , Element.text "dillon@incrementalelm.com"
+                ]
+        }
+        |> Element.el [ Element.centerX ]
 
 
 rawTextToId rawText =
