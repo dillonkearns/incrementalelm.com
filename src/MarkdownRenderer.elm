@@ -103,9 +103,8 @@ renderer : Markdown.Parser.Renderer (Element msg)
 renderer =
     { heading = heading
     , raw =
-        Element.textColumn
+        Element.paragraph
             [ Element.spacing 15
-            , Element.width Element.fill
             ]
     , thematicBreak = Element.none
     , plain = \content -> Element.el [] (Element.text content)
@@ -155,6 +154,7 @@ renderer =
                 { src = image.src, description = body }
                 |> Element.el
                     [ Element.centerX
+                    , Element.width Element.fill
                     ]
                 |> Ok
 
@@ -306,9 +306,9 @@ heading { level, rawText, children } =
             -- 36
             2 ->
                 -- 24
-                [ Font.size 36
-                , Font.bold
-                , Font.center
+                [ Font.size 24
+                , Font.semiBold
+                , Font.alignLeft
                 , Font.family [ Font.typeface "Raleway" ]
                 ]
 

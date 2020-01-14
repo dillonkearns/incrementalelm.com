@@ -6,7 +6,7 @@
 }
 ---
 
-One of the most successful techniques I've seen for making sure you don't break elm code the next time you touch it is a technique I call an *Exit Gatekeeper*.
+One of the most successful techniques I've seen for making sure you don't break elm code the next time you touch it is a technique I call an **Exit Gatekeeper**.
 
 Let's say you have these innocent functions in your app. How do you know that you won't get your wires crossed and log a user's social security number?
 
@@ -47,9 +47,9 @@ genericSendData payload endpoint =
 -- ⚠️ Not good for SSNs!
 ```
 
-Whoops, somebody forgot that we had a special `securelySaveSSN`{code} function that encrypts the SSN and masks the SSN when reporting errors. Do you dare look at the commit history? It could well have been your past self (we've all been there)!
+Whoops, somebody forgot that we had a special `securelySaveSSN` function that encrypts the SSN and masks the SSN when reporting errors. Do you dare look at the commit history? It could well have been your past self (we've all been there)!
 
-Humans make mistakes, so let's not expect them to be perfect. The core issue here is that the `SSN`{code} type wrapper has failed to communicate the limits of how we want it to be used. It's merely a convention to use `securelySaveSSN`{code} instead of calling the generic `genericSendData`{code} with the raw String. In this article, you'll learn a technique that gets the elm compiler to help guide us towards using data as intended: Exit Gatekeepers.
+Humans make mistakes, so let's not expect them to be perfect. The core issue here is that the `SSN` type wrapper has failed to communicate the limits of how we want it to be used. It's merely a convention to use `securelySaveSSN` instead of calling the generic `genericSendData` with the raw String. In this article, you'll learn a technique that gets the elm compiler to help guide us towards using data as intended: Exit Gatekeepers.
 
 ## 🔑 Exit Gatekeepers
 
@@ -68,7 +68,7 @@ module SSN exposing (SSN(..))
 
 ## 🔓 Unsecure Exit 2 - Public Accessor
 
-Similarly, you can unwrap the raw SSN directly from outside the module if we expose an accessor (also known as getters) which returns the /raw data/. In this case, our primitive representation of the SSN is a String, so we could have an unsecure exit by exposing a `toString`{code} accessor.
+Similarly, you can unwrap the raw SSN directly from outside the module if we expose an accessor (also known as getters) which returns the /raw data/. In this case, our primitive representation of the SSN is a String, so we could have an unsecure exit by exposing a `toString` accessor.
 
 ```elm
 module SSN exposing (SSN, toString)
@@ -77,7 +77,7 @@ toString : SSN -> String
 toString (SSN rawSsn) = rawSsn
 ```
 
-The public accessor function has the same effect as our publicly exposed constructor did, allowing us to accidentally pass the raw data to our `genericSendData`{code}.
+The public accessor function has the same effect as our publicly exposed constructor did, allowing us to accidentally pass the raw data to our `genericSendData`.
 
 ```elm
 storeSsn : SSN -> Cmd Msg
@@ -91,7 +91,7 @@ Think of a Gatekeeper like the Model in Model-View-Controller frameworks. The Mo
 
 ## How to control the exits
 
-To add an Exit Gatekeeper, all we need to do is define every function needed to use SSNs internally within the `SSN`{code} module. And of course, each of those functions is responsible for using it appropriately. (And on the other side of that coin, that means that the calling code is free of that responsibility!).
+To add an Exit Gatekeeper, all we need to do is define every function needed to use SSNs internally within the `SSN` module. And of course, each of those functions is responsible for using it appropriately. (And on the other side of that coin, that means that the calling code is free of that responsibility!).
 
 Let's make a function to securely send an SSN. We need to guarantee that:
 
