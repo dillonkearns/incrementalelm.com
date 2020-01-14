@@ -229,6 +229,9 @@ renderer =
             , Markdown.Html.tag "Button"
                 (\url children -> buttonView { url = url, children = children })
                 |> Markdown.Html.withAttribute "url"
+            , Markdown.Html.tag "Vimeo"
+                (\id children -> vimeoView id)
+                |> Markdown.Html.withAttribute "id"
             , Markdown.Html.tag "ContactButton" (\body -> contactButtonView)
 
             -- , Markdown.Html.tag "Oembed"
@@ -359,3 +362,19 @@ editorValue value =
         |> String.trim
         |> Encode.string
         |> property "editorValue"
+
+
+vimeoView : String -> Element msg
+vimeoView videoId =
+    Html.div [ Html.Attributes.class "embed-container" ]
+        [ Html.iframe
+            [ Html.Attributes.src <| "https://player.vimeo.com/video/" ++ videoId
+            , Html.Attributes.attribute "width" "100%"
+            , Html.Attributes.attribute "height" "100%"
+            , Html.Attributes.attribute "allow" "autoplay; fullscreen"
+            , Html.Attributes.attribute "allowfullscreen" ""
+            ]
+            []
+        ]
+        |> Element.html
+        |> Element.el [ Element.width Element.fill ]
