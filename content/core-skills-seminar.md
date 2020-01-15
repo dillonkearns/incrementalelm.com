@@ -8,8 +8,8 @@
 ## 🏋️📚 Incremental Elm Group Coaching Program
 Would you like to develop skills to help you with the following challenges?
 
-- What does the process of architecture look like for an in elm?
-- How do know which parts of your elm code to split out and organize together?
+- What does the process of architecture look like in elm?
+- How do you know which parts of your elm code to split out and organize together?
 - How do you keep your app easy to change and hard to break as you grow your non-trivial single-page apps?
 - How do you make working with new elm libraries manageable?
 - How can you use types to fix bugs and prevent new bugs?
