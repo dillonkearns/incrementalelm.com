@@ -257,6 +257,8 @@ renderer =
             , Markdown.Html.tag "Resource"
                 (\name resourceKind url children ->
                     let
+                        todo anything =
+                            todo anything
                         kind =
                             case Dict.get resourceKind icons of
                                 Just myResource ->
@@ -264,14 +266,13 @@ renderer =
                                     myResource
 
                                 Nothing ->
+                                    todo ""
                                     --Err
                                     --    { title = "Invalid resource name"
                                     --    , message = []
                                     --    }
-                                    Debug.todo ""
                     in
                     View.Resource.view { name = name, url = url, kind = kind }
-                 --Debug.todo ""
                 )
                 |> Markdown.Html.withAttribute "title"
                 |> Markdown.Html.withAttribute "icon"
