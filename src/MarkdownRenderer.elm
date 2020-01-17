@@ -108,6 +108,7 @@ renderer =
     , raw =
         Element.paragraph
             [ Element.spacing 15
+            , Element.width Element.fill
             ]
     , thematicBreak = Element.none
     , plain = \content -> Element.el [] (Element.text content)
@@ -151,12 +152,17 @@ renderer =
             --     |> Result.map
             -- (\() ->
             Element.image
-                [ Element.width (Element.fill |> Element.maximum 600)
+                [ Element.width (Element.px 600)
                 , Element.centerX
                 ]
                 { src = image.src, description = body }
                 |> Element.el
                     [ Element.centerX
+                    , Element.width Element.fill
+                    ]
+                |> List.singleton
+                |> Element.textColumn
+                    [ Element.spacing 15
                     , Element.width Element.fill
                     ]
                 |> Ok
