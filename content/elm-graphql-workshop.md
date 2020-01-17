@@ -9,7 +9,7 @@
 
 This workshop will equip you with everything you need to make guaranteed-correct, type-safe API requests from your Elm code! And all without needing to write a single JSON Decoder by hand!
 
-In this hands-on workshop, the author of Elm's type-safe GraphQL query builder library, [dillonkearns\\/elm-graphql](https://github.com/dillonkearns/elm-graphql), will walk you through the core concepts and best practices of the library. Check out [Types Without Borders](https://www.youtube.com/watch?v=memIRXFSNkU) from the most recent Elm Conf for some of the underlying philosophy of this library. Or you can [read an overview of features of this library](https://medium.com/open-graphql/type-safe-composable-graphql-in-elm-b3378cc8d021). Check out some highlights at the bottom of this event description.
+In this hands-on workshop, the author of Elm's type-safe GraphQL query builder library, [dillonkearns/elm-graphql](https://github.com/dillonkearns/elm-graphql), will walk you through the core concepts and best practices of the library. Check out [Types Without Borders](https://www.youtube.com/watch?v=memIRXFSNkU) from the most recent Elm Conf for some of the underlying philosophy of this library. Or you can [read an overview of features of this library](https://medium.com/open-graphql/type-safe-composable-graphql-in-elm-b3378cc8d021). Check out some highlights at the bottom of this event description.
 
 # Prerequisites
 
