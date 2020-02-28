@@ -42,6 +42,7 @@ main =
         , canonicalSiteUrl = "https://incrementalelm.com"
         , onPageChange = \_ -> OnPageChange
         , internals = Pages.internals
+        , generateFiles = \_ -> []
         }
 
 

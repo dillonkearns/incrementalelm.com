@@ -3,33 +3,10 @@
   <component name="ChangeListManager">
     <list default="true" id="e1232547-c783-45fc-b2ff-512520840b91" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/content/accelerator-application.emu" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/content/accelerator-program.emu" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/content/articles/exit-gatekeepers.emu" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/content/articles/moving-faster-with-tiny-steps.emu" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/content/articles/to-test-or-not-to-test.emu" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/content/contact.emu" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/content/core-skills-seminar.emu" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/content/custom-scalar-checklist.emu" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/content/elm-graphql-seminar.emu" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/content/elm-graphql-workshop.emu" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/content/incremental-weekly-unsubscribe.emu" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/content/introducing-custom-scalars-course.emu" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/content/learn/architecture.emu" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/content/learn/editor-config.emu" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/content/learn/getting-started.emu" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/content/scalar-codecs-tutorial.emu" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/content/services.emu" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/content/thank-you.emu" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/content/tips.emu" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/elm.json" beforeDir="false" afterPath="$PROJECT_DIR$/elm.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gen/Pages.elm" beforeDir="false" afterPath="$PROJECT_DIR$/gen/Pages.elm" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gen/Pages/ContentCache.elm" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gen/Pages/Platform.elm" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.elm" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.elm" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Metadata.elm" beforeDir="false" afterPath="$PROJECT_DIR$/src/Metadata.elm" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -134,10 +111,11 @@
       <screen x="0" y="0" width="1792" height="1120" />
     </state>
     <state x="565" y="324" width="662" height="472" key="find.popup/0.0.1792.1120@0.0.1792.1120" timestamp="1578543729873" />
-    <state x="662" y="257" width="670" height="526" key="search.everywhere.popup" timestamp="1578544304883">
-      <screen x="0" y="0" width="1792" height="1120" />
+    <state x="709" y="248" width="718" height="508" key="search.everywhere.popup" timestamp="1582900759312">
+      <screen x="0" y="0" width="1920" height="1080" />
     </state>
     <state x="662" y="257" width="670" height="526" key="search.everywhere.popup/0.0.1792.1120@0.0.1792.1120" timestamp="1578544304883" />
+    <state x="709" y="248" width="718" height="508" key="search.everywhere.popup/0.0.1920.1080/-1050.-138.1050.1680@0.0.1920.1080" timestamp="1582900759312" />
     <state x="945" y="331" width="670" height="676" key="search.everywhere.popup/0.0.2560.1440@0.0.2560.1440" timestamp="1578433102259" />
   </component>
 </project>
