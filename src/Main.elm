@@ -4,6 +4,7 @@ import Animation
 import Browser.Dom as Dom
 import Browser.Events
 import Color
+import DateFormat
 import Dimensions exposing (Dimensions)
 import Ease
 import Element exposing (Element)
@@ -22,9 +23,12 @@ import Pages.Manifest as Manifest
 import Pages.Manifest.Category
 import Pages.Platform exposing (Page)
 import Pages.StaticHttp as StaticHttp
+import Request.GoogleCalendar as GoogleCalendar exposing (Event)
+import Style
+import Style.Helpers as Helpers
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
-import Task
+import Task exposing (Task)
 import Time
 import View.MenuBar
 import View.Navbar
@@ -94,6 +98,14 @@ type alias Model =
     , dimensions : Dimensions
     , styles : List Animation.State
     , showMenu : Bool
+    , timezone : NamedZone
+    }
+
+
+namedUtc : NamedZone
+namedUtc =
+    { name = "UTC"
+    , zone = Time.utc
     }
 
 
@@ -115,11 +127,39 @@ init initialPage =
                 , device = Element.classifyDevice { height = 0, width = 0 }
                 }
       , showMenu = False
+      , timezone = namedUtc
       }
         |> updateStyles
-    , Dom.getViewport
-        |> Task.perform InitialViewport
+    , Cmd.batch
+        [ Dom.getViewport
+            |> Task.perform InitialViewport
+        , getNamedZone
+            |> Task.perform GotTimeZone
+        ]
     )
+
+
+getNamedZone : Task error NamedZone
+getNamedZone =
+    Task.map2 NamedZone
+        (Task.map
+            (\name ->
+                case name of
+                    Time.Name zoneName ->
+                        zoneName
+
+                    Time.Offset _ ->
+                        ""
+            )
+            Time.getZoneName
+        )
+        Time.here
+
+
+type alias NamedZone =
+    { name : String
+    , zone : Time.Zone
+    }
 
 
 updateStyles : Model -> Model
@@ -137,6 +177,7 @@ type Msg
     | InitialViewport Dom.Viewport
     | WindowResized Int Int
     | OnPageChange
+    | GotTimeZone NamedZone
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -213,6 +254,9 @@ update msg model =
 
         OnPageChange ->
             ( model, Cmd.none )
+
+        GotTimeZone namedZone ->
+            ( { model | timezone = namedZone }, Cmd.none )
 
 
 interpolation =
@@ -294,35 +338,120 @@ makeTranslated i polygon =
 --view :  List ( PagePath Pages.PathKey, Metadata Msg ) -> Page (Metadata Msg) (List (Element Msg)) Pages.PathKey -> { title : String, body : Html Msg }
 
 
-view allMetadata page =
-    StaticHttp.succeed
-        { head = head page.frontmatter
-        , view =
-            \model viewForPage ->
-                let
-                    { title, body } =
-                        pageOrPostView allMetadata model page viewForPage
-                in
-                { title = title
-                , body =
-                    (if model.showMenu then
-                        Element.column
-                            [ Element.height Element.fill
-                            , Element.alignTop
-                            , Element.width Element.fill
-                            ]
-                            [ View.Navbar.view model animationView StartAnimation
-                            , View.Navbar.modalMenuView model.menuAnimation
-                            ]
+eventsView : NamedZone -> List Event -> Element msg
+eventsView timezone events =
+    events
+        |> List.map (eventView timezone)
+        |> Element.column [ Element.width Element.fill ]
 
-                     else
-                        body
-                    )
-                        |> Element.layout
-                            [ Element.width Element.fill
-                            ]
+
+eventView : NamedZone -> Event -> Element msg
+eventView timezone event =
+    Element.column [ Element.centerX, Element.spacing 20 ]
+        [ Element.newTabLink []
+            { url = event.url
+            , label = Element.text event.summary
+            }
+        , Element.newTabLink []
+            { url = GoogleCalendar.googleAddToCalendarLink event
+            , label =
+                Helpers.button
+                    { fontColor = .mainBackground
+                    , backgroundColor = .highlight
+                    , size = Style.fontSize.body
+                    }
+                    [ Element.text "Add to Google Calendar"
+                    ]
+            }
+        , Element.text <| ourFormatter timezone event.start
+        ]
+
+
+ourFormatter : NamedZone -> Time.Posix -> String
+ourFormatter timezone =
+    DateFormat.format
+        [ DateFormat.dayOfWeekNameFull
+        , DateFormat.text ", "
+        , DateFormat.monthNameFull
+        , DateFormat.text " "
+        , DateFormat.dayOfMonthNumber
+        , DateFormat.text "\n"
+        , DateFormat.hourFixed
+        , DateFormat.text ":"
+        , DateFormat.minuteFixed
+        , DateFormat.text <| " - " ++ timezone.name
+
+        --, DateFormat.tim
+        ]
+        timezone.zone
+
+
+view allMetadata page =
+    if page.path == Pages.pages.events.index then
+        StaticHttp.map
+            (\events ->
+                { head = head page.frontmatter
+                , view =
+                    \model viewForPage ->
+                        let
+                            { title, body } =
+                                pageOrPostView allMetadata model page viewForPage
+                        in
+                        { title = title
+                        , body =
+                            (if model.showMenu then
+                                Element.column
+                                    [ Element.height Element.fill
+                                    , Element.alignTop
+                                    , Element.width Element.fill
+                                    ]
+                                    [ View.Navbar.view model animationView StartAnimation
+                                    , View.Navbar.modalMenuView model.menuAnimation
+                                    ]
+
+                             else
+                                Element.column [ Element.width Element.fill ]
+                                    [ body
+                                    , eventsView model.timezone events
+                                    ]
+                            )
+                                |> Element.layout
+                                    [ Element.width Element.fill
+                                    ]
+                        }
                 }
-        }
+            )
+            GoogleCalendar.request
+
+    else
+        StaticHttp.succeed
+            { head = head page.frontmatter
+            , view =
+                \model viewForPage ->
+                    let
+                        { title, body } =
+                            pageOrPostView allMetadata model page viewForPage
+                    in
+                    { title = title
+                    , body =
+                        (if model.showMenu then
+                            Element.column
+                                [ Element.height Element.fill
+                                , Element.alignTop
+                                , Element.width Element.fill
+                                ]
+                                [ View.Navbar.view model animationView StartAnimation
+                                , View.Navbar.modalMenuView model.menuAnimation
+                                ]
+
+                         else
+                            body
+                        )
+                            |> Element.layout
+                                [ Element.width Element.fill
+                                ]
+                    }
+            }
 
 
 
