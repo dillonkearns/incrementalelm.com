@@ -1,4 +1,4 @@
-module Main exposing (main)
+port module Main exposing (main)
 
 import Animation
 import Browser.Dom as Dom
@@ -9,9 +9,13 @@ import Dimensions exposing (Dimensions)
 import Ease
 import Element exposing (Element)
 import Element.Font as Font
+import Element.Lazy
 import ElmLogo
 import Head as Head exposing (Tag)
 import Head.Seo
+import Html
+import Html.Attributes as Attr
+import Html.Lazy
 import Index
 import Json.Decode
 import LearnIndex
@@ -32,6 +36,9 @@ import Task exposing (Task)
 import Time
 import View.MenuBar
 import View.Navbar
+
+
+port initialTimeZoneName : (String -> msg) -> Sub msg
 
 
 main : Pages.Platform.Program Model Msg (Metadata Msg) (List (Element Msg))
@@ -133,27 +140,8 @@ init initialPage =
     , Cmd.batch
         [ Dom.getViewport
             |> Task.perform InitialViewport
-        , getNamedZone
-            |> Task.perform GotTimeZone
         ]
     )
-
-
-getNamedZone : Task error NamedZone
-getNamedZone =
-    Task.map2 NamedZone
-        (Task.map
-            (\name ->
-                case name of
-                    Time.Name zoneName ->
-                        zoneName
-
-                    Time.Offset _ ->
-                        ""
-            )
-            Time.getZoneName
-        )
-        Time.here
 
 
 type alias NamedZone =
@@ -178,6 +166,7 @@ type Msg
     | WindowResized Int Int
     | OnPageChange
     | GotTimeZone NamedZone
+    | GotTimeZoneName String
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -258,6 +247,19 @@ update msg model =
         GotTimeZone namedZone ->
             ( { model | timezone = namedZone }, Cmd.none )
 
+        GotTimeZoneName zoneName ->
+            let
+                task =
+                    Time.here
+                        |> Task.map
+                            (\zone ->
+                                { name = zoneName
+                                , zone = zone
+                                }
+                            )
+            in
+            ( model, task |> Task.perform GotTimeZone )
+
 
 interpolation =
     Animation.easing
@@ -275,6 +277,7 @@ subscriptions model =
                 ++ [ model.menuAnimation ]
             )
         , Browser.Events.onResize WindowResized
+        , initialTimeZoneName GotTimeZoneName
         ]
 
 
@@ -363,7 +366,7 @@ eventView timezone event =
                     [ Element.text "Add to Google Calendar"
                     ]
             }
-        , Element.text <| ourFormatter timezone event.start
+        , ourFormatter timezone event.start |> Element.text
         ]
 
 
@@ -379,9 +382,8 @@ ourFormatter timezone =
         , DateFormat.hourFixed
         , DateFormat.text ":"
         , DateFormat.minuteFixed
-        , DateFormat.text <| " - " ++ timezone.name
-
-        --, DateFormat.tim
+        , DateFormat.amPmLowercase
+        , DateFormat.text <| " " ++ timezone.name
         ]
         timezone.zone
 
