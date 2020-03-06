@@ -7,6 +7,7 @@ import Json.Decode.Exploration.Pipeline as Pipeline
 import Pages
 import Pages.Secrets as Secrets
 import Pages.StaticHttp as StaticHttp
+import Rfc3339
 import Time
 import Time.Extra as Time
 import Url
@@ -50,9 +51,14 @@ googleAddToCalendarLink event =
         , Url.Builder.string "details" event.description
 
         --, Url.Builder.string "location" (event.location |> Maybe.withDefault "")
-        , Url.Builder.string "dates" "20200303T183000Z/20200303T200000Z"
+        , Url.Builder.string "dates"
+            (String.concat
+                [ event.startsAt |> Rfc3339.format
+                , "/"
+                , event.startsAt |> Time.add Time.Hour 1 Time.utc |> Rfc3339.format
+                ]
+            )
 
-        --, Url.Builder.string "dates" "20200303T183000Z%2F20200303T200000Z"
         --, Url.Builder.string "ctz" "America%2FLos_Angeles"
         , Url.Builder.string "sprop" "https://incrementalelm.com"
 
