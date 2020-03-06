@@ -8,8 +8,9 @@
     "dependencies": {
         "direct": {
             "avh4/elm-color": "1.0.0",
+            "dillonkearns/elm-graphql": "5.0.0",
             "dillonkearns/elm-markdown": "2.0.0",
-            "dillonkearns/elm-pages": "3.0.2",
+            "dillonkearns/elm-pages": "4.0.0",
             "elm/browser": "1.0.2",
             "elm/core": "1.0.5",
             "elm/html": "1.0.0",
@@ -32,6 +33,7 @@
             "zwilias/json-decode-exploration": "6.0.0"
         },
         "indirect": {
+            "Skinney/murmur3": "2.0.8",
             "elm/bytes": "1.0.8",
             "elm/file": "1.0.5",
             "elm/random": "1.0.0",

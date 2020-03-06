@@ -17,6 +17,7 @@
     "glob": "^7.1.4"
   },
   "devDependencies": {
+    "@dillonkearns/elm-graphql": "^4.0.2",
     "@types/glob": "^7.1.1",
     "@types/node": "^12.6.8",
     "codemirror": "^5.48.2",
