@@ -18,6 +18,7 @@ import Html.Attributes as Attr
 import Html.Lazy
 import Index
 import Json.Decode
+import Json.Encode as Encode
 import LearnIndex
 import MarkdownRenderer
 import Metadata exposing (Metadata)
@@ -368,26 +369,10 @@ eventView timezone event =
                     [ Element.text "Add to Google Calendar"
                     ]
             }
-        , ourFormatter timezone event.startsAt |> Element.text
+        , Html.node "intl-time" [ Attr.property "editorValue" (event.startsAt |> Time.posixToMillis |> Encode.int) ] []
+            |> Element.html
+            |> Element.el []
         ]
-
-
-ourFormatter : NamedZone -> Time.Posix -> String
-ourFormatter timezone =
-    DateFormat.format
-        [ DateFormat.dayOfWeekNameFull
-        , DateFormat.text ", "
-        , DateFormat.monthNameFull
-        , DateFormat.text " "
-        , DateFormat.dayOfMonthNumber
-        , DateFormat.text "\n"
-        , DateFormat.hourFixed
-        , DateFormat.text ":"
-        , DateFormat.minuteFixed
-        , DateFormat.amPmLowercase
-        , DateFormat.text <| " " ++ timezone.name
-        ]
-        timezone.zone
 
 
 view allMetadata page =
