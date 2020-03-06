@@ -27,6 +27,8 @@ import Pages.Manifest as Manifest
 import Pages.Manifest.Category
 import Pages.Platform exposing (Page)
 import Pages.StaticHttp as StaticHttp
+import Request
+import Request.Events exposing (LiveStream)
 import Request.GoogleCalendar as GoogleCalendar exposing (Event)
 import Style
 import Style.Helpers as Helpers
@@ -341,19 +343,19 @@ makeTranslated i polygon =
 --view :  List ( PagePath Pages.PathKey, Metadata Msg ) -> Page (Metadata Msg) (List (Element Msg)) Pages.PathKey -> { title : String, body : Html Msg }
 
 
-eventsView : NamedZone -> List Event -> Element msg
+eventsView : NamedZone -> List LiveStream -> Element msg
 eventsView timezone events =
     events
         |> List.map (eventView timezone)
         |> Element.column [ Element.width Element.fill ]
 
 
-eventView : NamedZone -> Event -> Element msg
+eventView : NamedZone -> LiveStream -> Element msg
 eventView timezone event =
     Element.column [ Element.centerX, Element.spacing 20 ]
         [ Element.newTabLink []
-            { url = event.url
-            , label = Element.text event.summary
+            { url = "" -- event.url
+            , label = Element.text event.title
             }
         , Element.newTabLink []
             { url = GoogleCalendar.googleAddToCalendarLink event
@@ -366,7 +368,7 @@ eventView timezone event =
                     [ Element.text "Add to Google Calendar"
                     ]
             }
-        , ourFormatter timezone event.start |> Element.text
+        , ourFormatter timezone event.startsAt |> Element.text
         ]
 
 
@@ -423,7 +425,7 @@ view allMetadata page =
                         }
                 }
             )
-            GoogleCalendar.request
+            (Request.staticGraphqlRequest Request.Events.selection)
 
     else
         StaticHttp.succeed
