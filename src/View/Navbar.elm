@@ -34,7 +34,8 @@ view model animationView startAnimationMsg =
 
 
 links =
-    [ { name = "Articles", url = "/articles" }
+    [ { name = "Live Streams", url = "/live" }
+    , { name = "Articles", url = "/articles" }
     , { name = "Services", url = "/services" }
     ]
 
