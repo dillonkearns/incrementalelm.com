@@ -4,21 +4,15 @@ import Animation
 import Browser.Dom as Dom
 import Browser.Events
 import Color
-import DateFormat
 import Dimensions exposing (Dimensions)
 import Ease
 import Element exposing (Element)
 import Element.Font as Font
-import Element.Lazy
 import ElmLogo
 import Head as Head exposing (Tag)
 import Head.Seo
-import Html
-import Html.Attributes as Attr
-import Html.Lazy
 import Index
 import Json.Decode
-import Json.Encode as Encode
 import LearnIndex
 import MarkdownRenderer
 import Metadata exposing (Metadata)
@@ -30,9 +24,6 @@ import Pages.Platform exposing (Page)
 import Pages.StaticHttp as StaticHttp
 import Request
 import Request.Events exposing (LiveStream)
-import Request.GoogleCalendar as GoogleCalendar exposing (Event)
-import Style
-import Style.Helpers as Helpers
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
 import Task exposing (Task)
@@ -347,39 +338,8 @@ makeTranslated i polygon =
 eventsView : NamedZone -> List LiveStream -> Element msg
 eventsView timezone events =
     events
-        |> List.map (eventView timezone)
+        |> List.map (Request.Events.view timezone)
         |> Element.column [ Element.spacing 30, Element.centerX ]
-
-
-eventView : NamedZone -> LiveStream -> Element msg
-eventView timezone event =
-    Element.column [ Element.spacing 20 ]
-        [ Element.newTabLink []
-            { url = "" -- event.url
-            , label =
-                Element.text event.title
-                    |> Element.el
-                        [ Font.bold
-                        , Font.size 24
-                        ]
-            }
-        , Html.node "intl-time" [ Attr.property "editorValue" (event.startsAt |> Time.posixToMillis |> Encode.int) ] []
-            |> Element.html
-            |> Element.el
-                [ Font.size 20
-                ]
-        , Element.newTabLink []
-            { url = GoogleCalendar.googleAddToCalendarLink event
-            , label =
-                Helpers.button
-                    { fontColor = .mainBackground
-                    , backgroundColor = .light
-                    , size = Style.fontSize.body
-                    }
-                    [ Element.text "Add to Google Calendar"
-                    ]
-            }
-        ]
 
 
 view allMetadata page =
