@@ -49,8 +49,7 @@ googleAddToCalendarLink event =
         , Url.Builder.string "trp" "true"
         , Url.Builder.string "text" event.title
         , Url.Builder.string "details" event.description
-
-        --, Url.Builder.string "location" (event.location |> Maybe.withDefault "")
+        , Url.Builder.string "location" "https://www.twitch.tv/dillonkearns"
         , Url.Builder.string "dates"
             (String.concat
                 [ event.startsAt |> Rfc3339.format
