@@ -12,6 +12,7 @@ import Request.GoogleCalendar as GoogleCalendar
 import SanityApi.Object
 import SanityApi.Object.Guest
 import SanityApi.Object.LiveStream
+import SanityApi.Object.Project
 import SanityApi.Query as Query
 import Scalar exposing (DateTime)
 import Style
@@ -35,6 +36,7 @@ type alias LiveStream =
     , startsAt : DateTime
     , description : String
     , guest : List Guest
+    , project : Project
     }
 
 
@@ -51,9 +53,19 @@ guestSelection =
         (SanityApi.Object.Guest.twitter |> SelectionSet.nonNullOrFail)
 
 
+type alias Project =
+    { name : String }
+
+
+projectSelection : SelectionSet Project SanityApi.Object.Project
+projectSelection =
+    SelectionSet.map Project
+        (SanityApi.Object.Project.name |> SelectionSet.nonNullOrFail)
+
+
 liveStreamSelection : SelectionSet LiveStream SanityApi.Object.LiveStream
 liveStreamSelection =
-    SelectionSet.map4 LiveStream
+    SelectionSet.map5 LiveStream
         (SanityApi.Object.LiveStream.title
             |> SelectionSet.nonNullOrFail
         )
@@ -66,6 +78,9 @@ liveStreamSelection =
         (SanityApi.Object.LiveStream.guest guestSelection
             |> SelectionSet.nonNullOrFail
             |> SelectionSet.nonNullElementsOrFail
+        )
+        (SanityApi.Object.LiveStream.project projectSelection
+            |> SelectionSet.nonNullOrFail
         )
 
 
@@ -83,6 +98,7 @@ view event =
             ]
             [ Element.text event.title ]
         , guestView event.guest
+        , projectView event.project
         , [ Element.text event.description ] |> Element.paragraph [ Font.size 14, Element.width Element.fill ]
         , Html.node "intl-time" [ Attr.property "editorValue" (event.startsAt |> Time.posixToMillis |> Encode.int) ] []
             |> Element.html
@@ -115,3 +131,11 @@ guestView guests =
             _ ->
                 []
         )
+
+
+projectView : Project -> Element msg
+projectView project =
+    Element.paragraph [ Font.size 18 ]
+        [ Element.text "working on "
+        , Helpers.link { url = "https://github.com/dillonkearns/" ++ project.name, content = project.name }
+        ]
