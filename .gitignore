@@ -5,4 +5,4 @@ markup.js
 dist/
 .cache/
 gen/Pages.elm
-
+elm-graphql-gen/

@@ -3,19 +3,22 @@
   "version": "1.0.0",
   "description": "Incremental Elm Consulting site.",
   "scripts": {
-    "start": "elm-pages develop",
+    "start": "npm run elm-graphql && elm-pages develop --port 1234",
     "serve": "npm run build && http-server ./dist -a localhost -p 3000 --gzip -c31557600",
-    "build": "rm -rf dist && elm-pages build",
+    "elm-graphql": "elm-graphql https://oqagd84p.api.sanity.io/v1/graphql/production/default --output elm-graphql-gen/ --base SanityApi --scalar-codecs Scalar",
+    "build": "npm run elm-graphql && rm -rf dist && elm-pages build",
     "test": "elm-test",
     "autotest": "elm-test --watch"
   },
   "author": "Dillon Kearns",
   "license": "BSD-3",
   "dependencies": {
+    "@github/time-elements": "^3.1.0",
     "assets": "^3.0.1",
     "glob": "^7.1.4"
   },
   "devDependencies": {
+    "@dillonkearns/elm-graphql": "^4.0.2",
     "@types/glob": "^7.1.1",
     "@types/node": "^12.6.8",
     "codemirror": "^5.48.2",

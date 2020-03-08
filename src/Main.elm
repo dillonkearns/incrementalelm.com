@@ -22,9 +22,11 @@ import Pages.Manifest as Manifest
 import Pages.Manifest.Category
 import Pages.Platform exposing (Page)
 import Pages.StaticHttp as StaticHttp
+import Request
+import Request.Events exposing (LiveStream)
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
-import Task
+import Task exposing (Task)
 import Time
 import View.MenuBar
 import View.Navbar
@@ -117,8 +119,10 @@ init initialPage =
       , showMenu = False
       }
         |> updateStyles
-    , Dom.getViewport
-        |> Task.perform InitialViewport
+    , Cmd.batch
+        [ Dom.getViewport
+            |> Task.perform InitialViewport
+        ]
     )
 
 
@@ -294,35 +298,82 @@ makeTranslated i polygon =
 --view :  List ( PagePath Pages.PathKey, Metadata Msg ) -> Page (Metadata Msg) (List (Element Msg)) Pages.PathKey -> { title : String, body : Html Msg }
 
 
-view allMetadata page =
-    StaticHttp.succeed
-        { head = head page.frontmatter
-        , view =
-            \model viewForPage ->
-                let
-                    { title, body } =
-                        pageOrPostView allMetadata model page viewForPage
-                in
-                { title = title
-                , body =
-                    (if model.showMenu then
-                        Element.column
-                            [ Element.height Element.fill
-                            , Element.alignTop
-                            , Element.width Element.fill
-                            ]
-                            [ View.Navbar.view model animationView StartAnimation
-                            , View.Navbar.modalMenuView model.menuAnimation
-                            ]
+eventsView : List LiveStream -> Element msg
+eventsView events =
+    events
+        |> List.map Request.Events.view
+        |> Element.column [ Element.spacing 30, Element.centerX ]
 
-                     else
-                        body
-                    )
-                        |> Element.layout
-                            [ Element.width Element.fill
-                            ]
+
+view allMetadata page =
+    if page.path == Pages.pages.live.index then
+        StaticHttp.map
+            (\events ->
+                { head = head page.frontmatter
+                , view =
+                    \model viewForPage ->
+                        let
+                            { title, body } =
+                                pageOrPostView allMetadata model page viewForPage
+                        in
+                        { title = title
+                        , body =
+                            (if model.showMenu then
+                                Element.column
+                                    [ Element.height Element.fill
+                                    , Element.alignTop
+                                    , Element.width Element.fill
+                                    ]
+                                    [ View.Navbar.view model animationView StartAnimation
+                                    , View.Navbar.modalMenuView model.menuAnimation
+                                    ]
+
+                             else
+                                Element.column
+                                    --[ Element.width (Element.fill |> Element.maximum 600)
+                                    [ Element.width Element.fill
+                                    ]
+                                    [ body
+                                    , eventsView events
+                                    ]
+                            )
+                                |> Element.layout
+                                    [ Element.width Element.fill
+                                    ]
+                        }
                 }
-        }
+            )
+            (Request.staticGraphqlRequest Request.Events.selection)
+
+    else
+        StaticHttp.succeed
+            { head = head page.frontmatter
+            , view =
+                \model viewForPage ->
+                    let
+                        { title, body } =
+                            pageOrPostView allMetadata model page viewForPage
+                    in
+                    { title = title
+                    , body =
+                        (if model.showMenu then
+                            Element.column
+                                [ Element.height Element.fill
+                                , Element.alignTop
+                                , Element.width Element.fill
+                                ]
+                                [ View.Navbar.view model animationView StartAnimation
+                                , View.Navbar.modalMenuView model.menuAnimation
+                                ]
+
+                         else
+                            body
+                        )
+                            |> Element.layout
+                                [ Element.width Element.fill
+                                ]
+                    }
+            }
 
 
 
@@ -351,11 +402,7 @@ pageOrPostView allMetadata model page viewForPage =
                         , Font.size 18
                         ]
                     |> Element.el
-                        [ if Dimensions.isMobile model.dimensions then
-                            Element.width (Element.fill |> Element.maximum 600)
-
-                          else
-                            Element.width Element.fill
+                        [ Element.width Element.fill
                         , Element.height Element.fill
                         , if Dimensions.isMobile model.dimensions then
                             Element.padding 20
