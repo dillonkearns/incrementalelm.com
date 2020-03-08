@@ -109,7 +109,7 @@ guestView guests =
         (case guests of
             [ guest ] ->
                 [ Element.text "with "
-                , Helpers.link { url = guest.twitter, content = guest.name }
+                , Helpers.link { url = "https://twitter.com/" ++ guest.twitter, content = guest.name }
                 ]
 
             _ ->
