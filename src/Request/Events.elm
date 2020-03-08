@@ -1,6 +1,7 @@
 module Request.Events exposing (..)
 
 import Element exposing (Element)
+import Element.Border as Border
 import Element.Font as Font
 import Graphql.Operation exposing (RootQuery)
 import Graphql.SelectionSet as SelectionSet exposing (SelectionSet)
@@ -70,17 +71,19 @@ liveStreamSelection =
 
 view : NamedZone -> LiveStream -> Element msg
 view timezone event =
-    Element.column [ Element.spacing 20 ]
-        [ Element.newTabLink []
-            { url = "" -- event.url
-            , label =
-                Element.text event.title
-                    |> Element.el
-                        [ Font.bold
-                        , Font.size 24
-                        ]
-            }
+    Element.column
+        [ Element.spacing 20
+        , Element.width (Element.fill |> Element.maximum 450)
+        , Element.padding 30
+        , Border.shadow { offset = ( 1, 1 ), size = 1, blur = 2, color = Element.rgba255 0 0 0 0.3 }
+        ]
+        [ Element.paragraph
+            [ Font.bold
+            , Font.size 24
+            ]
+            [ Element.text event.title ]
         , guestView event.guest
+        , [ Element.text event.description ] |> Element.paragraph [ Font.size 14, Element.width Element.fill ]
         , Html.node "intl-time" [ Attr.property "editorValue" (event.startsAt |> Time.posixToMillis |> Encode.int) ] []
             |> Element.html
             |> Element.el
