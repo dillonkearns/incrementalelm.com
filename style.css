@@ -220,3 +220,17 @@ form input[type="submit"]:hover {
 background-color: rgba(20, 188, 252, 1);
 }
 
+.on-air {
+  animation: glow 0.8s infinite alternate
+}
+
+@keyframes glow {
+  from {
+    /* box-shadow: 0 0 10px -10px #aef4af; */
+    box-shadow: 0 0 -10px #ed2121;
+  }
+  to {
+    box-shadow: 0 0 6px #ed2121;
+    /* box-shadow: 0 0 10px 10px #aef4af; */
+  }
+}

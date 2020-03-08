@@ -18,6 +18,7 @@ import Scalar exposing (DateTime)
 import Style
 import Style.Helpers as Helpers
 import Time
+import TwitchButton
 
 
 type alias NamedZone =
@@ -116,6 +117,8 @@ view event =
                     [ Element.text "Add to Google Calendar"
                     ]
             }
+
+        -- , TwitchButton.view
         ]
 
 
