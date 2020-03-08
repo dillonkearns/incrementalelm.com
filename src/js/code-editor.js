@@ -2,7 +2,7 @@ import CodeMirror from "codemirror";
 import "codemirror/lib/codemirror.css";
 import elm from "codemirror/mode/elm/elm.js";
 
-const formatter = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZoneName: 'short', hour: 'numeric', minute: 'numeric', });
+const formatter = new Intl.DateTimeFormat('en-US', { weekday: 'long', month: 'long', day: 'numeric', timeZoneName: 'short', hour: 'numeric', minute: 'numeric', });
 
 customElements.define(
   "code-editor",
