@@ -306,7 +306,7 @@ eventsView events =
 
 
 view allMetadata page =
-    if page.path == Pages.pages.events.index then
+    if page.path == Pages.pages.live.index then
         StaticHttp.map
             (\events ->
                 { head = head page.frontmatter
@@ -329,7 +329,10 @@ view allMetadata page =
                                     ]
 
                              else
-                                Element.column [ Element.width Element.fill ]
+                                Element.column
+                                    --[ Element.width (Element.fill |> Element.maximum 600)
+                                    [ Element.width Element.fill
+                                    ]
                                     [ body
                                     , eventsView events
                                     ]
@@ -399,11 +402,7 @@ pageOrPostView allMetadata model page viewForPage =
                         , Font.size 18
                         ]
                     |> Element.el
-                        [ if Dimensions.isMobile model.dimensions then
-                            Element.width (Element.fill |> Element.maximum 600)
-
-                          else
-                            Element.width Element.fill
+                        [ Element.width Element.fill
                         , Element.height Element.fill
                         , if Dimensions.isMobile model.dimensions then
                             Element.padding 20
