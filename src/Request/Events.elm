@@ -69,8 +69,8 @@ liveStreamSelection =
         )
 
 
-view : NamedZone -> LiveStream -> Element msg
-view timezone event =
+view : LiveStream -> Element msg
+view event =
     Element.column
         [ Element.spacing 20
         , Element.width (Element.fill |> Element.maximum 450)

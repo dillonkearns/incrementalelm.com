@@ -1,4 +1,4 @@
-port module Main exposing (main)
+module Main exposing (main)
 
 import Animation
 import Browser.Dom as Dom
@@ -30,9 +30,6 @@ import Task exposing (Task)
 import Time
 import View.MenuBar
 import View.Navbar
-
-
-port initialTimeZoneName : (String -> msg) -> Sub msg
 
 
 main : Pages.Platform.Program Model Msg (Metadata Msg) (List (Element Msg))
@@ -99,14 +96,6 @@ type alias Model =
     , dimensions : Dimensions
     , styles : List Animation.State
     , showMenu : Bool
-    , timezone : NamedZone
-    }
-
-
-namedUtc : NamedZone
-namedUtc =
-    { name = "UTC"
-    , zone = Time.utc
     }
 
 
@@ -128,7 +117,6 @@ init initialPage =
                 , device = Element.classifyDevice { height = 0, width = 0 }
                 }
       , showMenu = False
-      , timezone = namedUtc
       }
         |> updateStyles
     , Cmd.batch
@@ -136,12 +124,6 @@ init initialPage =
             |> Task.perform InitialViewport
         ]
     )
-
-
-type alias NamedZone =
-    { name : String
-    , zone : Time.Zone
-    }
 
 
 updateStyles : Model -> Model
@@ -159,8 +141,6 @@ type Msg
     | InitialViewport Dom.Viewport
     | WindowResized Int Int
     | OnPageChange
-    | GotTimeZone NamedZone
-    | GotTimeZoneName String
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -238,22 +218,6 @@ update msg model =
         OnPageChange ->
             ( model, Cmd.none )
 
-        GotTimeZone namedZone ->
-            ( { model | timezone = namedZone }, Cmd.none )
-
-        GotTimeZoneName zoneName ->
-            let
-                task =
-                    Time.here
-                        |> Task.map
-                            (\zone ->
-                                { name = zoneName
-                                , zone = zone
-                                }
-                            )
-            in
-            ( model, task |> Task.perform GotTimeZone )
-
 
 interpolation =
     Animation.easing
@@ -271,7 +235,6 @@ subscriptions model =
                 ++ [ model.menuAnimation ]
             )
         , Browser.Events.onResize WindowResized
-        , initialTimeZoneName GotTimeZoneName
         ]
 
 
@@ -335,10 +298,10 @@ makeTranslated i polygon =
 --view :  List ( PagePath Pages.PathKey, Metadata Msg ) -> Page (Metadata Msg) (List (Element Msg)) Pages.PathKey -> { title : String, body : Html Msg }
 
 
-eventsView : NamedZone -> List LiveStream -> Element msg
-eventsView timezone events =
+eventsView : List LiveStream -> Element msg
+eventsView events =
     events
-        |> List.map (Request.Events.view timezone)
+        |> List.map Request.Events.view
         |> Element.column [ Element.spacing 30, Element.centerX ]
 
 
@@ -368,7 +331,7 @@ view allMetadata page =
                              else
                                 Element.column [ Element.width Element.fill ]
                                     [ body
-                                    , eventsView model.timezone events
+                                    , eventsView events
                                     ]
                             )
                                 |> Element.layout
