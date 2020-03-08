@@ -348,30 +348,37 @@ eventsView : NamedZone -> List LiveStream -> Element msg
 eventsView timezone events =
     events
         |> List.map (eventView timezone)
-        |> Element.column [ Element.width Element.fill ]
+        |> Element.column [ Element.spacing 30, Element.centerX ]
 
 
 eventView : NamedZone -> LiveStream -> Element msg
 eventView timezone event =
-    Element.column [ Element.centerX, Element.spacing 20 ]
+    Element.column [ Element.spacing 20 ]
         [ Element.newTabLink []
             { url = "" -- event.url
-            , label = Element.text event.title
+            , label =
+                Element.text event.title
+                    |> Element.el
+                        [ Font.bold
+                        , Font.size 24
+                        ]
             }
+        , Html.node "intl-time" [ Attr.property "editorValue" (event.startsAt |> Time.posixToMillis |> Encode.int) ] []
+            |> Element.html
+            |> Element.el
+                [ Font.size 20
+                ]
         , Element.newTabLink []
             { url = GoogleCalendar.googleAddToCalendarLink event
             , label =
                 Helpers.button
                     { fontColor = .mainBackground
-                    , backgroundColor = .highlight
+                    , backgroundColor = .light
                     , size = Style.fontSize.body
                     }
                     [ Element.text "Add to Google Calendar"
                     ]
             }
-        , Html.node "intl-time" [ Attr.property "editorValue" (event.startsAt |> Time.posixToMillis |> Encode.int) ] []
-            |> Element.html
-            |> Element.el []
         ]
 
 
