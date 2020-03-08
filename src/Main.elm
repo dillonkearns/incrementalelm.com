@@ -39,7 +39,7 @@ main =
         , view = view
         , update = update
         , subscriptions = subscriptions
-        , documents = [ markupDocument, markdownDocument ]
+        , documents = [ markdownDocument ]
         , manifest = manifest
         , canonicalSiteUrl = "https://incrementalelm.com"
         , onPageChange = \_ -> OnPageChange
@@ -50,15 +50,6 @@ main =
 
 type alias View =
     List (Element Msg)
-
-
-markupDocument : ( String, Pages.Document.DocumentHandler (Metadata Msg) View )
-markupDocument =
-    Pages.Document.parser
-        { extension = "emu"
-        , metadata = Json.Decode.succeed <| Metadata.Page { title = "TODO - convert to md" }
-        , body = \_ -> Ok [ Element.text "TODO - convert to markdown." ]
-        }
 
 
 markdownDocument : ( String, Pages.Document.DocumentHandler (Metadata Msg) View )
@@ -508,7 +499,7 @@ head metadata =
                     , dimensions = Nothing
                     , mimeType = Nothing
                     }
-                , description = meta.title
+                , description = meta.description |> Maybe.withDefault meta.title
                 , title = meta.title
                 , locale = Nothing
                 }
