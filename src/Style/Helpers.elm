@@ -47,8 +47,25 @@ smallTitle contents =
 
 
 link { url, content } =
-    Element.newTabLink [ Element.Font.color Style.palette.highlight ]
-        { url = url, label = Element.text content }
+    Element.newTabLink
+        []
+        { url = url
+        , label =
+            Element.row
+                [ Element.Font.color
+                    (Element.rgb255 17 132 206)
+                , Element.mouseOver
+                    [ Element.Font.color (Element.rgb255 234 21 122)
+                    ]
+                , Element.htmlAttribute (Html.Attributes.style "display" "inline-flex")
+                ]
+                [ Element.text content ]
+        }
+
+
+
+--Element.newTabLink [ Element.Font.color Style.palette.highlight ]
+--    { url = url, label = Element.text content }
 
 
 sameTabLink { url, content } =

@@ -9,6 +9,7 @@ import Html.Attributes as Attr
 import Json.Encode as Encode
 import Request.GoogleCalendar as GoogleCalendar
 import SanityApi.Object
+import SanityApi.Object.Guest
 import SanityApi.Object.LiveStream
 import SanityApi.Query as Query
 import Scalar exposing (DateTime)
@@ -32,12 +33,26 @@ type alias LiveStream =
     { title : String
     , startsAt : DateTime
     , description : String
+    , guest : List Guest
     }
+
+
+type alias Guest =
+    { name : String
+    , twitter : String
+    }
+
+
+guestSelection : SelectionSet Guest SanityApi.Object.Guest
+guestSelection =
+    SelectionSet.map2 Guest
+        (SanityApi.Object.Guest.name |> SelectionSet.nonNullOrFail)
+        (SanityApi.Object.Guest.twitter |> SelectionSet.nonNullOrFail)
 
 
 liveStreamSelection : SelectionSet LiveStream SanityApi.Object.LiveStream
 liveStreamSelection =
-    SelectionSet.map3 LiveStream
+    SelectionSet.map4 LiveStream
         (SanityApi.Object.LiveStream.title
             |> SelectionSet.nonNullOrFail
         )
@@ -45,8 +60,11 @@ liveStreamSelection =
             |> SelectionSet.nonNullOrFail
         )
         (SanityApi.Object.LiveStream.description
-            --|> SelectionSet.nonNullOrFail
             |> SelectionSet.withDefault ""
+        )
+        (SanityApi.Object.LiveStream.guest guestSelection
+            |> SelectionSet.nonNullOrFail
+            |> SelectionSet.nonNullElementsOrFail
         )
 
 
@@ -62,6 +80,7 @@ view timezone event =
                         , Font.size 24
                         ]
             }
+        , guestView event.guest
         , Html.node "intl-time" [ Attr.property "editorValue" (event.startsAt |> Time.posixToMillis |> Encode.int) ] []
             |> Element.html
             |> Element.el
@@ -79,3 +98,17 @@ view timezone event =
                     ]
             }
         ]
+
+
+guestView : List Guest -> Element msg
+guestView guests =
+    Element.paragraph [ Font.size 18 ]
+        (case guests of
+            [ guest ] ->
+                [ Element.text "with "
+                , Helpers.link { url = guest.twitter, content = guest.name }
+                ]
+
+            _ ->
+                []
+        )
