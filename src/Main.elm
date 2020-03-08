@@ -11,6 +11,7 @@ import Element.Font as Font
 import ElmLogo
 import Head as Head exposing (Tag)
 import Head.Seo
+import Http
 import Index
 import Json.Decode
 import LearnIndex
@@ -28,6 +29,7 @@ import Svg exposing (..)
 import Svg.Attributes exposing (..)
 import Task exposing (Task)
 import Time
+import TwitchButton
 import View.MenuBar
 import View.Navbar
 
@@ -87,6 +89,7 @@ type alias Model =
     , dimensions : Dimensions
     , styles : List Animation.State
     , showMenu : Bool
+    , isOnAir : TwitchButton.IsOnAir
     }
 
 
@@ -108,11 +111,13 @@ init initialPage =
                 , device = Element.classifyDevice { height = 0, width = 0 }
                 }
       , showMenu = False
+      , isOnAir = TwitchButton.notOnAir
       }
         |> updateStyles
     , Cmd.batch
         [ Dom.getViewport
             |> Task.perform InitialViewport
+        , TwitchButton.request |> Cmd.map OnAirUpdated
         ]
     )
 
@@ -132,6 +137,7 @@ type Msg
     | InitialViewport Dom.Viewport
     | WindowResized Int Int
     | OnPageChange
+    | OnAirUpdated (Result Http.Error TwitchButton.IsOnAir)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -208,6 +214,14 @@ update msg model =
 
         OnPageChange ->
             ( model, Cmd.none )
+
+        OnAirUpdated result ->
+            case result of
+                Ok isOnAir ->
+                    ( { model | isOnAir = isOnAir }, Cmd.none )
+
+                Err _ ->
+                    ( model, Cmd.none )
 
 
 interpolation =
@@ -289,10 +303,12 @@ makeTranslated i polygon =
 --view :  List ( PagePath Pages.PathKey, Metadata Msg ) -> Page (Metadata Msg) (List (Element Msg)) Pages.PathKey -> { title : String, body : Html Msg }
 
 
-eventsView : List LiveStream -> Element msg
-eventsView events =
-    events
-        |> List.map Request.Events.view
+eventsView : TwitchButton.IsOnAir -> List LiveStream -> Element msg
+eventsView isOnAir events =
+    TwitchButton.viewIfOnAir isOnAir Element.none
+        :: (events
+                |> List.map Request.Events.view
+           )
         |> Element.column [ Element.spacing 30, Element.centerX ]
 
 
@@ -325,7 +341,7 @@ view allMetadata page =
                                     [ Element.width Element.fill
                                     ]
                                     [ body
-                                    , eventsView events
+                                    , eventsView model.isOnAir events
                                     ]
                             )
                                 |> Element.layout
