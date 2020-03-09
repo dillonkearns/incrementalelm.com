@@ -213,7 +213,12 @@ update msg model =
             )
 
         OnPageChange ->
-            ( model, Cmd.none )
+            ( { model
+                | showMenu = False
+                , menuBarAnimation = View.MenuBar.init
+              }
+            , Cmd.none
+            )
 
         OnAirUpdated result ->
             case result of
