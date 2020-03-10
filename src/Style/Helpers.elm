@@ -1,4 +1,4 @@
-module Style.Helpers exposing (blockQuote, button, link, roundedAvatar, sameTabLink, sameTabLink2, smallTitle, title)
+module Style.Helpers exposing (blockQuote, button, fontAwesomeLink, link, roundedAvatar, sameTabLink, sameTabLink2, smallTitle, title)
 
 import Dimensions exposing (Dimensions)
 import Element exposing (Element)
@@ -8,6 +8,7 @@ import Element.Font
 import Html
 import Html.Attributes
 import Style
+import View.FontAwesome as FontAwesome
 
 
 button { fontColor, backgroundColor, size } children =
@@ -60,6 +61,22 @@ link { url, content } =
                 , Element.htmlAttribute (Html.Attributes.style "display" "inline-flex")
                 ]
                 [ Element.text content ]
+        }
+
+
+fontAwesomeLink { url, name } =
+    Element.newTabLink
+        []
+        { url = url
+        , label =
+            Element.row
+                [ Element.Font.color
+                    (Element.rgb255 17 132 206)
+                , Element.mouseOver
+                    [ Element.Font.color (Element.rgb255 234 21 122)
+                    ]
+                ]
+                [ FontAwesome.styledIcon name [] ]
         }
 
 

@@ -43,7 +43,7 @@ type alias LiveStream =
 
 type alias Guest =
     { name : String
-    , twitter : String
+    , twitter : Maybe String
     }
 
 
@@ -51,7 +51,7 @@ guestSelection : SelectionSet Guest SanityApi.Object.Guest
 guestSelection =
     SelectionSet.map2 Guest
         (SanityApi.Object.Guest.name |> SelectionSet.nonNullOrFail)
-        (SanityApi.Object.Guest.twitter |> SelectionSet.nonNullOrFail)
+        SanityApi.Object.Guest.twitter
 
 
 type alias Project =
@@ -98,7 +98,7 @@ view event =
             , Font.size 24
             ]
             [ Element.text event.title ]
-        , guestView event.guest
+        , guestsView event.guest
         , projectView event.project
         , [ Element.text event.description ] |> Element.paragraph [ Font.size 14, Element.width Element.fill ]
         , Html.node "intl-time" [ Attr.property "editorValue" (event.startsAt |> Time.posixToMillis |> Encode.int) ] []
@@ -122,17 +122,22 @@ view event =
         ]
 
 
-guestView : List Guest -> Element msg
-guestView guests =
-    Element.paragraph [ Font.size 18 ]
-        (case guests of
-            [ guest ] ->
-                [ Element.text "with "
-                , Helpers.link { url = "https://twitter.com/" ++ guest.twitter, content = guest.name }
-                ]
+guestsView : List Guest -> Element msg
+guestsView guests =
+    Element.column [ Font.size 18, Element.spacing 15 ]
+        (List.map guestView guests)
 
-            _ ->
-                []
+
+guestView guest =
+    Element.row []
+        ([ Element.text ("Guest: " ++ guest.name) |> Just
+         , guest.twitter
+            |> Maybe.map
+                (\twitter ->
+                    Helpers.fontAwesomeLink { url = "https://twitter.com/" ++ twitter, name = "fab fa-twitter" }
+                )
+         ]
+            |> List.filterMap identity
         )
 
 
