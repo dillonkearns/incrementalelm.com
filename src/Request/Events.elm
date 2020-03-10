@@ -129,9 +129,18 @@ guestsView guests =
 
 
 guestView guest =
+    Element.row [ Element.spacing 10 ]
+        [ Element.row []
+            [ Element.text "Guest: " |> Element.el [ Font.color Style.color.darkGray ]
+            , Element.text guest.name
+            ]
+        , socialBadges guest
+        ]
+
+
+socialBadges guest =
     Element.row []
-        ([ Element.text ("Guest: " ++ guest.name) |> Just
-         , guest.twitter
+        ([ guest.twitter
             |> Maybe.map
                 (\twitter ->
                     Helpers.fontAwesomeLink { url = "https://twitter.com/" ++ twitter, name = "fab fa-twitter" }
