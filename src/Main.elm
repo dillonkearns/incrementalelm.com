@@ -336,6 +336,10 @@ eventsView maybeNow isOnAir events =
                             Nothing ->
                                 True
                     )
+                |> List.sortBy
+                    (\event ->
+                        Time.posixToMillis event.startsAt
+                    )
 
         recordings =
             events
