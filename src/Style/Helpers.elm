@@ -1,4 +1,4 @@
-module Style.Helpers exposing (blockQuote, button, fontAwesomeLink, link, roundedAvatar, sameTabLink, sameTabLink2, smallTitle, title)
+module Style.Helpers exposing (blockQuote, button, fontAwesomeLink, link, link2, roundedAvatar, sameTabLink, sameTabLink2, smallTitle, title)
 
 import Dimensions exposing (Dimensions)
 import Element exposing (Element)
@@ -45,6 +45,23 @@ smallTitle contents =
         , Element.width Element.fill
         ]
         [ contents ]
+
+
+link2 { url, content } =
+    Element.newTabLink
+        []
+        { url = url
+        , label =
+            Element.row
+                [ Element.Font.color
+                    (Element.rgb255 17 132 206)
+                , Element.mouseOver
+                    [ Element.Font.color (Element.rgb255 234 21 122)
+                    ]
+                , Element.htmlAttribute (Html.Attributes.style "display" "inline-flex")
+                ]
+                [ content ]
+        }
 
 
 link { url, content } =

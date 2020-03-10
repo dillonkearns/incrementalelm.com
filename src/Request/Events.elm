@@ -19,6 +19,7 @@ import Style
 import Style.Helpers as Helpers
 import Time
 import TwitchButton
+import View.FontAwesome as FontAwesome
 
 
 type alias NamedZone =
@@ -154,5 +155,12 @@ projectView : Project -> Element msg
 projectView project =
     Element.paragraph [ Font.size 18 ]
         [ Element.text "working on "
-        , Helpers.link { url = "https://github.com/dillonkearns/" ++ project.name, content = project.name }
+        , Helpers.link2
+            { url = "https://github.com/dillonkearns/" ++ project.name
+            , content =
+                Element.row [ Element.spacing 4, Font.underline ]
+                    [ FontAwesome.styledIcon "fab fa-github" []
+                    , Element.text project.name
+                    ]
+            }
         ]
