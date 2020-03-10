@@ -90,6 +90,7 @@ type alias Model =
     , styles : List Animation.State
     , showMenu : Bool
     , isOnAir : TwitchButton.IsOnAir
+    , now : Maybe Time.Posix
     }
 
 
@@ -112,12 +113,14 @@ init initialPage =
                 }
       , showMenu = False
       , isOnAir = TwitchButton.notOnAir
+      , now = Nothing
       }
         |> updateStyles
     , Cmd.batch
         [ Dom.getViewport
             |> Task.perform InitialViewport
         , TwitchButton.request |> Cmd.map OnAirUpdated
+        , Time.now |> Task.perform GotCurrentTime
         ]
     )
 
@@ -138,6 +141,7 @@ type Msg
     | WindowResized Int Int
     | OnPageChange
     | OnAirUpdated (Result Http.Error TwitchButton.IsOnAir)
+    | GotCurrentTime Time.Posix
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -228,6 +232,9 @@ update msg model =
                 Err _ ->
                     ( model, Cmd.none )
 
+        GotCurrentTime posix ->
+            ( { model | now = Just posix }, Cmd.none )
+
 
 interpolation =
     Animation.easing
@@ -245,7 +252,14 @@ subscriptions model =
                 ++ [ model.menuAnimation ]
             )
         , Browser.Events.onResize WindowResized
+
+        --, Time.every (oneSecond * 60) GotCurrentTime
         ]
+
+
+oneSecond : Float
+oneSecond =
+    1000
 
 
 header : Model -> Element Msg
@@ -308,10 +322,19 @@ makeTranslated i polygon =
 --view :  List ( PagePath Pages.PathKey, Metadata Msg ) -> Page (Metadata Msg) (List (Element Msg)) Pages.PathKey -> { title : String, body : Html Msg }
 
 
-eventsView : TwitchButton.IsOnAir -> List LiveStream -> Element msg
-eventsView isOnAir events =
+eventsView : Maybe Time.Posix -> TwitchButton.IsOnAir -> List LiveStream -> Element msg
+eventsView maybeNow isOnAir events =
     TwitchButton.viewIfOnAir isOnAir Element.none
         :: (events
+                |> List.filter
+                    (\event ->
+                        case maybeNow of
+                            Just now ->
+                                Time.posixToMillis event.startsAt > Time.posixToMillis now
+
+                            Nothing ->
+                                True
+                    )
                 |> List.map Request.Events.view
            )
         |> Element.column [ Element.spacing 30, Element.centerX ]
@@ -346,7 +369,7 @@ view allMetadata page =
                                     [ Element.width Element.fill
                                     ]
                                     [ body
-                                    , eventsView model.isOnAir events
+                                    , eventsView model.now model.isOnAir events
                                     ]
                             )
                                 |> Element.layout
