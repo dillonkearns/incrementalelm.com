@@ -20,6 +20,7 @@ import Style.Helpers as Helpers
 import Time
 import TwitchButton
 import View.FontAwesome as FontAwesome
+import Youtube
 
 
 type alias NamedZone =
@@ -39,6 +40,7 @@ type alias LiveStream =
     , description : String
     , guest : List Guest
     , project : Project
+    , youtubeId : Maybe String
     }
 
 
@@ -69,7 +71,7 @@ projectSelection =
 
 liveStreamSelection : SelectionSet LiveStream SanityApi.Object.LiveStream
 liveStreamSelection =
-    SelectionSet.map5 LiveStream
+    SelectionSet.map6 LiveStream
         (SanityApi.Object.LiveStream.title
             |> SelectionSet.nonNullOrFail
         )
@@ -86,13 +88,14 @@ liveStreamSelection =
         (SanityApi.Object.LiveStream.project projectSelection
             |> SelectionSet.nonNullOrFail
         )
+        SanityApi.Object.LiveStream.youtubeID
 
 
 view : LiveStream -> Element msg
 view event =
     Element.column
         [ Element.spacing 20
-        , Element.width (Element.fill |> Element.maximum 450)
+        , Element.width (Element.fill |> Element.maximum 550)
         , Element.padding 30
         , Border.shadow { offset = ( 1, 1 ), size = 1, blur = 2, color = Element.rgba255 0 0 0 0.3 }
         ]
@@ -123,6 +126,36 @@ view event =
 
         -- , TwitchButton.view
         ]
+
+
+recordingView : LiveStream -> Element msg
+recordingView event =
+    case event.youtubeId of
+        Nothing ->
+            Element.none
+
+        Just youtubeId ->
+            Element.column
+                [ Element.spacing 20
+                , Element.width (Element.fill |> Element.maximum 550)
+                , Element.padding 30
+                , Border.shadow { offset = ( 1, 1 ), size = 1, blur = 2, color = Element.rgba255 0 0 0 0.3 }
+                ]
+                [ Youtube.view youtubeId
+                , Element.paragraph
+                    [ Font.bold
+                    , Font.size 24
+                    ]
+                    [ Element.text event.title ]
+                , guestsView event.guest
+                , projectView event.project
+                , [ Element.text event.description ] |> Element.paragraph [ Font.size 14, Element.width Element.fill ]
+                , Html.node "intl-time" [ Attr.property "editorValue" (event.startsAt |> Time.posixToMillis |> Encode.int) ] []
+                    |> Element.html
+                    |> Element.el
+                        [ Font.size 20
+                        ]
+                ]
 
 
 guestsView : List Guest -> Element msg

@@ -324,8 +324,9 @@ makeTranslated i polygon =
 
 eventsView : Maybe Time.Posix -> TwitchButton.IsOnAir -> List LiveStream -> Element msg
 eventsView maybeNow isOnAir events =
-    TwitchButton.viewIfOnAir isOnAir Element.none
-        :: (events
+    let
+        upcoming =
+            events
                 |> List.filter
                     (\event ->
                         case maybeNow of
@@ -335,7 +336,22 @@ eventsView maybeNow isOnAir events =
                             Nothing ->
                                 True
                     )
-                |> List.map Request.Events.view
+
+        recordings =
+            events
+                |> List.filter
+                    (\event ->
+                        case maybeNow of
+                            Just now ->
+                                Time.posixToMillis event.startsAt <= Time.posixToMillis now
+
+                            Nothing ->
+                                False
+                    )
+    in
+    TwitchButton.viewIfOnAir isOnAir Element.none
+        :: ((upcoming |> List.map Request.Events.view)
+                ++ (recordings |> List.map Request.Events.recordingView)
            )
         |> Element.column [ Element.spacing 30, Element.centerX ]
 
