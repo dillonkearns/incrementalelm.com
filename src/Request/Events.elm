@@ -3,6 +3,7 @@ module Request.Events exposing (..)
 import Element exposing (Element)
 import Element.Border as Border
 import Element.Font as Font
+import Element.Keyed
 import Graphql.Operation exposing (RootQuery)
 import Graphql.SelectionSet as SelectionSet exposing (SelectionSet)
 import Html
@@ -107,9 +108,11 @@ view event =
         , guestsView event.guest
         , projectView event.project
         , [ Element.text event.description ] |> Element.paragraph [ Font.size 14, Element.width Element.fill ]
-        , Html.node "intl-time" [ Attr.property "editorValue" (event.startsAt |> Time.posixToMillis |> Encode.int) ] []
-            |> Element.html
-            |> Element.el
+        , ( event.startsAt |> Time.posixToMillis |> String.fromInt
+          , Html.node "intl-time" [ Attr.property "editorValue" (event.startsAt |> Time.posixToMillis |> Encode.int) ] []
+                |> Element.html
+          )
+            |> Element.Keyed.el
                 [ Font.size 20
                 ]
         , Element.newTabLink []

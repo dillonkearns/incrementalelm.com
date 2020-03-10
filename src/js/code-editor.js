@@ -42,8 +42,7 @@ customElements.define(
   class extends HTMLElement {
     constructor() {
       super();
-      this._editorValue =
-        "-- If you see this, the Elm code didn't set the value.";
+      this._editorValue = null;
     }
 
     get editorValue() {
@@ -55,6 +54,9 @@ customElements.define(
       this._editorValue = value;
       if (!this._editor) return;
       this._editor.setValue(value);
+    }
+
+    attributeChangedCallback(name, oldValue, newValue) {
     }
 
     connectedCallback() {
