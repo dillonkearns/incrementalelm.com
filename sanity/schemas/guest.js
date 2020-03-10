@@ -14,6 +14,12 @@ export default {
         title: 'Twitter',
         description: 'Just the username, no @ or URL (e.g. dillontkearns).',
       },
+      {
+        name: 'github',
+        type: 'string',
+        title: 'Github',
+        description: 'Just the username, no @ or URL (e.g. dillonkearns).',
+      },
     ],
   };
   

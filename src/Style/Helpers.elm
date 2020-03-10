@@ -87,9 +87,7 @@ fontAwesomeLink { url, name } =
         { url = url
         , label =
             Element.row
-                [ Element.Font.color
-                    (Element.rgb255 17 132 206)
-                , Element.mouseOver
+                [ Element.mouseOver
                     [ Element.Font.color (Element.rgb255 234 21 122)
                     ]
                 ]

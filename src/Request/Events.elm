@@ -45,14 +45,16 @@ type alias LiveStream =
 type alias Guest =
     { name : String
     , twitter : Maybe String
+    , github : Maybe String
     }
 
 
 guestSelection : SelectionSet Guest SanityApi.Object.Guest
 guestSelection =
-    SelectionSet.map2 Guest
+    SelectionSet.map3 Guest
         (SanityApi.Object.Guest.name |> SelectionSet.nonNullOrFail)
         SanityApi.Object.Guest.twitter
+        SanityApi.Object.Guest.github
 
 
 type alias Project =
@@ -140,11 +142,16 @@ guestView guest =
 
 
 socialBadges guest =
-    Element.row []
+    Element.row [ Element.spacing 5 ]
         ([ guest.twitter
             |> Maybe.map
                 (\twitter ->
                     Helpers.fontAwesomeLink { url = "https://twitter.com/" ++ twitter, name = "fab fa-twitter" }
+                )
+         , guest.github
+            |> Maybe.map
+                (\github ->
+                    Helpers.fontAwesomeLink { url = "https://github.com/" ++ github, name = "fab fa-github" }
                 )
          ]
             |> List.filterMap identity
