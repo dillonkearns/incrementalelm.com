@@ -352,6 +352,10 @@ eventsView maybeNow isOnAir events =
                             Nothing ->
                                 False
                     )
+                |> List.sortBy
+                    (\event ->
+                        -(Time.posixToMillis event.startsAt)
+                    )
     in
     TwitchButton.viewIfOnAir isOnAir Element.none
         :: ((upcoming |> List.map Request.Events.view)
