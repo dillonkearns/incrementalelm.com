@@ -83,7 +83,7 @@ liveStreamSelection =
             |> SelectionSet.withDefault ""
         )
         (SanityApi.Object.LiveStream.guest guestSelection
-            |> SelectionSet.nonNullOrFail
+            |> SelectionSet.withDefault []
             |> SelectionSet.nonNullElementsOrFail
         )
         (SanityApi.Object.LiveStream.project projectSelection
