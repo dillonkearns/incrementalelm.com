@@ -19,7 +19,6 @@ import Scalar exposing (DateTime)
 import Style
 import Style.Helpers as Helpers
 import Time
-import TwitchButton
 import View.FontAwesome as FontAwesome
 import Youtube
 
@@ -40,7 +39,7 @@ type alias LiveStream =
     , startsAt : DateTime
     , description : String
     , guest : List Guest
-    , project : Project
+    , project : Maybe Project
     , youtubeId : Maybe String
     }
 
@@ -86,9 +85,7 @@ liveStreamSelection =
             |> SelectionSet.withDefault []
             |> SelectionSet.nonNullElementsOrFail
         )
-        (SanityApi.Object.LiveStream.project projectSelection
-            |> SelectionSet.nonNullOrFail
-        )
+        (SanityApi.Object.LiveStream.project projectSelection)
         SanityApi.Object.LiveStream.youtubeID
 
 
@@ -106,7 +103,7 @@ view event =
             ]
             [ Element.text event.title ]
         , guestsView event.guest
-        , projectView event.project
+        , event.project |> Maybe.map projectView |> Maybe.withDefault Element.none
         , [ Element.text event.description ] |> Element.paragraph [ Font.size 14, Element.width Element.fill ]
         , ( event.startsAt |> Time.posixToMillis |> String.fromInt
           , Html.node "intl-time" [ Attr.property "editorValue" (event.startsAt |> Time.posixToMillis |> Encode.int) ] []
@@ -151,7 +148,7 @@ recordingView event =
                     ]
                     [ Element.text event.title ]
                 , guestsView event.guest
-                , projectView event.project
+                , event.project |> Maybe.map projectView |> Maybe.withDefault Element.none
                 , [ Element.text event.description ] |> Element.paragraph [ Font.size 14, Element.width Element.fill ]
                 , Html.node "intl-time" [ Attr.property "editorValue" (event.startsAt |> Time.posixToMillis |> Encode.int) ] []
                     |> Element.html
