@@ -1,7 +1,5 @@
 module MarkdownRenderer exposing (TableOfContents, view)
 
---import Ellie
-
 import Dict
 import Element exposing (Element)
 import Element.Background
@@ -10,19 +8,16 @@ import Element.Font as Font
 import Element.Region
 import Html exposing (Attribute, Html)
 import Html.Attributes exposing (property)
-import Html.Events exposing (on)
 import Json.Encode as Encode exposing (Value)
 import Markdown.Block
 import Markdown.Html
 import Markdown.Parser
-import Pages
 import Style
 import Style.Helpers
 import View.DripSignupForm
 import View.Ellie
 import View.FontAwesome
 import View.Resource
-import View.SignupForm
 
 
 buildToc : List Markdown.Block.Block -> TableOfContents
@@ -203,7 +198,20 @@ renderer =
     , codeBlock = codeBlock
     , html =
         Markdown.Html.oneOf
-            [ Markdown.Html.tag "Signup"
+            [ Markdown.Html.tag "Discord"
+                (\children ->
+                    Html.iframe
+                        [ Html.Attributes.src "https://discordapp.com/widget?id=534524278847045633&theme=dark"
+                        , Html.Attributes.width 350
+                        , Html.Attributes.height 500
+                        , Html.Attributes.attribute "allowtransparency" "true"
+                        , Html.Attributes.attribute "frameborder" "0"
+                        , Html.Attributes.attribute "sandbox" "allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"
+                        ]
+                        []
+                        |> Element.html
+                )
+            , Markdown.Html.tag "Signup"
                 (\buttonText formId body ->
                     [ Element.column
                         [ Font.center
@@ -259,6 +267,7 @@ renderer =
                     let
                         todo anything =
                             todo anything
+
                         kind =
                             case Dict.get resourceKind icons of
                                 Just myResource ->
@@ -267,10 +276,11 @@ renderer =
 
                                 Nothing ->
                                     todo ""
-                                    --Err
-                                    --    { title = "Invalid resource name"
-                                    --    , message = []
-                                    --    }
+
+                        --Err
+                        --    { title = "Invalid resource name"
+                        --    , message = []
+                        --    }
                     in
                     View.Resource.view { name = name, url = url, kind = kind }
                 )
