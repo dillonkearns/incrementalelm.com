@@ -18,7 +18,6 @@ import LearnIndex
 import MarkdownRenderer
 import Metadata exposing (Metadata)
 import Pages
-import Pages.Document
 import Pages.Manifest as Manifest
 import Pages.Manifest.Category
 import Pages.Platform exposing (Page)
@@ -36,31 +35,27 @@ import View.Navbar
 
 main : Pages.Platform.Program Model Msg (Metadata Msg) (List (Element Msg))
 main =
-    Pages.Platform.application
+    Pages.Platform.init
         { init = init
         , view = view
         , update = update
         , subscriptions = subscriptions
-        , documents = [ markdownDocument ]
+        , documents =
+            [ { extension = "md"
+              , metadata = Metadata.decoder
+              , body = MarkdownRenderer.view
+              }
+            ]
         , manifest = manifest
         , canonicalSiteUrl = "https://incrementalelm.com"
-        , onPageChange = \_ -> OnPageChange
+        , onPageChange = Just (\_ -> OnPageChange)
         , internals = Pages.internals
-        , generateFiles = \_ -> []
         }
+        |> Pages.Platform.toProgram
 
 
 type alias View =
     List (Element Msg)
-
-
-markdownDocument : ( String, Pages.Document.DocumentHandler (Metadata Msg) View )
-markdownDocument =
-    Pages.Document.parser
-        { extension = "md"
-        , metadata = Metadata.decoder
-        , body = MarkdownRenderer.view
-        }
 
 
 manifest : Manifest.Config Pages.PathKey

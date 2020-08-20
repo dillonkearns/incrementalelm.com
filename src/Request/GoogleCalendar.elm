@@ -2,8 +2,8 @@ module Request.GoogleCalendar exposing (Event, googleAddToCalendarLink, request)
 
 import Extra.Json.Decode.Exploration as Decode
 import Iso8601
-import Json.Decode.Exploration as Decode exposing (Decoder)
-import Json.Decode.Exploration.Pipeline as Pipeline
+import OptimizedDecoder as Decode exposing (Decoder)
+import OptimizedDecoder.Pipeline as Pipeline
 import Pages
 import Pages.Secrets as Secrets
 import Pages.StaticHttp as StaticHttp

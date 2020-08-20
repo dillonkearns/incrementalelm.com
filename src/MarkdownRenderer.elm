@@ -5,13 +5,15 @@ import Element exposing (Element)
 import Element.Background
 import Element.Border
 import Element.Font as Font
+import Element.Input
 import Element.Region
 import Html exposing (Attribute, Html)
 import Html.Attributes exposing (property)
 import Json.Encode as Encode exposing (Value)
-import Markdown.Block
+import Markdown.Block as Block exposing (Block, Inline, ListItem(..), Task(..))
 import Markdown.Html
 import Markdown.Parser
+import Markdown.Renderer
 import Style
 import Style.Helpers
 import View.DripSignupForm
@@ -20,7 +22,7 @@ import View.FontAwesome
 import View.Resource
 
 
-buildToc : List Markdown.Block.Block -> TableOfContents
+buildToc : List Block -> TableOfContents
 buildToc blocks =
     let
         headings =
@@ -37,18 +39,21 @@ buildToc blocks =
             )
 
 
-styledToString : List Markdown.Block.Inline -> String
-styledToString list =
-    List.map .string list
-        |> String.join "-"
+styledToString : List Inline -> String
+styledToString inlines =
+    --List.map .string list
+    --|> String.join "-"
+    -- TODO do I need to hyphenate?
+    inlines
+        |> Block.extractInlineText
 
 
-gatherHeadings : List Markdown.Block.Block -> List ( Int, List Markdown.Block.Inline )
+gatherHeadings : List Block -> List ( Block.HeadingLevel, List Inline )
 gatherHeadings blocks =
     List.filterMap
         (\block ->
             case block of
-                Markdown.Block.Heading level content ->
+                Block.Heading level content ->
                     Just ( level, content )
 
                 _ ->
@@ -68,7 +73,7 @@ view markdown =
             |> Markdown.Parser.parse
     of
         Ok okAst ->
-            case Markdown.Parser.render renderer okAst of
+            case Markdown.Renderer.render renderer okAst of
                 Ok rendered ->
                     Ok rendered
 
@@ -86,7 +91,7 @@ viewWithToc markdown =
             |> Markdown.Parser.parse
     of
         Ok okAst ->
-            case Markdown.Parser.render renderer okAst of
+            case Markdown.Renderer.render renderer okAst of
                 Ok rendered ->
                     Ok ( buildToc okAst, rendered )
 
@@ -97,86 +102,125 @@ viewWithToc markdown =
             Err (error |> List.map Markdown.Parser.deadEndToString |> String.join "\n")
 
 
-renderer : Markdown.Parser.Renderer (Element msg)
+renderer : Markdown.Renderer.Renderer (Element msg)
 renderer =
     { heading = heading
-    , raw =
+    , paragraph =
         Element.paragraph
             [ Element.spacing 15
             , Element.width Element.fill
             ]
     , thematicBreak = Element.none
-    , plain = \content -> Element.paragraph [] [ Element.text content ]
-    , bold = \content -> Element.paragraph [ Font.bold ] [ Element.text content ]
-    , italic = \content -> Element.paragraph [ Font.italic ] [ Element.text content ]
-    , code = code
+    , text = \value -> Element.paragraph [] [ Element.text value ]
+    , strong = \content -> Element.paragraph [ Font.bold ] content
+    , emphasis = \content -> Element.paragraph [ Font.italic ] content
+    , codeSpan = code
     , link =
-        \link body ->
-            -- Pages.isValidRoute link.destination
-            --     |> Result.map
-            --         (\() ->
-            Element.newTabLink
-                []
-                { url = link.destination
+        \{ title, destination } body ->
+            Element.newTabLink []
+                { url = destination
                 , label =
-                    Element.row
-                        [ Font.color
-                            (Element.rgb255
-                                17
-                                132
-                                206
-                            )
-                        , Element.mouseOver
-                            [ Font.color
-                                (Element.rgb255
-                                    234
-                                    21
-                                    122
-                                )
-                            ]
-
-                        --, Element.htmlAttribute (Html.Attributes.style "display" "inline-flex")
+                    Element.paragraph
+                        [ Font.color (Element.rgb255 0 0 255)
+                        , Element.htmlAttribute (Html.Attributes.style "overflow-wrap" "break-word")
+                        , Element.htmlAttribute (Html.Attributes.style "word-break" "break-word")
                         ]
                         body
                 }
-                |> Ok
 
-    -- )
+    --\link body ->
+    --    -- Pages.isValidRoute link.destination
+    --    --     |> Result.map
+    --    --         (\() ->
+    --    Element.newTabLink
+    --        []
+    --        { url = link.destination
+    --        , label =
+    --            Element.row
+    --                [ Font.color
+    --                    (Element.rgb255
+    --                        17
+    --                        132
+    --                        206
+    --                    )
+    --                , Element.mouseOver
+    --                    [ Font.color
+    --                        (Element.rgb255
+    --                            234
+    --                            21
+    --                            122
+    --                        )
+    --                    ]
+    --
+    --                --, Element.htmlAttribute (Html.Attributes.style "display" "inline-flex")
+    --                ]
+    --                body
+    --        }
+    --        |> Ok
+    --
     , image =
-        \image body ->
-            -- Pages.isValidRoute image.src
-            --     |> Result.map
-            -- (\() ->
-            Element.image
-                [ Element.width (Element.px 600)
-                , Element.centerX
-                ]
-                { src = image.src, description = body }
-                |> Element.el
-                    [ Element.centerX
-                    , Element.width Element.fill
-                    ]
-                |> List.singleton
-                |> Element.textColumn
-                    [ Element.spacing 15
-                    , Element.width Element.fill
-                    ]
-                |> Ok
+        \image ->
+            case image.title of
+                Just title ->
+                    Element.image [ Element.width Element.fill ] { src = image.src, description = image.alt }
 
+                Nothing ->
+                    Element.image [ Element.width Element.fill ] { src = image.src, description = image.alt }
+
+    --, image =
+    --    \image body ->
+    --        -- Pages.isValidRoute image.src
+    --        --     |> Result.map
+    --        -- (\() ->
+    --        Element.image
+    --            [ Element.width (Element.px 600)
+    --            , Element.centerX
+    --            ]
+    --            { src = image.src, description = body }
+    --            |> Element.el
+    --                [ Element.centerX
+    --                , Element.width Element.fill
+    --                ]
+    --            |> List.singleton
+    --            |> Element.textColumn
+    --                [ Element.spacing 15
+    --                , Element.width Element.fill
+    --                ]
+    --            |> Ok
+    --
     -- )
+    , hardLineBreak = Html.br [] [] |> Element.html
+    , blockQuote =
+        \children ->
+            Element.column
+                [ Element.Border.widthEach { top = 0, right = 0, bottom = 0, left = 10 }
+                , Element.padding 10
+                , Element.Border.color (Element.rgb255 145 145 145)
+                , Element.Background.color (Element.rgb255 245 245 245)
+                ]
+                children
     , unorderedList =
         \items ->
             Element.column [ Element.spacing 15 ]
                 (items
                     |> List.map
-                        (\itemBlocks ->
-                            Element.paragraph
-                                [ Element.spacing 5
-                                , Element.paddingEach { top = 0, right = 0, bottom = 0, left = 20 }
-                                ]
-                                [ Element.paragraph
+                        (\(ListItem task children) ->
+                            Element.paragraph [ Element.spacing 5 ]
+                                [ Element.row
                                     [ Element.alignTop ]
-                                    (Element.text " • " :: itemBlocks)
+                                    ((case task of
+                                        IncompleteTask ->
+                                            Element.Input.defaultCheckbox False
+
+                                        CompletedTask ->
+                                            Element.Input.defaultCheckbox True
+
+                                        NoTask ->
+                                            Element.text "•"
+                                     )
+                                        :: Element.text " "
+                                        :: children
+                                    )
                                 ]
                         )
                 )
@@ -197,6 +241,14 @@ renderer =
                         )
                 )
     , codeBlock = codeBlock
+    , table = Element.column []
+    , tableHeader = Element.column []
+    , tableBody = Element.column []
+    , tableRow = Element.row []
+    , tableHeaderCell =
+        \maybeAlignment children ->
+            Element.paragraph [] children
+    , tableCell = Element.paragraph []
     , html =
         Markdown.Html.oneOf
             [ Markdown.Html.tag "Discord"
@@ -362,42 +414,68 @@ rawTextToId rawText =
         |> String.replace " " ""
 
 
-heading : { level : Int, rawText : String, children : List (Element msg) } -> Element msg
+heading : { level : Block.HeadingLevel, rawText : String, children : List (Element msg) } -> Element msg
 heading { level, rawText, children } =
     Element.paragraph
-        ((case level of
-            1 ->
-                [ Font.size 36
-                , Font.bold
-                , Font.center
-                , Font.family [ Font.typeface "Raleway" ]
-                ]
+        [ Font.size
+            (case level of
+                Block.H1 ->
+                    36
 
-            -- 36
-            2 ->
-                -- 24
-                [ Font.size 24
-                , Font.semiBold
-                , Font.alignLeft
-                , Font.family [ Font.typeface "Raleway" ]
-                ]
+                Block.H2 ->
+                    24
 
-            _ ->
-                -- 20
-                [ Font.size 36
-                , Font.bold
-                , Font.center
-                , Font.family [ Font.typeface "Raleway" ]
-                ]
-         )
-            ++ [ Element.Region.heading level
-               , Element.htmlAttribute
-                    (Html.Attributes.attribute "name" (rawTextToId rawText))
-               , Element.htmlAttribute
-                    (Html.Attributes.id (rawTextToId rawText))
-               ]
-        )
+                _ ->
+                    20
+            )
+        , Font.bold
+        , Font.family [ Font.typeface "Montserrat" ]
+        , Element.Region.heading (Block.headingLevelToInt level)
+        , Element.htmlAttribute
+            (Html.Attributes.attribute "name" (rawTextToId rawText))
+        , Element.htmlAttribute
+            (Html.Attributes.id (rawTextToId rawText))
+        ]
         children
+
+
+
+--heading : { level : Int, rawText : String, children : List (Element msg) } -> Element msg
+--heading { level, rawText, children } =
+--    Element.paragraph
+--        ((case level of
+--            1 ->
+--                [ Font.size 36
+--                , Font.bold
+--                , Font.center
+--                , Font.family [ Font.typeface "Raleway" ]
+--                ]
+--
+--            -- 36
+--            2 ->
+--                -- 24
+--                [ Font.size 24
+--                , Font.semiBold
+--                , Font.alignLeft
+--                , Font.family [ Font.typeface "Raleway" ]
+--                ]
+--
+--            _ ->
+--                -- 20
+--                [ Font.size 36
+--                , Font.bold
+--                , Font.center
+--                , Font.family [ Font.typeface "Raleway" ]
+--                ]
+--         )
+--            ++ [ Element.Region.heading level
+--               , Element.htmlAttribute
+--                    (Html.Attributes.attribute "name" (rawTextToId rawText))
+--               , Element.htmlAttribute
+--                    (Html.Attributes.id (rawTextToId rawText))
+--               ]
+--        )
+--        children
 
 
 code : String -> Element msg
