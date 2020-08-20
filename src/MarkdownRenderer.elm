@@ -106,9 +106,9 @@ renderer =
             , Element.width Element.fill
             ]
     , thematicBreak = Element.none
-    , plain = \content -> Element.el [] (Element.text content)
-    , bold = \content -> Element.el [ Font.bold ] (Element.text content)
-    , italic = \content -> Element.el [ Font.italic ] (Element.text content)
+    , plain = \content -> Element.paragraph [] [ Element.text content ]
+    , bold = \content -> Element.paragraph [ Font.bold ] [ Element.text content ]
+    , italic = \content -> Element.paragraph [ Font.italic ] [ Element.text content ]
     , code = code
     , link =
         \link body ->
@@ -134,7 +134,8 @@ renderer =
                                     122
                                 )
                             ]
-                        , Element.htmlAttribute (Html.Attributes.style "display" "inline-flex")
+
+                        --, Element.htmlAttribute (Html.Attributes.style "display" "inline-flex")
                         ]
                         body
                 }
@@ -169,7 +170,7 @@ renderer =
                 (items
                     |> List.map
                         (\itemBlocks ->
-                            Element.wrappedRow
+                            Element.paragraph
                                 [ Element.spacing 5
                                 , Element.paddingEach { top = 0, right = 0, bottom = 0, left = 20 }
                                 ]
