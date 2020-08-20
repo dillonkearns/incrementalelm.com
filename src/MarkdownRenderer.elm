@@ -14,6 +14,7 @@ import Markdown.Block as Block exposing (Block, Inline, ListItem(..), Task(..))
 import Markdown.Html
 import Markdown.Parser
 import Markdown.Renderer
+import Pages
 import Style
 import Style.Helpers
 import View.DripSignupForm
@@ -121,74 +122,29 @@ renderer =
                 { url = destination
                 , label =
                     Element.paragraph
-                        [ Font.color (Element.rgb255 0 0 255)
+                        [ Font.color (Element.rgb255 17 132 206)
+                        , Element.mouseOver [ Font.color (Element.rgb255 234 21 122) ]
                         , Element.htmlAttribute (Html.Attributes.style "overflow-wrap" "break-word")
                         , Element.htmlAttribute (Html.Attributes.style "word-break" "break-word")
                         ]
                         body
                 }
-
-    --\link body ->
-    --    -- Pages.isValidRoute link.destination
-    --    --     |> Result.map
-    --    --         (\() ->
-    --    Element.newTabLink
-    --        []
-    --        { url = link.destination
-    --        , label =
-    --            Element.row
-    --                [ Font.color
-    --                    (Element.rgb255
-    --                        17
-    --                        132
-    --                        206
-    --                    )
-    --                , Element.mouseOver
-    --                    [ Font.color
-    --                        (Element.rgb255
-    --                            234
-    --                            21
-    --                            122
-    --                        )
-    --                    ]
-    --
-    --                --, Element.htmlAttribute (Html.Attributes.style "display" "inline-flex")
-    --                ]
-    --                body
-    --        }
-    --        |> Ok
-    --
     , image =
         \image ->
-            case image.title of
-                Just title ->
-                    Element.image [ Element.width Element.fill ] { src = image.src, description = image.alt }
-
-                Nothing ->
-                    Element.image [ Element.width Element.fill ] { src = image.src, description = image.alt }
-
-    --, image =
-    --    \image body ->
-    --        -- Pages.isValidRoute image.src
-    --        --     |> Result.map
-    --        -- (\() ->
-    --        Element.image
-    --            [ Element.width (Element.px 600)
-    --            , Element.centerX
-    --            ]
-    --            { src = image.src, description = body }
-    --            |> Element.el
-    --                [ Element.centerX
-    --                , Element.width Element.fill
-    --                ]
-    --            |> List.singleton
-    --            |> Element.textColumn
-    --                [ Element.spacing 15
-    --                , Element.width Element.fill
-    --                ]
-    --            |> Ok
-    --
-    -- )
+            Element.image
+                [ Element.width (Element.px 600)
+                , Element.centerX
+                ]
+                { src = image.src, description = image.alt }
+                |> Element.el
+                    [ Element.centerX
+                    , Element.width Element.fill
+                    ]
+                |> List.singleton
+                |> Element.textColumn
+                    [ Element.spacing 15
+                    , Element.width Element.fill
+                    ]
     , hardLineBreak = Html.br [] [] |> Element.html
     , blockQuote =
         \children ->
@@ -201,7 +157,7 @@ renderer =
                 children
     , unorderedList =
         \items ->
-            Element.column [ Element.spacing 15 ]
+            Element.column [ Element.spacing 15, Element.paddingEach { left = 20, top = 0, right = 0, bottom = 0 } ]
                 (items
                     |> List.map
                         (\(ListItem task children) ->
@@ -417,65 +373,33 @@ rawTextToId rawText =
 heading : { level : Block.HeadingLevel, rawText : String, children : List (Element msg) } -> Element msg
 heading { level, rawText, children } =
     Element.paragraph
-        [ Font.size
-            (case level of
-                Block.H1 ->
-                    36
+        ((case level of
+            Block.H1 ->
+                [ Font.size 36
+                , Font.bold
+                , Font.center
+                ]
 
-                Block.H2 ->
-                    24
+            Block.H2 ->
+                [ Font.size 24
+                , Font.semiBold
+                ]
 
-                _ ->
-                    20
-            )
-        , Font.bold
-        , Font.family [ Font.typeface "Montserrat" ]
-        , Element.Region.heading (Block.headingLevelToInt level)
-        , Element.htmlAttribute
-            (Html.Attributes.attribute "name" (rawTextToId rawText))
-        , Element.htmlAttribute
-            (Html.Attributes.id (rawTextToId rawText))
-        ]
+            _ ->
+                [ Font.size 20
+                , Font.semiBold
+                ]
+         )
+            ++ [ Font.bold
+               , Font.family [ Font.typeface "Raleway" ]
+               , Element.Region.heading (Block.headingLevelToInt level)
+               , Element.htmlAttribute
+                    (Html.Attributes.attribute "name" (rawTextToId rawText))
+               , Element.htmlAttribute
+                    (Html.Attributes.id (rawTextToId rawText))
+               ]
+        )
         children
-
-
-
---heading : { level : Int, rawText : String, children : List (Element msg) } -> Element msg
---heading { level, rawText, children } =
---    Element.paragraph
---        ((case level of
---            1 ->
---                [ Font.size 36
---                , Font.bold
---                , Font.center
---                , Font.family [ Font.typeface "Raleway" ]
---                ]
---
---            -- 36
---            2 ->
---                -- 24
---                [ Font.size 24
---                , Font.semiBold
---                , Font.alignLeft
---                , Font.family [ Font.typeface "Raleway" ]
---                ]
---
---            _ ->
---                -- 20
---                [ Font.size 36
---                , Font.bold
---                , Font.center
---                , Font.family [ Font.typeface "Raleway" ]
---                ]
---         )
---            ++ [ Element.Region.heading level
---               , Element.htmlAttribute
---                    (Html.Attributes.attribute "name" (rawTextToId rawText))
---               , Element.htmlAttribute
---                    (Html.Attributes.id (rawTextToId rawText))
---               ]
---        )
---        children
 
 
 code : String -> Element msg
