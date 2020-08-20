@@ -132,19 +132,16 @@ renderer =
     , image =
         \image ->
             Element.image
-                [ Element.width (Element.px 600)
-                , Element.centerX
+                [ Element.centerX
+                , Element.width (Element.fill |> Element.maximum 600)
                 ]
                 { src = image.src, description = image.alt }
-                |> Element.el
-                    [ Element.centerX
-                    , Element.width Element.fill
-                    ]
-                |> List.singleton
-                |> Element.textColumn
-                    [ Element.spacing 15
-                    , Element.width Element.fill
-                    ]
+
+    --|> List.singleton
+    --|> Element.textColumn
+    --    [ Element.spacing 15
+    --    , Element.width Element.fill
+    --    ]
     , hardLineBreak = Html.br [] [] |> Element.html
     , blockQuote =
         \children ->
