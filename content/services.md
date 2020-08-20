@@ -32,9 +32,9 @@ The program is limited to 5 people, which means you get a good balance of coachi
 
 If you're interested to learn more, fill out this form and I'll send you a link to schedule a call so we can explore whether this program can help you with your goals.
 
-<Button url="/accelerator-application">
+<button url="/accelerator-application">
 Sign Up for Group Coaching
-</Button>
+</button>
 
 ## 👥 One-on-one Coaching
 
@@ -42,9 +42,9 @@ I offer more personalized guidance that will help you improve your elm app tailo
 
 One-on-one coaching sessions happen on a weekly or bi-weekly basis. Each session has a priority and focus that we decide on beforehand, and ends with a set of next steps. The next steps serve as an action plan to maximize the learning and give you the opportunity to apply the material from the session.
 
-<Button url="https://app.moonclerk.com/pay/59azfo4etnk4">
+<button url="https://app.moonclerk.com/pay/59azfo4etnk4">
 See Coaching Pricing
-</Button>
+</button>
 
 
 ## 🎓 Training
@@ -60,4 +60,4 @@ If you have a smaller team, contact me about our public remote workshops.
 
 Want to discuss finding the right service to help you improve your elm codebase? Send me an email with a brief description of the outcome your looking for.
 
-<ContactButton />
+<contact-button />

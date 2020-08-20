@@ -21,15 +21,12 @@ Here are some popular tips you can check out right away.
 - [How can I write elm code faster, and without getting stuck?](/articles/moving-faster-with-tiny-steps)
 - [How can I improve my elm-graphql codebase?](/custom-scalar-checklist)
 
-<Signup
-    buttonText="I want weekly elm tips!"
-    formId="906002494"
->
+<signup buttontext="I want weekly elm tips!" formid="906002494">
 # Tips for Writing Like a Senior Elm Dev
 
 - Go beyond learning what great elm code *looks like*. Learn **how to write it**.
 - Tips you won't find anywhere else to level up your elm skills
-</Signup>
+</signup>
 
 # How I can help your team level up
 

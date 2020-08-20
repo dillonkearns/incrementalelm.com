@@ -5,7 +5,7 @@
 }
 ---
 
-<Vimeo id="329690102" />
+<vimeo id="329690102" />
 
 # Want to take elm-graphql to the next level?
 
@@ -20,9 +20,9 @@ Download it now to get the descriptions and examples of all of these types of fi
 - Context Contract
 - Enumeration Contract
 
-<Signup buttonText="Download the checklist" formId="573190762">
+<signup buttontext="Download the checklist" formid="573190762">
 # ✅ Improve your Schema with this step-by-step checklist
 
 - Simple steps that will improve your elm-graphql codebase!
 - Learn the 4 kinds of Contracts that you can turn into Custom Scalars
-</Signup>
+</signup>

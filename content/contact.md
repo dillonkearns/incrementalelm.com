@@ -9,4 +9,4 @@
 
 ![Contact Image](/images/contact.jpg)
 
-<ContactButton />
+<contact-button />

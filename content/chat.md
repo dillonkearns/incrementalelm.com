@@ -2,4 +2,4 @@
 {"type": "page", "title": "Incremental Elm Community Chat"}
 ---
 
-<Discord></Discord>
+<discord></discord>

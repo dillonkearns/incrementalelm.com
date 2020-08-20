@@ -35,12 +35,12 @@ Instead of testing the business logic that's accessible to test in your code, ma
 - Given your nice, independent business logic modules, write unit tests for those.
 
 
-<Signup buttonText = "Send me weekly elm tips!" formId="906002494">
+<signup buttonText = "Send me weekly elm tips!" formid="906002494">
 # Tips for Writing Like a Senior Elm Dev
 
 - Go beyond learning what great elm code *looks like*. Learn *how to write it*.
 - Tips you won't find anywhere else to level up your elm skills
-</Signup>
+</signup>
 
 ## Test-first guides you to decouple business logic
 

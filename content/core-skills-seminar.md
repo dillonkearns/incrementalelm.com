@@ -27,6 +27,6 @@ You'll learn through several mediums:
 The program is limited to 5 people, which means you get a good balance of coaching on your specific issues, and learning from other developer's experiences.
 
 
-<Button url="https://app.moonclerk.com/pay/6ml1tiepte9a">
+<button url="https://app.moonclerk.com/pay/6ml1tiepte9a">
 See Pricing and Enroll
-</Button>
+</button>

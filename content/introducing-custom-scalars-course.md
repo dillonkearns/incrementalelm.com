@@ -14,16 +14,16 @@ I recommend downloading the [Custom Scalar Checklist](https://incrementalelm.com
 
 Watch this intro to using `--scalar-codecs <ModuleName>` in `elm-graphql` if you haven't already.
 
-<Vimeo id="329690102" />
+<vimeo id="329690102" />
 
 ## Part 1 - Benefits of using Custom Scalars
 
-<Vimeo id="329898472" />
+<vimeo id="329898472" />
 
 ## Part 2 - Introducing the steps
 
-<Vimeo id="329896387" />
+<vimeo id="329896387" />
 
 ## Part 3 - Executing the steps
 
-<Vimeo id="329888719" />
+<vimeo id="329888719" />

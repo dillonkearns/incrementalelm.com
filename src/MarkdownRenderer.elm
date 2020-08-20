@@ -251,7 +251,7 @@ renderer =
     , tableCell = Element.paragraph []
     , html =
         Markdown.Html.oneOf
-            [ Markdown.Html.tag "Discord"
+            [ Markdown.Html.tag "discord"
                 (\children ->
                     Html.iframe
                         [ Html.Attributes.src "https://discordapp.com/widget?id=534524278847045633&theme=dark"
@@ -264,7 +264,7 @@ renderer =
                         []
                         |> Element.html
                 )
-            , Markdown.Html.tag "Signup"
+            , Markdown.Html.tag "signup"
                 (\buttonText formId body ->
                     [ Element.column
                         [ Font.center
@@ -294,18 +294,18 @@ renderer =
                             ]
                         |> Element.el []
                 )
-                |> Markdown.Html.withAttribute "buttonText"
-                |> Markdown.Html.withAttribute "formId"
-            , Markdown.Html.tag "Button"
+                |> Markdown.Html.withAttribute "buttontext"
+                |> Markdown.Html.withAttribute "formid"
+            , Markdown.Html.tag "button"
                 (\url children -> buttonView { url = url, children = children })
                 |> Markdown.Html.withAttribute "url"
-            , Markdown.Html.tag "Vimeo"
+            , Markdown.Html.tag "vimeo"
                 (\id children -> vimeoView id)
                 |> Markdown.Html.withAttribute "id"
-            , Markdown.Html.tag "Ellie"
+            , Markdown.Html.tag "ellie"
                 (\id children -> View.Ellie.view id)
                 |> Markdown.Html.withAttribute "id"
-            , Markdown.Html.tag "Resources"
+            , Markdown.Html.tag "resources"
                 (\children ->
                     Element.column
                         [ Element.spacing 16
@@ -315,7 +315,7 @@ renderer =
                         ]
                         children
                 )
-            , Markdown.Html.tag "Resource"
+            , Markdown.Html.tag "resource"
                 (\name resourceKind url children ->
                     let
                         todo anything =
@@ -340,7 +340,7 @@ renderer =
                 |> Markdown.Html.withAttribute "title"
                 |> Markdown.Html.withAttribute "icon"
                 |> Markdown.Html.withAttribute "url"
-            , Markdown.Html.tag "ContactButton" (\body -> contactButtonView)
+            , Markdown.Html.tag "contact-button" (\body -> contactButtonView)
 
             -- , Markdown.Html.tag "Oembed"
             --     (\url children ->
