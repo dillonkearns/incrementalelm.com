@@ -111,7 +111,7 @@ renderer =
             [ Element.spacing 15
             , Element.width Element.fill
             ]
-    , thematicBreak = Element.none
+    , thematicBreak = Element.paragraph [] []
     , text = \value -> Element.paragraph [] [ Element.text value ]
     , strong = \content -> Element.paragraph [ Font.bold ] content
     , emphasis = \content -> Element.paragraph [ Font.italic ] content
