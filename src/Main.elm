@@ -12,6 +12,7 @@ import ElmLogo
 import Head as Head exposing (Tag)
 import Head.Seo
 import Http
+import IcalFeed
 import Index
 import Json.Decode
 import LearnIndex
@@ -51,6 +52,18 @@ main =
         , onPageChange = Just (\_ -> OnPageChange)
         , internals = Pages.internals
         }
+        |> Pages.Platform.withFileGenerator
+            (\_ ->
+                StaticHttp.map
+                    (\events ->
+                        [ Ok
+                            { path = [ "live.ics" ]
+                            , content = IcalFeed.feed events
+                            }
+                        ]
+                    )
+                    (Request.staticGraphqlRequest Request.Events.selection)
+            )
         |> Pages.Platform.toProgram
 
 

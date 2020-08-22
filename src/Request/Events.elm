@@ -41,6 +41,8 @@ type alias LiveStream =
     , guest : List Guest
     , project : Maybe Project
     , youtubeId : Maybe String
+    , id : Scalar.Id
+    , createdAt : DateTime
     }
 
 
@@ -71,7 +73,7 @@ projectSelection =
 
 liveStreamSelection : SelectionSet LiveStream SanityApi.Object.LiveStream
 liveStreamSelection =
-    SelectionSet.map6 LiveStream
+    SelectionSet.map8 LiveStream
         (SanityApi.Object.LiveStream.title
             |> SelectionSet.nonNullOrFail
         )
@@ -87,6 +89,8 @@ liveStreamSelection =
         )
         (SanityApi.Object.LiveStream.project projectSelection)
         SanityApi.Object.LiveStream.youtubeID
+        SanityApi.Object.LiveStream.id_
+        SanityApi.Object.LiveStream.createdAt_
 
 
 view : LiveStream -> Element msg
