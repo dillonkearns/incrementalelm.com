@@ -1,9 +1,7 @@
 module Format exposing (..)
 
-import Iso8601
 import List.Extra
 import Regex
-import Time
 
 
 formatKeys nodes =
@@ -48,13 +46,3 @@ splitOverflowingLines string =
 reg string =
     Regex.fromString string
         |> Maybe.withDefault Regex.never
-
-
-toIso8601 : String -> Time.Posix
-toIso8601 string =
-    case Iso8601.toTime string of
-        Ok parsed ->
-            parsed
-
-        Err error ->
-            Time.millisToPosix 0
