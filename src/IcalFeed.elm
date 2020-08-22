@@ -11,7 +11,13 @@ feed : List LiveStream -> String
 feed liveStreams =
     liveStreams
         |> List.map toEvent
-        |> Ical.generate { id = "//incrementalelm.com//elm-ical.tests//EN", domain = "incrementalelm.com" }
+        |> Ical.generate
+            { id = "//incrementalelm.com//elm-ical.tests//EN"
+            , domain = "incrementalelm.com"
+            , name = Just "Incremental Elm Live"
+            , description = Just "Pairing on Elm Open Source and learning from the community."
+            , url = Just "https://incrementalelm.com/live.ics"
+            }
 
 
 toEvent : LiveStream -> Ical.Event
@@ -26,4 +32,9 @@ toEvent liveStream =
         liveStream.youtubeId
             |> Maybe.map (\youtubeId -> "https://www.youtube.com/watch?v=" ++ youtubeId)
             |> Maybe.withDefault "https://twitch.tv/dillonkearns"
+    , organizer =
+        Just
+            { name = "Dillon Kearns"
+            , email = "dillon@incrementalelm.com"
+            }
     }
