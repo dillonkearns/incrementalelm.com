@@ -35,6 +35,7 @@ dateString posix =
         , DateFormat.text ":"
         , DateFormat.minuteFixed
         , DateFormat.amPmLowercase
+        , DateFormat.text " PT"
         ]
         pacificZone
         posix
