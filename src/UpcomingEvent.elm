@@ -13,6 +13,7 @@ json upcoming =
             , ( "description", Encode.string upcoming.description )
             , ( "guest", upcoming.guest |> encodeGuest |> Encode.string )
             , ( "avatarUrl", upcoming.guest |> avatarUrl |> Encode.string )
+            , ( "githubAvatarUrl", upcoming.guest |> githubAvatarUrl |> Encode.string )
             ]
             |> Encode.encode 0
     }
@@ -23,6 +24,18 @@ avatarUrl guests =
     case List.head guests of
         Just guest ->
             guest.avatarUrl |> Maybe.withDefault ""
+
+        Nothing ->
+            ""
+
+
+githubAvatarUrl : List Guest -> String
+githubAvatarUrl guests =
+    case List.head guests of
+        Just guest ->
+            guest.github
+                |> Maybe.map (\username -> "https://github.com/" ++ username ++ ".png")
+                |> Maybe.withDefault ""
 
         Nothing ->
             ""
