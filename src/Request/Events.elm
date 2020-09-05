@@ -12,8 +12,10 @@ import Json.Encode as Encode
 import Request.GoogleCalendar as GoogleCalendar
 import SanityApi.Object
 import SanityApi.Object.Guest
+import SanityApi.Object.Image
 import SanityApi.Object.LiveStream
 import SanityApi.Object.Project
+import SanityApi.Object.SanityImageAsset
 import SanityApi.Query as Query
 import Scalar exposing (DateTime)
 import Style
@@ -50,15 +52,23 @@ type alias Guest =
     { name : String
     , twitter : Maybe String
     , github : Maybe String
+    , avatarUrl : Maybe String
     }
 
 
 guestSelection : SelectionSet Guest SanityApi.Object.Guest
 guestSelection =
-    SelectionSet.map3 Guest
+    SelectionSet.map4 Guest
         (SanityApi.Object.Guest.name |> SelectionSet.nonNullOrFail)
         SanityApi.Object.Guest.twitter
         SanityApi.Object.Guest.github
+        (SanityApi.Object.Guest.avatarUrl imageSelection)
+
+
+imageSelection =
+    SanityApi.Object.Image.asset SanityApi.Object.SanityImageAsset.url
+        |> SelectionSet.nonNullOrFail
+        |> SelectionSet.nonNullOrFail
 
 
 type alias Project =
