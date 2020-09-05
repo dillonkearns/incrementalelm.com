@@ -30,6 +30,7 @@ import Svg.Attributes exposing (..)
 import Task exposing (Task)
 import Time
 import TwitchButton
+import UpcomingEvent
 import View.MenuBar
 import View.Navbar
 
@@ -60,6 +61,25 @@ main =
                             { path = [ "live.ics" ]
                             , content = IcalFeed.feed events
                             }
+                        , events
+                            |> List.sortBy
+                                (\event ->
+                                    Time.posixToMillis event.startsAt
+                                )
+                            |> List.reverse
+                            |> List.head
+                            |> Maybe.map
+                                (\upcoming ->
+                                    UpcomingEvent.json upcoming
+                                )
+                            |> (\json ->
+                                    case json of
+                                        Just value ->
+                                            Ok value
+
+                                        Nothing ->
+                                            Err "No upcoming events found."
+                               )
                         ]
                     )
                     (Request.staticGraphqlRequest Request.Events.selection)
