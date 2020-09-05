@@ -1,7 +1,9 @@
 module UpcomingEvent exposing (..)
 
+import DateFormat
 import Json.Encode as Encode
 import Request.Events exposing (Guest, LiveStream)
+import Time
 
 
 json : LiveStream -> { path : List String, content : String }
@@ -14,9 +16,33 @@ json upcoming =
             , ( "guest", upcoming.guest |> encodeGuest |> Encode.string )
             , ( "avatarUrl", upcoming.guest |> avatarUrl |> Encode.string )
             , ( "githubAvatarUrl", upcoming.guest |> githubAvatarUrl |> Encode.string )
+            , ( "startsAt", upcoming.startsAt |> dateString |> Encode.string )
             ]
             |> Encode.encode 0
     }
+
+
+dateString : Time.Posix -> String
+dateString posix =
+    DateFormat.format
+        [ DateFormat.dayOfWeekNameFull
+        , DateFormat.text ", "
+        , DateFormat.monthNameFull
+        , DateFormat.text " "
+        , DateFormat.dayOfMonthNumber
+        , DateFormat.text " @ "
+        , DateFormat.hourNumber
+        , DateFormat.text ":"
+        , DateFormat.minuteFixed
+        , DateFormat.amPmLowercase
+        ]
+        pacificZone
+        posix
+
+
+pacificZone : Time.Zone
+pacificZone =
+    Time.customZone (-60 * 7) []
 
 
 avatarUrl : List Guest -> String
