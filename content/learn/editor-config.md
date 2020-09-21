@@ -2,36 +2,26 @@
 { "type": "learn", "title": "Recommended Editor Configuration" }
 ---
 
-Right now, our editor of choice is Atom because of the excellent Elm tools available in that editor.
+My editor of choice is IntelliJ with the excellent [intellij-elm](https://github.com/klazuka/intellij-elm) plugin. You can [install the free IntelliJ Community Edition](https://www.jetbrains.com/idea/download), or use a paid JetBrains IDE (it will work just as well either way).
 
-I'm closely watching the rapid and promising improvements in [the Intellij Elm plugin](https://github.com/klazuka/intellij-elm). At the moment it's missing some very useful features that Atom has support for, so it gets second place for me. Also, the Vim support is decent in Intellij, and outstanding in Atom, which is a big plus for me!
+To see some of the great features of intellij-elm's features in action, take a look at the [feature demo gifs in the docs](https://github.com/klazuka/intellij-elm/tree/master/docs/features).
 
-To see some of the great features of Atom's Elm integration in action, look at the [docs from the Elmjutsu Atom package](https://atom.io/packages/elmjutsu).
+## IntelliJ Vim Configuration
 
-## Recommended Atom Configuration
+If you like vim motions, it's worth [installing IdeaVim](https://plugins.jetbrains.com/plugin/164-ideavim).
 
-First, download and install the [Atom editor](https://atom.io/).
+There's also a somewhat hidden feature that you can enable some built-in emulated vim plugins. [These docs](https://github.com/JetBrains/ideavim/blob/master/doc/emulated-plugins.md) describe all the available plugins and how to enable them.
 
-You can install our recommended core Elm packages in one go by running this from your terminal after installing Atom:
+If you want to use my recommended setup, you can just copy-paste this into a file at `~/.ideavimrc`:
 
+```viml
+set surround
+set commentary
+set ReplaceWithRegister
+set easymotion
+set argtextobj
+set exchange
+set textobj-entire
+
+let g:argtextobj_pairs="(:),{:},<:>,[:]"
 ```
-apm install elmjutsu elm-lens elm-format atom-ide-ui language-elm
-```
-
-- [Elmjutsu](https://atom.io/packages/elmjutsu) - see link for a full list of functionality.
-- [elm-lens](https://atom.io/packages/elm-lens) - annotates unused functions with warnings. Tells you if you have exposed functions with no external usage as well.
-- [Atom IDE UI](https://atom.io/packages/atom-ide-ui) - provides a UI for displaying in-editor compiler errors & command-click to navigate to definition functionality.
-- [elm-format package](https://atom.io/packages/elm-format) - runs `elm-format` on save in your editor. Requires that you've run `npm install -g elm-format`.
-
-## Atom Vim Configuration
-
-If you like Vim, Atom has the best Vim support of any editor I've used! It even has first-class integration with Atom's built-in multiple cursors feature. Here is our recommended setup:
-
-```
-apm install vim-mode-plus vim-mode-plus-keymaps-for-surround
-```
-
-See the docs for lots of details about the features in vim-mode-plus.
-
-- [vim-mode-plus](https://atom.io/packages/vim-mode-plus)
-- [vim-mode-plus surround keybindings](https://atom.io/packages/vim-mode-plus-keymaps-for-surround)
