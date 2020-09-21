@@ -1,6 +1,6 @@
 ---
 title: TCR
-description: `test && commit || revert`.
+description: test && commit || revert.
 type: glossary
 ---
 
