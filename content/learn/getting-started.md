@@ -1,8 +1,5 @@
 ---
-{
-    "type": "learn",
-    "title": "Getting Started Resources"
-}
+{ "type": "learn", "title": "Getting Started Resources" }
 ---
 
 Here are my favorite resources for learning the Elm fundamentals.

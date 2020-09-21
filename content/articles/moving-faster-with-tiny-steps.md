@@ -1,9 +1,9 @@
 ---
 {
-    "type": "article",
-    "title": "Moving Faster with Tiny Steps in Elm",
-    "src": "article-cover/mountains.jpg",
-    "description": "In this post, we're going to be looking up an Article in an Elm Dict, using the tiniest steps possible."
+  "type": "article",
+  "title": "Moving Faster with Tiny Steps in Elm",
+  "src": "article-cover/mountains.jpg",
+  "description": "In this post, we're going to be looking up an Article in an Elm Dict, using the tiniest steps possible.",
 }
 ---
 
@@ -35,7 +35,6 @@ Okay, now let's walk through our tiny steps for building our Dict!
 Always respond with "Article Not Found."
 
 We start with the failure case because it's easiest. This is sort of like returning 1 for for factorial(1). It's just an easy way to get something working and compiling. Think of this as our "base case".
-
 
 ```elm
 view : Maybe String -> Browser.Document msg

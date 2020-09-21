@@ -2,7 +2,7 @@
 {
   "type": "page",
   "title": "Incremental Elm Live",
-  "description": "Live coding streams, working on Elm Open Source and learning from community members!"
+  "description": "Live coding streams, working on Elm Open Source and learning from community members!",
 }
 ---
 

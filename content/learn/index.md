@@ -1,6 +1,3 @@
 ---
-{
-  "type": "page",
-  "title": "Learning Resources",
-}
+{ "type": "page", "title": "Learning Resources" }
 ---

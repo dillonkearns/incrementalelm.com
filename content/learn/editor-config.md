@@ -1,8 +1,5 @@
 ---
-{
-    "type": "learn",
-    "title": "Recommended Editor Configuration"
-}
+{ "type": "learn", "title": "Recommended Editor Configuration" }
 ---
 
 Right now, our editor of choice is Atom because of the excellent Elm tools available in that editor.
@@ -16,7 +13,6 @@ To see some of the great features of Atom's Elm integration in action, look at t
 First, download and install the [Atom editor](https://atom.io/).
 
 You can install our recommended core Elm packages in one go by running this from your terminal after installing Atom:
-
 
 ```
 apm install elmjutsu elm-lens elm-format atom-ide-ui language-elm

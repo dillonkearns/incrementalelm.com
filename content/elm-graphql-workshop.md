@@ -1,8 +1,5 @@
 ---
-{
-    "type": "page",
-    "title": "Elm GraphQL Workshop"
-}
+{ "type": "page", "title": "Elm GraphQL Workshop" }
 ---
 
 ![Elm-GraphQL Full-Day Workshop](/images/elm-graphql-workshop-header.jpg)
@@ -20,10 +17,7 @@ In this hands-on workshop, the author of Elm's type-safe GraphQL query builder l
 
 Over the course of this full-day workshop, we will cover everything from core GraphQL concepts, to the Elm-GraphQL library fundamentals, and finally advanced elm-graphql techniques.
 
-
-
 ## Morning (1st Half)
-
 
 1. GraphQL core concepts overview
 1. Elm GraphQL Overview

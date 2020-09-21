@@ -1,6 +1,3 @@
 ---
-{
-  "type": "page",
-  "title": "Incremental Elm Articles"
-}
+{ "type": "page", "title": "Incremental Elm Articles" }
 ---

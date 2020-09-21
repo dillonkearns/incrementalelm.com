@@ -1,7 +1,5 @@
 ---
-{ "type": "page",
-  "title": "Incremental Elm Consulting",
-}
+{ "type": "page", "title": "Incremental Elm Consulting" }
 ---
 
 # Stop Learning Elm Best Practices The Hard Way
@@ -11,7 +9,7 @@ Your team has got the hang of Elm. Now it's time to take it to the next level.
 You might want to keep reading if:
 
 - You want your team to write elm code faster, and to keep writing it fast as your codebase grows.
-- You want your senior devs to spend their time applying elm best practices, not *figuring them out*.
+- You want your senior devs to spend their time applying elm best practices, not _figuring them out_.
 - You want expert guidance, proven elm techniques, and battle-tested learning material to level up your elm team and codebase fast.
 
 If you're a do-it-yourself kind of person, look no further! You can level up with my Weekly Mastering Elm Tips right now.
@@ -24,9 +22,9 @@ Here are some popular tips you can check out right away.
 <signup buttontext="I want weekly elm tips!" formid="906002494">
 # Tips for Writing Like a Senior Elm Dev
 
-- Go beyond learning what great elm code *looks like*. Learn **how to write it**.
+- Go beyond learning what great elm code _looks like_. Learn **how to write it**.
 - Tips you won't find anywhere else to level up your elm skills
-</signup>
+  </signup>
 
 # How I can help your team level up
 
