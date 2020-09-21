@@ -15,7 +15,6 @@ import Head.Seo
 import Http
 import IcalFeed
 import Index
-import Json.Decode
 import LearnIndex
 import MarkdownRenderer
 import Metadata exposing (Metadata)
@@ -584,7 +583,38 @@ pageOrPostView allMetadata model page viewForPage =
 
         Metadata.Glossary metadata ->
             { title = metadata.title
-            , body = Element.column [] [] -- TODO
+            , body =
+                [ header model
+                , Element.textColumn [ Element.spacing 15, Element.centerX, Element.paddingXY 0 50 ]
+                    [ Element.paragraph
+                        [ Font.size 36
+                        , Font.center
+                        , Font.family [ Font.typeface "Raleway" ]
+                        , Font.bold
+                        ]
+                        [ Element.text metadata.title ]
+                    , Element.paragraph [] [ Element.text metadata.description ]
+                    , viewForPage
+                        |> Element.textColumn
+                            [ Element.centerX
+                            , Element.width Element.fill
+                            , Element.spacing 30
+                            , Font.size 18
+                            ]
+                        |> Element.el
+                            [ if Dimensions.isMobile model.dimensions then
+                                Element.width (Element.fill |> Element.maximum 600)
+
+                              else
+                                Element.width (Element.fill |> Element.maximum 700)
+                            , Element.height Element.fill
+                            , Element.padding 20
+                            , Element.spacing 20
+                            , Element.centerX
+                            ]
+                    ]
+                ]
+                    |> Element.column [ Element.width Element.fill ]
             }
 
 
@@ -613,16 +643,6 @@ head metadata =
                 |> Head.Seo.website
 
         Metadata.Article meta ->
-            let
-                twitterUsername =
-                    "dillontkearns"
-
-                twitterSiteAccount =
-                    "incrementalelm"
-
-                image =
-                    fullyQualifiedUrl meta.coverImage
-            in
             Head.Seo.summaryLarge
                 { canonicalUrlOverride = Nothing
                 , siteName = siteName
