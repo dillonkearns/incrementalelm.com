@@ -25,3 +25,7 @@ set textobj-entire
 
 let g:argtextobj_pairs="(:),{:},<:>,[:]"
 ```
+
+## Remote Pairing
+
+The [IntelliJ GitDuck plugin](https://plugins.jetbrains.com/plugin/14919-gitduck-pair-programming-tool) allows you to pair in either VS Code or `intellij-elm`.

@@ -18,14 +18,11 @@ view posts =
             |> List.filterMap
                 (\( path, metadata ) ->
                     case metadata of
-                        Metadata.Page meta ->
-                            Nothing
-
-                        Metadata.Article meta ->
-                            Nothing
-
                         Metadata.Learn meta ->
                             Just ( path, meta )
+
+                        _ ->
+                            Nothing
                 )
             |> List.map postSummary
         )

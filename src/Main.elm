@@ -576,6 +576,11 @@ pageOrPostView allMetadata model page viewForPage =
                     |> Element.column [ Element.width Element.fill ]
             }
 
+        Metadata.Glossary metadata ->
+            { title = metadata.title
+            , body = Element.column [] [] -- TODO
+            }
+
 
 {-| <https://developer.twitter.com/en/docs/tweets/optimize-with-cards/overview/abouts-cards>
 <https://htmlhead.dev>
@@ -635,6 +640,9 @@ head metadata =
                     }
 
         Metadata.Learn meta ->
+            []
+
+        Metadata.Glossary meta ->
             []
 
 
