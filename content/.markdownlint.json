@@ -1,0 +1,10 @@
+{
+    "line-length": false,
+    "first-line-h1": false,
+    "no-inline-html": {
+        "allowed_elements": [
+            "a",
+            "button"
+        ]
+    }
+}
