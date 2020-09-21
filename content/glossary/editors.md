@@ -1,5 +1,6 @@
-intellij-elm
+## intellij-elm
 
-VS Code
+
+## VS Code
 
 elm-lsp (why isn't support as good as for VS Code? How is it different from intellij-elm?)

@@ -1,5 +1,5 @@
 ---
-{"type": "page", "title": "Incremental Elm Community Chat"}
+{ "type": "page", "title": "Incremental Elm Community Chat" }
 ---
 
 ## Incremental Elm Open Source Community Chat
