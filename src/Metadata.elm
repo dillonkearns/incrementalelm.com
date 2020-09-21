@@ -1,4 +1,4 @@
-module Metadata exposing (ArticleMetadata, LearnMetadata, Metadata(..), decoder)
+module Metadata exposing (ArticleMetadata, GlossaryMetadata, LearnMetadata, Metadata(..), decoder)
 
 import Dict exposing (Dict)
 import Element exposing (Element)
@@ -18,7 +18,7 @@ type alias LearnMetadata =
 
 
 type alias GlossaryMetadata =
-    { title : String }
+    { title : String, description : String }
 
 
 type alias ArticleMetadata msg =
@@ -79,6 +79,12 @@ decoder =
                                 (Decode.field "title" Decode.string)
                                 (Decode.maybe (Decode.field "description" Decode.string))
 
+                        "glossary" ->
+                            Decode.map2 GlossaryMetadata
+                                (Decode.field "title" Decode.string)
+                                (Decode.field "description" Decode.string)
+                                |> Decode.map Glossary
+
                         "article" ->
                             Decode.map Article articleDecoder
 
@@ -88,7 +94,4 @@ decoder =
                         _ ->
                             Decode.fail "Unhandled page type"
                 )
-        , Decode.map2 (\title description -> Page { title = title, description = description })
-            (Decode.field "title" Decode.string)
-            (Decode.maybe (Decode.field "description" Decode.string))
         ]

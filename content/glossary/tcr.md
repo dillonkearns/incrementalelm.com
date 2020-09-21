@@ -1,5 +1,7 @@
 ---
-title: TCR (test && commit || revert)
+title: TCR
+description: `test && commit || revert`.
+type: glossary
 ---
 
 ## What is it

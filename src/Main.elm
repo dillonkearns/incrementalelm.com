@@ -9,6 +9,7 @@ import Ease
 import Element exposing (Element)
 import Element.Font as Font
 import ElmLogo
+import GlossaryIndex
 import Head as Head exposing (Tag)
 import Head.Seo
 import Http
@@ -478,6 +479,11 @@ pageOrPostView allMetadata model page viewForPage =
 
                    else if page.path == Pages.pages.learn.index then
                     [ LearnIndex.view allMetadata ]
+
+                   else if page.path == Pages.pages.glossary.index then
+                    [ allMetadata
+                        |> GlossaryIndex.view
+                    ]
 
                    else
                     viewForPage
