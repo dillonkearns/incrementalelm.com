@@ -90,6 +90,6 @@ postPreview post =
         , Element.Font.size 18
         ]
         [ title post.title
-        , Element.text post.description
+        , Element.paragraph [] [ Element.text post.description ]
         , readMoreLink
         ]
