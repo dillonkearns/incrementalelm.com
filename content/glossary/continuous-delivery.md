@@ -43,3 +43,11 @@ The definition of a refactoring is to change the structure of your code without 
 Now that you're doing frequent Safe Refactorings, let's get those committed!
 
 You renamed a variable? Excellent! We know the code didn't break because we used our IDE to do the automated refactor. Now let's commit it! That's one less thing to think about when we get to the scary part: changing the code's behavior.
+
+## Automation
+
+If you notice yourself doing the same set of manual steps repeatedly, you can automate those steps to reduce friction and ensure predictible quality.
+
+## Learn Your Shortcuts
+
+Learning keyboard shortcuts to use your IDE and other tools effectively is not just a time-saver. It allows you to move through with 1) less friction, and 2) without losing context. So the time you save is just as important as retaining your flow state.
