@@ -19,7 +19,7 @@ Tools like elm-format, or prettier, reduce the friction to making a change. And 
 Other examples include:
 
 - Markdown linter for your docs
-- Custom linters (for example, are their guidelines for your formatting rules?)
+- Custom linters (for example, are there guidelines for your formatting rules?)
 - Design conventions - make sure that you're using the right conventions for your CSS, or consuming the available design system helpers
 
 ## Automated Tests
