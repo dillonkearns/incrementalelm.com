@@ -1,8 +1,5 @@
 ---
-{
-    "type": "page",
-    "title": "elm-graphql - Scalar Codecs Tutorial"
-}
+{ "type": "page", "title": "elm-graphql - Scalar Codecs Tutorial" }
 ---
 
 <vimeo id="329690102" />
@@ -25,4 +22,4 @@ Download it now to get the descriptions and examples of all of these types of fi
 
 - Simple steps that will improve your elm-graphql codebase!
 - Learn the 4 kinds of Contracts that you can turn into Custom Scalars
-</signup>
+  </signup>

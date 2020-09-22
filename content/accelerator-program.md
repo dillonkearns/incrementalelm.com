@@ -1,10 +1,6 @@
 ---
-{
-    "type": "page",
-    "title": "Elm Accelerator Group Coaching Program"
-}
+{ "type": "page", "title": "Elm Accelerator Group Coaching Program" }
 ---
-
 
 # Incremental Elm Accelerator Program
 

@@ -1,8 +1,5 @@
 ---
-{
-    "type": "learn",
-    "title": "The Elm Architecture"
-}
+{ "type": "learn", "title": "The Elm Architecture" }
 ---
 
 ![The Elm Architecture](/images/architecture.jpg)

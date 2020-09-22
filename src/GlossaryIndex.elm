@@ -1,4 +1,4 @@
-module Index exposing (view)
+module GlossaryIndex exposing (view)
 
 import Element exposing (Element)
 import Element.Border
@@ -6,7 +6,6 @@ import Element.Font
 import Metadata exposing (Metadata)
 import Pages
 import Pages.PagePath as PagePath exposing (PagePath)
-import Style.Helpers
 
 
 view :
@@ -14,26 +13,25 @@ view :
     -> Element msg
 view posts =
     Element.column [ Element.spacing 20 ]
-        ((posts
+        (posts
             |> List.filterMap
                 (\( path, metadata ) ->
                     case metadata of
-                        Metadata.Article meta ->
+                        Metadata.Glossary meta ->
                             Just ( path, meta )
 
                         _ ->
                             Nothing
                 )
-         )
             |> List.map postSummary
         )
 
 
 postSummary :
-    ( PagePath Pages.PathKey, Metadata.ArticleMetadata msg )
+    ( PagePath Pages.PathKey, Metadata.GlossaryMetadata )
     -> Element msg
 postSummary ( postPath, post ) =
-    articleIndex post
+    learnIndex post
         |> linkToPost postPath
 
 
@@ -55,8 +53,8 @@ title text =
             ]
 
 
-articleIndex : Metadata.ArticleMetadata msg -> Element msg
-articleIndex metadata =
+learnIndex : Metadata.GlossaryMetadata -> Element msg
+learnIndex metadata =
     Element.el
         [ Element.centerX
         , Element.width (Element.maximum 800 Element.fill)
@@ -83,7 +81,7 @@ readMoreLink =
             ]
 
 
-postPreview : Metadata.ArticleMetadata msg -> Element msg
+postPreview : Metadata.GlossaryMetadata -> Element msg
 postPreview post =
     Element.textColumn
         [ Element.centerX
@@ -91,24 +89,7 @@ postPreview post =
         , Element.spacing 30
         , Element.Font.size 18
         ]
-        [ title post.title.raw
-        , image post
-        , post.description.styled
-            |> Element.paragraph
-                [ Element.Font.size 22
-                , Element.Font.center
-                , Element.Font.family [ Element.Font.typeface "Raleway" ]
-                ]
+        [ title post.title
+        , Element.paragraph [] [ Element.text post.description ]
         , readMoreLink
         ]
-
-
-image article =
-    Element.image
-        [ Element.width (Element.fill |> Element.maximum 600)
-        , Element.centerX
-        ]
-        { src = article.coverImage
-        , description = article.title.raw ++ " cover image"
-        }
-        |> Element.el [ Element.centerX ]

@@ -9,12 +9,12 @@ import Ease
 import Element exposing (Element)
 import Element.Font as Font
 import ElmLogo
+import GlossaryIndex
 import Head as Head exposing (Tag)
 import Head.Seo
 import Http
 import IcalFeed
 import Index
-import Json.Decode
 import LearnIndex
 import MarkdownRenderer
 import Metadata exposing (Metadata)
@@ -479,6 +479,11 @@ pageOrPostView allMetadata model page viewForPage =
                    else if page.path == Pages.pages.learn.index then
                     [ LearnIndex.view allMetadata ]
 
+                   else if page.path == Pages.pages.glossary.index then
+                    [ allMetadata
+                        |> GlossaryIndex.view
+                    ]
+
                    else
                     viewForPage
                   )
@@ -576,6 +581,42 @@ pageOrPostView allMetadata model page viewForPage =
                     |> Element.column [ Element.width Element.fill ]
             }
 
+        Metadata.Glossary metadata ->
+            { title = metadata.title
+            , body =
+                [ header model
+                , Element.textColumn [ Element.spacing 15, Element.centerX, Element.paddingXY 0 50 ]
+                    [ Element.paragraph
+                        [ Font.size 36
+                        , Font.center
+                        , Font.family [ Font.typeface "Raleway" ]
+                        , Font.bold
+                        ]
+                        [ Element.text metadata.title ]
+                    , Element.paragraph [] [ Element.text metadata.description ]
+                    , viewForPage
+                        |> Element.textColumn
+                            [ Element.centerX
+                            , Element.width Element.fill
+                            , Element.spacing 30
+                            , Font.size 18
+                            ]
+                        |> Element.el
+                            [ if Dimensions.isMobile model.dimensions then
+                                Element.width (Element.fill |> Element.maximum 600)
+
+                              else
+                                Element.width (Element.fill |> Element.maximum 700)
+                            , Element.height Element.fill
+                            , Element.padding 20
+                            , Element.spacing 20
+                            , Element.centerX
+                            ]
+                    ]
+                ]
+                    |> Element.column [ Element.width Element.fill ]
+            }
+
 
 {-| <https://developer.twitter.com/en/docs/tweets/optimize-with-cards/overview/abouts-cards>
 <https://htmlhead.dev>
@@ -602,16 +643,6 @@ head metadata =
                 |> Head.Seo.website
 
         Metadata.Article meta ->
-            let
-                twitterUsername =
-                    "dillontkearns"
-
-                twitterSiteAccount =
-                    "incrementalelm"
-
-                image =
-                    fullyQualifiedUrl meta.coverImage
-            in
             Head.Seo.summaryLarge
                 { canonicalUrlOverride = Nothing
                 , siteName = siteName
@@ -635,6 +666,9 @@ head metadata =
                     }
 
         Metadata.Learn meta ->
+            []
+
+        Metadata.Glossary meta ->
             []
 
 

@@ -1,8 +1,5 @@
 ---
-{
-    "type": "page",
-    "title": "Contact"
-}
+{ "type": "page", "title": "Contact" }
 ---
 
 # Contact Incremental Elm

@@ -1,8 +1,9 @@
 ---
-{"type": "article",
-"title": "Using elm types to prevent logging social security #'s",
-"src": "article-cover/exit.jpg",
-"description":"One of the most successful techniques I've seen for making sure you don't break elm code the next time you touch it is a technique I call an *Exit Gatekeeper*."
+{
+  "type": "article",
+  "title": "Using elm types to prevent logging social security #'s",
+  "src": "article-cover/exit.jpg",
+  "description": "One of the most successful techniques I've seen for making sure you don't break elm code the next time you touch it is a technique I call an *Exit Gatekeeper*.",
 }
 ---
 
@@ -15,7 +16,6 @@ securelySaveSSN : String -> Cmd Msg
 
 reportError : String -> Cmd Msg
 ```
-
 
 You might wrap it in a type wrapper like so:
 
@@ -30,7 +30,6 @@ securelySaveSSN : SSN -> Cmd Msg
 
 reportError : String -> Cmd Msg
 ```
-
 
 The `SSN` type wrapper is a good start. But how do you know it won't be unwrapped and passed around somewhere where it could mistakenly be misused?
 
@@ -117,6 +116,7 @@ securelySendSsn ssn =
 Now we can be confident that the calling code will never mistakenly send SSNs to the wrong endpoint, or forget to encrypt them!
 
 ## Displaying the SSN
+
 What if you only want to display the last 4 digits of the SSN? How do you make sure that you, your team members, and your future self all remember to do that?
 
 You could vigilantly put that in a code review checklist, or come up with all sorts of creative heuristics to avoid that mistake. I like to reach for the Exit Gatekeeper pattern as my first choice. Then you need to check very carefully any time you are modifying the SSN module itself, and you can trust the module and treat it as a blackbox when you're not modifying it.
@@ -136,9 +136,9 @@ lastFourView ssn =
 <signup formid="906002494" buttontext="Get weekly elm tips!">
 # Get tips to improve your elm code every week
 
-- Go beyond learning what great elm code *looks like*. Learn **how to write it**.
+- Go beyond learning what great elm code _looks like_. Learn **how to write it**.
 - Tips you won't find anywhere else to level up your elm skills
-</signup>
+  </signup>
 
 ## Takeaways
 

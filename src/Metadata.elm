@@ -1,4 +1,4 @@
-module Metadata exposing (ArticleMetadata, LearnMetadata, Metadata(..), decoder)
+module Metadata exposing (ArticleMetadata, GlossaryMetadata, LearnMetadata, Metadata(..), decoder)
 
 import Dict exposing (Dict)
 import Element exposing (Element)
@@ -10,10 +10,15 @@ type Metadata msg
     = Page { title : String, description : Maybe String }
     | Article (ArticleMetadata msg)
     | Learn LearnMetadata
+    | Glossary GlossaryMetadata
 
 
 type alias LearnMetadata =
     { title : String }
+
+
+type alias GlossaryMetadata =
+    { title : String, description : String }
 
 
 type alias ArticleMetadata msg =
@@ -57,28 +62,36 @@ markdownString =
 
 decoder : Decoder (Metadata msg)
 decoder =
-    Decode.field "type" Decode.string
-        |> Decode.andThen
-            (\type_ ->
-                case type_ of
-                    {-
+    Decode.oneOf
+        [ Decode.field "type" Decode.string
+            |> Decode.andThen
+                (\type_ ->
+                    case type_ of
+                        {-
 
-                       "type": "article",
-                       "title": "Moving Faster with Tiny Steps in Elm",
-                       "src": "article-cover/mountains.jpg",
-                       "description": "In this post, we're going to be looking up an Article in an Elm Dict, using the tiniest steps possible."
-                    -}
-                    "page" ->
-                        Decode.map2 (\title description -> Page { title = title, description = description })
-                            (Decode.field "title" Decode.string)
-                            (Decode.maybe (Decode.field "description" Decode.string))
+                           "type": "article",
+                           "title": "Moving Faster with Tiny Steps in Elm",
+                           "src": "article-cover/mountains.jpg",
+                           "description": "In this post, we're going to be looking up an Article in an Elm Dict, using the tiniest steps possible."
+                        -}
+                        "page" ->
+                            Decode.map2 (\title description -> Page { title = title, description = description })
+                                (Decode.field "title" Decode.string)
+                                (Decode.maybe (Decode.field "description" Decode.string))
 
-                    "article" ->
-                        Decode.map Article articleDecoder
+                        "glossary" ->
+                            Decode.map2 GlossaryMetadata
+                                (Decode.field "title" Decode.string)
+                                (Decode.field "description" Decode.string)
+                                |> Decode.map Glossary
 
-                    "learn" ->
-                        Decode.map Learn learnDecoder
+                        "article" ->
+                            Decode.map Article articleDecoder
 
-                    _ ->
-                        Decode.fail "Unhandled page type"
-            )
+                        "learn" ->
+                            Decode.map Learn learnDecoder
+
+                        _ ->
+                            Decode.fail "Unhandled page type"
+                )
+        ]

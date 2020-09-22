@@ -1,8 +1,5 @@
 ---
-{
-    "type": "page",
-    "title": "Thank You!"
-}
+{ "type": "page", "title": "Thank You!" }
 ---
 
 # Thank you!
