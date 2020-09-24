@@ -1,9 +1,12 @@
-module Metadata exposing (ArticleMetadata, GlossaryMetadata, LearnMetadata, Metadata(..), decoder)
+module Metadata exposing (ArticleMetadata, GlossaryMetadata, LearnMetadata, Metadata(..), TipMetadata, decoder)
 
+import Date exposing (Date)
 import Dict exposing (Dict)
 import Element exposing (Element)
 import Element.Font as Font
+import Iso8601
 import Json.Decode as Decode exposing (Decoder)
+import Time
 
 
 type Metadata msg
@@ -11,6 +14,7 @@ type Metadata msg
     | Article (ArticleMetadata msg)
     | Learn LearnMetadata
     | Glossary GlossaryMetadata
+    | Tip TipMetadata
 
 
 type alias LearnMetadata =
@@ -19,6 +23,13 @@ type alias LearnMetadata =
 
 type alias GlossaryMetadata =
     { title : String, description : String }
+
+
+type alias TipMetadata =
+    { title : String
+    , description : String
+    , publishedAt : Date
+    }
 
 
 type alias ArticleMetadata msg =
@@ -87,6 +98,25 @@ decoder =
 
                         "article" ->
                             Decode.map Article articleDecoder
+
+                        "tip" ->
+                            Decode.map3 TipMetadata
+                                (Decode.field "title" Decode.string)
+                                (Decode.field "description" Decode.string)
+                                (Decode.field "publishAt"
+                                    (Decode.string
+                                        |> Decode.andThen
+                                            (\isoString ->
+                                                case Date.fromIsoString isoString of
+                                                    Ok date ->
+                                                        Decode.succeed date
+
+                                                    Err error ->
+                                                        Decode.fail error
+                                            )
+                                    )
+                                )
+                                |> Decode.map Tip
 
                         "learn" ->
                             Decode.map Learn learnDecoder

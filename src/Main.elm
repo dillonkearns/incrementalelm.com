@@ -21,10 +21,13 @@ import Metadata exposing (Metadata)
 import Pages
 import Pages.Manifest as Manifest
 import Pages.Manifest.Category
+import Pages.PagePath as PagePath exposing (PagePath)
 import Pages.Platform exposing (Page)
 import Pages.StaticHttp as StaticHttp
 import Request
 import Request.Events exposing (LiveStream)
+import Rss
+import RssPlugin
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
 import Task exposing (Task)
@@ -33,6 +36,10 @@ import TwitchButton
 import UpcomingEvent
 import View.MenuBar
 import View.Navbar
+
+
+canonicalSiteUrl =
+    "https://incrementalelm.com"
 
 
 main : Pages.Platform.Program Model Msg (Metadata Msg) (List (Element Msg))
@@ -49,7 +56,7 @@ main =
               }
             ]
         , manifest = manifest
-        , canonicalSiteUrl = "https://incrementalelm.com"
+        , canonicalSiteUrl = canonicalSiteUrl
         , onPageChange = Just (\_ -> OnPageChange)
         , internals = Pages.internals
         }
@@ -84,7 +91,39 @@ main =
                     )
                     (Request.staticGraphqlRequest Request.Events.selection)
             )
+        |> RssPlugin.generate
+            { siteTagline = siteTagline
+            , siteUrl = canonicalSiteUrl
+            , title = "Incremental Elm Tips"
+            , builtAt = Pages.builtAt
+            , indexPage = Pages.pages.tips
+            , now = Pages.builtAt
+            }
+            metadataToRssItem
         |> Pages.Platform.toProgram
+
+
+metadataToRssItem :
+    { path : PagePath Pages.PathKey
+    , frontmatter : Metadata Msg
+    , body : String
+    }
+    -> Maybe Rss.Item
+metadataToRssItem page =
+    case page.frontmatter of
+        Metadata.Tip tip ->
+            Just
+                { title = tip.title
+                , description = tip.description
+                , url = PagePath.toString page.path
+                , categories = []
+                , author = "Dillon Kearns"
+                , pubDate = Rss.Date tip.publishedAt
+                , content = Nothing
+                }
+
+        _ ->
+            Nothing
 
 
 type alias View =
@@ -617,6 +656,42 @@ pageOrPostView allMetadata model page viewForPage =
                     |> Element.column [ Element.width Element.fill ]
             }
 
+        Metadata.Tip metadata ->
+            { title = metadata.title
+            , body =
+                [ header model
+                , Element.textColumn [ Element.spacing 15, Element.centerX, Element.paddingXY 0 50 ]
+                    [ Element.paragraph
+                        [ Font.size 36
+                        , Font.center
+                        , Font.family [ Font.typeface "Raleway" ]
+                        , Font.bold
+                        ]
+                        [ Element.text metadata.title ]
+                    , Element.paragraph [] [ Element.text metadata.description ]
+                    , viewForPage
+                        |> Element.textColumn
+                            [ Element.centerX
+                            , Element.width Element.fill
+                            , Element.spacing 30
+                            , Font.size 18
+                            ]
+                        |> Element.el
+                            [ if Dimensions.isMobile model.dimensions then
+                                Element.width (Element.fill |> Element.maximum 600)
+
+                              else
+                                Element.width (Element.fill |> Element.maximum 700)
+                            , Element.height Element.fill
+                            , Element.padding 20
+                            , Element.spacing 20
+                            , Element.centerX
+                            ]
+                    ]
+                ]
+                    |> Element.column [ Element.width Element.fill ]
+            }
+
 
 {-| <https://developer.twitter.com/en/docs/tweets/optimize-with-cards/overview/abouts-cards>
 <https://htmlhead.dev>
@@ -669,6 +744,9 @@ head metadata =
             []
 
         Metadata.Glossary meta ->
+            []
+
+        Metadata.Tip meta ->
             []
 
 
