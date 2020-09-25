@@ -17,6 +17,7 @@ import IcalFeed
 import Index
 import LearnIndex
 import MarkdownRenderer
+import MarkdownToHtmlStringRenderer
 import Metadata exposing (Metadata)
 import Pages
 import Pages.Manifest as Manifest
@@ -112,6 +113,11 @@ metadataToRssItem :
 metadataToRssItem page =
     case page.frontmatter of
         Metadata.Tip tip ->
+            let
+                markdownHtmlString =
+                    MarkdownToHtmlStringRenderer.renderMarkdown page.body
+                        |> Result.withDefault "TODO"
+            in
             Just
                 { title = tip.title
                 , description = tip.description
@@ -119,7 +125,7 @@ metadataToRssItem page =
                 , categories = []
                 , author = "Dillon Kearns"
                 , pubDate = Rss.Date tip.publishedAt
-                , content = Nothing
+                , content = Just markdownHtmlString
                 }
 
         _ ->

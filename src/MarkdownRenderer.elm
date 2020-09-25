@@ -195,13 +195,24 @@ renderer =
                 )
     , codeBlock = codeBlock
     , table = Element.column []
-    , tableHeader = Element.column []
+    , tableHeader =
+        Element.column
+            [ Font.bold
+            , Element.width Element.fill
+            , Font.center
+            ]
     , tableBody = Element.column []
-    , tableRow = Element.row []
+    , tableRow = Element.row [ Element.height Element.fill, Element.width Element.fill ]
     , tableHeaderCell =
         \maybeAlignment children ->
-            Element.paragraph [] children
-    , tableCell = Element.paragraph []
+            Element.paragraph
+                tableBorder
+                children
+    , tableCell =
+        \maybeAlignment children ->
+            Element.paragraph
+                tableBorder
+                children
     , html =
         Markdown.Html.oneOf
             [ Markdown.Html.tag "discord"
@@ -314,6 +325,19 @@ renderer =
             --     |> Markdown.Html.withAttribute "id"
             ]
     }
+
+
+alternateTableRowBackground =
+    Element.rgb255 245 247 249
+
+
+tableBorder =
+    [ Element.Border.color (Element.rgb255 223 226 229)
+    , Element.Border.width 1
+    , Element.Border.solid
+    , Element.paddingXY 6 13
+    , Element.height Element.fill
+    ]
 
 
 icons =
