@@ -126,6 +126,8 @@ metadataToRssItem page =
                 , author = "Dillon Kearns"
                 , pubDate = Rss.Date tip.publishedAt
                 , content = Just markdownHtmlString
+                , contentEncoded = Just markdownHtmlString
+                , enclosure = Nothing
                 }
 
         _ ->
