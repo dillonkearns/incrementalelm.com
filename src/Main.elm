@@ -760,7 +760,26 @@ head metadata =
             []
 
         Metadata.Tip meta ->
-            []
+            Head.Seo.summaryLarge
+                { canonicalUrlOverride = Nothing
+                , siteName = siteName
+                , image =
+                    { url = Pages.images.iconPng
+                    , alt = meta.description
+                    , dimensions = Nothing
+                    , mimeType = Nothing
+                    }
+                , description = meta.description
+                , title = meta.title
+                , locale = Nothing
+                }
+                |> Head.Seo.article
+                    { tags = []
+                    , section = Nothing
+                    , publishedTime = Nothing
+                    , modifiedTime = Nothing
+                    , expirationTime = Nothing
+                    }
 
 
 ensureAtPrefix : String -> String
