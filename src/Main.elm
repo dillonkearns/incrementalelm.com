@@ -669,34 +669,36 @@ pageOrPostView allMetadata model page viewForPage =
             { title = metadata.title
             , body =
                 [ header model
-                , Element.textColumn [ Element.spacing 15, Element.centerX, Element.paddingXY 0 50 ]
-                    [ Element.paragraph
-                        [ Font.size 36
-                        , Font.center
-                        , Font.family [ Font.typeface "Raleway" ]
-                        , Font.bold
-                        ]
-                        [ Element.text metadata.title ]
-                    , Element.paragraph [] [ Element.text metadata.description ]
-                    , viewForPage
-                        |> Element.textColumn
-                            [ Element.centerX
-                            , Element.width Element.fill
-                            , Element.spacing 30
-                            , Font.size 18
-                            ]
-                        |> Element.el
-                            [ if Dimensions.isMobile model.dimensions then
-                                Element.width (Element.fill |> Element.maximum 600)
+                , Element.textColumn
+                    [ Element.spacing 15
+                    , Element.centerX
+                    , Element.paddingXY 0 50
+                    , Element.width Element.shrink
+                    ]
+                    [ Element.textColumn
+                        [ Element.centerX
+                        , Element.spacing 30
+                        , Font.size 18
+                        , if Dimensions.isMobile model.dimensions then
+                            Element.width (Element.fill |> Element.maximum 600)
 
-                              else
-                                Element.width (Element.fill |> Element.maximum 700)
-                            , Element.height Element.fill
-                            , Element.padding 20
-                            , Element.spacing 20
-                            , Element.centerX
+                          else
+                            Element.width (Element.fill |> Element.maximum 700)
+                        , Element.padding 20
+                        ]
+                        (Element.paragraph
+                            [ Font.size 36
+                            , Font.center
+                            , Font.family [ Font.typeface "Raleway" ]
+                            , Font.bold
                             ]
-                    , Widget.Signup.view "Get Weekly Tips" "906002494" []
+                            [ Element.text metadata.title ]
+                            :: Element.paragraph
+                                [ Element.padding 20 ]
+                                [ Element.text metadata.description ]
+                            :: viewForPage
+                            ++ [ Widget.Signup.view "Get Weekly Tips" "906002494" [] ]
+                        )
                     ]
                 ]
                     |> Element.column [ Element.width Element.fill ]
