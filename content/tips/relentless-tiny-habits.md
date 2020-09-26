@@ -5,7 +5,7 @@ description: Manageable codebases don't happen because of brilliant designs. The
 publishAt: "2020-09-21"
 ---
 
-Your development habits and processes are perfectly designed to give you exactly the results you're getting. Do you wish something was different about those results? You'd like it to be easier to understand code, or add new features? The solution is simple and unglamorous. Focus on building the right habits. And look at your development processes to consider how they support or get in the way of building those habits.
+Your development habits and processes are perfectly designed to give you exactly the results you're getting. Do you wish something was different about those results? You'd like it to be easier to understand code, or add new features? The solution is simple and unglamorous. Focus on building the right habits. And step back to look at your development processes to consider how they support or hinder building those habits.
 
 So what do those habits look like? In my experience, the key to manageable code is not applying big, complex ideas occasionally (you know those 4 week refactoring branches?). Instead, it comes from applying very simple ideas **persistently**. Relentlessly. No seriously, turn that dial up all the way to 11.
 
