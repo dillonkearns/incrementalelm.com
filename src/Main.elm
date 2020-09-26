@@ -25,6 +25,7 @@ import Pages.Manifest.Category
 import Pages.PagePath as PagePath exposing (PagePath)
 import Pages.Platform exposing (Page)
 import Pages.StaticHttp as StaticHttp
+import Palette
 import Request
 import Request.Events exposing (LiveStream)
 import Rss
@@ -695,7 +696,7 @@ pageOrPostView allMetadata model page viewForPage =
                             [ Element.text metadata.title ]
                             :: Element.paragraph
                                 [ Element.padding 20 ]
-                                [ Element.text metadata.description ]
+                                [ Palette.textQuote metadata.description ]
                             :: viewForPage
                             ++ [ Widget.Signup.view "Get Weekly Tips" "906002494" [] ]
                         )

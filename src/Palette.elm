@@ -1,11 +1,23 @@
 module Palette exposing (..)
 
-import Element exposing (column)
+import Element exposing (..)
 import Element.Background as Background
 import Element.Border as Border
+import Element.Font as Font
 
 
-blockQuote : List (Element.Element msg) -> Element.Element msg
+textQuote : String -> Element msg
+textQuote string =
+    blockQuote
+        [ paragraph
+            [ Element.spacing 15
+            , Font.size 20
+            ]
+            [ text string ]
+        ]
+
+
+blockQuote : List (Element msg) -> Element msg
 blockQuote children =
     column
         [ Border.widthEach { top = 0, right = 0, bottom = 0, left = 10 }
