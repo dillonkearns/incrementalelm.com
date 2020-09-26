@@ -14,13 +14,12 @@ import Markdown.Block as Block exposing (Block, Inline, ListItem(..), Task(..))
 import Markdown.Html
 import Markdown.Parser
 import Markdown.Renderer
-import Pages
 import Style
 import Style.Helpers
-import View.DripSignupForm
 import View.Ellie
 import View.FontAwesome
 import View.Resource
+import Widget.Signup
 
 
 buildToc : List Block -> TableOfContents
@@ -228,36 +227,7 @@ renderer =
                         []
                         |> Element.html
                 )
-            , Markdown.Html.tag "signup"
-                (\buttonText formId body ->
-                    [ Element.column
-                        [ Font.center
-                        , Element.spacing 30
-                        , Element.centerX
-                        ]
-                        body
-                    , View.DripSignupForm.viewNew buttonText formId { maybeReferenceId = Nothing }
-                        |> Element.html
-                        |> Element.el [ Element.width Element.fill ]
-                    , [ Element.text "We'll never share your email. Unsubscribe any time." ]
-                        |> Element.paragraph
-                            [ Font.color (Element.rgba255 0 0 0 0.5)
-                            , Font.size 14
-                            , Font.center
-                            ]
-                    ]
-                        |> Element.column
-                            [ Element.width Element.fill
-                            , Element.padding 20
-                            , Element.spacing 20
-                            , Element.Border.shadow { offset = ( 0, 0 ), size = 1, blur = 4, color = Element.rgb 0.8 0.8 0.8 }
-                            , Element.mouseOver
-                                [ Element.Border.shadow { offset = ( 0, 0 ), size = 1, blur = 4, color = Element.rgb 0.85 0.85 0.85 } ]
-                            , Element.width (Element.fill |> Element.maximum 500)
-                            , Element.centerX
-                            ]
-                        |> Element.el []
-                )
+            , Markdown.Html.tag "signup" Widget.Signup.view
                 |> Markdown.Html.withAttribute "buttontext"
                 |> Markdown.Html.withAttribute "formid"
             , Markdown.Html.tag "button"

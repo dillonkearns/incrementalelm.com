@@ -37,6 +37,7 @@ import TwitchButton
 import UpcomingEvent
 import View.MenuBar
 import View.Navbar
+import Widget.Signup
 
 
 canonicalSiteUrl =
@@ -695,6 +696,7 @@ pageOrPostView allMetadata model page viewForPage =
                             , Element.spacing 20
                             , Element.centerX
                             ]
+                    , Widget.Signup.view "Get Weekly Tips" "906002494" []
                     ]
                 ]
                     |> Element.column [ Element.width Element.fill ]
