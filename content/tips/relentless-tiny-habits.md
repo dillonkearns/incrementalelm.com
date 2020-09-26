@@ -25,11 +25,18 @@ Also keep in mind that these are not destinations, but rather directions. These 
 
 The fundamtenal habit is to _build-in and ensure quality at every step_, rather than adding or verifying quality after the fact. That means having feedback loops, like tests and foolproof automation. You can learn more about some of these processes for building-in quality and reducing friction in my [Continuous Delivery glossary](/glossary/continuous-delivery).
 
+### Tiny Steps That Maintain a Working State
+
+Make smaller steps, and keep things in a working state at each point along the way.
+
+- Refactor with several small steps that keep your tests (and compiler) green
+- Use automated refactorings
+
 ### Narrow the source of truth
 
 - Move things into modules
-- Use [opaque types](TODO elm radio opaque types episode) to move responsibility to a single pinch point
-- Remove ["Impossible States" from your data types](TODO elm radio impossible states)
+- Use [opaque types](https://elm-radio.com/episode/intro-to-opaque-types) to move responsibility to a single pinch point
+- Remove ["Impossible States" from your data types](https://elm-radio.com/episode/impossible-states/)
 - Depend on fewer things. Decouple your code. Narrow down the types that you can accept, or can return.
 
 ### Name Things Better
