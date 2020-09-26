@@ -111,26 +111,26 @@ metadataToRssItem :
     , frontmatter : Metadata Msg
     , body : String
     }
-    -> Maybe Rss.Item
+    -> Maybe (Result String Rss.Item)
 metadataToRssItem page =
     case page.frontmatter of
         Metadata.Tip tip ->
-            let
-                markdownHtmlString =
-                    MarkdownToHtmlStringRenderer.renderMarkdown page.body
-                        |> Result.withDefault "TODO"
-            in
-            Just
-                { title = tip.title
-                , description = tip.description
-                , url = PagePath.toString page.path
-                , categories = []
-                , author = "Dillon Kearns"
-                , pubDate = Rss.Date tip.publishedAt
-                , content = Just markdownHtmlString
-                , contentEncoded = Just markdownHtmlString
-                , enclosure = Nothing
-                }
+            page.body
+                |> MarkdownToHtmlStringRenderer.renderMarkdown
+                |> Result.map
+                    (\markdownHtmlString ->
+                        { title = tip.title
+                        , description = tip.description
+                        , url = PagePath.toString page.path
+                        , categories = []
+                        , author = "Dillon Kearns"
+                        , pubDate = Rss.Date tip.publishedAt
+                        , content = Just markdownHtmlString
+                        , contentEncoded = Just markdownHtmlString
+                        , enclosure = Nothing
+                        }
+                    )
+                |> Just
 
         _ ->
             Nothing

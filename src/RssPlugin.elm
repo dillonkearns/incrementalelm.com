@@ -5,8 +5,9 @@ import Head
 import Pages.PagePath as PagePath exposing (PagePath)
 import Pages.Platform exposing (Builder)
 import Pages.StaticHttp as StaticHttp
+import Result.Extra
 import Rss exposing (DateOrTime)
-import Time exposing (customZone)
+import Time
 
 
 generate :
@@ -22,7 +23,7 @@ generate :
          , frontmatter : metadata
          , body : String
          }
-         -> Maybe Rss.Item
+         -> Maybe (Result String Rss.Item)
         )
     -> Builder pathKey userModel userMsg metadata view
     -> Builder pathKey userModel userMsg metadata view
@@ -37,22 +38,26 @@ generate options metadataToRssItem builder =
     builder
         |> Pages.Platform.withFileGenerator
             (\siteMetadata ->
-                { path = feedFilePath
-                , content =
-                    Rss.generate
-                        { title = options.title
-                        , description = options.siteTagline
-                        , url = options.siteUrl ++ "/" ++ PagePath.toString options.indexPage
-                        , lastBuildTime = options.builtAt
-                        , generator = Just "elm-pages"
-                        , items =
-                            siteMetadata
-                                |> List.filterMap metadataToRssItem
-                                |> publishedEntries options.now
-                        , siteUrl = options.siteUrl
-                        }
-                }
-                    |> Ok
+                siteMetadata
+                    |> List.filterMap metadataToRssItem
+                    |> Result.Extra.combine
+                    |> Result.map
+                        (\values ->
+                            { path = feedFilePath
+                            , content =
+                                Rss.generate
+                                    { title = options.title
+                                    , description = options.siteTagline
+                                    , url = options.siteUrl ++ "/" ++ PagePath.toString options.indexPage
+                                    , lastBuildTime = options.builtAt
+                                    , generator = Just "elm-pages"
+                                    , items =
+                                        values
+                                            |> publishedEntries options.now
+                                    , siteUrl = options.siteUrl
+                                    }
+                            }
+                        )
                     |> List.singleton
                     |> StaticHttp.succeed
             )
