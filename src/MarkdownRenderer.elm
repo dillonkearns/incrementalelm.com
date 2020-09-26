@@ -14,6 +14,7 @@ import Markdown.Block as Block exposing (Block, Inline, ListItem(..), Task(..))
 import Markdown.Html
 import Markdown.Parser
 import Markdown.Renderer
+import Palette
 import Style
 import Style.Helpers
 import View.Ellie
@@ -142,15 +143,7 @@ renderer =
     --    , Element.width Element.fill
     --    ]
     , hardLineBreak = Html.br [] [] |> Element.html
-    , blockQuote =
-        \children ->
-            Element.column
-                [ Element.Border.widthEach { top = 0, right = 0, bottom = 0, left = 10 }
-                , Element.padding 10
-                , Element.Border.color (Element.rgb255 145 145 145)
-                , Element.Background.color (Element.rgb255 245 245 245)
-                ]
-                children
+    , blockQuote = Palette.blockQuote
     , unorderedList =
         \items ->
             Element.column [ Element.spacing 15, Element.paddingEach { left = 20, top = 0, right = 0, bottom = 0 } ]
