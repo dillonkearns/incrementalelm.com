@@ -66,16 +66,20 @@ generate options metadataToRssItem builder =
 
 publishedEntries : Time.Posix -> List Rss.Item -> List Rss.Item
 publishedEntries now =
-    List.filter (\item -> hasFuturePublishDate now item.pubDate)
+    List.filter (\item -> isAfterPublishDate now item.pubDate)
 
 
-hasFuturePublishDate : Time.Posix -> DateOrTime -> Bool
-hasFuturePublishDate now dateOrTime =
+isAfterPublishDate : Time.Posix -> DateOrTime -> Bool
+isAfterPublishDate now dateOrTime =
+    let
+        zone =
+            Time.utc
+    in
     case dateOrTime of
         Rss.Date publishDate ->
             -- now > publishDate
-            Date.compare (Date.fromPosix Time.utc now) publishDate == GT
+            Date.compare (Date.fromPosix zone now |> Debug.log "date") publishDate == GT
 
         Rss.DateTime publishDateTime ->
             -- now > publishDateTime
-            Date.compare (Date.fromPosix Time.utc now) (Date.fromPosix Time.utc publishDateTime) == GT
+            Date.compare (Date.fromPosix zone now) (Date.fromPosix zone publishDateTime) == GT
