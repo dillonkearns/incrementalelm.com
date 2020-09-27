@@ -24,7 +24,7 @@
     "codemirror": "^5.48.2",
     "elm": "latest-0.19.1",
     "elm-format": "^0.8.3",
-    "elm-pages": "^1.4.3",
+    "elm-pages": "file:../elm-pages",
     "elm-test": "^0.19.1-revision4",
     "http-server": "^0.12.3",
     "node-elm-compiler": "^5.0.3",
