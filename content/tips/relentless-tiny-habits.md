@@ -3,6 +3,7 @@ type: tip
 title: Relentless Tiny Habits
 description: Manageable codebases don't happen because of brilliant designs. They happen because of relentless tiny habits that move code in the right direction.
 publishAt: "2020-09-28"
+image: "images/article-covers/lofoten-hike.jpg"
 ---
 
 Your development habits and processes are perfectly designed to give you exactly the results you're getting. Do you wish something was different about those results? You'd like it to be easier to understand code, or add new features? The solution is simple and unglamorous. Focus on building the right habits. And step back to look at your development processes to consider how they support or hinder building those habits.
