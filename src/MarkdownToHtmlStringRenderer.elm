@@ -6,6 +6,7 @@ import Markdown.Block as Block
 import Markdown.Html
 import Markdown.Parser as Markdown
 import Markdown.Renderer
+import Site
 
 
 render renderer markdown =
@@ -56,16 +57,24 @@ renderMarkdown markdown =
                 \content -> Html.code [] [ Html.text content ]
             , link =
                 \link content ->
+                    let
+                        fullUrl =
+                            if link.destination |> String.startsWith "/" then
+                                Site.canonicalUrl ++ link.destination
+
+                            else
+                                link.destination
+                    in
                     case link.title of
                         Just title ->
                             Html.a
-                                [ Attr.href link.destination
+                                [ Attr.href fullUrl
                                 , Attr.title title
                                 ]
                                 content
 
                         Nothing ->
-                            Html.a [ Attr.href link.destination ] content
+                            Html.a [ Attr.href fullUrl ] content
             , image =
                 \imageInfo ->
                     case imageInfo.title of

@@ -30,6 +30,7 @@ import Request
 import Request.Events exposing (LiveStream)
 import Rss
 import RssPlugin
+import Site
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
 import Task exposing (Task)
@@ -39,10 +40,6 @@ import UpcomingEvent
 import View.MenuBar
 import View.Navbar
 import Widget.Signup
-
-
-canonicalSiteUrl =
-    "https://incrementalelm.com"
 
 
 main : Pages.Platform.Program Model Msg (Metadata Msg) (List (Element Msg))
@@ -59,7 +56,7 @@ main =
               }
             ]
         , manifest = manifest
-        , canonicalSiteUrl = canonicalSiteUrl
+        , canonicalSiteUrl = Site.canonicalUrl
         , onPageChange = Just (\_ -> OnPageChange)
         , internals = Pages.internals
         }
@@ -96,7 +93,7 @@ main =
             )
         |> RssPlugin.generate
             { siteTagline = siteTagline
-            , siteUrl = canonicalSiteUrl
+            , siteUrl = Site.canonicalUrl
             , title = "Incremental Elm Tips"
             , builtAt = Pages.builtAt
             , indexPage = Pages.pages.tips
