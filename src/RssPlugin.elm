@@ -69,23 +69,6 @@ publishedEntries now =
     List.filter (\item -> onOrAfterPublishDate now item.pubDate)
 
 
-
---isAfterPublishDate : Time.Posix -> DateOrTime -> Bool
---isAfterPublishDate now dateOrTime =
---    let
---        zone =
---            Time.utc
---    in
---    case dateOrTime of
---        Rss.Date publishDate ->
---            -- now > publishDate
---            Date.compare (Date.fromPosix zone now |> Debug.log "date") publishDate == GT
---
---        Rss.DateTime publishDateTime ->
---            -- now > publishDateTime
---            Date.compare (Date.fromPosix zone now) (Date.fromPosix zone publishDateTime) == GT
-
-
 onOrAfterPublishDate : Time.Posix -> DateOrTime -> Bool
 onOrAfterPublishDate now dateOrTime =
     let
@@ -94,9 +77,9 @@ onOrAfterPublishDate now dateOrTime =
     in
     case dateOrTime of
         Rss.Date publishDate ->
-            -- now > publishDate
+            -- now >= publishDate
             Date.compare (Date.fromPosix zone now) publishDate /= LT
 
         Rss.DateTime publishDateTime ->
-            -- now > publishDateTime
+            -- now >= publishDateTime
             Date.compare (Date.fromPosix zone now) (Date.fromPosix zone publishDateTime) /= LT
