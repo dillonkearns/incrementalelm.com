@@ -13,7 +13,7 @@ So what do those habits look like? The key to manageable code is not applying bi
 
 Habits are key. But in order to build these habits, you need to double down on rewarding those habits by removing friction. Habits form when you get that positive signal when you perform the habit.
 
-If your build server is very slow, then you won't build a habit of refactoring as soon as you see the opportunity. If you don't have unit tests, then you won't build the habit of changing your underlying data types to better refelct your domain. If setting up a unit test is cumbersome then you won't write tests.
+If your build server is very slow, then you won't build a habit of refactoring as soon as you see the opportunity. If you don't have unit tests, then you won't build the habit of changing your underlying data types to better reflect your domain. If setting up a unit test is cumbersome then you won't write tests.
 
 Anything that increases confidence or otherwise reduces friction to making changes is a [keystone habit](https://jamesclear.com/keystone-habits). That is, getting in the habit of improving your feedback loops and safety nets will enable you and your team to build other good habits faster. Keystone habits are a key ingredient to Relentless, Tiny Habits.
 
