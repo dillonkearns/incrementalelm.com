@@ -3,14 +3,13 @@ module LearnIndex exposing (view)
 import Element exposing (Element)
 import Element.Border
 import Element.Font
-import Metadata exposing (Metadata)
 import Pages
 import Pages.PagePath as PagePath exposing (PagePath)
-import Style.Helpers
+import TemplateType exposing (TemplateType)
 
 
 view :
-    List ( PagePath Pages.PathKey, Metadata msg )
+    List ( PagePath Pages.PathKey, TemplateType )
     -> Element msg
 view posts =
     Element.column [ Element.spacing 20 ]
@@ -18,7 +17,7 @@ view posts =
             |> List.filterMap
                 (\( path, metadata ) ->
                     case metadata of
-                        Metadata.Learn meta ->
+                        TemplateType.Learn meta ->
                             Just ( path, meta )
 
                         _ ->
@@ -29,7 +28,7 @@ view posts =
 
 
 postSummary :
-    ( PagePath Pages.PathKey, Metadata.LearnMetadata )
+    ( PagePath Pages.PathKey, TemplateType.LearnMetadata )
     -> Element msg
 postSummary ( postPath, post ) =
     learnIndex post
@@ -54,7 +53,7 @@ title text =
             ]
 
 
-learnIndex : Metadata.LearnMetadata -> Element msg
+learnIndex : TemplateType.LearnMetadata -> Element msg
 learnIndex metadata =
     Element.el
         [ Element.centerX
@@ -82,7 +81,7 @@ readMoreLink =
             ]
 
 
-postPreview : Metadata.LearnMetadata -> Element msg
+postPreview : TemplateType.LearnMetadata -> Element msg
 postPreview post =
     Element.textColumn
         [ Element.centerX

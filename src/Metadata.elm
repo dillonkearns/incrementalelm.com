@@ -9,6 +9,7 @@ import Json.Decode as Decode exposing (Decoder)
 import List.Extra
 import Pages
 import Pages.ImagePath
+import TemplateType exposing (TemplateType)
 import Time
 
 
@@ -90,7 +91,7 @@ markdownString =
 --(Decode.field "title" Decode.string) |> Decode.map (\title -> Page { title = title })
 
 
-decoder : Decoder (Metadata msg)
+decoder : Decoder TemplateType
 decoder =
     Decode.oneOf
         [ Decode.field "type" Decode.string
@@ -105,22 +106,22 @@ decoder =
                            "description": "In this post, we're going to be looking up an Article in an Elm Dict, using the tiniest steps possible."
                         -}
                         "page" ->
-                            Decode.map3 (\title description image -> Page { title = title, description = description, image = image })
+                            Decode.map3 (\title description image -> TemplateType.Page { title = title, description = description, image = image })
                                 (Decode.field "title" Decode.string)
                                 (Decode.maybe (Decode.field "description" Decode.string))
                                 (Decode.maybe (Decode.field "image" imageDecoder))
 
                         "glossary" ->
-                            Decode.map2 GlossaryMetadata
+                            Decode.map2 TemplateType.GlossaryMetadata
                                 (Decode.field "title" Decode.string)
                                 (Decode.field "description" Decode.string)
-                                |> Decode.map Glossary
+                                |> Decode.map TemplateType.Glossary
 
                         "article" ->
-                            Decode.map Article articleDecoder
+                            Decode.map TemplateType.Article articleDecoder
 
                         "tip" ->
-                            Decode.map3 TipMetadata
+                            Decode.map3 TemplateType.TipMetadata
                                 (Decode.field "title" Decode.string)
                                 (Decode.field "description" Decode.string)
                                 (Decode.field "publishAt"

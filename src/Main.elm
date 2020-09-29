@@ -18,7 +18,6 @@ import Index
 import LearnIndex
 import MarkdownRenderer
 import MarkdownToHtmlStringRenderer
-import Metadata exposing (Metadata)
 import Pages
 import Pages.ImagePath as ImagePath
 import Pages.Manifest as Manifest
@@ -35,6 +34,8 @@ import Site
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
 import Task exposing (Task)
+import TemplateDemultiplexer
+import TemplateType exposing (TemplateType)
 import Time
 import TwitchButton
 import UpcomingEvent
@@ -43,23 +44,29 @@ import View.Navbar
 import Widget.Signup
 
 
-main : Pages.Platform.Program Model Msg (Metadata Msg) (List (Element Msg))
+
+--main : Pages.Platform.Program Model Msg TemplateType (List (Element Msg))
+
+
 main =
-    Pages.Platform.init
-        { init = init
-        , view = view
-        , update = update
-        , subscriptions = \_ _ -> subscriptions
+    TemplateDemultiplexer.mainTemplate
+        { --init = init
+          --, view = view
+          --, update = update
+          subscriptions = Sub.none -- \_ _ -> subscriptions
         , documents =
             [ { extension = "md"
-              , metadata = Metadata.decoder
+              , metadata = TemplateType.decoder
               , body = MarkdownRenderer.view
               }
             ]
-        , manifest = manifest
-        , canonicalSiteUrl = Site.canonicalUrl
+        , site = Site.config
+
+        --, manifest = manifest
+        --, canonicalSiteUrl = Site.canonicalUrl
         , onPageChange = Just (\_ -> OnPageChange)
-        , internals = Pages.internals
+
+        --, internals = Pages.internals
         }
         |> Pages.Platform.withFileGenerator
             (\_ ->
@@ -106,13 +113,13 @@ main =
 
 metadataToRssItem :
     { path : PagePath Pages.PathKey
-    , frontmatter : Metadata Msg
+    , frontmatter : TemplateType
     , body : String
     }
     -> Maybe (Result String Rss.Item)
 metadataToRssItem page =
     case page.frontmatter of
-        Metadata.Tip tip ->
+        TemplateType.Tip tip ->
             page.body
                 |> MarkdownToHtmlStringRenderer.renderMarkdown
                 |> Result.map
@@ -394,7 +401,7 @@ makeTranslated i polygon =
 
 
 
---view :  List ( PagePath Pages.PathKey, Metadata Msg ) -> Page (Metadata Msg) (List (Element Msg)) Pages.PathKey -> { title : String, body : Html Msg }
+--view :  List ( PagePath Pages.PathKey, TemplateType Msg ) -> Page (TemplateType Msg) (List (Element Msg)) Pages.PathKey -> { title : String, body : Html Msg }
 
 
 eventsView : Maybe Time.Posix -> TwitchButton.IsOnAir -> List LiveStream -> Element msg
@@ -511,12 +518,12 @@ view allMetadata page =
 
 
 
---pageOrPostView : List ( PagePath Pages.PathKey, Metadata Msg ) -> Model -> Page (Metadata Msg) (List (Element Msg)) Pages.PathKey -> { title : String, body : Element Msg }
+--pageOrPostView : List ( PagePath Pages.PathKey, TemplateType Msg ) -> Model -> Page (TemplateType Msg) (List (Element Msg)) Pages.PathKey -> { title : String, body : Element Msg }
 
 
 pageOrPostView allMetadata model page viewForPage =
     case page.frontmatter of
-        Metadata.Page metadata ->
+        TemplateType.Page metadata ->
             { title = metadata.title
             , body =
                 [ header model
@@ -554,11 +561,13 @@ pageOrPostView allMetadata model page viewForPage =
                     |> Element.column [ Element.width Element.fill ]
             }
 
-        Metadata.Article metadata ->
-            { title = metadata.title.raw
+        TemplateType.Article metadata ->
+            { title = metadata.title
             , body =
                 [ header model
-                , ((metadata.title.styled
+                , ((metadata.title
+                        |> Element.text
+                        |> List.singleton
                         |> Element.paragraph [ Font.size 36, Font.center, Font.family [ Font.typeface "Raleway" ], Font.bold ]
                    )
                     :: (Element.image
@@ -566,7 +575,7 @@ pageOrPostView allMetadata model page viewForPage =
                             , Element.centerX
                             ]
                             { src = ImagePath.toString metadata.coverImage
-                            , description = metadata.title.raw
+                            , description = metadata.title
                             }
                             |> Element.el [ Element.centerX ]
                        )
@@ -593,7 +602,7 @@ pageOrPostView allMetadata model page viewForPage =
                     |> Element.column [ Element.width Element.fill ]
             }
 
-        Metadata.Learn metadata ->
+        TemplateType.Learn metadata ->
             { title = metadata.title
             , body =
                 [ header model
@@ -628,7 +637,7 @@ pageOrPostView allMetadata model page viewForPage =
                     |> Element.column [ Element.width Element.fill ]
             }
 
-        Metadata.Glossary metadata ->
+        TemplateType.Glossary metadata ->
             { title = metadata.title
             , body =
                 [ header model
@@ -664,7 +673,7 @@ pageOrPostView allMetadata model page viewForPage =
                     |> Element.column [ Element.width Element.fill ]
             }
 
-        Metadata.Tip metadata ->
+        TemplateType.Tip metadata ->
             { title = metadata.title
             , body =
                 [ header model
@@ -709,10 +718,10 @@ pageOrPostView allMetadata model page viewForPage =
 <https://html.spec.whatwg.org/multipage/semantics.html#standard-metadata-names>
 <https://ogp.me/>
 -}
-head : Metadata.Metadata msg -> List (Head.Tag Pages.PathKey)
+head : TemplateType.TemplateType -> List (Head.Tag Pages.PathKey)
 head metadata =
     case metadata of
-        Metadata.Page meta ->
+        TemplateType.Page meta ->
             Head.Seo.summaryLarge
                 { canonicalUrlOverride = Nothing
                 , siteName = siteName
@@ -728,18 +737,18 @@ head metadata =
                 }
                 |> Head.Seo.website
 
-        Metadata.Article meta ->
+        TemplateType.Article meta ->
             Head.Seo.summaryLarge
                 { canonicalUrlOverride = Nothing
                 , siteName = siteName
                 , image =
                     { url = meta.coverImage
-                    , alt = meta.description.raw
+                    , alt = meta.description
                     , dimensions = Nothing
                     , mimeType = Nothing
                     }
-                , description = meta.description.raw
-                , title = meta.title.raw
+                , description = meta.description
+                , title = meta.title
                 , locale = Nothing
                 }
                 |> Head.Seo.article
@@ -750,13 +759,13 @@ head metadata =
                     , expirationTime = Nothing
                     }
 
-        Metadata.Learn meta ->
+        TemplateType.Learn meta ->
             []
 
-        Metadata.Glossary meta ->
+        TemplateType.Glossary meta ->
             []
 
-        Metadata.Tip meta ->
+        TemplateType.Tip meta ->
             Head.Seo.summaryLarge
                 { canonicalUrlOverride = Nothing
                 , siteName = siteName

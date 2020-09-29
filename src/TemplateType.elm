@@ -2,10 +2,13 @@ module TemplateType exposing (..)
 
 import Date exposing (Date)
 import Json.Decode as Decode exposing (Decoder)
+import List.Extra
+import Pages
+import Pages.ImagePath
 
 
 type TemplateType
-    = Page { title : String, description : Maybe String }
+    = Page { title : String, description : Maybe String, image : Maybe (Pages.ImagePath.ImagePath Pages.PathKey) }
     | Article ArticleMetadata
     | Learn LearnMetadata
     | Glossary GlossaryMetadata
@@ -30,8 +33,26 @@ type alias TipMetadata =
 type alias ArticleMetadata =
     { title : String
     , description : String
-    , coverImage : String
+    , coverImage : Pages.ImagePath.ImagePath Pages.PathKey
     }
+
+
+imageDecoder : Decoder (Pages.ImagePath.ImagePath Pages.PathKey)
+imageDecoder =
+    (Decode.string |> Decode.map (\src -> "images/" ++ src))
+        |> Decode.andThen findImage
+
+
+findImage : String -> Decoder (Pages.ImagePath.ImagePath Pages.PathKey)
+findImage imagePath =
+    case Pages.allImages |> List.Extra.find (\image -> Pages.ImagePath.toString image == imagePath) of
+        Just image ->
+            Decode.succeed image
+
+        Nothing ->
+            Decode.fail <|
+                "Couldn't find image. Found \n"
+                    ++ (List.map Pages.ImagePath.toString Pages.allImages |> String.join "\n")
 
 
 articleDecoder : Decoder ArticleMetadata
@@ -39,9 +60,7 @@ articleDecoder =
     Decode.map3 ArticleMetadata
         (Decode.field "title" Decode.string)
         (Decode.field "description" Decode.string)
-        (Decode.field "src"
-            (Decode.string |> Decode.map (\src -> "/images/" ++ src))
-        )
+        (Decode.field "src" imageDecoder)
 
 
 learnDecoder : Decoder LearnMetadata
@@ -65,9 +84,10 @@ decoder =
                            "description": "In this post, we're going to be looking up an Article in an Elm Dict, using the tiniest steps possible."
                         -}
                         "page" ->
-                            Decode.map2 (\title description -> Page { title = title, description = description })
+                            Decode.map3 (\title description image -> Page { title = title, description = description, image = image })
                                 (Decode.field "title" Decode.string)
                                 (Decode.maybe (Decode.field "description" Decode.string))
+                                (Decode.maybe (Decode.field "image" imageDecoder))
 
                         "glossary" ->
                             Decode.map2 GlossaryMetadata

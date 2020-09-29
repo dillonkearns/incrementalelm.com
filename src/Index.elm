@@ -3,15 +3,15 @@ module Index exposing (view)
 import Element exposing (Element)
 import Element.Border
 import Element.Font
-import Metadata exposing (Metadata)
 import Pages
 import Pages.ImagePath as ImagePath
 import Pages.PagePath as PagePath exposing (PagePath)
 import Style.Helpers
+import TemplateType exposing (TemplateType)
 
 
 view :
-    List ( PagePath Pages.PathKey, Metadata msg )
+    List ( PagePath Pages.PathKey, TemplateType )
     -> Element msg
 view posts =
     Element.column [ Element.spacing 20 ]
@@ -19,7 +19,7 @@ view posts =
             |> List.filterMap
                 (\( path, metadata ) ->
                     case metadata of
-                        Metadata.Article meta ->
+                        TemplateType.Article meta ->
                             Just ( path, meta )
 
                         _ ->
@@ -31,7 +31,7 @@ view posts =
 
 
 postSummary :
-    ( PagePath Pages.PathKey, Metadata.ArticleMetadata msg )
+    ( PagePath Pages.PathKey, TemplateType.ArticleMetadata )
     -> Element msg
 postSummary ( postPath, post ) =
     articleIndex post
@@ -56,7 +56,7 @@ title text =
             ]
 
 
-articleIndex : Metadata.ArticleMetadata msg -> Element msg
+articleIndex : TemplateType.ArticleMetadata -> Element msg
 articleIndex metadata =
     Element.el
         [ Element.centerX
@@ -84,7 +84,7 @@ readMoreLink =
             ]
 
 
-postPreview : Metadata.ArticleMetadata msg -> Element msg
+postPreview : TemplateType.ArticleMetadata -> Element msg
 postPreview post =
     Element.textColumn
         [ Element.centerX
@@ -92,9 +92,11 @@ postPreview post =
         , Element.spacing 30
         , Element.Font.size 18
         ]
-        [ title post.title.raw
+        [ title post.title
         , image post
-        , post.description.styled
+        , post.description
+            |> Element.text
+            |> List.singleton
             |> Element.paragraph
                 [ Element.Font.size 22
                 , Element.Font.center
@@ -110,6 +112,6 @@ image article =
         , Element.centerX
         ]
         { src = ImagePath.toString article.coverImage
-        , description = article.title.raw ++ " cover image"
+        , description = article.title ++ " cover image"
         }
         |> Element.el [ Element.centerX ]
