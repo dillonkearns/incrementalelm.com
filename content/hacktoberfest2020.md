@@ -2,6 +2,7 @@
 title: Hacktoberfest Panel Discussion
 description: Announcing Our Elm Hacktoberfest Kickoff Event!
 type: page
+image: hacktoberfest.png
 ---
 
 # Hacktoberfest Kickoff and Panel Discussion
