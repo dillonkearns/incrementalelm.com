@@ -10,7 +10,7 @@ import Pages
 import Pages.PagePath exposing (PagePath)
 import Pages.Platform
 import Pages.StaticHttp as StaticHttp
-
+import Template.Tip
 
 
 type alias Model =
@@ -29,7 +29,8 @@ type alias Model =
 
 
 type TemplateModel
-    = 
+    = ModelTip Template.Tip.Model
+
     | NotFound
 
 
@@ -42,7 +43,8 @@ type Msg
         , fragment : Maybe String
         , metadata : TemplateType
         }
-    | 
+    | MsgTip Template.Tip.Msg
+
 
 
 view :
@@ -58,7 +60,47 @@ view :
             }
 view siteMetadata page =
     case page.frontmatter of
-        
+        M.Tip metadata ->
+            StaticHttp.map2
+                (\data globalData ->
+                    { view =
+                        \model rendered ->
+                            case model.page of
+                                ModelTip subModel ->
+                                    Template.Tip.template.view
+                                        subModel
+                                        model.global
+                                        siteMetadata
+                                        { static = data
+                                        , sharedStatic = globalData
+                                        , metadata = metadata
+                                        , path = page.path
+                                        }
+                                        rendered
+                                        |> (\{ title, body } ->
+                                                Shared.view
+                                                    globalData
+                                                    page
+                                                    model.global
+                                                    MsgGlobal
+                                                    ({ title = title, body = body }
+                                                        |> Shared.map MsgTip
+                                                    )
+                                           )
+
+                                _ ->
+                                    { title = "", body = Html.text "" }
+                    , head = Template.Tip.template.head
+                        { static = data
+                        , sharedStatic = globalData
+                        , metadata = metadata
+                        , path = page.path
+                        }
+                    }
+                )
+                (Template.Tip.template.staticData siteMetadata)
+                (Shared.staticData siteMetadata)
+
 
 
 init :
@@ -85,7 +127,11 @@ init currentGlobalModel maybePagePath =
 
                 Just meta ->
                     case meta of
-                        
+                        M.Tip metadata ->
+                            Template.Tip.template.init metadata
+                                |> Tuple.mapBoth ModelTip (Cmd.map MsgTip)
+
+
     in
     ( { global = sharedModel
       , page = templateModel
@@ -123,6 +169,28 @@ update msg model =
                     }
 
         
+        MsgTip msg_ ->
+            let
+                ( updatedPageModel, pageCmd, ( newGlobalModel, newGlobalCmd ) ) =
+                    case ( model.page, model.current |> Maybe.map .metadata ) of
+                        ( ModelTip pageModel, Just (M.Tip metadata) ) ->
+                            Template.Tip.template.update
+                                metadata
+                                msg_
+                                pageModel
+                                model.global
+                                |> mapBoth ModelTip (Cmd.map MsgTip)
+                                |> (\( a, b, c ) ->
+                                        ( a, b, Shared.update (Shared.SharedMsg c) model.global )
+                                   )
+
+                        _ ->
+                            ( model.page, Cmd.none, ( model.global, Cmd.none ) )
+            in
+            ( { model | page = updatedPageModel, global = newGlobalModel }
+            , Cmd.batch [ pageCmd, newGlobalCmd |> Cmd.map MsgGlobal ]
+            )
+
 
 
 type alias SiteConfig =
@@ -134,6 +202,19 @@ templateSubscriptions : TemplateType -> PagePath Pages.PathKey -> Model -> Sub M
 templateSubscriptions metadata path model =
     case model.page of
         
+        ModelTip templateModel ->
+            case metadata of
+                M.Tip templateMetadata ->
+                    Template.Tip.template.subscriptions
+                        templateMetadata
+                        path
+                        templateModel
+                        model.global
+                        |> Sub.map MsgTip
+
+                _ ->
+                    Sub.none
+
 
 
         NotFound ->

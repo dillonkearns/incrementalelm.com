@@ -1,0 +1,82 @@
+{
+  "main": {
+    "id": "72b005648a7f2517",
+    "type": "split",
+    "children": [
+      {
+        "id": "24b238fedee5459e",
+        "type": "leaf",
+        "active": true,
+        "state": {
+          "type": "markdown",
+          "state": {
+            "file": "tips/testing-modules.md",
+            "mode": "source"
+          }
+        }
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "c01e9dfbf3ebb28b",
+    "type": "split",
+    "children": [
+      {
+        "id": "b1423268ac8de589",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "11e082afb516ade7",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {}
+            }
+          },
+          {
+            "id": "3d38e390d7bd0a9b",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": ""
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "6670e8ce29f69a69",
+    "type": "split",
+    "children": [
+      {
+        "id": "dbc0127b766d09ac",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "aedf4698807fb77a",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "tips/testing-modules.md"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "lastOpenFiles": [
+    "tips/testing-modules.md",
+    "tips/relentless-tiny-habits.md",
+    "tips/automating-quality.md"
+  ]
+}
