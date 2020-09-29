@@ -20,6 +20,7 @@ import MarkdownRenderer
 import MarkdownToHtmlStringRenderer
 import Metadata exposing (Metadata)
 import Pages
+import Pages.ImagePath as ImagePath
 import Pages.Manifest as Manifest
 import Pages.Manifest.Category
 import Pages.PagePath as PagePath exposing (PagePath)
@@ -564,7 +565,7 @@ pageOrPostView allMetadata model page viewForPage =
                             [ Element.width (Element.fill |> Element.maximum 600)
                             , Element.centerX
                             ]
-                            { src = metadata.coverImage
+                            { src = ImagePath.toString metadata.coverImage
                             , description = metadata.title.raw
                             }
                             |> Element.el [ Element.centerX ]

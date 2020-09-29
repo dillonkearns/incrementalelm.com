@@ -5,6 +5,7 @@ import Element.Border
 import Element.Font
 import Metadata exposing (Metadata)
 import Pages
+import Pages.ImagePath as ImagePath
 import Pages.PagePath as PagePath exposing (PagePath)
 import Style.Helpers
 
@@ -108,7 +109,7 @@ image article =
         [ Element.width (Element.fill |> Element.maximum 600)
         , Element.centerX
         ]
-        { src = article.coverImage
+        { src = ImagePath.toString article.coverImage
         , description = article.title.raw ++ " cover image"
         }
         |> Element.el [ Element.centerX ]

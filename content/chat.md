@@ -1,5 +1,9 @@
 ---
-{ "type": "page", "title": "Incremental Elm Community Chat" }
+{
+  "type": "page",
+  "title": "Incremental Elm Community Chat",
+  "image": "hacktoberfest.png",
+}
 ---
 
 ## Incremental Elm Open Source Community Chat
