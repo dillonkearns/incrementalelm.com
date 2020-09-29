@@ -63,7 +63,9 @@ findImage imagePath =
             Decode.succeed image
 
         Nothing ->
-            Decode.fail <| "Couldn't find image. Found \n" ++ Debug.toString (List.map Pages.ImagePath.toString Pages.allImages)
+            Decode.fail <|
+                "Couldn't find image. Found \n"
+                    ++ (List.map Pages.ImagePath.toString Pages.allImages |> String.join "\n")
 
 
 learnDecoder : Decoder LearnMetadata
