@@ -2,6 +2,7 @@
 title: Hacktoberfest Panel Discussion
 description: Announcing Our Elm Hacktoberfest Kickoff Event!
 type: page
+image: hacktoberfest.png
 ---
 
 # Hacktoberfest Kickoff and Panel Discussion
@@ -33,7 +34,7 @@ You can learn more about Hacktoberfest at the official site: <https://hacktoberf
 
 ## Where
 
-To view the kick off event, join the [Incremental Elm Community Discord](/chat). We have a community of people in that server who are working towards improving the Elm Open Source ecosystem. It's been a really positive and supportive environment, and anyone who is willing to follow the [community code of conduct](/code-of-conduct) is very welcome!
+To view the kick off event, join the [Incremental Elm Community Discord](/chat). We have a community of people in that server who are working towards improving the Elm Open Source ecosystem. It's been a really positive and supportive environment, and anyone who is willing to follow the [community code of conduct](/chat#code-of-conduct) is very welcome!
 
 Why not YouTube, Twitch, Zoom, etc.? Hacktoberfest is all about community, and Discord has proven to be a great place to share progress and collaborate on open source work, all with a supportive environment. I also think that the way people engage takes many different forms, and I want a medium that supports that. For example, some people really like asynchronous chats. You can chat to your hearts content and skip out on video streams if you like.
 
@@ -49,7 +50,7 @@ If you're eager to roll up your sleeves and start working on some contributions,
 
 We'll also be announcing some live streams through the month of October where project maintainers work on their projects, so stay tuned in the Discord for that!
 
-And check out these open issues tagged with #hacktoberfest.
+And check out these open issues tagged with #hacktoberfest, #good-first-issue, and #help-wanted on Elm open source projects. We'll walk through more of these and share links in the Discord, so stay tuned!
 
 ## Next Steps
 
