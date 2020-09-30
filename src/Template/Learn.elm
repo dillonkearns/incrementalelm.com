@@ -23,8 +23,7 @@ type alias Msg =
 template : Template.Template_ TemplateType.LearnMetadata ()
 template =
     Template.noStaticData
-        { head =
-            \_ -> []
+        { head = \_ -> [] -- TODO
         }
         |> Template.buildNoState { view = view }
 

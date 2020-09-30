@@ -13,6 +13,7 @@ import Pages.StaticHttp as StaticHttp
 import Template.Article
 import Template.Glossary
 import Template.Learn
+import Template.LiveIndex
 import Template.Page
 import Template.Tip
 
@@ -36,6 +37,7 @@ type TemplateModel
     = ModelArticle Template.Article.Model
     | ModelGlossary Template.Glossary.Model
     | ModelLearn Template.Learn.Model
+    | ModelLiveIndex Template.LiveIndex.Model
     | ModelPage Template.Page.Model
     | ModelTip Template.Tip.Model
 
@@ -54,6 +56,7 @@ type Msg
     | MsgArticle Template.Article.Msg
     | MsgGlossary Template.Glossary.Msg
     | MsgLearn Template.Learn.Msg
+    | MsgLiveIndex Template.LiveIndex.Msg
     | MsgPage Template.Page.Msg
     | MsgTip Template.Tip.Msg
 
@@ -198,6 +201,48 @@ view siteMetadata page =
                 (Shared.staticData siteMetadata)
 
 
+        M.LiveIndex metadata ->
+            StaticHttp.map2
+                (\data globalData ->
+                    { view =
+                        \model rendered ->
+                            case model.page of
+                                ModelLiveIndex subModel ->
+                                    Template.LiveIndex.template.view
+                                        subModel
+                                        model.global
+                                        siteMetadata
+                                        { static = data
+                                        , sharedStatic = globalData
+                                        , metadata = metadata
+                                        , path = page.path
+                                        }
+                                        rendered
+                                        |> (\{ title, body } ->
+                                                Shared.view
+                                                    globalData
+                                                    page
+                                                    model.global
+                                                    MsgGlobal
+                                                    ({ title = title, body = body }
+                                                        |> Shared.map MsgLiveIndex
+                                                    )
+                                           )
+
+                                _ ->
+                                    { title = "", body = Html.text "" }
+                    , head = Template.LiveIndex.template.head
+                        { static = data
+                        , sharedStatic = globalData
+                        , metadata = metadata
+                        , path = page.path
+                        }
+                    }
+                )
+                (Template.LiveIndex.template.staticData siteMetadata)
+                (Shared.staticData siteMetadata)
+
+
         M.Page metadata ->
             StaticHttp.map2
                 (\data globalData ->
@@ -322,6 +367,11 @@ init currentGlobalModel maybePagePath =
                                 |> Tuple.mapBoth ModelLearn (Cmd.map MsgLearn)
 
 
+                        M.LiveIndex metadata ->
+                            Template.LiveIndex.template.init metadata
+                                |> Tuple.mapBoth ModelLiveIndex (Cmd.map MsgLiveIndex)
+
+
                         M.Page metadata ->
                             Template.Page.template.init metadata
                                 |> Tuple.mapBoth ModelPage (Cmd.map MsgPage)
@@ -438,6 +488,29 @@ update msg model =
             )
 
         
+        MsgLiveIndex msg_ ->
+            let
+                ( updatedPageModel, pageCmd, ( newGlobalModel, newGlobalCmd ) ) =
+                    case ( model.page, model.current |> Maybe.map .metadata ) of
+                        ( ModelLiveIndex pageModel, Just (M.LiveIndex metadata) ) ->
+                            Template.LiveIndex.template.update
+                                metadata
+                                msg_
+                                pageModel
+                                model.global
+                                |> mapBoth ModelLiveIndex (Cmd.map MsgLiveIndex)
+                                |> (\( a, b, c ) ->
+                                        ( a, b, Shared.update (Shared.SharedMsg c) model.global )
+                                   )
+
+                        _ ->
+                            ( model.page, Cmd.none, ( model.global, Cmd.none ) )
+            in
+            ( { model | page = updatedPageModel, global = newGlobalModel }
+            , Cmd.batch [ pageCmd, newGlobalCmd |> Cmd.map MsgGlobal ]
+            )
+
+        
         MsgPage msg_ ->
             let
                 ( updatedPageModel, pageCmd, ( newGlobalModel, newGlobalCmd ) ) =
@@ -531,6 +604,20 @@ templateSubscriptions metadata path model =
                         templateModel
                         model.global
                         |> Sub.map MsgLearn
+
+                _ ->
+                    Sub.none
+
+        
+        ModelLiveIndex templateModel ->
+            case metadata of
+                M.LiveIndex templateMetadata ->
+                    Template.LiveIndex.template.subscriptions
+                        templateMetadata
+                        path
+                        templateModel
+                        model.global
+                        |> Sub.map MsgLiveIndex
 
                 _ ->
                     Sub.none

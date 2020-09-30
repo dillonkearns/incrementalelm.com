@@ -1,6 +1,6 @@
 ---
 {
-  "type": "page",
+  "type": "live-index",
   "title": "Incremental Elm Live",
   "description": "Live coding streams, working on Elm Open Source and learning from community members!",
 }

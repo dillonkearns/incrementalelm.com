@@ -9,6 +9,7 @@ import Pages.ImagePath
 
 type TemplateType
     = Page PageMetadata
+    | LiveIndex LiveIndexMetadata
     | Article ArticleMetadata
     | Learn LearnMetadata
     | Glossary GlossaryMetadata
@@ -16,6 +17,10 @@ type TemplateType
 
 
 type alias PageMetadata =
+    { title : String, description : Maybe String, image : Maybe (Pages.ImagePath.ImagePath Pages.PathKey) }
+
+
+type alias LiveIndexMetadata =
     { title : String, description : Maybe String, image : Maybe (Pages.ImagePath.ImagePath Pages.PathKey) }
 
 
@@ -89,6 +94,12 @@ decoder =
                         -}
                         "page" ->
                             Decode.map3 (\title description image -> Page { title = title, description = description, image = image })
+                                (Decode.field "title" Decode.string)
+                                (Decode.maybe (Decode.field "description" Decode.string))
+                                (Decode.maybe (Decode.field "image" imageDecoder))
+
+                        "live-index" ->
+                            Decode.map3 (\title description image -> LiveIndex { title = title, description = description, image = image })
                                 (Decode.field "title" Decode.string)
                                 (Decode.maybe (Decode.field "description" Decode.string))
                                 (Decode.maybe (Decode.field "image" imageDecoder))
