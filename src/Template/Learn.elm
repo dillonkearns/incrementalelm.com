@@ -1,5 +1,6 @@
 module Template.Learn exposing (..)
 
+import Element
 import Template
 
 
@@ -11,8 +12,14 @@ type alias Msg =
     Never
 
 
+template : Template.Template_ templateMetadata ()
 template =
-    Template.noStaticData { head = Debug.todo "" }
+    Template.noStaticData
+        { head =
+            \_ -> []
+        }
         |> Template.buildNoState
-            { view = Debug.todo ""
+            { view =
+                \_ _ _ ->
+                    { title = "", body = [ Element.none ] }
             }

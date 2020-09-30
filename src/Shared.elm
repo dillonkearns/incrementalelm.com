@@ -5,6 +5,7 @@ import Browser.Dom as Dom
 import Dimensions exposing (Dimensions)
 import Ease
 import Element exposing (Element)
+import Element.Font as Font
 import ElmLogo
 import Html exposing (Html)
 import Http
@@ -112,7 +113,7 @@ type alias Model =
 map : (msg1 -> msg2) -> PageView msg1 -> PageView msg2
 map fn doc =
     { title = doc.title
-    , body = Element.map fn doc.body
+    , body = doc.body |> List.map (Element.map fn)
     }
 
 
@@ -122,7 +123,9 @@ type alias RenderedBody =
 
 
 type alias PageView msg =
-    { title : String, body : Element msg }
+    { title : String
+    , body : List (Element msg)
+    }
 
 
 
@@ -183,49 +186,6 @@ view :
     -> PageView msg
     -> { body : Html msg, title : String }
 view allMetadata page model toMsg viewForPage =
-    --        --(\events ->
-    --        --    {
-    --                \model viewForPage ->
-    --                    let
-    --                        { title, body } =
-    --                            pageOrPostView allMetadata model page viewForPage
-    --                    in
-    --                    { title = title
-    --                    , body =
-    --                        (if model.showMenu then
-    --                            Element.column
-    --                                [ Element.height Element.fill
-    --                                , Element.alignTop
-    --                                , Element.width Element.fill
-    --                                ]
-    --                                [ View.Navbar.view model animationView StartAnimation
-    --                                , View.Navbar.modalMenuView model.menuAnimation
-    --                                ]
-    --
-    --                         else
-    --                            Element.column
-    --                                --[ Element.width (Element.fill |> Element.maximum 600)
-    --                                [ Element.width Element.fill
-    --                                ]
-    --                                [ body
-    --                                , eventsView model.now model.isOnAir events
-    --                                ]
-    --                        )
-    --                            |> Element.layout
-    --                                [ Element.width Element.fill
-    --                                ]
-    --                    }
-    --
-    --        --)
-    --        --(Request.staticGraphqlRequest Request.Events.selection)
-    --
-    --else
-    --        --{
-    --let
-    --    { title, body } =
-    --        --pageOrPostView allMetadata model page viewForPage
-    --        viewForPage
-    --in
     { title = viewForPage.title
     , body =
         (if model.showMenu then
@@ -239,11 +199,23 @@ view allMetadata page model toMsg viewForPage =
                 ]
 
          else
-            viewForPage.body
-        )
-            |> Element.layout
-                [ Element.width Element.fill
+            Element.column [ Element.width Element.fill ]
+                [ View.Navbar.view model animationView (toMsg StartAnimation)
+                , viewForPage.body
+                    |> Element.textColumn
+                        [ Element.height Element.fill
+                        , Element.padding 30
+                        , Element.spacing 30
+                        , Element.centerX
+                        , if Dimensions.isMobile model.dimensions then
+                            Element.width (Element.fill |> Element.maximum 600)
+
+                          else
+                            Element.width (Element.fill |> Element.maximum 700)
+                        ]
                 ]
+        )
+            |> Element.layout [ Element.width Element.fill ]
     }
 
 
