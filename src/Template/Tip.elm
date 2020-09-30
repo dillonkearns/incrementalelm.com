@@ -2,11 +2,14 @@ module Template.Tip exposing (..)
 
 import Element
 import Element.Font as Font
+import Head
+import Head.Seo
 import Pages
 import Pages.PagePath
 import Palette
 import Shared
-import Template
+import Site
+import Template exposing (StaticPayload)
 import TemplateType
 import Widget.Signup
 
@@ -50,3 +53,29 @@ view allMetadata static viewForPage =
         ]
             |> List.concat
     }
+
+
+head :
+    StaticPayload TemplateType.TipMetadata ()
+    -> List (Head.Tag Pages.PathKey)
+head { metadata } =
+    Head.Seo.summaryLarge
+        { canonicalUrlOverride = Nothing
+        , siteName = Site.name
+        , image =
+            { url = Pages.images.articleCover.lofotenHike
+            , alt = metadata.description
+            , dimensions = Nothing
+            , mimeType = Nothing
+            }
+        , description = metadata.description
+        , title = metadata.title
+        , locale = Nothing
+        }
+        |> Head.Seo.article
+            { tags = []
+            , section = Nothing
+            , publishedTime = Nothing
+            , modifiedTime = Nothing
+            , expirationTime = Nothing
+            }
