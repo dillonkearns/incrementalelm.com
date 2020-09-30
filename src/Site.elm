@@ -18,7 +18,7 @@ manifest =
     , categories = [ Pages.Manifest.Category.education ]
     , displayMode = Manifest.MinimalUi
     , orientation = Manifest.Portrait
-    , description = siteTagline
+    , description = tagline
     , iarcRatingId = Nothing
     , name = "Incremental Elm Consulting"
     , themeColor = Just Color.white
@@ -28,7 +28,7 @@ manifest =
     }
 
 
-siteTagline =
+tagline =
     "Incremental Elm Consulting"
 
 
