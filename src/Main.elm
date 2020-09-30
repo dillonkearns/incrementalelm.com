@@ -50,23 +50,14 @@ import Widget.Signup
 
 main =
     TemplateDemultiplexer.mainTemplate
-        { --init = init
-          --, view = view
-          --, update = update
-          subscriptions = Sub.none -- \_ _ -> subscriptions
-        , documents =
+        { documents =
             [ { extension = "md"
               , metadata = TemplateType.decoder
               , body = MarkdownRenderer.view
               }
             ]
         , site = Site.config
-
-        --, manifest = manifest
-        --, canonicalSiteUrl = Site.canonicalUrl
         , onPageChange = Just (\_ -> OnPageChange)
-
-        --, internals = Pages.internals
         }
         |> Pages.Platform.withFileGenerator
             (\_ ->
@@ -323,20 +314,6 @@ interpolation =
         { duration = second * 1
         , ease = Ease.inOutCubic
         }
-
-
-subscriptions : Model -> Sub Msg
-subscriptions model =
-    Sub.batch
-        [ Animation.subscription Animate
-            (model.styles
-                ++ View.MenuBar.animationStates model.menuBarAnimation
-                ++ [ model.menuAnimation ]
-            )
-        , Browser.Events.onResize WindowResized
-
-        --, Time.every (oneSecond * 60) GotCurrentTime
-        ]
 
 
 oneSecond : Float

@@ -2,6 +2,7 @@ module Shared exposing (..)
 
 import Animation
 import Browser.Dom as Dom
+import Browser.Events
 import Dimensions exposing (Dimensions)
 import Ease
 import Element exposing (Element)
@@ -15,6 +16,7 @@ import Pages.StaticHttp as StaticHttp
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
 import Task
+import TemplateType exposing (TemplateType)
 import Time
 import TwitchButton
 import View.MenuBar
@@ -297,6 +299,20 @@ update msg model =
             case sharedMsg of
                 NoOp ->
                     ( model, Cmd.none )
+
+
+subscriptions : TemplateType -> PagePath Pages.PathKey -> Model -> Sub Msg
+subscriptions templateType path model =
+    Sub.batch
+        [ Animation.subscription Animate
+            (model.styles
+                ++ View.MenuBar.animationStates model.menuBarAnimation
+                ++ [ model.menuAnimation ]
+            )
+        , Browser.Events.onResize WindowResized
+
+        --, Time.every (oneSecond * 60) GotCurrentTime
+        ]
 
 
 interpolation =
