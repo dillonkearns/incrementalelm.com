@@ -30,11 +30,11 @@ template =
 
 view :
     List ( Pages.PagePath.PagePath Pages.PathKey, TemplateType.TemplateType )
-    -> Template.StaticPayload templateMetadata templateStaticData
+    -> Template.StaticPayload TemplateType.PageMetadata templateStaticData
     -> Shared.RenderedBody
     -> Shared.PageView Never
 view allMetadata static viewForPage =
-    { title = ""
+    { title = static.metadata.title
     , body =
         if static.path == Pages.pages.articles.index then
             [ Index.view allMetadata ]
