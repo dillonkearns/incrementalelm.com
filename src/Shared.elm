@@ -30,16 +30,6 @@ staticData siteMetadata =
     StaticHttp.succeed ()
 
 
-
---init : a -> ( Model, Cmd Msg )
---init maybePagePath =
---    ( { showMobileMenu = False
---      , counter = 0
---      }
---    , Cmd.none
---    )
-
-
 init : a -> ( Model, Cmd Msg )
 init initialPage =
     ( { styles = ElmLogo.polygons |> List.map Animation.style
@@ -118,7 +108,6 @@ map fn doc =
 
 
 type alias RenderedBody =
-    --( MarkdownRenderer.TableOfContents, List (Element Never) )
     List (Element Never)
 
 
@@ -128,54 +117,8 @@ type alias PageView msg =
     }
 
 
-
---type alias PageView msg =
---    List (Element msg)
-
-
 type alias StaticData =
     ()
-
-
-
---view :
---    StaticData
---    -> { a | path : PagePath Pages.PathKey }
---    -> Model
---    -> (Msg -> msg)
---    -> PageView msg
---    -> { body : Html msg, title : String }
---view stars page model toMsg pageView =
---    { body =
---        (if model.showMobileMenu then
---            Element.column
---                [ Element.width Element.fill
---                , Element.padding 20
---                ]
---                [ Element.row [ Element.width Element.fill, Element.spaceEvenly ]
---                    [ logoLinkMobile |> Element.map toMsg
---                    , FontAwesome.styledIcon "fas fa-bars" [ Element.Events.onClick ToggleMobileMenu ]
---                        |> Element.map toMsg
---                    ]
---                , Element.column [ Element.centerX, Element.spacing 20 ]
---                    (navbarLinks stars page.path)
---                ]
---
---         else
---            Element.column [ Element.width Element.fill ]
---                [ header stars page.path |> Element.map toMsg
---                , incrementView model |> Element.map toMsg
---                , pageView.body
---                ]
---        )
---            |> Element.layout
---                [ Element.width Element.fill
---                , Font.size 20
---                , Font.family [ Font.typeface "Roboto" ]
---                , Font.color (Element.rgba255 0 0 0 0.8)
---                ]
---    , title = pageView.title
---    }
 
 
 view :
