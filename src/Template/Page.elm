@@ -2,13 +2,16 @@ module Template.Page exposing (..)
 
 import Element
 import GlossaryIndex
+import Head
+import Head.Seo
 import Index
 import LearnIndex
 import Pages
 import Pages.PagePath
 import Shared
-import Template
-import TemplateType
+import Site
+import Template exposing (StaticPayload)
+import TemplateType exposing (TemplateType)
 
 
 type alias Model =
@@ -19,14 +22,10 @@ type alias Msg =
     Never
 
 
-template : Template.Template_ templateMetadata ()
+template : Template.Template_ TemplateType.PageMetadata ()
 template =
-    Template.noStaticData
-        { head =
-            \_ -> []
-        }
-        |> Template.buildNoState
-            { view = view }
+    Template.noStaticData { head = head }
+        |> Template.buildNoState { view = view }
 
 
 view :
@@ -51,3 +50,23 @@ view allMetadata static viewForPage =
         else
             viewForPage
     }
+
+
+head :
+    StaticPayload TemplateType.PageMetadata ()
+    -> List (Head.Tag Pages.PathKey)
+head { metadata } =
+    Head.Seo.summaryLarge
+        { canonicalUrlOverride = Nothing
+        , siteName = Site.name
+        , image =
+            { url = metadata.image |> Maybe.withDefault Pages.images.icon
+            , alt = metadata.title
+            , dimensions = Nothing
+            , mimeType = Nothing
+            }
+        , description = metadata.description |> Maybe.withDefault metadata.title
+        , title = metadata.title
+        , locale = Nothing
+        }
+        |> Head.Seo.website

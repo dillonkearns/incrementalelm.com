@@ -35,3 +35,8 @@ siteTagline =
 canonicalUrl : String
 canonicalUrl =
     "https://incrementalelm.com"
+
+
+name : String
+name =
+    "Incremental Elm Consulting"

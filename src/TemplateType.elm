@@ -8,11 +8,15 @@ import Pages.ImagePath
 
 
 type TemplateType
-    = Page { title : String, description : Maybe String, image : Maybe (Pages.ImagePath.ImagePath Pages.PathKey) }
+    = Page PageMetadata
     | Article ArticleMetadata
     | Learn LearnMetadata
     | Glossary GlossaryMetadata
     | Tip TipMetadata
+
+
+type alias PageMetadata =
+    { title : String, description : Maybe String, image : Maybe (Pages.ImagePath.ImagePath Pages.PathKey) }
 
 
 type alias LearnMetadata =
