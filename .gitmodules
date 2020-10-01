@@ -1,0 +1,3 @@
+[submodule "elm-pages"]
+	path = elm-pages
+	url = git@github.com:dillonkearns/elm-pages.git
