@@ -15,6 +15,7 @@ import Markdown.Html
 import Markdown.Parser
 import Markdown.Renderer
 import Palette
+import Regex
 import Style
 import Style.Helpers
 import View.Ellie
@@ -71,6 +72,7 @@ view : String -> Result String (List (Element msg))
 view markdown =
     case
         markdown
+            |> replaceWikiQuotes
             |> Markdown.Parser.parse
     of
         Ok okAst ->
@@ -83,6 +85,25 @@ view markdown =
 
         Err error ->
             Err (error |> List.map Markdown.Parser.deadEndToString |> String.join "\n")
+
+
+replaceWikiQuotes : String -> String
+replaceWikiQuotes markdownString =
+    let
+        regex =
+            Regex.fromString "\\[\\[(.*)\\]\\]"
+                |> Maybe.withDefault Regex.never
+    in
+    Regex.replace regex
+        (\match ->
+            case match.submatches of
+                [ Just subMatch ] ->
+                    "[" ++ subMatch ++ "]"
+
+                _ ->
+                    ""
+        )
+        markdownString
 
 
 viewWithToc : String -> Result String ( TableOfContents, List (Element msg) )
