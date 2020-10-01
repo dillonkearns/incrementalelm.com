@@ -140,7 +140,7 @@ templateSubscriptions metadata path model =
             Sub.none
 
 
-mainTemplate { documents, subscriptions, site } =
+mainTemplate { documents, site } =
     Pages.Platform.init
         { init = init Nothing
         , view = view
@@ -148,7 +148,7 @@ mainTemplate { documents, subscriptions, site } =
         , subscriptions =
             \metadata path model ->
                 Sub.batch
-                    [ subscriptions
+                    [ Shared.subscriptions metadata path model.global |> Sub.map MsgGlobal
                     , templateSubscriptions metadata path model
                     ]
         , documents = documents
