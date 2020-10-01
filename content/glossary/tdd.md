@@ -6,8 +6,6 @@ description: The red, green, refactor cycle. You start with a failing test that 
 
 This is a key technique for emergent design. TDD makes writing code much more manageable because you don't have to solve every problem at once. You just have to handle a single case.
 
-You can learn more about it in [the Elm Radio episode about testing](https://elm-radio.com/episode/elm-test).
-
 ## Red Green Refactor
 
 ### Red
@@ -28,3 +26,9 @@ You can learn more about it in [the Elm Radio episode about testing](https://elm
 - Only refactor when your tests are Green.
 - Do Atomic Refactoring, using tiny steps, ideally with an automated tool like your IDE refactorings.
 - **"Make the change easy, then make the easy change"** - Often it's helpful to do a Prepreatory Refactoring. Getting a new test case to pass would be much easier if the code had this structure - refactor the code structure (Refactor), then make the easy change (Red and then Green).
+
+## Resources
+
+- This [Elm Radio episode about testing](https://elm-radio.com/episode/elm-test) goes into Red, Green, Refactor, as well as the specifics of testing in Elm.
+- Kent Beck, who created TDD, has a great book on the subject [Test Driven Development: By Example](https://www.amazon.com/Test-Driven-Development-Kent-Beck/dp/0321146530)
+- Here is a nice summary of **Test-Driven Development: By Example** <https://stanislaw.github.io/2016/01/25/notes-on-test-driven-development-by-example-by-kent-beck.html>
