@@ -3,13 +3,13 @@ module GlossaryIndex exposing (view)
 import Element exposing (Element)
 import Element.Border
 import Element.Font
-import Metadata exposing (Metadata)
 import Pages
 import Pages.PagePath as PagePath exposing (PagePath)
+import TemplateType exposing (TemplateType)
 
 
 view :
-    List ( PagePath Pages.PathKey, Metadata msg )
+    List ( PagePath Pages.PathKey, TemplateType )
     -> Element msg
 view posts =
     Element.column [ Element.spacing 20 ]
@@ -17,7 +17,7 @@ view posts =
             |> List.filterMap
                 (\( path, metadata ) ->
                     case metadata of
-                        Metadata.Glossary meta ->
+                        TemplateType.Glossary meta ->
                             Just ( path, meta )
 
                         _ ->
@@ -28,7 +28,7 @@ view posts =
 
 
 postSummary :
-    ( PagePath Pages.PathKey, Metadata.GlossaryMetadata )
+    ( PagePath Pages.PathKey, TemplateType.GlossaryMetadata )
     -> Element msg
 postSummary ( postPath, post ) =
     learnIndex post
@@ -53,7 +53,7 @@ title text =
             ]
 
 
-learnIndex : Metadata.GlossaryMetadata -> Element msg
+learnIndex : TemplateType.GlossaryMetadata -> Element msg
 learnIndex metadata =
     Element.el
         [ Element.centerX
@@ -81,7 +81,7 @@ readMoreLink =
             ]
 
 
-postPreview : Metadata.GlossaryMetadata -> Element msg
+postPreview : TemplateType.GlossaryMetadata -> Element msg
 postPreview post =
     Element.textColumn
         [ Element.centerX

@@ -13,7 +13,6 @@ import Index
 import LearnIndex
 import Mark
 import Mark.Error
-import Metadata exposing (Metadata)
 import Pages
 import Pages.Platform exposing (Page)
 import Style

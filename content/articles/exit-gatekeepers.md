@@ -3,7 +3,7 @@
   "type": "article",
   "title": "Using elm types to prevent logging social security #'s",
   "src": "article-cover/exit.jpg",
-  "description": "One of the most successful techniques I've seen for making sure you don't break elm code the next time you touch it is a technique I call an *Exit Gatekeeper*.",
+  "description": "One of the most successful techniques I've seen for making sure you don't break elm code the next time you touch it is a technique I call an Exit Gatekeeper.",
 }
 ---
 

@@ -6,7 +6,7 @@
     "start": "npm run elm-graphql && elm-pages develop --port 1234",
     "serve": "npm run build && http-server ./dist -a localhost -p 3000 --gzip -c31557600",
     "elm-graphql": "elm-graphql https://oqagd84p.api.sanity.io/v1/graphql/production/default --output elm-graphql-gen/ --base SanityApi --scalar-codecs Scalar",
-    "build": "npm run elm-graphql && rm -rf dist && elm-pages build",
+    "build": "npm run elm-graphql && rm -rf dist && (cd elm-pages && npm run build) && elm-pages build",
     "test": "elm-test",
     "autotest": "elm-test --watch"
   },
@@ -24,7 +24,7 @@
     "codemirror": "^5.48.2",
     "elm": "latest-0.19.1",
     "elm-format": "^0.8.3",
-    "elm-pages": "^1.4.3",
+    "elm-pages": "file:elm-pages",
     "elm-test": "^0.19.1-revision4",
     "http-server": "^0.12.3",
     "node-elm-compiler": "^5.0.3",

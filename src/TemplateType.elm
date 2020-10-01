@@ -1,24 +1,30 @@
-module Metadata exposing (ArticleMetadata, GlossaryMetadata, LearnMetadata, Metadata(..), TipMetadata, decoder)
+module TemplateType exposing (..)
 
 import Date exposing (Date)
-import Dict exposing (Dict)
-import Element exposing (Element)
-import Element.Font as Font
-import Iso8601
 import Json.Decode as Decode exposing (Decoder)
 import List.Extra
 import Pages
 import Pages.ImagePath
-import TemplateType exposing (TemplateType)
-import Time
 
 
-type Metadata msg
-    = Page { title : String, description : Maybe String, image : Maybe (Pages.ImagePath.ImagePath Pages.PathKey) }
-    | Article (ArticleMetadata msg)
+type TemplateType
+    = Page PageMetadata
+    | LiveIndex LiveIndexMetadata
+    | Article ArticleMetadata
     | Learn LearnMetadata
     | Glossary GlossaryMetadata
     | Tip TipMetadata
+
+
+type alias PageMetadata =
+    { title : String
+    , description : Maybe String
+    , image : Maybe (Pages.ImagePath.ImagePath Pages.PathKey)
+    }
+
+
+type alias LiveIndexMetadata =
+    { title : String, description : Maybe String, image : Maybe (Pages.ImagePath.ImagePath Pages.PathKey) }
 
 
 type alias LearnMetadata =
@@ -36,19 +42,11 @@ type alias TipMetadata =
     }
 
 
-type alias ArticleMetadata msg =
-    { title : { styled : List (Element msg), raw : String }
-    , description : { styled : List (Element msg), raw : String }
+type alias ArticleMetadata =
+    { title : String
+    , description : String
     , coverImage : Pages.ImagePath.ImagePath Pages.PathKey
     }
-
-
-articleDecoder : Decoder (ArticleMetadata msg)
-articleDecoder =
-    Decode.map3 ArticleMetadata
-        (Decode.field "title" markdownString)
-        (Decode.field "description" markdownString)
-        (Decode.field "src" imageDecoder)
 
 
 imageDecoder : Decoder (Pages.ImagePath.ImagePath Pages.PathKey)
@@ -69,26 +67,18 @@ findImage imagePath =
                     ++ (List.map Pages.ImagePath.toString Pages.allImages |> String.join "\n")
 
 
+articleDecoder : Decoder ArticleMetadata
+articleDecoder =
+    Decode.map3 ArticleMetadata
+        (Decode.field "title" Decode.string)
+        (Decode.field "description" Decode.string)
+        (Decode.field "src" imageDecoder)
+
+
 learnDecoder : Decoder LearnMetadata
 learnDecoder =
     Decode.map LearnMetadata
         (Decode.field "title" Decode.string)
-
-
-markdownString : Decoder { styled : List (Element msg), raw : String }
-markdownString =
-    Decode.string
-        |> Decode.andThen
-            (\string ->
-                Decode.succeed
-                    { styled = [ Element.text string ]
-                    , raw = string
-                    }
-            )
-
-
-
---(Decode.field "title" Decode.string) |> Decode.map (\title -> Page { title = title })
 
 
 decoder : Decoder TemplateType
@@ -106,22 +96,28 @@ decoder =
                            "description": "In this post, we're going to be looking up an Article in an Elm Dict, using the tiniest steps possible."
                         -}
                         "page" ->
-                            Decode.map3 (\title description image -> TemplateType.Page { title = title, description = description, image = image })
+                            Decode.map3 (\title description image -> Page { title = title, description = description, image = image })
+                                (Decode.field "title" Decode.string)
+                                (Decode.maybe (Decode.field "description" Decode.string))
+                                (Decode.maybe (Decode.field "image" imageDecoder))
+
+                        "live-index" ->
+                            Decode.map3 (\title description image -> LiveIndex { title = title, description = description, image = image })
                                 (Decode.field "title" Decode.string)
                                 (Decode.maybe (Decode.field "description" Decode.string))
                                 (Decode.maybe (Decode.field "image" imageDecoder))
 
                         "glossary" ->
-                            Decode.map2 TemplateType.GlossaryMetadata
+                            Decode.map2 GlossaryMetadata
                                 (Decode.field "title" Decode.string)
                                 (Decode.field "description" Decode.string)
-                                |> Decode.map TemplateType.Glossary
+                                |> Decode.map Glossary
 
                         "article" ->
-                            Decode.map TemplateType.Article articleDecoder
+                            Decode.map Article articleDecoder
 
                         "tip" ->
-                            Decode.map3 TemplateType.TipMetadata
+                            Decode.map3 TipMetadata
                                 (Decode.field "title" Decode.string)
                                 (Decode.field "description" Decode.string)
                                 (Decode.field "publishAt"
@@ -145,4 +141,9 @@ decoder =
                         _ ->
                             Decode.fail "Unhandled page type"
                 )
+        , Decode.map3 PageMetadata
+            (Decode.field "title" Decode.string)
+            (Decode.maybe (Decode.field "description" Decode.string))
+            (Decode.maybe (Decode.field "image" imageDecoder))
+            |> Decode.map Page
         ]
