@@ -17,7 +17,10 @@ type TemplateType
 
 
 type alias PageMetadata =
-    { title : String, description : Maybe String, image : Maybe (Pages.ImagePath.ImagePath Pages.PathKey) }
+    { title : String
+    , description : Maybe String
+    , image : Maybe (Pages.ImagePath.ImagePath Pages.PathKey)
+    }
 
 
 type alias LiveIndexMetadata =
@@ -138,4 +141,9 @@ decoder =
                         _ ->
                             Decode.fail "Unhandled page type"
                 )
+        , Decode.map3 PageMetadata
+            (Decode.field "title" Decode.string)
+            (Decode.maybe (Decode.field "description" Decode.string))
+            (Decode.maybe (Decode.field "image" imageDecoder))
+            |> Decode.map Page
         ]
