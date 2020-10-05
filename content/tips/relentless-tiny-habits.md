@@ -16,7 +16,7 @@ Habits are key. But in order to build these habits, you need to double down on r
 
 If your build server is very slow, then you won't build a habit of refactoring as soon as you see the opportunity. If you don't have unit tests, then you won't build the habit of changing your underlying data types to better reflect your domain. If setting up a unit test is cumbersome then you won't write tests.
 
-Anything that increases confidence or otherwise reduces friction to making changes is a [keystone habit](https://jamesclear.com/keystone-habits). That is, getting in the habit of improving your feedback loops and safety nets will enable you and your team to build other good habits faster. Keystone habits are a key ingredient to Relentless, Tiny Habits.
+Anything that increases confidence or otherwise reduces friction to making changes is a [[keystone habit]]. That is, getting in the habit of improving your feedback loops and safety nets will enable you and your team to build other good habits faster. Keystone habits are a key ingredient to Relentless, Tiny Habits.
 
 ## The Core Habits
 
@@ -42,7 +42,7 @@ Once you have a cohesive grouping, move towards finding a better name.
 
 ### Tiny Steps That Maintain a Working State
 
-As you move in the right direction, you want to _build-in and ensure quality at every step_, rather than adding or verifying quality after the fact. That means having feedback loops, like tests and foolproof automation. You can learn more about some of these processes for building-in quality and reducing friction in my [Continuous Delivery glossary](/glossary/continuous-delivery).
+As you move in the right direction, you want to _build-in and ensure quality at every step_, rather than adding or verifying quality after the fact. That means having feedback loops, like tests and foolproof automation. You can learn more about some of these processes for building-in quality and reducing friction in [[Continuous Delivery]].
 Make smaller steps, and keep things in a working state at each point along the way.
 
 - Refactor with several small steps that keep your tests (and compiler) green
