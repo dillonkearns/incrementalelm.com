@@ -5,17 +5,17 @@ description: Automation isn't just about efficiency, it's also about, quality, s
 publishAt: "2020-10-12"
 ---
 
-Last week I talked about core ingredient to manageable code: [Relentless, Tiny Habits](/tips/relentless-tiny-habits).
+Recently I wrote about a core ingredient to manageable code: [Relentless, Tiny Habits](/tips/relentless-tiny-habits).
 
 Having brilliant code design ideas doesn't necessarily help you manage your codebase better. But building in relentless, tiny habits is likely to bring out some brilliant designs.
 
 I think we can generalize this one essential technique a step further. Habits are indeed very powerful, and greater than the sum of their parts. But a habit is just a special case of an automation.
 
-Instead of thinking of myself as a programmer, I like to frame my job as an **automator**. Programming is a type of automation. I think you can argue that a habit is a kind of automation as well. It's just that we're automating by training the wiring in our brain instead of automating through code or scripts.
+Instead of thinking of myself as a programmer, I like to frame my job as an **automator**. Programming is a type of automation. I think you can argue that a habit is a kind of automation as well. It's just that we're automating by training the wiring in our brain instead of automating through code or scripts. Thinking of our role as an automator rather than a programmer can deeply change the way you approach your work.
 
 ## Who Cares If It's "Programmer" or "Automator"?
 
-It's a subtle distinction. I think the power comes from having clarity on what tasks to prioritize, and how to approach your work. Is manually running a set of deployment steps a good use of time for a Programmer? Perhaps. But it's pretty clear that you're deviating from your job description if you're manually running steps as an "Automator."
+It's a subtle distinction. I think the power comes from having clarity on what tasks to prioritize, and how to approach your work. Is manually running a set of deployment steps a good use of time for a Programmer? Perhaps. But it's pretty clear that there is some important work to prioritize improving that manual process when you see yourself as an "Automator."
 
 Embrace that role, and use that framing of the role as a cue to step back and make a small investment to automate a repetitive task.
 
@@ -33,13 +33,15 @@ Automation opportunities can take many forms.
 
 ### Signs of Automation Opportunities
 
-Some things to look out for are
+There are some broad patterns to look out for.
 
 - Repetitive steps
 - Multiple sources of truth
 - Context shifts
 - Quality issues (frequent bugs from a process or area of code)
 - Steps to add quality after (rather than built-in quality)
+
+Stepping back a level, it's important to build the habit of recognizing these signs and taking a moment to identify and address them. There are many ways to do this, like retrospectives or keeping a running list of things that are slowing you down.
 
 ## Familiar Elm automation tools
 
@@ -50,13 +52,13 @@ Some things to look out for are
 - elm-graphql (and other codegen)
 - elm-format
 
-These examples may seem obvious because we're used to them. But those tools weren't necessarily obvious before somebody saw that automation opportunity and took action. Could you find similar opportunities in your own codebase? What is slowing you down most in terms of context shifting, repetitive tasks, or quality issues?
+These examples may seem obvious because we're used to them. But those tools weren't necessarily obvious before somebody saw that automation opportunity and took action. Could you find similar opportunities in your own codebase? And what low-hanging fruit could you automate right now? Any time you can automate quality and correctness instead of verifying it manually, it's a huge win.
 
 ## Continuous Improvement
 
 Fully baked automation tools are great. But code is a lot easier to iterate on than hardware. So the best automation you can invest in is automating your habit of making small improvements as you see them!
 
-If you notice repeatedly doing an action in your editor, you could take a moment to look up the keyboard shortcut. Or move a set of manual commands into a repeatable script.
+If you notice repeatedly doing an action in your editor, you could take a moment to look up the keyboard shortcut. Or move a set of manual commands into a repeatable script. You can even think of Making Impossible States Impossible as a type of automation, providing guardrails and ensuring that future changes don't run into the same issues. In Toyota culture, this concept of automating quality is called [poka yoke](https://kanbanize.com/lean-management/improvement/what-is-poka-yoke), or foolproofing.
 
 Importantly, these small habits and automations are greater than the sum of their parts. If you learn a keyboard shortcut for the rename function refactoring, you're not only saving the time you would have spent renaming manually or accessing the refactoring with the mouse. You are reducing the barrier to that action, which leads to better names in your codebase over time.
 
