@@ -20,7 +20,7 @@ type alias Msg =
     Never
 
 
-template : Template.Template_ TemplateType.LearnMetadata ()
+template : Template.Template TemplateType.LearnMetadata ()
 template =
     Template.noStaticData
         { head = \_ -> [] -- TODO

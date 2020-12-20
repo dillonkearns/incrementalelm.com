@@ -12,7 +12,7 @@ import Request.Events exposing (LiveStream)
 import Rss
 import RssPlugin
 import Site
-import TemplateDemultiplexer
+import TemplateModulesBeta
 import TemplateType exposing (TemplateType)
 import Time
 import UpcomingEvent
@@ -23,7 +23,7 @@ import UpcomingEvent
 
 
 main =
-    TemplateDemultiplexer.mainTemplate
+    TemplateModulesBeta.mainTemplate
         { documents =
             [ { extension = "md"
               , metadata = TemplateType.decoder
