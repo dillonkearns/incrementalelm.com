@@ -20,7 +20,7 @@ type alias Msg =
     Never
 
 
-template : Template.Template_ TemplateType.GlossaryMetadata ()
+template : Template.Template TemplateType.GlossaryMetadata ()
 template =
     Template.noStaticData
         { head =
