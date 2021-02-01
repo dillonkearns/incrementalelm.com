@@ -8,7 +8,8 @@
     "elm-graphql": "elm-graphql https://oqagd84p.api.sanity.io/v1/graphql/production/default --output elm-graphql-gen/ --base SanityApi --scalar-codecs Scalar",
     "build": "npm run elm-graphql && rm -rf dist && (cd elm-pages && npm run build) && elm-pages build",
     "test": "elm-test",
-    "autotest": "elm-test --watch"
+    "autotest": "elm-test --watch",
+    "postinstall": "elm-tooling install"
   },
   "author": "Dillon Kearns",
   "license": "BSD-3",
@@ -22,10 +23,9 @@
     "@types/glob": "^7.1.1",
     "@types/node": "^12.6.8",
     "codemirror": "^5.48.2",
-    "elm": "latest-0.19.1",
-    "elm-format": "^0.8.4",
     "elm-pages": "file:elm-pages",
     "elm-test": "^0.19.1-revision4",
+    "elm-tooling": "^1.1.0",
     "http-server": "^0.12.3",
     "node-elm-compiler": "^5.0.3",
     "prettier": "^2.1.2"
