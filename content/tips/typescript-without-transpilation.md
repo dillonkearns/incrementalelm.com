@@ -7,7 +7,7 @@ publishAt: "2021-02-01"
 
 The first rule of Elm is that you want to write *everything* in Elm. But sometimes we need to reach out to JavaScript, whether we're using ports, Custom Elements, or serverless functions. Sometimes JavaScript is just the right tool for the job.
 
-If you're going to use JavaScript, then there's no reason to go for TypeScript and get the improved safety and tooling. Except that it adds an extra transpilation step. Working in Elm, that often feels like an unnecessary burden. As you may have guessed already, there is a way to get the best of both worlds!
+If you're going to use JavaScript, then you may as well get the improved safety and tooling that TypeScript provides. Except that it adds an extra transpilation step. Working in Elm, that often feels like an unnecessary burden. As you may have guessed already, there is a way to get the best of both worlds!
 
 ## Running TypeScript on your .js files
 
