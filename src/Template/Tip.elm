@@ -5,6 +5,7 @@ import Element
 import Element.Font as Font
 import Head
 import Head.Seo
+import Html.Attributes as Attr
 import Pages
 import Pages.ImagePath as ImagePath
 import Pages.PagePath as PagePath exposing (PagePath)
@@ -12,6 +13,7 @@ import Palette
 import Shared
 import Site
 import StructuredDataHelper
+import Style
 import Template exposing (StaticPayload)
 import TemplateType
 import Time
@@ -42,11 +44,43 @@ view allMetadata static viewForPage =
     , body =
         [ [ Element.paragraph
                 [ Font.size 36
-                , Font.center
-                , Font.family [ Font.typeface "Raleway" ]
+                , Font.alignLeft
+                , Font.family [ Font.typeface "Open Sans" ]
                 , Font.bold
                 ]
                 [ Element.text static.metadata.title ]
+          ]
+        , [ Element.row []
+                [ Element.row
+                    [ Element.htmlAttribute (Attr.class "avatar")
+                    , Element.paddingEach
+                        { bottom = 0
+                        , left = 0
+                        , right = 15
+                        , top = 0
+                        }
+                    ]
+                    [ Element.image
+                        [ Element.width (Element.px 80)
+                        , Element.height (Element.px 80)
+                        ]
+                        { src = "https://res.cloudinary.com/dillonkearns/image/upload/c_pad,w_180,q_auto,f_auto/v1602899672/elm-radio/dillon-profile_n2lqst.jpg"
+                        , description = ""
+                        }
+                    ]
+                , Element.paragraph
+                    [ Font.size 20
+                    , Font.alignLeft
+                    , Font.family [ Font.typeface "Open Sans" ]
+                    ]
+                    [ Element.row [ Element.htmlAttribute (Attr.class "avatar") ]
+                        [ Element.text "Dillon Kearns" |> Element.el [ Font.bold ]
+                        ]
+                    , " · "
+                        ++ (static.metadata.publishedAt |> Date.format "MMMM d, y")
+                        |> Element.text
+                    ]
+                ]
           ]
         , [ Element.paragraph [ Element.padding 20 ] [ Palette.textQuote static.metadata.description ] ]
         , viewForPage

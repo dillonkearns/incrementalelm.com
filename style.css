@@ -234,3 +234,7 @@ background-color: rgba(20, 188, 252, 1);
     /* box-shadow: 0 0 10px 10px #aef4af; */
   }
 }
+
+.avatar img {
+  border-radius: 50%;
+}
