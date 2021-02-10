@@ -5,6 +5,7 @@ import Json.Decode as Decode exposing (Decoder)
 import List.Extra
 import Pages
 import Pages.ImagePath
+import UnsplashImage exposing (UnsplashImage)
 
 
 type TemplateType
@@ -39,6 +40,7 @@ type alias TipMetadata =
     { title : String
     , description : String
     , publishedAt : Date
+    , cover : UnsplashImage
     }
 
 
@@ -117,7 +119,7 @@ decoder =
                             Decode.map Article articleDecoder
 
                         "tip" ->
-                            Decode.map3 TipMetadata
+                            Decode.map4 TipMetadata
                                 (Decode.field "title" Decode.string)
                                 (Decode.field "description" Decode.string)
                                 (Decode.field "publishAt"
@@ -133,6 +135,7 @@ decoder =
                                             )
                                     )
                                 )
+                                (Decode.field "cover" UnsplashImage.decoder)
                                 |> Decode.map Tip
 
                         "learn" ->

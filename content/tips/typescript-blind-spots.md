@@ -3,6 +3,7 @@ type: tip
 title: TypeScript's Blind Spots
 description: It's hard to know when to trust TypeScript for Elm developers who are used to a sound type system. It helps to know where its blind spots are.
 publishAt: "2021-02-09"
+cover: photo-1511028931355-082bb4781053
 ---
 
 It would be quite dangerous to drive a car with blind spots, but not know exactly where those blind spots are. You still need to be extra careful, even with a full awareness of the blind spots. But at least you know where to put that extra care.
