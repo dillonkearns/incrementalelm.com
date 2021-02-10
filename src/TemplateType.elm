@@ -2,6 +2,7 @@ module TemplateType exposing (..)
 
 import Date exposing (Date)
 import Json.Decode as Decode exposing (Decoder)
+import Json.Decode.Extra
 import List.Extra
 import Pages
 import Pages.ImagePath
@@ -135,7 +136,9 @@ decoder =
                                             )
                                     )
                                 )
-                                (Decode.field "cover" UnsplashImage.decoder)
+                                (Json.Decode.Extra.optionalField "cover" UnsplashImage.decoder
+                                    |> Decode.map (Maybe.withDefault defaultImage)
+                                )
                                 |> Decode.map Tip
 
                         "learn" ->
@@ -150,3 +153,8 @@ decoder =
             (Decode.maybe (Decode.field "image" imageDecoder))
             |> Decode.map Page
         ]
+
+
+defaultImage : UnsplashImage
+defaultImage =
+    UnsplashImage.fromId "1587382668076-5101b7cd8eae"

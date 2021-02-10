@@ -1,4 +1,4 @@
-module UnsplashImage exposing (UnsplashImage, decoder, image, imagePath, rawUrl)
+module UnsplashImage exposing (UnsplashImage, decoder, fromId, image, imagePath, rawUrl)
 
 import Element
 import Json.Decode as Decode exposing (Decoder)
@@ -33,6 +33,11 @@ rawUrl (UnsplashImage url_) =
     url_
 
 
+fromId : String -> UnsplashImage
+fromId id =
+    UnsplashImage (url id)
+
+
 decoder : Decoder UnsplashImage
 decoder =
     Decode.string
@@ -44,7 +49,7 @@ url : String -> String
 url photoId =
     Url.Builder.crossOrigin
         "https://images.unsplash.com"
-        [ photoId ]
+        [ "photo-" ++ photoId ]
         [ string "auto" "format"
         , string "fit" "crop"
         , Url.Builder.int "w" 600
