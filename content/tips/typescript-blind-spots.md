@@ -59,7 +59,7 @@ function prettyPrint(value: unknown): string | null {
 
 You can pass any value in to `prettyPrint`, just like you would be able to if the argument was annotated as `any`. But you must check the value before using it because it is `unknown`.
 
-You can use [`@tylescript-eslint/no-explicit-any`](https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/no-explicit-any.md) to prevent explicit `any` types in your own code. You can even configure it to auto-fix `any` types in your code and change them to `unknown`.
+You can use [`@typescript-eslint/no-explicit-any`](https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/no-explicit-any.md) to prevent explicit `any` types in your own code. You can even configure it to auto-fix `any` types in your code and change them to `unknown`.
 
 ### `any` in core JavaScript APIs
 
@@ -130,7 +130,7 @@ TypeScript assumes that the index you access is there.
 
 ```typescript
 const thisWillBeNull = [1, 2, 3][100];
-thisWillBeNull * 2; // Nan
+thisWillBeNull * 2; // NaN
 ```
 
 The type of `thisWillBeNull` is `number` (it is not nullable).
@@ -139,7 +139,7 @@ The type of `thisWillBeNull` is `number` (it is not nullable).
 
 By default, TypeScript doesn't require you to exhaustively handle all cases in `switch` statements.
 
-This can be improved by using a linting rule the [`typescript-eslint` `switch-exhaustiveness-check`](https://github.com/typescript-eslint/typescript-eslint/blob/9e0f6ddef7cd29f355f398c90f1986e51c4854f7/packages/eslint-plugin/docs/rules/switch-exhaustiveness-check.md)
+This can be improved with [`typescript-eslint` `switch-exhaustiveness-check`](https://github.com/typescript-eslint/typescript-eslint/blob/9e0f6ddef7cd29f355f398c90f1986e51c4854f7/packages/eslint-plugin/docs/rules/switch-exhaustiveness-check.md).
 
 ## Non-null assertions
 
@@ -162,7 +162,7 @@ Gary Bernhardt's famous [Wat video](https://www.destroyallsoftware.com/talks/wat
 
 Any chipping away at confidence means that you have to have a skeptical eye at every turn.
 
-Let's think of it in reverse, though. Unit tests don't give us 100% certainty that our code is correct. Even Elm types don't give us 100% certainty that our types our correct. There are plenty of cases where we don't express every single constraint in the type system, and there's a point where it becomes so verbose to constrain your types that its more pragmatic to stop short of perfect types. Jeroen and I discuss this in our [Make Impossible States Elm Radio episode](https://elm-radio.com/episode/impossible-states).
+Let's think of it in reverse, though. Unit tests don't give us 100% certainty that our code is correct. Even Elm types don't give us 100% certainty that our types our correct. There are plenty of cases where we don't express every single constraint in the type system, and there's a point where it becomes so verbose to constrain your types that its more pragmatic to stop short of perfect types. Jeroen and I discuss this in our [Make Impossible States Impossible Elm Radio episode](https://elm-radio.com/episode/impossible-states).
 
 Yes, TypeScript's type system is far less robust than Elm's. But it's far _more_ robust than the type-safety you get in vanilla JavaScript! And I'll take all the added safety I can get! So any time I find myself reaching for JavaScript, I try to take advantage of TypeScript's added safety.
 
