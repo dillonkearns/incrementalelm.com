@@ -23,6 +23,54 @@ import View.MenuBar
 import View.Navbar
 
 
+type alias SharedTemplate templateDemuxMsg msg1 msg2 =
+    { init :
+        Maybe
+            { path :
+                { path : PagePath Pages.PathKey
+                , query : Maybe String
+                , fragment : Maybe String
+                }
+            , metadata : TemplateType
+            }
+        -> ( Model, Cmd Msg )
+    , update : Msg -> Model -> ( Model, Cmd Msg )
+    , view :
+        StaticData
+        ->
+            { path : PagePath Pages.PathKey
+            , frontmatter : TemplateType
+            }
+        -> Model
+        -> (Msg -> templateDemuxMsg)
+        -> PageView templateDemuxMsg
+        -> { body : Html templateDemuxMsg, title : String }
+    , map : (msg1 -> msg2) -> PageView msg1 -> PageView msg2
+    , staticData : List ( PagePath Pages.PathKey, TemplateType ) -> StaticHttp.Request StaticData
+    , subscriptions : TemplateType -> PagePath Pages.PathKey -> Model -> Sub Msg
+    , onPageChange :
+        Maybe
+            ({ path : PagePath Pages.PathKey
+             , query : Maybe String
+             , fragment : Maybe String
+             }
+             -> Msg
+            )
+    }
+
+
+template : SharedTemplate msg msg1 msg2
+template =
+    { init = init
+    , update = update
+    , view = view
+    , map = map
+    , staticData = staticData
+    , subscriptions = subscriptions
+    , onPageChange = Just (\_ -> OnPageChange)
+    }
+
+
 type SharedMsg
     = NoOp
 
