@@ -25,6 +25,7 @@ manifest =
     , startUrl = Pages.pages.index
     , shortName = Just "Incremental Elm"
     , sourceIcon = Pages.images.iconPng
+    , icons = []
     }
 
 

@@ -21,7 +21,7 @@ type alias Msg =
     Never
 
 
-template : Template.Template_ TemplateType.ArticleMetadata ()
+template : Template.Template TemplateType.ArticleMetadata ()
 template =
     Template.noStaticData { head = head }
         |> Template.buildNoState { view = view }

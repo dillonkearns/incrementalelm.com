@@ -22,7 +22,7 @@ type alias Msg =
     Never
 
 
-template : Template.Template_ TemplateType.PageMetadata ()
+template : Template.Template TemplateType.PageMetadata ()
 template =
     Template.noStaticData { head = head }
         |> Template.buildNoState { view = view }

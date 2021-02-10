@@ -28,7 +28,7 @@ type alias StaticData =
     List LiveStream
 
 
-template : Template.Template_ TemplateType.LiveIndexMetadata StaticData
+template : Template.Template TemplateType.LiveIndexMetadata StaticData
 template =
     Template.withStaticData { staticData = staticData, head = head }
         |> Template.buildNoState { view = view }

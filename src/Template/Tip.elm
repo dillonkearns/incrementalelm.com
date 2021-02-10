@@ -17,6 +17,7 @@ import Style
 import Template exposing (StaticPayload)
 import TemplateType
 import Time
+import UnsplashImage
 import Widget.Signup
 
 
@@ -28,7 +29,7 @@ type alias Msg =
     Never
 
 
-template : Template.Template_ TemplateType.TipMetadata ()
+template : Template.Template TemplateType.TipMetadata ()
 template =
     Template.noStaticData { head = head }
         |> Template.buildNoState { view = view }
@@ -82,6 +83,8 @@ view allMetadata static viewForPage =
                     ]
                 ]
           ]
+
+        --, [ UnsplashImage.image [ Element.width Element.fill ] static.metadata.cover ]
         , [ Element.paragraph [ Element.padding 20 ] [ Palette.textQuote static.metadata.description ] ]
         , viewForPage
         , [ Widget.Signup.view "Get Weekly Tips" "906002494" [] ]
@@ -102,7 +105,7 @@ head { metadata, path } =
                 , author = StructuredDataHelper.person { name = "Dillon Kearns" }
                 , publisher = StructuredDataHelper.person { name = "Dillon Kearns" }
                 , url = Site.canonicalUrl ++ "/" ++ PagePath.toString path
-                , imageUrl = Site.canonicalUrl ++ "/" ++ ImagePath.toString Pages.images.articleCover.lofotenHike
+                , imageUrl = metadata.cover |> UnsplashImage.rawUrl
                 , datePublished = Date.toIsoString metadata.publishedAt
                 , mainEntityOfPage =
                     StructuredDataHelper.softwareSourceCode
@@ -118,7 +121,7 @@ head { metadata, path } =
                 { canonicalUrlOverride = Nothing
                 , siteName = Site.name
                 , image =
-                    { url = Pages.images.articleCover.lofotenHike
+                    { url = metadata.cover |> UnsplashImage.imagePath
                     , alt = metadata.description
                     , dimensions = Nothing
                     , mimeType = Nothing
