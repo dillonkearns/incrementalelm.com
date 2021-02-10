@@ -83,7 +83,8 @@ view allMetadata static viewForPage =
                     ]
                 ]
           ]
-        , [ UnsplashImage.image [ Element.width Element.fill ] static.metadata.cover ]
+
+        --, [ UnsplashImage.image [ Element.width Element.fill ] static.metadata.cover ]
         , [ Element.paragraph [ Element.padding 20 ] [ Palette.textQuote static.metadata.description ] ]
         , viewForPage
         , [ Widget.Signup.view "Get Weekly Tips" "906002494" [] ]
