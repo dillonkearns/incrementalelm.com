@@ -1,12 +1,15 @@
 module Request.GoogleCalendar exposing (Event, googleAddToCalendarLink, request)
 
+--import Pages.StaticHttp as StaticHttp
+
+import DataSource exposing (DataSource)
+import DataSource.Http
 import Extra.Json.Decode.Exploration as Decode
 import Iso8601
 import OptimizedDecoder as Decode exposing (Decoder)
 import OptimizedDecoder.Pipeline as Pipeline
 import Pages
 import Pages.Secrets as Secrets
-import Pages.StaticHttp as StaticHttp
 import Rfc3339
 import Time
 import Time.Extra as Time
@@ -69,9 +72,9 @@ googleAddToCalendarLink event =
 -- location=https%3A%2F%2Ftwitch.tv%2Fjlengstorf&dates=20200303T183000Z%2F20200303T200000Z&ctz=America%2FLos_Angeles
 
 
-request : StaticHttp.Request (List Event)
+request : DataSource (List Event)
 request =
-    StaticHttp.get
+    DataSource.Http.get
         (Secrets.succeed
             (\key ->
                 "https://www.googleapis.com/calendar/v3/calendars/dillonkearns.com_4ksg89crjfvchds60t16dpqu98@group.calendar.google.com/events"
