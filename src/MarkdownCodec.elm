@@ -1,12 +1,40 @@
-module MarkdownCodec exposing (codec, withFrontmatter)
+module MarkdownCodec exposing (codec, noteTitle, withFrontmatter)
 
-import DataSource
+import DataSource exposing (DataSource)
 import DataSource.File as StaticFile
 import Markdown.Block as Block exposing (Block)
 import Markdown.Parser
 import Markdown.Renderer
 import OptimizedDecoder exposing (Decoder)
 import Serialize as S
+
+
+noteTitle : String -> DataSource String
+noteTitle filePath =
+    StaticFile.bodyWithoutFrontmatter filePath
+        |> DataSource.andThen
+            (\rawContent ->
+                rawContent
+                    |> Markdown.Parser.parse
+                    |> Result.mapError (\_ -> "Markdown error")
+                    |> Result.map
+                        (\blocks ->
+                            Block.foldl
+                                (\block maybeTitle ->
+                                    case block of
+                                        Block.Heading Block.H1 inlines ->
+                                            Just (Block.extractInlineText inlines)
+
+                                        _ ->
+                                            maybeTitle
+                                )
+                                Nothing
+                                blocks
+                        )
+                    |> Result.andThen (Result.fromMaybe "Expected to find an H1 heading")
+                    |> DataSource.fromResult
+            )
+        |> DataSource.distillSerializeCodec ("note-title-" ++ filePath) S.string
 
 
 withFrontmatter :

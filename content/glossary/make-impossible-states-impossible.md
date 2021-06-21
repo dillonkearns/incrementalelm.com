@@ -1,8 +1,8 @@
 ---
-title: Make Impossible States Impossible
 description: A data modeling philosophy. Start by identifying all the possible states your type can express, and then remove the ones that represent invalid states.
-type: glossary
 ---
+
+# Make Impossible States Impossible
 
 - See Richard Feldman's classic talk [Making Impossible States Impossible](https://www.youtube.com/watch?v=IcgmSRJHu_8)
 - [Elm Radio 013: Make Impossible States Impossible](https://elm-radio.com/episode/impossible-states)

@@ -1,8 +1,8 @@
 ---
-type: glossary
-title: Continuous Delivery
 description: Automated, frequent production deploys, with built-in (not bolt-on) quality.
 ---
+
+# Continuous Delivery
 
 It's not just about shipping more frequently, though. It's about reducing the friction. And building in quality (not adding or checking for it after the fact). See Lean (i.e. Toyota Production System).
 

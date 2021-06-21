@@ -1,30 +1,19 @@
-module Page.Wiki.Topic_ exposing (Data, Model, Msg, page)
+module Page.Notes.Topic_ exposing (Data, Model, Msg, page)
 
 import DataSource exposing (DataSource)
 import DataSource.Glob as Glob
-import Date exposing (Date)
 import Element exposing (Element)
-import Element.Font as Font
 import Head
 import Head.Seo as Seo
-import Html.Attributes as Attr
-import List.NonEmpty as NonEmpty
 import MarkdownCodec
 import MarkdownRenderer
 import OptimizedDecoder as Decode exposing (Decoder)
 import Page exposing (Page, PageWithState, StaticPayload)
-import Pages
 import Pages.PageUrl exposing (PageUrl)
 import Pages.Url
-import Palette
 import Path
 import Shared
-import Site
-import StructuredDataHelper
-import Time
-import UnsplashImage exposing (UnsplashImage)
 import View exposing (View)
-import Widget.Signup
 
 
 type alias Model =
@@ -60,18 +49,25 @@ routes =
 
 data : RouteParams -> DataSource Data
 data routeParams =
+    let
+        filePath =
+            "content/glossary/" ++ routeParams.topic ++ ".md"
+    in
     MarkdownCodec.withFrontmatter Data
         decoder
         MarkdownRenderer.renderer
-        ("content/glossary/"
-            ++ routeParams.topic
-            ++ ".md"
-        )
+        filePath
+        |> andMap (MarkdownCodec.noteTitle filePath)
+
+
+andMap dataSource =
+    DataSource.map2 (|>) dataSource
 
 
 type alias Data =
     { metadata : PageMetadata
     , body : List (Element Msg)
+    , title : String
     }
 
 
@@ -90,7 +86,7 @@ view :
     -> StaticPayload Data RouteParams
     -> View Msg
 view maybeUrl sharedModel static =
-    { title = static.data.metadata.title
+    { title = static.data.title
     , body =
         --else if static.path == Pages.pages.learn.index then
         --    [ LearnIndex.view allMetadata ]
@@ -121,27 +117,26 @@ head static =
         , siteName = "Incremental Elm"
         , image =
             { url = static.data.metadata.image |> Maybe.withDefault (Pages.Url.external "")
-            , alt = static.data.metadata.title
+            , alt = static.data.title
             , dimensions = Nothing
             , mimeType = Nothing
             }
-        , description = static.data.metadata.description |> Maybe.withDefault static.data.metadata.title
-        , title = static.data.metadata.title
+        , description = static.data.metadata.description |> Maybe.withDefault static.data.title
+        , title = static.data.title
         , locale = Nothing
         }
         |> Seo.website
 
 
 type alias PageMetadata =
-    { title : String
-    , description : Maybe String
+    { description : Maybe String
     , image : Maybe Pages.Url.Url
     }
 
 
+decoder : Decoder PageMetadata
 decoder =
-    Decode.map3 PageMetadata
-        (Decode.field "title" Decode.string)
+    Decode.map2 PageMetadata
         (Decode.maybe (Decode.field "description" Decode.string))
         (Decode.maybe (Decode.field "image" imageDecoder))
 
