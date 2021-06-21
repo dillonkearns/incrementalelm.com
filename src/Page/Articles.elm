@@ -13,6 +13,7 @@ import Page exposing (Page, PageWithState, StaticPayload)
 import Pages.PageUrl exposing (PageUrl)
 import Pages.Url
 import Path exposing (Path)
+import Route exposing (Route)
 import Shared
 import View exposing (View)
 
@@ -64,7 +65,7 @@ head static =
 
 
 type alias Data =
-    List ( Path, ArticleMetadata )
+    List ( Route, ArticleMetadata )
 
 
 type alias Article =
@@ -79,11 +80,11 @@ articles =
         |> Glob.match (Glob.literal "content/articles/")
         |> Glob.capture Glob.wildcard
         |> Glob.match (Glob.literal ".md")
-        |> Glob.capture Glob.fullFilePath
+        |> Glob.captureFilePath
         |> Glob.toDataSource
 
 
-allArticleMetadata : DataSource (List ( Path, ArticleMetadata ))
+allArticleMetadata : DataSource (List ( Route, ArticleMetadata ))
 allArticleMetadata =
     articles
         |> DataSource.map
@@ -91,11 +92,11 @@ allArticleMetadata =
                 (\article ->
                     DataSource.map2 Tuple.pair
                         (DataSource.succeed
-                            (Path.fromString "")
+                            (Route.Articles__Slug_ { slug = article.slug })
                         )
-                        (DataSource.File.request
+                        (DataSource.File.onlyFrontmatter
+                            articleDecoder
                             article.filePath
-                            (DataSource.File.frontmatter articleDecoder)
                         )
                 )
             )
@@ -120,7 +121,7 @@ view maybeUrl sharedModel static =
 
 
 viewMain :
-    List ( Path, ArticleMetadata )
+    List ( Route, ArticleMetadata )
     -> Element msg
 viewMain posts =
     Element.column [ Element.spacing 20 ]
@@ -130,17 +131,17 @@ viewMain posts =
 
 
 postSummary :
-    ( Path, ArticleMetadata )
+    ( Route, ArticleMetadata )
     -> Element msg
 postSummary ( postPath, post ) =
     articleIndex post
         |> linkToPost postPath
 
 
-linkToPost : Path -> Element msg -> Element msg
+linkToPost : Route -> Element msg -> Element msg
 linkToPost postPath content =
     Element.link [ Element.width Element.fill ]
-        { url = Path.toAbsolute postPath, label = content }
+        { url = Route.toPath postPath |> Path.toAbsolute, label = content }
 
 
 title : String -> Element msg
