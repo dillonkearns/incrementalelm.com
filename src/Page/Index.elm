@@ -1,8 +1,12 @@
 module Page.Index exposing (Data, Model, Msg, page)
 
 import DataSource exposing (DataSource)
+import Element exposing (Element)
 import Head
 import Head.Seo as Seo
+import MarkdownCodec
+import MarkdownRenderer
+import OptimizedDecoder as Decode
 import Page exposing (Page, StaticPayload)
 import Pages.PageUrl exposing (PageUrl)
 import Pages.Url
@@ -33,7 +37,10 @@ page =
 
 data : DataSource Data
 data =
-    DataSource.succeed ()
+    MarkdownCodec.withFrontmatter Data
+        (Decode.field "title" Decode.string)
+        MarkdownRenderer.renderer
+        "content/index.md"
 
 
 head :
@@ -57,7 +64,9 @@ head static =
 
 
 type alias Data =
-    ()
+    { metadata : String
+    , body : List (Element Msg)
+    }
 
 
 view :
@@ -66,4 +75,6 @@ view :
     -> StaticPayload Data RouteParams
     -> View Msg
 view maybeUrl sharedModel static =
-    View.placeholder "Index"
+    { title = static.data.metadata
+    , body = static.data.body
+    }
