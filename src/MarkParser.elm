@@ -410,7 +410,7 @@ code =
     Mark.block "Code"
         (\codeSnippet ->
             codeSnippet
-                |> View.CodeSnippet.codeEditor
+                |> Element.text
                 |> Element.el [ Font.size 16 ]
         )
         Mark.string

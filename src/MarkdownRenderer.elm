@@ -18,6 +18,7 @@ import Palette
 import Regex
 import Style
 import Style.Helpers
+import SyntaxHighlight
 import View.Ellie
 import View.FontAwesome
 import View.Resource
@@ -422,13 +423,11 @@ code snippet =
 
 codeBlock : { body : String, language : Maybe String } -> Element msg
 codeBlock details =
-    Html.node "code-editor"
-        [ editorValue details.body
-        , Html.Attributes.style "white-space" "normal"
-        ]
-        []
-        |> Element.html
-        |> Element.el [ Element.width Element.fill ]
+    SyntaxHighlight.elm details.body
+        |> Result.map (SyntaxHighlight.toBlockHtml (Just 1))
+        |> Result.map Element.html
+        |> Result.map (Element.el [ Element.width Element.fill ])
+        |> Result.withDefault (Element.text "")
 
 
 editorValue : String -> Attribute msg

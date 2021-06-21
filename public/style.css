@@ -104,59 +104,59 @@ form input[type="submit"]:hover {
 }
 
 .CodeMirror {
-background: rgba(0, 0, 0, 0.033) !important;
-font-family: "Roboto Mono", monospace !important;
-height: auto !important;
-padding: 10px;
+  background: rgba(0, 0, 0, 0.033) !important;
+  font-family: "Roboto Mono", monospace !important;
+  height: auto !important;
+  padding: 10px;
 }
 input .button {
-border-radius: 0px !important;
+  border-radius: 0px !important;
 }
 form input[type="submit"] {
-border-radius: 0px !important;
--webkit-appearance: none;
--moz-appearance: none;
-appearance: none;
+  border-radius: 0px !important;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
 }
 iframe {
-border: 0;
+  border: 0;
 }
 .embed-container {
-position: relative;
-padding-bottom: 56.25%;
-height: 0;
-overflow: hidden;
-max-width: 100%;
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+  overflow: hidden;
+  max-width: 100%;
 }
 .embed-container iframe,
 .embed-container object,
 .embed-container embed {
-position: absolute;
-top: 0;
-left: 0;
-width: 100%;
-height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 
 /* Remove Mobile Safari submit button rounding */
 form input[type="submit"] {
-border-radius: 0;
--webkit-appearance: none;
--moz-appearance: none;
-appearance: none;
+  border-radius: 0;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
 }
 
 form {
-font-family: "Open Sans", arial, sans;
+  font-family: "Open Sans", arial, sans;
 }
 form h2 {
-background: #4d4d4d;
-font-family: "Open Sans", sans-serif;
-color: #797979;
-font-size: 18px;
-font-weight: 100;
-padding: 20px;
-margin: -30px -30px 30px -30px;
+  background: #4d4d4d;
+  font-family: "Open Sans", sans-serif;
+  color: #797979;
+  font-size: 18px;
+  font-weight: 100;
+  padding: 20px;
+  margin: -30px -30px 30px -30px;
 }
 form input[type="text"],
 form input[type="date"],
@@ -169,59 +169,59 @@ form input[type="url"],
 form input[type="password"],
 form textarea,
 form select {
-box-sizing: border-box;
--webkit-box-sizing: border-box;
--moz-box-sizing: border-box;
-outline: none;
-display: block;
-width: 100%;
-padding: 7px;
-border: none;
-border-bottom: 1px solid #ddd;
-border-radius: 3px;
-margin-top: 10px;
-background: transparent;
-margin-bottom: 10px;
-font: 16px Arial, Helvetica, sans-serif;
-height: 45px;
--webkit-appearance: none;
-background-color: #eee;
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  outline: none;
+  display: block;
+  width: 100%;
+  padding: 7px;
+  border: none;
+  border-bottom: 1px solid #ddd;
+  border-radius: 3px;
+  margin-top: 10px;
+  background: transparent;
+  margin-bottom: 10px;
+  font: 16px Arial, Helvetica, sans-serif;
+  height: 45px;
+  -webkit-appearance: none;
+  background-color: #eee;
 }
 form textarea {
-resize: none;
-overflow: hidden;
+  resize: none;
+  overflow: hidden;
 }
 form input[type="button"],
 form input[type="submit"] {
--moz-box-shadow: inset 0px 1px 0px 0px #45d6d6;
--webkit-box-shadow: inset 0px 1px 0px 0px #45d6d6;
-box-shadow: inset 0px 1px 0px 0px #45d6d6;
-background-color: #2cbbbb;
-border: 1px solid #27a0a0;
-display: inline-block;
-cursor: pointer;
-color: #ffffff;
-font-family: "Open Sans", sans-serif;
-font-size: 14px;
-padding: 8px 18px;
-text-decoration: none;
+  -moz-box-shadow: inset 0px 1px 0px 0px #45d6d6;
+  -webkit-box-shadow: inset 0px 1px 0px 0px #45d6d6;
+  box-shadow: inset 0px 1px 0px 0px #45d6d6;
+  background-color: #2cbbbb;
+  border: 1px solid #27a0a0;
+  display: inline-block;
+  cursor: pointer;
+  color: #ffffff;
+  font-family: "Open Sans", sans-serif;
+  font-size: 14px;
+  padding: 8px 18px;
+  text-decoration: none;
 }
 form input[type="submit"] {
-background-color: rgba(0, 168, 232, 1);
-font-family: "Raleway";
-font-size: 20px;
-border: none;
-color: #fff;
-padding: 10px 50px;
-border-radius: 10px;
-font-weight: normal;
+  background-color: rgba(0, 168, 232, 1);
+  font-family: "Raleway";
+  font-size: 20px;
+  border: none;
+  color: #fff;
+  padding: 10px 50px;
+  border-radius: 10px;
+  font-weight: normal;
 }
 form input[type="submit"]:hover {
-background-color: rgba(20, 188, 252, 1);
+  background-color: rgba(20, 188, 252, 1);
 }
 
 .on-air {
-  animation: glow 0.8s infinite alternate
+  animation: glow 0.8s infinite alternate;
 }
 
 @keyframes glow {
@@ -237,4 +237,77 @@ background-color: rgba(20, 188, 252, 1);
 
 .avatar img {
   border-radius: 50%;
+}
+pre.elmsh {
+  padding: 10px;
+  margin: 0;
+  text-align: left;
+  overflow: auto;
+  height: 100%;
+  width: 100%;
+  font-size: 16px;
+  font-family: "Roboto Mono", monospace !important;
+}
+code.elmsh {
+  padding: 0;
+}
+.elmsh-line:before {
+  content: attr(data-elmsh-lc);
+  /* display: inline-block; */
+  display: none;
+  text-align: right;
+  width: 40px;
+  padding: 0 20px 0 0;
+  opacity: 0.3;
+}
+.elmsh {
+  color: black;
+  background: rgba(0, 0, 0, 0.033) !important;
+}
+.elmsh-hl {
+  background: #00f;
+}
+.elmsh-add {
+  background: #003800;
+}
+.elmsh-del {
+  background: #a11;
+}
+.elmsh-comm {
+  color: #d4d4d4;
+}
+.elmsh1 {
+  color: #74b0df;
+}
+.elmsh2 {
+  color: #a11;
+}
+.elmsh3 {
+  color: #708;
+}
+.elmsh4 {
+  color: #00f;
+}
+.elmsh5 {
+  color: #00f;
+}
+.elmsh6 {
+  color: #00f;
+}
+.elmsh7 {
+  color: #ce9178;
+}
+.elmsh-elm-ts,
+.elmsh-js-dk,
+.elmsh-css-p {
+  font-style: italic;
+  color: #4f76ac;
+}
+.elmsh-js-ce {
+  font-style: italic;
+  color: #5bb498;
+}
+.elmsh-css-ar-i {
+  font-weight: bold;
+  color: #ff0000;
 }
