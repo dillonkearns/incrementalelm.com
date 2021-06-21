@@ -1,4 +1,4 @@
-module Site exposing (config)
+module Site exposing (canonicalUrl, config)
 
 import DataSource
 import Head
@@ -15,10 +15,15 @@ config : SiteConfig Data
 config =
     \_ ->
         { data = data
-        , canonicalUrl = "https://elm-pages.com"
+        , canonicalUrl = canonicalUrl
         , manifest = manifest
         , head = head
         }
+
+
+canonicalUrl : String
+canonicalUrl =
+    "https://elm-pages.com"
 
 
 data : DataSource.DataSource Data

@@ -41,6 +41,7 @@
             "rtfeldman/elm-iso8601-date-strings": "1.1.3",
             "ryannhg/date-format": "2.3.0",
             "tripokey/elm-fuzzy": "5.2.1",
+            "turboMaCk/non-empty-list-alias": "1.1.0",
             "zwilias/elm-html-string": "2.0.2",
             "zwilias/json-decode-exploration": "6.0.0"
         },
