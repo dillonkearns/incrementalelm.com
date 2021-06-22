@@ -1,7 +1,8 @@
-module MarkdownCodec exposing (codec, noteTitle, withFrontmatter)
+module MarkdownCodec exposing (codec, noteTitle, withFrontmatter, withoutFrontmatter)
 
 import DataSource exposing (DataSource)
 import DataSource.File as StaticFile
+import List.Extra
 import Markdown.Block as Block exposing (Block)
 import Markdown.Parser
 import Markdown.Renderer
@@ -19,22 +20,46 @@ noteTitle filePath =
                     |> Result.mapError (\_ -> "Markdown error")
                     |> Result.map
                         (\blocks ->
-                            Block.foldl
-                                (\block maybeTitle ->
-                                    case block of
-                                        Block.Heading Block.H1 inlines ->
-                                            Just (Block.extractInlineText inlines)
+                            blocks
+                                |> List.Extra.findMap
+                                    (\block ->
+                                        case block of
+                                            Block.Heading Block.H1 inlines ->
+                                                Just (Block.extractInlineText inlines)
 
-                                        _ ->
-                                            maybeTitle
-                                )
-                                Nothing
-                                blocks
+                                            _ ->
+                                                Nothing
+                                    )
                         )
                     |> Result.andThen (Result.fromMaybe "Expected to find an H1 heading")
                     |> DataSource.fromResult
             )
         |> DataSource.distillSerializeCodec ("note-title-" ++ filePath) S.string
+
+
+withoutFrontmatter :
+    Markdown.Renderer.Renderer view
+    -> String
+    -> DataSource.DataSource (List view)
+withoutFrontmatter renderer filePath =
+    (StaticFile.bodyWithoutFrontmatter
+        filePath
+        |> DataSource.andThen
+            (\rawBody ->
+                rawBody
+                    |> Markdown.Parser.parse
+                    |> Result.mapError (\_ -> "Couldn't parse markdown.")
+                    |> DataSource.fromResult
+            )
+    )
+        |> DataSource.distillSerializeCodec ("markdown-blocks-" ++ filePath)
+            (S.list codec)
+        |> DataSource.andThen
+            (\blocks ->
+                blocks
+                    |> Markdown.Renderer.render renderer
+                    |> DataSource.fromResult
+            )
 
 
 withFrontmatter :

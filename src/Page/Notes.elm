@@ -7,7 +7,7 @@ import Element
 import Element.Font as Font
 import Head
 import Head.Seo as Seo
-import Markdown.Block as Block
+import Markdown.Block as Block exposing (Block)
 import Markdown.Parser
 import Page exposing (Page, PageWithState, StaticPayload)
 import Pages.PageUrl exposing (PageUrl)
@@ -42,7 +42,61 @@ page =
 
 data : DataSource Data
 data =
+    DataSource.map2 Data
+        wikiEntries
+        (backReferences "deliberate-practice")
+
+
+backReferences : String -> DataSource (List Note)
+backReferences slug =
     wikiEntries
+        |> DataSource.map
+            (\notes ->
+                notes
+                    |> Debug.log "notes"
+                    |> List.map
+                        (\note ->
+                            DataSource.File.bodyWithoutFrontmatter
+                                ("content/glossary/" ++ note.slug ++ ".md" |> Debug.log "filePath")
+                                |> DataSource.andThen
+                                    (\rawMarkdown ->
+                                        rawMarkdown
+                                            |> Debug.log "rawMarkdown"
+                                            |> Markdown.Parser.parse
+                                            |> Result.map
+                                                (\blocks ->
+                                                    if hasReferenceTo slug blocks then
+                                                        Just note
+
+                                                    else
+                                                        Nothing
+                                                )
+                                            |> Result.mapError (\_ -> "Markdown error")
+                                            |> DataSource.fromResult
+                                    )
+                        )
+            )
+        |> DataSource.resolve
+        |> DataSource.map (List.filterMap identity)
+
+
+hasReferenceTo : String -> List Block -> Bool
+hasReferenceTo slug blocks =
+    blocks
+        |> Block.inlineFoldl
+            (\inline links ->
+                case inline of
+                    Block.Link str mbstr moreinlines ->
+                        if str == slug then
+                            True
+
+                        else
+                            links
+
+                    _ ->
+                        links
+            )
+            False
 
 
 noteTitle : String -> DataSource String
@@ -77,7 +131,9 @@ noteTitle slug =
 
 
 type alias Data =
-    List Note
+    { notes : List Note
+    , refs : List Note
+    }
 
 
 view :
@@ -96,7 +152,7 @@ view maybeUrl sharedModel static =
             ]
             [ Element.text "Incremental Elm Wiki" ]
         , Element.column []
-            (static.data
+            (static.data.notes
                 |> List.map
                     (\note ->
                         Element.link []
@@ -107,12 +163,18 @@ view maybeUrl sharedModel static =
                             }
                     )
             )
+        , Element.text <|
+            (static.data.refs
+                |> List.map (\note -> note.title)
+                |> String.join "\n"
+            )
         ]
     }
 
 
 type alias Note =
     { route : Route
+    , slug : String
     , title : String
     }
 
@@ -123,7 +185,7 @@ wikiEntries =
         (\topic ->
             noteTitle topic
                 |> DataSource.map
-                    (Note (Route.Notes__Topic_ { topic = topic }))
+                    (Note (Route.Notes__Topic_ { topic = topic }) topic)
         )
         |> Glob.match (Glob.literal "content/glossary/")
         |> Glob.capture Glob.wildcard
