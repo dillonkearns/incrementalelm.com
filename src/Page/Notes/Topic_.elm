@@ -60,13 +60,9 @@ data routeParams =
     in
     DataSource.map4
         Data
-        --(DataSource.File.onlyFrontmatter decoder filePath)
-        (DataSource.succeed (PageMetadata Nothing Nothing))
-        --(MarkdownCodec.withoutFrontmatter MarkdownRenderer.renderer filePath)
-        (DataSource.succeed [])
-        --(MarkdownCodec.noteTitle filePath)
-        (DataSource.succeed "Title")
-        --(DataSource.succeed [])
+        (DataSource.File.onlyFrontmatter decoder filePath)
+        (MarkdownCodec.withoutFrontmatter MarkdownRenderer.renderer filePath)
+        (MarkdownCodec.noteTitle filePath)
         (backReferences routeParams.topic)
 
 
@@ -170,7 +166,6 @@ notes =
         |> Glob.capture Glob.wildcard
         |> Glob.match (Glob.literal ".md")
         |> Glob.toDataSource
-        |> DataSource.map (Debug.log "@@@NOTES")
         |> DataSource.resolve
 
 
@@ -180,24 +175,21 @@ backReferences slug =
         |> DataSource.map
             (\allNotes ->
                 allNotes
-                    |> Debug.log "allNotes"
                     |> List.map
                         (\note ->
                             DataSource.File.bodyWithoutFrontmatter ("content/glossary/" ++ note.slug ++ ".md")
                                 |> DataSource.andThen
                                     (\rawMarkdown ->
                                         rawMarkdown
-                                            |> Debug.log "rawMarkdown"
                                             |> Markdown.Parser.parse
                                             |> Result.map
-                                                (\blocks -> Just { slug = "hello", title = "hello" })
-                                            --(\blocks ->
-                                            --    if hasReferenceTo slug blocks then
-                                            --        Just note
-                                            --
-                                            --    else
-                                            --        Nothing
-                                            --)
+                                                (\blocks ->
+                                                    if hasReferenceTo slug blocks then
+                                                        Just note
+
+                                                    else
+                                                        Nothing
+                                                )
                                             |> Result.mapError (\_ -> "Markdown error")
                                             |> DataSource.fromResult
                                     )
@@ -205,10 +197,7 @@ backReferences slug =
             )
         |> DataSource.resolve
         |> DataSource.map (List.filterMap identity)
-
-
-
---|> DataSource.distillSerializeCodec "backrefs" (Serialize.list serializeBackRef)
+        |> DataSource.distillSerializeCodec "backrefs" (Serialize.list serializeBackRef)
 
 
 serializeBackRef =
@@ -265,7 +254,27 @@ noteTitle slug =
                     |> Result.andThen (Result.fromMaybe "Expected to find an H1 heading")
                     |> DataSource.fromResult
             )
+        |> DataSource.distillSerializeCodec ("note-title-" ++ slug) Serialize.string
 
 
-
---|> DataSource.distillSerializeCodec ("note-title-" ++ slug) Serialize.string
+repro : DataSource (List BackRef)
+repro =
+    Glob.succeed
+        (\topic ->
+            DataSource.File.bodyWithoutFrontmatter ("content/glossary/" ++ topic ++ ".md")
+                |> DataSource.map (BackRef topic)
+        )
+        |> Glob.match (Glob.literal "content/glossary/")
+        |> Glob.capture Glob.wildcard
+        |> Glob.match (Glob.literal ".md")
+        |> Glob.toDataSource
+        |> DataSource.resolve
+        |> DataSource.map
+            (\allNotes ->
+                allNotes
+                    |> List.map
+                        (\note ->
+                            DataSource.succeed note
+                        )
+            )
+        |> DataSource.resolve

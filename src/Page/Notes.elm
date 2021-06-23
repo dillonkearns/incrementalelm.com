@@ -42,61 +42,8 @@ page =
 
 data : DataSource Data
 data =
-    DataSource.map2 Data
+    DataSource.map Data
         wikiEntries
-        (backReferences "deliberate-practice")
-
-
-backReferences : String -> DataSource (List Note)
-backReferences slug =
-    wikiEntries
-        |> DataSource.map
-            (\notes ->
-                notes
-                    |> Debug.log "notes"
-                    |> List.map
-                        (\note ->
-                            DataSource.File.bodyWithoutFrontmatter
-                                ("content/glossary/" ++ note.slug ++ ".md" |> Debug.log "filePath")
-                                |> DataSource.andThen
-                                    (\rawMarkdown ->
-                                        rawMarkdown
-                                            |> Debug.log "rawMarkdown"
-                                            |> Markdown.Parser.parse
-                                            |> Result.map
-                                                (\blocks ->
-                                                    if hasReferenceTo slug blocks then
-                                                        Just note
-
-                                                    else
-                                                        Nothing
-                                                )
-                                            |> Result.mapError (\_ -> "Markdown error")
-                                            |> DataSource.fromResult
-                                    )
-                        )
-            )
-        |> DataSource.resolve
-        |> DataSource.map (List.filterMap identity)
-
-
-hasReferenceTo : String -> List Block -> Bool
-hasReferenceTo slug blocks =
-    blocks
-        |> Block.inlineFoldl
-            (\inline links ->
-                case inline of
-                    Block.Link str mbstr moreinlines ->
-                        if str == slug then
-                            True
-
-                        else
-                            links
-
-                    _ ->
-                        links
-            )
-            False
 
 
 noteTitle : String -> DataSource String
@@ -132,7 +79,6 @@ noteTitle slug =
 
 type alias Data =
     { notes : List Note
-    , refs : List Note
     }
 
 
@@ -162,11 +108,6 @@ view maybeUrl sharedModel static =
                                     (Element.text note.title)
                             }
                     )
-            )
-        , Element.text <|
-            (static.data.refs
-                |> List.map (\note -> note.title)
-                |> String.join "\n"
             )
         ]
     }
