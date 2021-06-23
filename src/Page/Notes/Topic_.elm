@@ -200,6 +200,7 @@ backReferences slug =
         |> DataSource.distillSerializeCodec "backrefs" (Serialize.list serializeBackRef)
 
 
+serializeBackRef : Serialize.Codec e { slug : String, title : String }
 serializeBackRef =
     Serialize.record BackRef
         |> Serialize.field .slug Serialize.string
@@ -255,26 +256,3 @@ noteTitle slug =
                     |> DataSource.fromResult
             )
         |> DataSource.distillSerializeCodec ("note-title-" ++ slug) Serialize.string
-
-
-repro : DataSource (List BackRef)
-repro =
-    Glob.succeed
-        (\topic ->
-            DataSource.File.bodyWithoutFrontmatter ("content/glossary/" ++ topic ++ ".md")
-                |> DataSource.map (BackRef topic)
-        )
-        |> Glob.match (Glob.literal "content/glossary/")
-        |> Glob.capture Glob.wildcard
-        |> Glob.match (Glob.literal ".md")
-        |> Glob.toDataSource
-        |> DataSource.resolve
-        |> DataSource.map
-            (\allNotes ->
-                allNotes
-                    |> List.map
-                        (\note ->
-                            DataSource.succeed note
-                        )
-            )
-        |> DataSource.resolve
