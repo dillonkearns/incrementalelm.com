@@ -23,7 +23,7 @@ config =
 
 canonicalUrl : String
 canonicalUrl =
-    "https://elm-pages.com"
+    "https://incrementalelm.com"
 
 
 data : DataSource.DataSource Data
