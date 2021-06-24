@@ -48,7 +48,7 @@ tipsFeedItems : (Html Never -> String) -> DataSource (List Rss.Item)
 tipsFeedItems htmlToString =
     Glob.succeed
         (\slug filePath ->
-            MarkdownCodec.nonDistilledWithFrontmatter
+            MarkdownCodec.withFrontmatter
                 (\metadata body ->
                     { body = body |> List.map htmlToString |> String.join ""
                     , metadata = metadata
