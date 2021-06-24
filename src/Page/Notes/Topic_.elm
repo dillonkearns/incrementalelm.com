@@ -93,7 +93,10 @@ backReferencesView backRefs =
         (backRefs
             |> List.map
                 (\backReference ->
-                    Element.text backReference.title
+                    Element.link []
+                        { url = Route.Notes__Topic_ { topic = backReference.slug } |> Route.toPath |> Path.toAbsolute
+                        , label = Element.text backReference.title
+                        }
                 )
         )
 
