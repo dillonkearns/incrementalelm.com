@@ -33,8 +33,10 @@ view model animationView startAnimationMsg =
         ]
 
 
+links : List { name : String, url : String }
 links =
-    [ { name = "Live Streams", url = "/live" }
+    [ { name = "Notes", url = "/notes" }
+    , { name = "Live Streams", url = "/live" }
     , { name = "Articles", url = "/articles" }
     , { name = "Services", url = "/services" }
     ]
