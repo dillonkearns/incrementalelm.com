@@ -1,4 +1,4 @@
-module MarkdownCodec exposing (codec, noteTitle, withFrontmatter, withoutFrontmatter)
+module MarkdownCodec exposing (codec, nonDistilledWithFrontmatter, noteTitle, withFrontmatter, withoutFrontmatter)
 
 import DataSource exposing (DataSource)
 import DataSource.File as StaticFile
@@ -67,7 +67,7 @@ withFrontmatter :
     -> Decoder frontmatter
     -> Markdown.Renderer.Renderer view
     -> String
-    -> DataSource.DataSource value
+    -> DataSource value
 withFrontmatter constructor frontmatterDecoder renderer filePath =
     DataSource.map2 constructor
         (StaticFile.onlyFrontmatter
@@ -86,6 +86,37 @@ withFrontmatter constructor frontmatterDecoder renderer filePath =
          )
             |> DataSource.distillSerializeCodec ("markdown-blocks-" ++ filePath)
                 (S.list codec)
+            |> DataSource.andThen
+                (\blocks ->
+                    blocks
+                        |> Markdown.Renderer.render renderer
+                        |> DataSource.fromResult
+                )
+        )
+
+
+nonDistilledWithFrontmatter :
+    (frontmatter -> List view -> value)
+    -> Decoder frontmatter
+    -> Markdown.Renderer.Renderer view
+    -> String
+    -> DataSource value
+nonDistilledWithFrontmatter constructor frontmatterDecoder renderer filePath =
+    DataSource.map2 constructor
+        (StaticFile.onlyFrontmatter
+            frontmatterDecoder
+            filePath
+        )
+        ((StaticFile.bodyWithoutFrontmatter
+            filePath
+            |> DataSource.andThen
+                (\rawBody ->
+                    rawBody
+                        |> Markdown.Parser.parse
+                        |> Result.mapError (\_ -> "Couldn't parse markdown.")
+                        |> DataSource.fromResult
+                )
+         )
             |> DataSource.andThen
                 (\blocks ->
                     blocks
