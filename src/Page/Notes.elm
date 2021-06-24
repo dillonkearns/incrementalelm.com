@@ -10,6 +10,7 @@ import Head.Seo as Seo
 import List.Extra
 import Markdown.Block as Block exposing (Block)
 import Markdown.Parser
+import OptimizedDecoder as Decode
 import Page exposing (Page, PageWithState, StaticPayload)
 import Pages.PageUrl exposing (PageUrl)
 import Pages.Url
@@ -101,7 +102,7 @@ view maybeUrl sharedModel static =
                             { url = Route.toPath note.route |> Path.toAbsolute
                             , label =
                                 Element.el []
-                                    (Element.text note.title)
+                                    (Element.text <| note.title ++ " #" ++ String.join ", " note.tags)
                             }
                     )
             )
@@ -113,20 +114,33 @@ type alias Note =
     { route : Route
     , slug : String
     , title : String
+    , tags : List String
     }
 
 
 wikiEntries : DataSource (List Note)
 wikiEntries =
     Glob.succeed
-        (\topic ->
-            noteTitle topic
-                |> DataSource.map
-                    (Note (Route.Notes__Topic_ { topic = topic }) topic)
+        (\topic filePath ->
+            DataSource.map2
+                (Note (Route.Notes__Topic_ { topic = topic }) topic)
+                (noteTitle topic)
+                (DataSource.File.onlyFrontmatter
+                    (Decode.optionalField "tags"
+                        (Decode.oneOf
+                            [ Decode.list Decode.string
+                            , Decode.string |> Decode.map List.singleton
+                            ]
+                        )
+                        |> Decode.map (Maybe.withDefault [])
+                    )
+                    filePath
+                )
         )
         |> Glob.match (Glob.literal "content/glossary/")
         |> Glob.capture Glob.wildcard
         |> Glob.match (Glob.literal ".md")
+        |> Glob.captureFilePath
         |> Glob.toDataSource
         |> DataSource.resolve
 

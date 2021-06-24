@@ -141,17 +141,34 @@ renderer =
     , codeSpan = code
     , link =
         \{ title, destination } body ->
-            Element.newTabLink []
-                { url = destination
-                , label =
-                    Element.paragraph
-                        [ Font.color (Element.rgb255 17 132 206)
-                        , Element.mouseOver [ Font.color (Element.rgb255 234 21 122) ]
-                        , Element.htmlAttribute (Html.Attributes.style "overflow-wrap" "break-word")
-                        , Element.htmlAttribute (Html.Attributes.style "word-break" "break-word")
-                        ]
-                        body
-                }
+            if (destination |> String.startsWith "http") || (destination |> String.startsWith "/") then
+                Element.newTabLink []
+                    { url = destination
+                    , label =
+                        Element.paragraph
+                            [ Font.color (Element.rgb255 17 132 206)
+                            , Element.mouseOver [ Font.color (Element.rgb255 234 21 122) ]
+                            , Element.htmlAttribute (Html.Attributes.style "overflow-wrap" "break-word")
+                            , Element.htmlAttribute (Html.Attributes.style "word-break" "break-word")
+                            ]
+                            body
+                    }
+
+            else
+                Element.link
+                    [ Element.htmlAttribute
+                        (Html.Attributes.attribute "elm-pages:prefetch" "")
+                    ]
+                    { url = "/notes/" ++ destination
+                    , label =
+                        Element.paragraph
+                            [ Font.color (Element.rgb255 17 132 206)
+                            , Element.mouseOver [ Font.color (Element.rgb255 234 21 122) ]
+                            , Element.htmlAttribute (Html.Attributes.style "overflow-wrap" "break-word")
+                            , Element.htmlAttribute (Html.Attributes.style "word-break" "break-word")
+                            ]
+                            body
+                    }
     , image =
         \image ->
             Element.image
