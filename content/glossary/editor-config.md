@@ -1,6 +1,8 @@
 ---
-{ "type": "learn", "title": "Recommended Editor Configuration" }
+tags: setup
 ---
+
+# Recommended Editor Configuration
 
 My editor of choice is IntelliJ with the excellent [intellij-elm](https://github.com/klazuka/intellij-elm) plugin. You can [install the free IntelliJ Community Edition](https://www.jetbrains.com/idea/download), or use a paid JetBrains IDE (it will work just as well either way).
 

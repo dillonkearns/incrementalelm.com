@@ -1,6 +1,8 @@
 ---
-{ "type": "learn", "title": "Getting Started Resources" }
+tags: resources
 ---
+
+# Getting Started Resources
 
 Here are my favorite resources for learning the Elm fundamentals.
 
