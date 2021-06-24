@@ -7,6 +7,7 @@ import Element
 import Element.Font as Font
 import Head
 import Head.Seo as Seo
+import List.Extra
 import Markdown.Block as Block exposing (Block)
 import Markdown.Parser
 import Page exposing (Page, PageWithState, StaticPayload)
@@ -55,20 +56,15 @@ noteTitle slug =
                     |> Result.mapError (\_ -> "Markdown error")
                     |> Result.map
                         (\blocks ->
-                            Block.foldl
-                                (\block maxSoFar ->
+                            List.Extra.findMap
+                                (\block ->
                                     case block of
-                                        Block.Heading level inlines ->
-                                            if level == Block.H1 then
-                                                Just (Block.extractInlineText inlines)
-
-                                            else
-                                                maxSoFar
+                                        Block.Heading Block.H1 inlines ->
+                                            Just (Block.extractInlineText inlines)
 
                                         _ ->
-                                            maxSoFar
+                                            Nothing
                                 )
-                                Nothing
                                 blocks
                         )
                     |> Result.andThen (Result.fromMaybe "Expected to find an H1 heading")
