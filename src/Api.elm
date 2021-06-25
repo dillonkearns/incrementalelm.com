@@ -40,7 +40,7 @@ routes getStaticRoutes htmlToString =
         |> ApiRoute.literal "tips"
         |> ApiRoute.slash
         |> ApiRoute.literal "feed.xml"
-        |> ApiRoute.singleRoute
+        |> ApiRoute.single
     ]
 
 

@@ -40,7 +40,7 @@ type alias RouteParams =
 
 page : Page RouteParams Data
 page =
-    Page.prerenderedRoute
+    Page.prerender
         { head = head
         , routes = routes
         , data = data
@@ -51,9 +51,7 @@ page =
 routes : DataSource (List RouteParams)
 routes =
     DataSource.succeed
-        [ { splat = ( "glossary", [ "tcr" ] ) }
-        , { splat = ( "tips", [] ) }
-        , { splat = ( "services", [] ) }
+        [ { splat = ( "services", [] ) }
         ]
 
 
