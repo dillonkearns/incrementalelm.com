@@ -37,7 +37,6 @@ links : List { name : String, url : String }
 links =
     [ { name = "Notes", url = "/notes" }
     , { name = "Live Streams", url = "/live" }
-    , { name = "Articles", url = "/articles" }
     , { name = "Services", url = "/services" }
     ]
 
@@ -71,7 +70,7 @@ contactButton =
                 , backgroundColor = .highlight
                 , size = fontSize.body
                 }
-                [ Element.text "Get Weekly elm Tips" ]
+                [ Element.text "Elm Tips" ]
         }
 
 
