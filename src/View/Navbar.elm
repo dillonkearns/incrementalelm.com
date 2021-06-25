@@ -12,6 +12,9 @@ import Element.Border as Border
 import Element.Font
 import ElmLogo
 import Html exposing (Html)
+import Link
+import List.NonEmpty as NonEmpty
+import Route exposing (Route)
 import Style exposing (fontSize, fonts, palette)
 import Style.Helpers
 import Task
@@ -33,11 +36,11 @@ view model animationView startAnimationMsg =
         ]
 
 
-links : List { name : String, url : String }
+links : List { name : String, url : Route }
 links =
-    [ { name = "Notes", url = "/notes" }
-    , { name = "Live Streams", url = "/live" }
-    , { name = "Services", url = "/services" }
+    [ { name = "Notes", url = Route.Notes }
+    , { name = "Live Streams", url = Route.Live }
+    , { name = "Services", url = Route.SPLAT_ { splat = NonEmpty.singleton "services" } }
     ]
 
 
@@ -75,10 +78,9 @@ contactButton =
 
 
 linkView link =
-    Element.link [ Element.width Element.fill ]
-        { label = Element.text link.name
-        , url = link.url
-        }
+    Link.link link.url
+        [ Element.width Element.fill ]
+        (Element.text link.name)
 
 
 modalMenuView menuAnimation =
