@@ -1,10 +1,7 @@
 ---
-{
-  "type": "article",
-  "title": "To test, or not to test elm code?",
-  "src": "article-cover/thinker.jpg",
-  "description": 'Is it as simple as "only test your business logic?"',
-}
+title: To test, or not to test elm code
+description: Is it as simple as "only test your business logic?"
+publishAt: "2020-01-01"
 ---
 
 That... is the question Richard Feldman's keynote at Elm in the Spring last week explored. Richard talked about the interplay between unit tests and the elm type system. His general advice is the same as I've described it:

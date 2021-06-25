@@ -1,13 +1,8 @@
 ---
-{
-  "type": "article",
-  "title": "Using elm types to prevent logging social security #'s",
-  "src": "article-cover/exit.jpg",
-  "description": "One of the most successful techniques I've seen for making sure you don't break elm code the next time you touch it is a technique I call an Exit Gatekeeper.",
-}
+title: "Using elm types to prevent logging social security #'s"
+description: One of the most successful techniques I've seen for making sure you don't break elm code the next time you touch it is a technique I call an Exit Gatekeeper.
+publishAt: "2020-01-01"
 ---
-
-One of the most successful techniques I've seen for making sure you don't break elm code the next time you touch it is a technique I call an **Exit Gatekeeper**.
 
 Let's say you have these innocent functions in your app. How do you know that you won't get your wires crossed and log a user's social security number?
 
