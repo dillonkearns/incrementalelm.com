@@ -46,7 +46,7 @@ page =
 routes : DataSource (List RouteParams)
 routes =
     Glob.succeed RouteParams
-        |> Glob.match (Glob.literal "content/glossary/")
+        |> Glob.match (Glob.literal "content/notes/")
         |> Glob.capture Glob.wildcard
         |> Glob.match (Glob.literal ".md")
         |> Glob.toDataSource
@@ -56,7 +56,7 @@ data : RouteParams -> DataSource Data
 data routeParams =
     let
         filePath =
-            "content/glossary/" ++ routeParams.topic ++ ".md"
+            "content/notes/" ++ routeParams.topic ++ ".md"
     in
     DataSource.map4
         Data
@@ -165,7 +165,7 @@ notes =
                 |> DataSource.map
                     (BackRef topic)
         )
-        |> Glob.match (Glob.literal "content/glossary/")
+        |> Glob.match (Glob.literal "content/notes/")
         |> Glob.capture Glob.wildcard
         |> Glob.match (Glob.literal ".md")
         |> Glob.toDataSource
@@ -180,7 +180,7 @@ backReferences slug =
                 allNotes
                     |> List.map
                         (\note ->
-                            DataSource.File.bodyWithoutFrontmatter ("content/glossary/" ++ note.slug ++ ".md")
+                            DataSource.File.bodyWithoutFrontmatter ("content/notes/" ++ note.slug ++ ".md")
                                 |> DataSource.andThen
                                     (\rawMarkdown ->
                                         rawMarkdown
@@ -232,7 +232,7 @@ hasReferenceTo slug blocks =
 
 noteTitle : String -> DataSource String
 noteTitle slug =
-    DataSource.File.bodyWithoutFrontmatter ("content/glossary/" ++ slug ++ ".md")
+    DataSource.File.bodyWithoutFrontmatter ("content/notes/" ++ slug ++ ".md")
         |> DataSource.andThen
             (\rawContent ->
                 Markdown.Parser.parse rawContent

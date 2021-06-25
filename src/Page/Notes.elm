@@ -50,7 +50,7 @@ data =
 
 noteTitle : String -> DataSource String
 noteTitle slug =
-    DataSource.File.bodyWithoutFrontmatter ("content/glossary/" ++ slug ++ ".md")
+    DataSource.File.bodyWithoutFrontmatter ("content/notes/" ++ slug ++ ".md")
         |> DataSource.andThen
             (\rawContent ->
                 Markdown.Parser.parse rawContent
@@ -137,7 +137,7 @@ wikiEntries =
                     filePath
                 )
         )
-        |> Glob.match (Glob.literal "content/glossary/")
+        |> Glob.match (Glob.literal "content/notes/")
         |> Glob.capture Glob.wildcard
         |> Glob.match (Glob.literal ".md")
         |> Glob.captureFilePath

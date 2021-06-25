@@ -1,6 +1,7 @@
 module Page.SPLAT_ exposing (Data, Model, Msg, page)
 
 import DataSource exposing (DataSource)
+import DataSource.Glob as Glob
 import Date exposing (Date)
 import Element exposing (Element)
 import Element.Font as Font
@@ -50,9 +51,11 @@ page =
 
 routes : DataSource (List RouteParams)
 routes =
-    DataSource.succeed
-        [ { splat = ( "services", [] ) }
-        ]
+    Glob.succeed (NonEmpty.singleton >> RouteParams)
+        |> Glob.match (Glob.literal "content/pages/")
+        |> Glob.capture Glob.wildcard
+        |> Glob.match (Glob.literal ".md")
+        |> Glob.toDataSource
 
 
 data : RouteParams -> DataSource Data
@@ -60,7 +63,7 @@ data routeParams =
     MarkdownCodec.withFrontmatter Data
         decoder
         MarkdownRenderer.renderer
-        ("content/"
+        ("content/pages/"
             ++ (NonEmpty.toList routeParams.splat |> String.join "/")
             ++ ".md"
         )
