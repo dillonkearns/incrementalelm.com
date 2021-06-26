@@ -1,13 +1,13 @@
 module View.SignupForm exposing (view)
 
 import Html exposing (..)
-import Html.Attributes as Attr exposing (..)
+import Html.Attributes exposing (..)
 
 
 view : Maybe String -> Html msg
 view maybeReferenceId =
     div [ id "mc_embed_signup" ]
-        [ Html.form
+        [ form
             [ action "https://incrementalelm.us7.list-manage.com/subscribe/post?u=8252abc4ac213a3cdf1832799&amp;id=c68ad2ba25"
             , method "post"
             , id "mc-embedded-subscribe-form"

@@ -1,14 +1,8 @@
 module View.Resource exposing (Resource, ResourceKind(..), view)
 
 import Element exposing (Element)
-import Element.Background as Background
-import Element.Border
 import Element.Font
-import Html
-import Html.Attributes exposing (attribute, class, style)
-import Style exposing (fontSize, fonts, palette)
-import Style.Helpers
-import View.Ellie
+import Style exposing (palette)
 import View.FontAwesome
 
 
@@ -29,6 +23,7 @@ type ResourceKind
     | Book
 
 
+view : Resource -> Element msg
 view { name, url, kind } =
     let
         ( iconClasses, color, font ) =

@@ -1,30 +1,24 @@
 module View.Navbar exposing (modalMenuView, view)
 
-import Animation exposing (backgroundColor)
-import Browser
-import Browser.Dom
-import Browser.Events
-import Browser.Navigation
+import Animation
 import Dimensions
 import Element exposing (Element)
 import Element.Background as Background
 import Element.Border as Border
 import Element.Font
-import ElmLogo
-import Html exposing (Html)
 import Link
 import List.NonEmpty as NonEmpty
 import Route exposing (Route)
 import Style exposing (fontSize, fonts, palette)
 import Style.Helpers
-import Task
-import Time
-import Url exposing (Url)
-import Url.Builder
-import View.FontAwesome
 import View.MenuBar
 
 
+view :
+    { a | dimensions : Dimensions.Dimensions, menuBarAnimation : View.MenuBar.Model }
+    -> ({ a | dimensions : Dimensions.Dimensions, menuBarAnimation : View.MenuBar.Model } -> Element c)
+    -> c
+    -> Element c
 view model animationView startAnimationMsg =
     Element.row
         [ Element.spaceEvenly
@@ -44,6 +38,7 @@ links =
     ]
 
 
+linksView : { a | dimensions : Dimensions.Dimensions, menuBarAnimation : View.MenuBar.Model } -> msg -> Element msg
 linksView model startAnimationMsg =
     Element.row
         [ Element.spacing 20
@@ -62,6 +57,7 @@ linksView model startAnimationMsg =
         )
 
 
+contactButton : Element msg
 contactButton =
     Element.link
         [ Element.centerX
@@ -77,6 +73,7 @@ contactButton =
         }
 
 
+linkView : { url : Route, name : String } -> Element msg
 linkView link =
     Link.link link.url
         [ Element.width Element.fill ]
@@ -108,6 +105,7 @@ modalMenuView menuAnimation =
         ]
 
 
+logoView : a -> (a -> Element msg) -> Element msg
 logoView model animationView =
     Element.link
         []
@@ -123,6 +121,7 @@ logoView model animationView =
         }
 
 
+logoText : Element msg
 logoText =
     [ Element.text "Incremental Elm"
         |> Element.el
