@@ -1,4 +1,4 @@
-module IcalFeed exposing (..)
+module IcalFeed exposing (feed, toEvent)
 
 import Ical
 import Request.Events exposing (LiveStream)

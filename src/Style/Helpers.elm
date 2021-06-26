@@ -6,7 +6,7 @@ import Element.Background as Background
 import Element.Border
 import Element.Font
 import Html
-import Html.Attributes
+import Html.Attributes as Attr
 import Style
 import View.FontAwesome as FontAwesome
 
@@ -58,7 +58,7 @@ link2 { url, content } =
                 , Element.mouseOver
                     [ Element.Font.color (Element.rgb255 234 21 122)
                     ]
-                , Element.htmlAttribute (Html.Attributes.style "display" "inline-flex")
+                , Element.htmlAttribute (Attr.style "display" "inline-flex")
                 ]
                 [ content ]
         }
@@ -75,7 +75,7 @@ link { url, content } =
                 , Element.mouseOver
                     [ Element.Font.color (Element.rgb255 234 21 122)
                     ]
-                , Element.htmlAttribute (Html.Attributes.style "display" "inline-flex")
+                , Element.htmlAttribute (Attr.style "display" "inline-flex")
                 ]
                 [ Element.text content ]
         }
@@ -134,9 +134,9 @@ blockQuote dimensions { content, author } =
 
 roundedAvatar src =
     Html.img
-        [ Html.Attributes.src src
-        , Html.Attributes.style "border-radius" "50%"
-        , Html.Attributes.style "max-width" "75px"
+        [ Attr.src src
+        , Attr.style "border-radius" "50%"
+        , Attr.style "max-width" "75px"
         ]
         []
         |> Element.html

@@ -1,4 +1,4 @@
-module UpcomingEvent exposing (..)
+module UpcomingEvent exposing (avatarUrl, dateString, encodeGuest, githubAvatarUrl, json, pacificZone)
 
 import DateFormat
 import Json.Encode as Encode

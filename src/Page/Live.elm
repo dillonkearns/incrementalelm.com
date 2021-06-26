@@ -1,4 +1,4 @@
-module Page.Live exposing (Data, Model, Msg, page)
+module Page.Live exposing (Data, Model, Msg, RouteParams, page)
 
 --import TemplateType exposing (TemplateType)
 
@@ -6,7 +6,7 @@ import DataSource exposing (DataSource)
 import Element exposing (Element)
 import Head
 import Head.Seo as Seo
-import Page exposing (Page, PageWithState, StaticPayload)
+import Page exposing (Page, StaticPayload)
 import Pages
 import Pages.PageUrl exposing (PageUrl)
 import Pages.Url
@@ -41,7 +41,8 @@ page =
 
 data : DataSource Data
 data =
-    Request.staticGraphqlRequest Request.Events.selection
+    --Request.staticGraphqlRequest Request.Events.selection
+    DataSource.succeed []
 
 
 

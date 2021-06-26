@@ -1,6 +1,5 @@
 module Ease exposing
     ( Easing
-    , bezier
     , linear
     , inQuad, outQuad, inOutQuad
     , inCubic, outCubic, inOutCubic
@@ -8,11 +7,11 @@ module Ease exposing
     , inQuint, outQuint, inOutQuint
     , inSine, outSine, inOutSine
     , inExpo, outExpo, inOutExpo
-    , inCirc, outCirc, inOutCirc
-    , inBack, outBack, inOutBack
-    , inBounce, outBounce, inOutBounce
+    , outCirc, inOutCirc
+    , outBack, inOutBack
+    , outBounce, inOutBounce
     , inElastic, outElastic, inOutElastic
-    , reverse, flip, inOut, retour
+    , reverse, inOut, retour
     )
 
 {-| An easing function is used in animation to make a transition between two values appear more lifelike or interesting.
@@ -69,32 +68,6 @@ type alias Easing =
 linear : Easing
 linear =
     identity
-
-
-{-| A cubic bezier function using 4 parameters: x and y position of first control point, and x and y position of second control point.
-
-See [here](http://greweb.me/glsl-transition/example/ "glsl-transitions") for examples or [here](http://cubic-bezier.com/ "tester") to test.
-
--}
-bezier : Float -> Float -> Float -> Float -> Easing
-bezier x1 y1 x2 y2 time =
-    let
-        lerp from to v =
-            from + (to - from) * v
-
-        pair interpolate ( a0, b0 ) ( a1, b1 ) v =
-            ( interpolate a0 a1 v, interpolate b0 b1 v )
-
-        casteljau ps =
-            case ps of
-                [ ( x, y ) ] ->
-                    y
-
-                xs ->
-                    List.map2 (\x y -> pair lerp x y time) xs (Maybe.withDefault [] (List.tail xs))
-                        |> casteljau
-    in
-    casteljau [ ( 0, 0 ), ( x1, y1 ), ( x2, y2 ), ( 1, 1 ) ]
 
 
 {-| -}

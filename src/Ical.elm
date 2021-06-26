@@ -1,4 +1,4 @@
-module Ical exposing (Event, generate)
+module Ical exposing (Config, Event, Recipient, generate)
 
 import Property exposing (Parameter(..), ValueData(..))
 import Time

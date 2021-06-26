@@ -4,10 +4,12 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 
 
+dripAttribute : String -> Attribute msg
 dripAttribute =
     attribute "data-drip-attribute"
 
 
+emailInput : Html msg
 emailInput =
     dripInput
         { inputId = "drip-email"
@@ -19,6 +21,7 @@ emailInput =
         }
 
 
+firstNameInput : Html msg
 firstNameInput =
     dripInput
         { inputId = "drip-first-name"
@@ -30,6 +33,7 @@ firstNameInput =
         }
 
 
+dripInput : { a | display : Display, inputId : String, labelText : String, type_ : String, name : String, value : Maybe String } -> Html msg
 dripInput details =
     div
         (case details.display of
@@ -52,6 +56,7 @@ dripInput details =
         ]
 
 
+includeValueIfPresent : Maybe String -> List (Attribute msg) -> List (Attribute msg)
 includeValueIfPresent maybeValue list =
     case maybeValue of
         Just actualValue ->
@@ -61,6 +66,7 @@ includeValueIfPresent maybeValue list =
             list
 
 
+websiteField : Html msg
 websiteField =
     dripInput
         { inputId = "website"
@@ -97,7 +103,7 @@ viewNew buttonText formId signupDetails =
     Html.form
         [ action <| "https://www.getdrip.com/forms/" ++ formId ++ "/submissions"
         , method "post"
-        , Html.Attributes.attribute "data-drip-embedded-form" formId
+        , attribute "data-drip-embedded-form" formId
         , style "font-family" "'Open Sans'"
         ]
         [ h2 [ dripAttribute "headline", style "display" "none" ] [ text "Incremental Elm" ]

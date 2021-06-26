@@ -95,6 +95,23 @@ config =
                         , "elm-pages/src"
                         , "elm-graphql-gen"
                         ]
+                    |> Rule.ignoreErrorsForFiles
+                        [ "src/MarkdownRenderer.elm"
+                        , "src/View.elm"
+                        , "src/Live.elm"
+                        , "src/Helpers.elm"
+                        , "src/Api.elm"
+                        , "src/Ease.elm"
+                        , "src/Ical.elm"
+                        , "src/IcalFeed.elm"
+                        , "src/Request/Events.elm"
+                        , "src/Property.elm"
+                        , "src/Request/GoogleCalendar.elm"
+                        , "src/StructuredDataHelper.elm"
+                        , "src/Style/Helpers.elm"
+                        , "src/UnsplashImage.elm"
+                        , "src/UpcomingEvent.elm"
+                        ]
             )
 
 

@@ -41,11 +41,9 @@
             "ryannhg/date-format": "2.3.0",
             "tripokey/elm-fuzzy": "5.2.1",
             "turboMaCk/non-empty-list-alias": "1.1.0",
-            "zwilias/elm-html-string": "2.0.2",
             "zwilias/json-decode-exploration": "6.0.0"
         },
         "indirect": {
-            "NoRedInk/elm-string-conversions": "1.0.1",
             "bburdette/toop": "1.0.1",
             "billstclair/elm-xml-eeue56": "1.0.1",
             "danfishgold/base64-bytes": "1.1.0",

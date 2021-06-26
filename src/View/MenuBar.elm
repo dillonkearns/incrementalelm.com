@@ -1,6 +1,6 @@
 module View.MenuBar exposing (Model, animationStates, init, startAnimation, update, view)
 
-import Animation
+import Animation exposing (Interpolation)
 import Ease
 import Element exposing (Element)
 import Element.Background as Background
@@ -220,14 +220,17 @@ startAnimation { menuBarAnimation, showMenu } =
             }
 
 
+separationLength : Float
 separationLength =
     barHeight + spacing
 
 
+second : Float
 second =
     1000
 
 
+interpolation : Interpolation
 interpolation =
     Animation.easing
         { duration = second * 0.2

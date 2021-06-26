@@ -1,17 +1,9 @@
-module View.Resource exposing (Resource, ResourceKind(..), view)
+module View.Resource exposing (ResourceKind(..), view)
 
-import Element exposing (Element)
+import Element
 import Element.Font
 import Style exposing (palette)
 import View.FontAwesome
-
-
-type alias Resource =
-    { name : String
-    , url : String
-    , kind : ResourceKind
-    , description : Maybe String
-    }
 
 
 type ResourceKind
@@ -23,6 +15,7 @@ type ResourceKind
     | Book
 
 
+view : { a | name : String, url : String, kind : ResourceKind } -> Element.Element msg
 view { name, url, kind } =
     let
         ( iconClasses, color, font ) =

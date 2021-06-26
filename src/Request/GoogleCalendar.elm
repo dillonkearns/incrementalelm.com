@@ -5,15 +5,12 @@ module Request.GoogleCalendar exposing (Event, googleAddToCalendarLink, request)
 import DataSource exposing (DataSource)
 import DataSource.Http
 import Extra.Json.Decode.Exploration as Decode
-import Iso8601
 import OptimizedDecoder as Decode exposing (Decoder)
 import OptimizedDecoder.Pipeline as Pipeline
-import Pages
 import Pages.Secrets as Secrets
 import Rfc3339
 import Time
 import Time.Extra as Time
-import Url
 import Url.Builder
 
 

@@ -1,10 +1,12 @@
-module Style exposing (animationPalette, color, fontSize, fonts, hoverPalette, palette)
+module Style exposing (animationPalette, color, fontSize, fonts, hoverPalette, palette, shadow)
 
 import Animation
 import Element
+import Element.Border
 import Element.Font
 
 
+fonts : { title : Element.Attribute msg, body : Element.Attribute a, code : Element.Attribute b }
 fonts =
     { title = Element.Font.family [ Element.Font.typeface "Open Sans" ]
     , body = Element.Font.family [ Element.Font.typeface "Raleway" ]
@@ -12,6 +14,7 @@ fonts =
     }
 
 
+fontSize : { body : Element.Attr decorative msg, title : Element.Attr a b, smallTitle : Element.Attr c d, quotation : Element.Attr e f, medium : Element.Attr g h, small : Element.Attr i j, logo : Element.Attr k l }
 fontSize =
     { body = Element.Font.size 18
     , title = Element.Font.size 40
@@ -23,8 +26,14 @@ fontSize =
     }
 
 
+color : { main : Element.Color, bold : Element.Color, light : Element.Color, darkGray : Element.Color, highlight : Element.Color, mainBackground : Element.Color, highlightBackground : Element.Color }
 color =
     palette
+
+
+shadow : Element.Attr decorative msg
+shadow =
+    Element.Border.shadow { offset = ( 2, 1 ), size = 1, blur = 4, color = Element.rgb 0.8 0.8 0.8 }
 
 
 palette =

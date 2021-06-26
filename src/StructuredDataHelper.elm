@@ -1,4 +1,4 @@
-module StructuredDataHelper exposing (..)
+module StructuredDataHelper exposing (StructuredData(..), additionalName, article, article_, computerLanguage, elmLang, encode, episode, example, person, series, softwareSourceCode)
 
 import Json.Encode as Encode
 

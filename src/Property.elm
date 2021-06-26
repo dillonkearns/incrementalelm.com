@@ -1,4 +1,4 @@
-module Property exposing (..)
+module Property exposing (Pair, Parameter(..), PropertyValue(..), ValueData(..), encodeParameter, encodeProperty, encodeValue, quoted)
 
 import Format
 import Rfc3339
@@ -11,7 +11,6 @@ type alias Pair =
 
 type PropertyValue
     = SinglePart ValueData
-    | MultiPart ( Pair, List Pair )
 
 
 {-| <https://tools.ietf.org/html/rfc5545#section-3.2.20>
