@@ -7,7 +7,7 @@ import Browser.Navigation
 import DataSource
 import Dimensions exposing (Dimensions)
 import Ease
-import Element exposing (Element)
+import Element
 import ElmLogo
 import Html exposing (Html)
 import Http
@@ -199,7 +199,7 @@ animationView model =
         , viewBox "0 0 323.141 322.95"
         , width "100%"
         ]
-        [ Svg.g []
+        [ g []
             (List.map (\poly -> polygon (Animation.render poly) []) model.styles)
         ]
         |> Element.html

@@ -1,13 +1,11 @@
-module View.DripSignupForm exposing (view, viewNew)
+module View.DripSignupForm exposing (viewNew)
 
-import Element exposing (Element)
-import Element.Region
 import Html exposing (..)
 import Html.Attributes exposing (..)
 
 
 dripAttribute =
-    Html.Attributes.attribute "data-drip-attribute"
+    attribute "data-drip-attribute"
 
 
 emailInput =
@@ -79,17 +77,6 @@ type Display
     | Show
 
 
-lastNameInput =
-    dripInput
-        { inputId = "drip-last-name"
-        , type_ = "text"
-        , labelText = "Last"
-        , name = "fields[last_name]"
-        , display = Show
-        , value = Just ""
-        }
-
-
 referenceIdInput : Maybe String -> Html msg
 referenceIdInput maybeReferenceId =
     div [ style "display" "none", attribute "aria-hidden" "true" ]
@@ -103,11 +90,6 @@ referenceIdInput maybeReferenceId =
             ]
             []
         ]
-
-
-view : String -> { details | maybeReferenceId : Maybe String } -> Html msg
-view =
-    viewNew "Subscribe"
 
 
 viewNew : String -> String -> { details | maybeReferenceId : Maybe String } -> Html msg
