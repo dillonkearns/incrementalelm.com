@@ -98,7 +98,7 @@ modalMenuView menuAnimation =
             , Element.width Element.shrink
             , Element.spacing 25
             , fonts.body
-            , Style.fontSize.title
+            , fontSize.title
             , Element.Font.color palette.bold
             ]
             ((links |> List.map linkView) ++ [ contactButton ])

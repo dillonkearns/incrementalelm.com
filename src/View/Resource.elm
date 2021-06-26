@@ -23,7 +23,6 @@ type ResourceKind
     | Book
 
 
-view : Resource -> Element msg
 view { name, url, kind } =
     let
         ( iconClasses, color, font ) =

@@ -93,6 +93,7 @@ config =
                         [ "src/ElmHtml"
                         , ".elm-pages"
                         , "elm-pages/src"
+                        , "elm-graphql-gen"
                         ]
             )
 

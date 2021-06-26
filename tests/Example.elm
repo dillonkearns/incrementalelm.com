@@ -1,7 +1,7 @@
-module Example exposing (..)
+module Example exposing (suite)
 
 import Date
-import Expect exposing (Expectation)
+import Expect
 import Iso8601
 import Rss exposing (DateOrTime)
 import Test exposing (..)

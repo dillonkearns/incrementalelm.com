@@ -27,12 +27,10 @@
             "elm/time": "1.0.0",
             "elm/url": "1.0.0",
             "elm-community/dict-extra": "2.4.0",
-            "elm-community/json-extra": "4.3.0",
             "elm-community/list-extra": "8.3.0",
             "elm-community/result-extra": "2.4.0",
             "justinmimbs/date": "3.2.1",
             "justinmimbs/time-extra": "1.1.0",
-            "lukewestby/elm-string-interpolate": "1.0.4",
             "mdgriffith/elm-markup": "3.0.1",
             "mdgriffith/elm-style-animation": "4.0.0",
             "mdgriffith/elm-ui": "1.1.8",
@@ -58,6 +56,7 @@
             "elm/virtual-dom": "1.0.2",
             "fredcy/elm-parseint": "2.0.1",
             "lazamar/dict-parser": "1.0.2",
+            "lukewestby/elm-string-interpolate": "1.0.4",
             "mgold/elm-nonempty-list": "4.1.0",
             "rtfeldman/elm-hex": "1.0.0"
         }

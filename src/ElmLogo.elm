@@ -1,6 +1,6 @@
 module ElmLogo exposing (polygons)
 
-import Animation exposing (px)
+import Animation
 import Style exposing (animationPalette)
 
 

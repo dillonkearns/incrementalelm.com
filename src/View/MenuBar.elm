@@ -5,7 +5,7 @@ import Ease
 import Element exposing (Element)
 import Element.Background as Background
 import Element.Events
-import Style exposing (fonts, palette)
+import Style exposing (palette)
 
 
 type alias Model =

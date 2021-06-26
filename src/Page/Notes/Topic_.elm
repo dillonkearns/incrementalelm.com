@@ -1,17 +1,16 @@
-module Page.Notes.Topic_ exposing (Data, Model, Msg, page)
+module Page.Notes.Topic_ exposing (BackRef, Data, Model, Msg, PageMetadata, RouteParams, page)
 
 import DataSource exposing (DataSource)
 import DataSource.File
 import DataSource.Glob as Glob
 import Element exposing (Element)
 import Head
-import Head.Seo as Seo
 import Markdown.Block as Block exposing (Block)
 import Markdown.Parser
 import MarkdownCodec
 import MarkdownRenderer
 import OptimizedDecoder as Decode exposing (Decoder)
-import Page exposing (Page, PageWithState, StaticPayload)
+import Page exposing (Page, StaticPayload)
 import Pages.PageUrl exposing (PageUrl)
 import Pages.Url
 import Path
@@ -217,7 +216,7 @@ hasReferenceTo slug blocks =
         |> Block.inlineFoldl
             (\inline links ->
                 case inline of
-                    Block.Link str mbstr moreinlines ->
+                    Block.Link str _ _ ->
                         if str == slug then
                             True
 

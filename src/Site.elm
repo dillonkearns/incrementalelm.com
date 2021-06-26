@@ -1,4 +1,4 @@
-module Site exposing (canonicalUrl, config)
+module Site exposing (Data, canonicalUrl, config)
 
 import DataSource
 import Head

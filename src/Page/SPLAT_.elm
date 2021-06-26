@@ -1,30 +1,20 @@
-module Page.SPLAT_ exposing (Data, Model, Msg, page)
+module Page.SPLAT_ exposing (Data, Model, Msg, PageMetadata, RouteParams, page)
 
 import DataSource exposing (DataSource)
 import DataSource.Glob as Glob
-import Date exposing (Date)
 import Element exposing (Element)
-import Element.Font as Font
 import Head
 import Head.Seo as Seo
-import Html.Attributes as Attr
 import List.NonEmpty as NonEmpty
 import MarkdownCodec
 import MarkdownRenderer
 import OptimizedDecoder as Decode exposing (Decoder)
-import Page exposing (Page, PageWithState, StaticPayload)
-import Pages
+import Page exposing (Page, StaticPayload)
 import Pages.PageUrl exposing (PageUrl)
 import Pages.Url
-import Palette
 import Path
 import Shared
-import Site
-import StructuredDataHelper
-import Time
-import UnsplashImage exposing (UnsplashImage)
 import View exposing (View)
-import Widget.Signup
 
 
 type alias Model =

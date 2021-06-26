@@ -1,7 +1,6 @@
-module Scalar exposing (..)
+module Scalar exposing (Date, DateTime, Id, codecs)
 
 import Iso8601
-import Json.Decode as Decode exposing (Decoder)
 import SanityApi.Scalar exposing (defaultCodecs)
 import Time
 

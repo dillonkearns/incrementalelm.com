@@ -16,8 +16,8 @@ view ellieId =
         , Attr.src <| "https://ellie-app.com/embed/" ++ ellieId
         ]
         []
-        |> Element.html
-        |> Element.el
+        |> html
+        |> el
             [ width fill
             , height (px 400)
             ]

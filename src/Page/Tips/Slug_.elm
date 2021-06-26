@@ -1,4 +1,4 @@
-module Page.Tips.Slug_ exposing (Data, Model, Msg, page)
+module Page.Tips.Slug_ exposing (Data, Model, Msg, RouteParams, TipMetadata, page)
 
 import DataSource exposing (DataSource)
 import DataSource.Glob as Glob
@@ -8,14 +8,12 @@ import Element.Font as Font
 import Head
 import Head.Seo as Seo
 import Html.Attributes as Attr
-import List.NonEmpty as NonEmpty
 import MarkdownCodec
 import MarkdownRenderer
 import OptimizedDecoder as Decode exposing (Decoder)
-import Page exposing (Page, PageWithState, StaticPayload)
+import Page exposing (Page, StaticPayload)
 import Pages
 import Pages.PageUrl exposing (PageUrl)
-import Pages.Url
 import Palette
 import Path
 import Shared

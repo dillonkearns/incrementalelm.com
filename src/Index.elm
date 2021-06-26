@@ -6,7 +6,6 @@ import Element.Font
 import Pages
 import Pages.ImagePath as ImagePath
 import Pages.PagePath as PagePath exposing (PagePath)
-import Style.Helpers
 import TemplateType exposing (TemplateType)
 
 

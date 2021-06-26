@@ -1,4 +1,4 @@
-module Page.Index exposing (Data, Model, Msg, page)
+module Page.Index exposing (Data, Model, Msg, RouteParams, page)
 
 import DataSource exposing (DataSource)
 import Element exposing (Element)

@@ -4,7 +4,7 @@ import Element
 import Element.Background as Background
 import Element.Border as Border
 import Element.Font
-import Html.Attributes
+import Html.Attributes as Attr
 import Http
 import Json.Decode as Decode
 import Style exposing (palette)
@@ -29,7 +29,7 @@ view =
             Element.row
                 [ Element.spacing 5
                 , Element.Font.color palette.mainBackground
-                , Element.htmlAttribute (Html.Attributes.class "on-air")
+                , Element.htmlAttribute (Attr.class "on-air")
                 , Element.mouseOver
                     [ Background.color (Element.rgba255 200 20 20 1)
                     ]

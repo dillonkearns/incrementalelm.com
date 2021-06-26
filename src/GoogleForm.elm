@@ -1,7 +1,7 @@
 module GoogleForm exposing (view)
 
 import Element
-import Html exposing (div, iframe)
+import Html exposing (iframe)
 import Html.Attributes exposing (attribute, src, style)
 
 

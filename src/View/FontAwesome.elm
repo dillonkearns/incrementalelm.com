@@ -2,17 +2,17 @@ module View.FontAwesome exposing (icon, styledIcon)
 
 import Element exposing (Element)
 import Html
-import Html.Attributes
+import Html.Attributes as Attr
 
 
 styledIcon : String -> List (Element.Attribute msg) -> Element msg
 styledIcon classString styles =
-    Html.i [ Html.Attributes.class classString ] []
+    Html.i [ Attr.class classString ] []
         |> Element.html
         |> Element.el styles
 
 
 icon : String -> Element msg
 icon classString =
-    Html.i [ Html.Attributes.class classString ] []
+    Html.i [ Attr.class classString ] []
         |> Element.html

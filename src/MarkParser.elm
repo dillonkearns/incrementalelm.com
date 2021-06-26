@@ -1,23 +1,17 @@
 module MarkParser exposing (newDocument)
 
-import Dict exposing (Dict)
+import Dict
 import Element exposing (Element)
 import Element.Background
 import Element.Border
 import Element.Font as Font
 import Element.Region
 import GoogleForm
-import Html exposing (Html)
+import Html
 import Html.Attributes as Attr
-import Index
-import LearnIndex
 import Mark
-import Mark.Error
-import Pages
-import Pages.Platform exposing (Page)
 import Style
 import Style.Helpers
-import View.CodeSnippet
 import View.DripSignupForm
 import View.Ellie
 import View.FontAwesome

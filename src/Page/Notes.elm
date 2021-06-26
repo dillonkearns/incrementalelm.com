@@ -1,4 +1,4 @@
-module Page.Notes exposing (Data, Model, Msg, page)
+module Page.Notes exposing (Data, Model, Msg, Note, RouteParams, page)
 
 import DataSource exposing (DataSource)
 import DataSource.File
@@ -8,10 +8,10 @@ import Element.Font as Font
 import Head
 import Head.Seo as Seo
 import List.Extra
-import Markdown.Block as Block exposing (Block)
+import Markdown.Block as Block
 import Markdown.Parser
 import OptimizedDecoder as Decode
-import Page exposing (Page, PageWithState, StaticPayload)
+import Page exposing (Page, StaticPayload)
 import Pages.PageUrl exposing (PageUrl)
 import Pages.Url
 import Path

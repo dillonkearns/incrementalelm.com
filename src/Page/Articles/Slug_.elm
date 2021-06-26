@@ -1,4 +1,4 @@
-module Page.Articles.Slug_ exposing (Data, Model, Msg, page)
+module Page.Articles.Slug_ exposing (ArticleMetadata, Data, Model, Msg, RouteParams, page)
 
 import DataSource exposing (DataSource)
 import DataSource.Glob as Glob
@@ -9,7 +9,7 @@ import Head.Seo as Seo
 import MarkdownCodec
 import MarkdownRenderer
 import OptimizedDecoder as Decode exposing (Decoder)
-import Page exposing (Page, PageWithState, StaticPayload)
+import Page exposing (Page, StaticPayload)
 import Pages.PageUrl exposing (PageUrl)
 import Pages.Url
 import Path exposing (Path)

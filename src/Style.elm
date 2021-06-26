@@ -1,8 +1,7 @@
-module Style exposing (animationPalette, color, elementRgb, fontSize, fonts, highlightFactor, highlightRgb, hoverPalette, palette, rgb, shadow)
+module Style exposing (animationPalette, color, fontSize, fonts, hoverPalette, palette)
 
 import Animation
 import Element
-import Element.Border
 import Element.Font
 
 
@@ -26,10 +25,6 @@ fontSize =
 
 color =
     palette
-
-
-shadow =
-    Element.Border.shadow { offset = ( 2, 1 ), size = 1, blur = 4, color = Element.rgb 0.8 0.8 0.8 }
 
 
 palette =

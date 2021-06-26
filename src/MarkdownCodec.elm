@@ -1,4 +1,4 @@
-module MarkdownCodec exposing (codec, noteTitle, withFrontmatter, withoutFrontmatter)
+module MarkdownCodec exposing (noteTitle, withFrontmatter, withoutFrontmatter)
 
 import DataSource exposing (DataSource)
 import DataSource.File as StaticFile
@@ -40,7 +40,7 @@ noteTitle filePath =
 withoutFrontmatter :
     Markdown.Renderer.Renderer view
     -> String
-    -> DataSource.DataSource (List view)
+    -> DataSource (List view)
 withoutFrontmatter renderer filePath =
     (StaticFile.bodyWithoutFrontmatter
         filePath

@@ -1,4 +1,4 @@
-module Youtube exposing (..)
+module Youtube exposing (view)
 
 import Element exposing (Element)
 import Html exposing (..)
@@ -8,7 +8,7 @@ import Html.Attributes exposing (..)
 view : String -> Element msg
 view id =
     div
-        [ Html.Attributes.class "embed-container"
+        [ class "embed-container"
         ]
         [ iframe
             [ attribute "allow" "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
