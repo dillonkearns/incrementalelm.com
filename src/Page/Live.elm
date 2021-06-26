@@ -12,6 +12,7 @@ import Pages.PageUrl exposing (PageUrl)
 import Pages.Url
 import Request
 import Request.Events exposing (LiveStream)
+import Scalar exposing (DateTime, Id)
 import Shared
 import Time
 import TwitchButton
@@ -41,8 +42,8 @@ page =
 
 data : DataSource Data
 data =
-    --Request.staticGraphqlRequest Request.Events.selection
-    DataSource.succeed []
+    --DataSource.succeed []
+    Request.staticGraphqlRequest Request.Events.selection
 
 
 
@@ -101,10 +102,12 @@ view :
     -> View Msg
 view maybeUrl sharedModel static =
     let
+        now : Maybe Time.Posix
         now =
             -- TODO
             Just Pages.builtAt
 
+        isOnAir : TwitchButton.IsOnAir
         isOnAir =
             -- TODO
             TwitchButton.notOnAir
@@ -155,6 +158,17 @@ eventsView maybeNow isOnAir events =
                         Time.posixToMillis event.startsAt
                     )
 
+        recordings :
+            List
+                { title : String
+                , startsAt : DateTime
+                , description : String
+                , guest : List Request.Events.Guest
+                , project : Maybe Request.Events.Project
+                , youtubeId : Maybe String
+                , id : Id
+                , createdAt : DateTime
+                }
         recordings =
             events
                 |> List.filter

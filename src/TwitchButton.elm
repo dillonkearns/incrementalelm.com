@@ -65,6 +65,7 @@ request =
         }
 
 
+isLiveDecoder : Decode.Decoder IsOnAir
 isLiveDecoder =
     Decode.field "data"
         (Decode.list

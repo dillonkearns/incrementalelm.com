@@ -97,14 +97,17 @@ init =
     }
 
 
+barHeight : number
 barHeight =
     2
 
 
+spacing : number
 spacing =
     6
 
 
+barWidth : number
 barWidth =
     30
 

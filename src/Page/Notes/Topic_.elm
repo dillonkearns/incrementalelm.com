@@ -54,6 +54,7 @@ routes =
 data : RouteParams -> DataSource Data
 data routeParams =
     let
+        filePath : String
         filePath =
             "content/notes/" ++ routeParams.topic ++ ".md"
     in

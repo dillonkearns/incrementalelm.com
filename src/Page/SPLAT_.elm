@@ -129,6 +129,7 @@ type alias PageMetadata =
     }
 
 
+decoder : Decoder PageMetadata
 decoder =
     Decode.map3 PageMetadata
         (Decode.field "title" Decode.string)
@@ -145,7 +146,3 @@ imageDecoder =
                     |> Path.join
                     |> Pages.Url.fromPath
             )
-
-
-
---|> Decode.andThen findImage

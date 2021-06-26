@@ -1,6 +1,6 @@
 module Shared exposing (Data, Model, Msg(..), SharedMsg(..), template)
 
-import Animation
+import Animation exposing (Interpolation)
 import Browser.Dom as Dom
 import Browser.Events
 import Browser.Navigation
@@ -346,6 +346,7 @@ subscriptions _ model =
         ]
 
 
+interpolation : Interpolation
 interpolation =
     Animation.easing
         { duration = second * 1
