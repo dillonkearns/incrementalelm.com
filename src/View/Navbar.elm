@@ -7,7 +7,6 @@ import Element.Background as Background
 import Element.Border as Border
 import Element.Font
 import Link
-import List.NonEmpty as NonEmpty
 import Route exposing (Route)
 import Style exposing (fontSize, fonts, palette)
 import Style.Helpers
@@ -34,7 +33,7 @@ links : List { name : String, url : Route }
 links =
     [ { name = "Notes", url = Route.Notes }
     , { name = "Live Streams", url = Route.Live }
-    , { name = "Services", url = Route.SPLAT_ { splat = NonEmpty.singleton "services" } }
+    , { name = "Services", url = Route.Page_ { page = "services" } }
     ]
 
 

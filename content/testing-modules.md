@@ -1,9 +1,10 @@
 ---
 type: tip
-title: How do you test code that's not defined in a module?
 description: TODO
 publishAt: "2020-09-28"
 ---
+
+# How do you test code that's not defined in a module?
 
 Have you ever sat down to try to test some code and not known where to start? There's a bug in production, and you want to reproduce it in a unit test before working on the fix. But what do you even test? Where is the problem?
 

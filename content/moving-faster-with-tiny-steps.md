@@ -1,9 +1,10 @@
 ---
-title: Moving Faster with Tiny Steps in Elm
 description: In this post, we're going to be looking up an Article in an Elm Dict, using the tiniest steps possible.
 publishAt: "2020-01-01"
 cover: 1523005023961-0f525418b9cb
 ---
+
+# Moving Faster with Tiny Steps in Elm
 
 Why use tiny steps? Simple! Because we want to write Elm code faster, and with more precise error messages to guide us through each step.
 

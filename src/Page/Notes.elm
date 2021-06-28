@@ -10,6 +10,7 @@ import Head.Seo as Seo
 import List.Extra
 import Markdown.Block as Block
 import Markdown.Parser
+import MarkdownCodec
 import OptimizedDecoder as Decode
 import Page exposing (Page, StaticPayload)
 import Pages.PageUrl exposing (PageUrl)
@@ -46,32 +47,6 @@ data : DataSource Data
 data =
     DataSource.map Data
         wikiEntries
-
-
-noteTitle : String -> DataSource String
-noteTitle slug =
-    DataSource.File.bodyWithoutFrontmatter ("content/notes/" ++ slug ++ ".md")
-        |> DataSource.andThen
-            (\rawContent ->
-                Markdown.Parser.parse rawContent
-                    |> Result.mapError (\_ -> "Markdown error")
-                    |> Result.map
-                        (\blocks ->
-                            List.Extra.findMap
-                                (\block ->
-                                    case block of
-                                        Block.Heading Block.H1 inlines ->
-                                            Just (Block.extractInlineText inlines)
-
-                                        _ ->
-                                            Nothing
-                                )
-                                blocks
-                        )
-                    |> Result.andThen (Result.fromMaybe "Expected to find an H1 heading")
-                    |> DataSource.fromResult
-            )
-        |> DataSource.distillSerializeCodec ("note-title-" ++ slug) Serialize.string
 
 
 type alias Data =
@@ -124,8 +99,8 @@ wikiEntries =
     Glob.succeed
         (\topic filePath ->
             DataSource.map2
-                (Note (Route.Notes__Topic_ { topic = topic }) topic)
-                (noteTitle topic)
+                (Note (Route.Page_ { page = topic }) topic)
+                (MarkdownCodec.noteTitle filePath)
                 (DataSource.File.onlyFrontmatter
                     (Decode.optionalField "tags"
                         (Decode.oneOf
@@ -138,7 +113,7 @@ wikiEntries =
                     filePath
                 )
         )
-        |> Glob.match (Glob.literal "content/notes/")
+        |> Glob.match (Glob.literal "content/")
         |> Glob.capture Glob.wildcard
         |> Glob.match (Glob.literal ".md")
         |> Glob.captureFilePath

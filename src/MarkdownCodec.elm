@@ -12,29 +12,43 @@ import Serialize as S
 
 noteTitle : String -> DataSource String
 noteTitle filePath =
-    StaticFile.bodyWithoutFrontmatter filePath
+    titleFromFrontmatter filePath
         |> DataSource.andThen
-            (\rawContent ->
-                rawContent
-                    |> Markdown.Parser.parse
-                    |> Result.mapError (\_ -> "Markdown error")
-                    |> Result.map
-                        (\blocks ->
-                            blocks
-                                |> List.Extra.findMap
-                                    (\block ->
-                                        case block of
-                                            Block.Heading Block.H1 inlines ->
-                                                Just (Block.extractInlineText inlines)
+            (\maybeTitle ->
+                maybeTitle
+                    |> Maybe.map DataSource.succeed
+                    |> Maybe.withDefault
+                        (StaticFile.bodyWithoutFrontmatter filePath
+                            |> DataSource.andThen
+                                (\rawContent ->
+                                    Markdown.Parser.parse rawContent
+                                        |> Result.mapError (\_ -> "Markdown error")
+                                        |> Result.map
+                                            (\blocks ->
+                                                List.Extra.findMap
+                                                    (\block ->
+                                                        case block of
+                                                            Block.Heading Block.H1 inlines ->
+                                                                Just (Block.extractInlineText inlines)
 
-                                            _ ->
-                                                Nothing
-                                    )
+                                                            _ ->
+                                                                Nothing
+                                                    )
+                                                    blocks
+                                            )
+                                        |> Result.andThen (Result.fromMaybe <| "Expected to find an H1 heading for page " ++ filePath)
+                                        |> DataSource.fromResult
+                                )
                         )
-                    |> Result.andThen (Result.fromMaybe "Expected to find an H1 heading")
-                    |> DataSource.fromResult
             )
         |> DataSource.distillSerializeCodec ("note-title-" ++ filePath) S.string
+
+
+titleFromFrontmatter : String -> DataSource (Maybe String)
+titleFromFrontmatter filePath =
+    StaticFile.onlyFrontmatter
+        (OptimizedDecoder.optionalField "title" OptimizedDecoder.string)
+        filePath
 
 
 withoutFrontmatter :

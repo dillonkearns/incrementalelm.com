@@ -1,11 +1,12 @@
 ---
 type: tip
-title: TypeScript Without Transpilation
 description: Using TypeScript for your JavaScript has a lot of benefits. For Elm devs, the transpilation step is a burden. But you can get all the benefits and skip the transpilation.
 publishAt: "2021-02-01"
 ---
 
-The first rule of Elm is that you want to write *everything* in Elm. But sometimes we need to reach out to JavaScript, whether we're using ports, Custom Elements, or serverless functions. Sometimes JavaScript is just the right tool for the job.
+# TypeScript Without Transpilation
+
+The first rule of Elm is that you want to write _everything_ in Elm. But sometimes we need to reach out to JavaScript, whether we're using ports, Custom Elements, or serverless functions. Sometimes JavaScript is just the right tool for the job.
 
 If you're going to use JavaScript, then you may as well get the improved safety and tooling that TypeScript provides. Except that it adds an extra transpilation step. Working in Elm, that often feels like an unnecessary burden. As you may have guessed already, there is a way to get the best of both worlds!
 
@@ -58,13 +59,13 @@ You can include type information in `JSDoc` comments.
  */
 function greet(language, name, user) {
   /** @type {string} */
-  let greeting
-  greeting = `${helloInLanguage(language)} ${name}`
-  const username = user.username
+  let greeting;
+  greeting = `${helloInLanguage(language)} ${name}`;
+  const username = user.username;
   if (username) {
-    greeting += ` (@${user.username})!`
+    greeting += ` (@${user.username})!`;
   }
-  return greeting
+  return greeting;
 }
 
 /** @typedef {"english" | "spanish"} Language */

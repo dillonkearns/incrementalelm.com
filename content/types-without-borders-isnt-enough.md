@@ -1,10 +1,11 @@
 ---
 type: tip
-title: Types Without Borders Isn't Enough
 description: When you preserve type information across environments, you know that if it compiles it works. Pairing that with a functional-style API makes it truly delightful.
 publishAt: "2021-02-22"
 cover: 1593291619431-271d4391ded1
 ---
+
+# Types Without Borders Isn't Enough
 
 At Elm Conf 2018, I gave a talk called [Types Without Borders](https://www.youtube.com/watch?v=memIRXFSNkU). In the talk, I discussed the idea of preserving type information when crossing the boundary between languages or environments.
 

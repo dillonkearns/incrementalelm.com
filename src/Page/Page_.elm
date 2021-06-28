@@ -1,4 +1,4 @@
-module Page.Notes.Topic_ exposing (BackRef, Data, Model, Msg, PageMetadata, RouteParams, page)
+module Page.Page_ exposing (BackRef, Data, Model, Msg, PageMetadata, RouteParams, page)
 
 import DataSource exposing (DataSource)
 import DataSource.File
@@ -29,7 +29,7 @@ type alias Msg =
 
 
 type alias RouteParams =
-    { topic : String }
+    { page : String }
 
 
 page : Page RouteParams Data
@@ -45,7 +45,7 @@ page =
 routes : DataSource (List RouteParams)
 routes =
     Glob.succeed RouteParams
-        |> Glob.match (Glob.literal "content/notes/")
+        |> Glob.match (Glob.literal "content/")
         |> Glob.capture Glob.wildcard
         |> Glob.match (Glob.literal ".md")
         |> Glob.toDataSource
@@ -56,14 +56,14 @@ data routeParams =
     let
         filePath : String
         filePath =
-            "content/notes/" ++ routeParams.topic ++ ".md"
+            Debug.log "filePath" ("content/" ++ routeParams.page ++ ".md")
     in
     DataSource.map4
         Data
         (DataSource.File.onlyFrontmatter decoder filePath)
         (MarkdownCodec.withoutFrontmatter MarkdownRenderer.renderer filePath)
         (MarkdownCodec.noteTitle filePath)
-        (backReferences routeParams.topic)
+        (backReferences routeParams.page)
 
 
 type alias Data =
@@ -96,7 +96,7 @@ backReferencesView backRefs =
             |> List.map
                 (\backReference ->
                     Element.link []
-                        { url = Route.Notes__Topic_ { topic = backReference.slug } |> Route.toPath |> Path.toAbsolute
+                        { url = Route.Page_ { page = backReference.slug } |> Route.toPath |> Path.toAbsolute
                         , label = Element.text backReference.title
                         }
                 )
@@ -162,14 +162,15 @@ type alias BackRef =
 notes : DataSource (List BackRef)
 notes =
     Glob.succeed
-        (\topic ->
-            noteTitle topic
+        (\topic filePath ->
+            MarkdownCodec.noteTitle filePath
                 |> DataSource.map
                     (BackRef topic)
         )
-        |> Glob.match (Glob.literal "content/notes/")
+        |> Glob.match (Glob.literal "content/")
         |> Glob.capture Glob.wildcard
         |> Glob.match (Glob.literal ".md")
+        |> Glob.captureFilePath
         |> Glob.toDataSource
         |> DataSource.resolve
 
@@ -182,7 +183,7 @@ backReferences slug =
                 allNotes
                     |> List.map
                         (\note ->
-                            DataSource.File.bodyWithoutFrontmatter ("content/notes/" ++ note.slug ++ ".md")
+                            DataSource.File.bodyWithoutFrontmatter ("content/" ++ note.slug ++ ".md")
                                 |> DataSource.andThen
                                     (\rawMarkdown ->
                                         rawMarkdown
@@ -230,34 +231,3 @@ hasReferenceTo slug blocks =
                         links
             )
             False
-
-
-noteTitle : String -> DataSource String
-noteTitle slug =
-    DataSource.File.bodyWithoutFrontmatter ("content/notes/" ++ slug ++ ".md")
-        |> DataSource.andThen
-            (\rawContent ->
-                Markdown.Parser.parse rawContent
-                    |> Result.mapError (\_ -> "Markdown error")
-                    |> Result.map
-                        (\blocks ->
-                            Block.foldl
-                                (\block maxSoFar ->
-                                    case block of
-                                        Block.Heading level inlines ->
-                                            if level == Block.H1 then
-                                                Just (Block.extractInlineText inlines)
-
-                                            else
-                                                maxSoFar
-
-                                        _ ->
-                                            maxSoFar
-                                )
-                                Nothing
-                                blocks
-                        )
-                    |> Result.andThen (Result.fromMaybe "Expected to find an H1 heading")
-                    |> DataSource.fromResult
-            )
-        |> DataSource.distillSerializeCodec ("note-title-" ++ slug) Serialize.string
