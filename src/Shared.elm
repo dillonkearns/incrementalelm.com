@@ -4,13 +4,15 @@ import Animation exposing (Interpolation)
 import Browser.Dom as Dom
 import Browser.Events
 import Browser.Navigation
+import Css
 import DataSource
 import Dimensions exposing (Dimensions)
 import Ease
 import Element
 import ElmLogo
 import Html exposing (Html)
-import Html.Styled
+import Html.Styled exposing (div)
+import Html.Styled.Attributes exposing (css)
 import Http
 import Pages.Flags
 import Pages.PageUrl exposing (PageUrl)
@@ -18,6 +20,8 @@ import Path exposing (Path)
 import SharedTemplate exposing (SharedTemplate)
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
+import Tailwind.Breakpoints as Bp
+import Tailwind.Utilities as Tw
 import Task
 import Time
 import TwitchButton
@@ -197,11 +201,38 @@ view sharedData page model toMsg pageView =
         View.Tailwind nodes ->
             { title = pageView.title
             , body =
-                (((View.TailwindNavbar.view ToggleMobileMenu page.path |> Html.Styled.map toMsg)
-                    :: nodes
-                 )
-                    |> Html.Styled.div []
-                )
+                div
+                    [ css
+                        [ Tw.min_h_screen
+                        , Tw.w_full
+                        , Tw.relative
+                        ]
+                    ]
+                    [ View.TailwindNavbar.view ToggleMobileMenu page.path |> Html.Styled.map toMsg
+                    , div
+                        [ css
+                            [ Tw.pt_32
+                            , Tw.pb_16
+                            , Tw.px_8
+                            , Tw.flex
+                            , Tw.flex_col
+                            ]
+                        ]
+                        [ div
+                            [ css
+                                [ Bp.md [ Tw.mx_auto ]
+                                ]
+                            ]
+                            [ div
+                                [ css
+                                    [ Tw.prose
+                                    , Css.fontFamilies [ "Open Sans" ]
+                                    ]
+                                ]
+                                nodes
+                            ]
+                        ]
+                    ]
                     |> Html.Styled.toUnstyled
             }
 

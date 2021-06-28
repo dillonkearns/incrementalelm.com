@@ -88,41 +88,11 @@ view maybeUrl sharedModel static =
     { title = static.data.title
     , body =
         View.Tailwind
-            [ div
-                [ css
-                    [ Tw.min_h_screen
-                    , Tw.w_full
-                    , Tw.relative
-                    ]
-                ]
-                [ div
-                    [ css
-                        [ Tw.pt_32
-                        , Tw.pb_16
-                        , Tw.px_8
-                        , Tw.flex
-                        , Tw.flex_col
-                        ]
-                    ]
-                    [ div
-                        [ css
-                            [ Bp.md [ Tw.mx_auto ]
-                            ]
-                        ]
-                        [ div
-                            [ css
-                                [ Tw.prose
-                                , Css.fontFamilies [ "Open Sans" ]
-                                ]
-                            ]
-                            static.data.body
-                        , backReferencesView static.data.backReferences
-                        ]
-                    ]
-                ]
-            ]
-
-    --++ [ backReferencesView static.data.backReferences ] ]
+            ([ static.data.body
+             , [ backReferencesView static.data.backReferences ]
+             ]
+                |> List.concat
+            )
     }
 
 

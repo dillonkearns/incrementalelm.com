@@ -113,10 +113,11 @@ renderer =
                         ]
                         []
                 )
-
-            --, Markdown.Html.tag "signup" Widget.Signup.view
-            --    |> Markdown.Html.withAttribute "buttontext"
-            --    |> Markdown.Html.withAttribute "formid"
+            , Markdown.Html.tag "signup"
+                --Widget.Signup.view
+                (\_ _ _ -> Html.text "signup TODO")
+                |> Markdown.Html.withAttribute "buttontext"
+                |> Markdown.Html.withAttribute "formid"
             , Markdown.Html.tag "button"
                 (\url children ->
                     Html.a
