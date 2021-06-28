@@ -159,7 +159,7 @@ renderer =
                     [ Element.htmlAttribute
                         (Html.Attributes.attribute "elm-pages:prefetch" "")
                     ]
-                    { url = "/notes/" ++ destination
+                    { url = destination
                     , label =
                         Element.paragraph
                             [ Font.color (Element.rgb255 17 132 206)
