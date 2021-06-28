@@ -73,26 +73,28 @@ view :
 view maybeUrl sharedModel static =
     { title = static.data.metadata.title
     , body =
-        (static.data.metadata.title
-            |> Element.text
-            |> List.singleton
-            |> Element.paragraph
-                [ Font.size 36
-                , Font.center
-                , Font.family [ Font.typeface "Raleway" ]
-                , Font.bold
-                ]
-        )
-            :: (Element.image
-                    [ Element.width (Element.fill |> Element.maximum 600)
-                    , Element.centerX
+        View.ElmUi
+            ((static.data.metadata.title
+                |> Element.text
+                |> List.singleton
+                |> Element.paragraph
+                    [ Font.size 36
+                    , Font.center
+                    , Font.family [ Font.typeface "Raleway" ]
+                    , Font.bold
                     ]
-                    { src = static.data.metadata.coverImage |> Path.toAbsolute
-                    , description = static.data.metadata.title
-                    }
-                    |> Element.el [ Element.centerX ]
-               )
-            :: static.data.body
+             )
+                :: (Element.image
+                        [ Element.width (Element.fill |> Element.maximum 600)
+                        , Element.centerX
+                        ]
+                        { src = static.data.metadata.coverImage |> Path.toAbsolute
+                        , description = static.data.metadata.title
+                        }
+                        |> Element.el [ Element.centerX ]
+                   )
+                :: static.data.body
+            )
     }
 
 

@@ -115,7 +115,8 @@ view maybeUrl sharedModel static =
     { title = "Incremental Elm Live Streams" --static.metadata.title
     , body =
         --viewForPage
-        [ eventsView now isOnAir static.data ]
+        View.ElmUi
+            [ eventsView now isOnAir static.data ]
     }
 
 

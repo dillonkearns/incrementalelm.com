@@ -158,6 +158,12 @@ view :
     -> View msg
     -> { body : Html msg, title : String }
 view sharedData page model toMsg pageView =
+    let
+        body =
+            case pageView.body of
+                View.ElmUi elements ->
+                    elements
+    in
     { title = pageView.title
     , body =
         (if model.showMenu then
@@ -173,7 +179,7 @@ view sharedData page model toMsg pageView =
          else
             Element.column [ Element.width Element.fill ]
                 [ View.Navbar.view model animationView (toMsg StartAnimation)
-                , pageView.body
+                , body
                     |> Element.textColumn
                         [ Element.height Element.fill
                         , Element.padding 30

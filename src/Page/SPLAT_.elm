@@ -91,7 +91,8 @@ view maybeUrl sharedModel static =
         --    ]
         --
         --else
-        static.data.body
+        View.ElmUi
+            static.data.body
     }
 
 

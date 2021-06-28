@@ -87,26 +87,27 @@ view :
 view maybeUrl sharedModel static =
     { title = "Incremental Elm Wiki"
     , body =
-        [ Element.paragraph
-            [ Font.size 36
-            , Font.center
-            , Font.family [ Font.typeface "Raleway" ]
-            , Font.bold
+        View.ElmUi
+            [ Element.paragraph
+                [ Font.size 36
+                , Font.center
+                , Font.family [ Font.typeface "Raleway" ]
+                , Font.bold
+                ]
+                [ Element.text "Incremental Elm Wiki" ]
+            , Element.column []
+                (static.data.notes
+                    |> List.map
+                        (\note ->
+                            Element.link []
+                                { url = Route.toPath note.route |> Path.toAbsolute
+                                , label =
+                                    Element.el []
+                                        (Element.text <| note.title ++ " #" ++ String.join ", " note.tags)
+                                }
+                        )
+                )
             ]
-            [ Element.text "Incremental Elm Wiki" ]
-        , Element.column []
-            (static.data.notes
-                |> List.map
-                    (\note ->
-                        Element.link []
-                            { url = Route.toPath note.route |> Path.toAbsolute
-                            , label =
-                                Element.el []
-                                    (Element.text <| note.title ++ " #" ++ String.join ", " note.tags)
-                            }
-                    )
-            )
-        ]
     }
 
 

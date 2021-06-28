@@ -78,53 +78,55 @@ view :
 view maybeUrl sharedModel static =
     { title = static.data.metadata.title
     , body =
-        [ [ Element.paragraph
-                [ Font.size 36
-                , Font.alignLeft
-                , Font.family [ Font.typeface "Open Sans" ]
-                , Font.bold
-                ]
-                [ Element.text static.data.metadata.title ]
-          ]
-        , [ Element.row []
-                [ Element.row
-                    [ Element.htmlAttribute (Attr.class "avatar")
-                    , Element.paddingEach
-                        { bottom = 0
-                        , left = 0
-                        , right = 15
-                        , top = 0
-                        }
-                    ]
-                    [ Element.image
-                        [ Element.width (Element.px 80)
-                        , Element.height (Element.px 80)
-                        ]
-                        { src = "https://res.cloudinary.com/dillonkearns/image/upload/c_pad,w_180,q_auto,f_auto/v1602899672/elm-radio/dillon-profile_n2lqst.jpg"
-                        , description = ""
-                        }
-                    ]
-                , Element.paragraph
-                    [ Font.size 20
+        View.ElmUi
+            ([ [ Element.paragraph
+                    [ Font.size 36
                     , Font.alignLeft
                     , Font.family [ Font.typeface "Open Sans" ]
+                    , Font.bold
                     ]
-                    [ Element.row [ Element.htmlAttribute (Attr.class "avatar") ]
-                        [ Element.text "Dillon Kearns" |> Element.el [ Font.bold ]
+                    [ Element.text static.data.metadata.title ]
+               ]
+             , [ Element.row []
+                    [ Element.row
+                        [ Element.htmlAttribute (Attr.class "avatar")
+                        , Element.paddingEach
+                            { bottom = 0
+                            , left = 0
+                            , right = 15
+                            , top = 0
+                            }
                         ]
-                    , " · "
-                        ++ (static.data.metadata.publishedAt |> Date.format "MMMM d, y")
-                        |> Element.text
+                        [ Element.image
+                            [ Element.width (Element.px 80)
+                            , Element.height (Element.px 80)
+                            ]
+                            { src = "https://res.cloudinary.com/dillonkearns/image/upload/c_pad,w_180,q_auto,f_auto/v1602899672/elm-radio/dillon-profile_n2lqst.jpg"
+                            , description = ""
+                            }
+                        ]
+                    , Element.paragraph
+                        [ Font.size 20
+                        , Font.alignLeft
+                        , Font.family [ Font.typeface "Open Sans" ]
+                        ]
+                        [ Element.row [ Element.htmlAttribute (Attr.class "avatar") ]
+                            [ Element.text "Dillon Kearns" |> Element.el [ Font.bold ]
+                            ]
+                        , " · "
+                            ++ (static.data.metadata.publishedAt |> Date.format "MMMM d, y")
+                            |> Element.text
+                        ]
                     ]
-                ]
-          ]
+               ]
 
-        --, [ UnsplashImage.image [ Element.width Element.fill ] static.data.metadata.cover ]
-        , [ Element.paragraph [ Element.padding 20 ] [ Palette.textQuote static.data.metadata.description ] ]
-        , static.data.body
-        , [ Widget.Signup.view "Get Weekly Tips" "906002494" [] ]
-        ]
-            |> List.concat
+             --, [ UnsplashImage.image [ Element.width Element.fill ] static.data.metadata.cover ]
+             , [ Element.paragraph [ Element.padding 20 ] [ Palette.textQuote static.data.metadata.description ] ]
+             , static.data.body
+             , [ Widget.Signup.view "Get Weekly Tips" "906002494" [] ]
+             ]
+                |> List.concat
+            )
     }
 
 

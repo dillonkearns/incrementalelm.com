@@ -76,5 +76,7 @@ view :
     -> View Msg
 view maybeUrl sharedModel static =
     { title = static.data.metadata
-    , body = static.data.body
+    , body =
+        View.ElmUi
+            static.data.body
     }

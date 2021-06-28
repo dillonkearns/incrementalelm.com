@@ -82,8 +82,10 @@ view :
 view maybeUrl sharedModel static =
     { title = static.data.title
     , body =
-        static.data.body
-            ++ [ backReferencesView static.data.backReferences ]
+        View.ElmUi
+            (static.data.body
+                ++ [ backReferencesView static.data.backReferences ]
+            )
     }
 
 
