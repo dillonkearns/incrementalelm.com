@@ -4,14 +4,13 @@ import Css
 import DataSource exposing (DataSource)
 import DataSource.File
 import DataSource.Glob as Glob
-import Element exposing (Element)
 import Head
-import Html.Styled exposing (Html, div)
+import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (css)
+import Link
 import Markdown.Block as Block exposing (Block)
 import Markdown.Parser
 import MarkdownCodec
-import MarkdownRenderer
 import OptimizedDecoder as Decode exposing (Decoder)
 import Page exposing (Page, StaticPayload)
 import Pages.PageUrl exposing (PageUrl)
@@ -117,6 +116,7 @@ view maybeUrl sharedModel static =
                                 ]
                             ]
                             static.data.body
+                        , backReferencesView static.data.backReferences
                         ]
                     ]
                 ]
@@ -126,18 +126,37 @@ view maybeUrl sharedModel static =
     }
 
 
-backReferencesView : List BackRef -> Element msg
+backReferencesView : List BackRef -> Html msg
 backReferencesView backRefs =
-    Element.column []
-        (backRefs
-            |> List.map
-                (\backReference ->
-                    Element.link []
-                        { url = Route.Page_ { page = backReference.slug } |> Route.toPath |> Path.toAbsolute
-                        , label = Element.text backReference.title
-                        }
+    if List.isEmpty backRefs then
+        text ""
+
+    else
+        div
+            []
+            [ h2
+                [ css
+                    [ Css.fontFamilies [ "Raleway" ]
+                    , Tw.text_2xl
+                    , Tw.font_bold
+                    , Tw.pb_4
+                    ]
+                ]
+                [ text "Linked References" ]
+            , ul
+                [ css [ Css.fontFamilies [ "Open Sans" ] ]
+                ]
+                (backRefs
+                    |> List.map
+                        (\backReference ->
+                            li
+                                []
+                                [ Route.Page_ { page = backReference.slug }
+                                    |> Link.htmlLink [] (text backReference.title)
+                                ]
+                        )
                 )
-        )
+            ]
 
 
 head :
