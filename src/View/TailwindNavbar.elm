@@ -26,6 +26,7 @@ view toggleMobileMenuMsg currentPath =
             , Tw.border_b
             , Tw.border_gray_200
             , Tw.px_6
+            , Tw.shadow
 
             --, Bp.dark
             --    [ Tw.bg_dark
