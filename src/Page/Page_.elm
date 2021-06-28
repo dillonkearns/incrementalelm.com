@@ -1,10 +1,13 @@
 module Page.Page_ exposing (BackRef, Data, Model, Msg, PageMetadata, RouteParams, page)
 
+import Css
 import DataSource exposing (DataSource)
 import DataSource.File
 import DataSource.Glob as Glob
 import Element exposing (Element)
 import Head
+import Html.Styled exposing (Html, div)
+import Html.Styled.Attributes exposing (css)
 import Markdown.Block as Block exposing (Block)
 import Markdown.Parser
 import MarkdownCodec
@@ -17,6 +20,9 @@ import Path
 import Route exposing (Route)
 import Serialize
 import Shared
+import Tailwind.Breakpoints as Bp
+import Tailwind.Utilities as Tw
+import TailwindMarkdownRenderer
 import View exposing (View)
 
 
@@ -61,14 +67,14 @@ data routeParams =
     DataSource.map4
         Data
         (DataSource.File.onlyFrontmatter decoder filePath)
-        (MarkdownCodec.withoutFrontmatter MarkdownRenderer.renderer filePath)
+        (MarkdownCodec.withoutFrontmatter TailwindMarkdownRenderer.renderer filePath)
         (MarkdownCodec.noteTitle filePath)
         (backReferences routeParams.page)
 
 
 type alias Data =
     { metadata : PageMetadata
-    , body : List (Element Msg)
+    , body : List (Html Msg)
     , title : String
     , backReferences : List BackRef
     }
@@ -82,10 +88,41 @@ view :
 view maybeUrl sharedModel static =
     { title = static.data.title
     , body =
-        View.ElmUi
-            (static.data.body
-                ++ [ backReferencesView static.data.backReferences ]
-            )
+        View.Tailwind
+            [ div
+                [ css
+                    [ Tw.min_h_screen
+                    , Tw.w_full
+                    , Tw.relative
+                    ]
+                ]
+                [ div
+                    [ css
+                        [ Tw.pt_16
+                        , Tw.pb_16
+                        , Tw.px_8
+                        , Tw.flex
+                        , Tw.flex_col
+                        ]
+                    ]
+                    [ div
+                        [ css
+                            [ Bp.md [ Tw.mx_auto ]
+                            ]
+                        ]
+                        [ div
+                            [ css
+                                [ Tw.prose
+                                , Css.fontFamilies [ "Open Sans" ]
+                                ]
+                            ]
+                            static.data.body
+                        ]
+                    ]
+                ]
+            ]
+
+    --++ [ backReferencesView static.data.backReferences ] ]
     }
 
 

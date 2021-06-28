@@ -1,7 +1,7 @@
 module View exposing (Body(..), View, map, placeholder)
 
 import Element exposing (Element)
-import Html.Styled exposing (Html)
+import Html.Styled as Html exposing (Html)
 
 
 type alias View msg =
@@ -12,6 +12,7 @@ type alias View msg =
 
 type Body msg
     = ElmUi (List (Element msg))
+    | Tailwind (List (Html msg))
 
 
 
@@ -25,6 +26,9 @@ map fn doc =
         case doc.body of
             ElmUi elements ->
                 List.map (Element.map fn) elements |> ElmUi
+
+            Tailwind nodes ->
+                List.map (Html.map fn) nodes |> Tailwind
     }
 
 

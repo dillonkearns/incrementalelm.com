@@ -10,6 +10,7 @@ import Ease
 import Element
 import ElmLogo
 import Html exposing (Html)
+import Html.Styled
 import Http
 import Pages.Flags
 import Pages.PageUrl exposing (PageUrl)
@@ -158,43 +159,47 @@ view :
     -> View msg
     -> { body : Html msg, title : String }
 view sharedData page model toMsg pageView =
-    let
-        body =
-            case pageView.body of
-                View.ElmUi elements ->
-                    elements
-    in
-    { title = pageView.title
-    , body =
-        (if model.showMenu then
-            Element.column
-                [ Element.height Element.fill
-                , Element.alignTop
-                , Element.width Element.fill
-                ]
-                [ View.Navbar.view model animationView (toMsg StartAnimation)
-                , View.Navbar.modalMenuView model.menuAnimation
-                ]
-
-         else
-            Element.column [ Element.width Element.fill ]
-                [ View.Navbar.view model animationView (toMsg StartAnimation)
-                , body
-                    |> Element.textColumn
+    case pageView.body of
+        View.ElmUi elements ->
+            { title = pageView.title
+            , body =
+                (if model.showMenu then
+                    Element.column
                         [ Element.height Element.fill
-                        , Element.padding 30
-                        , Element.spacing 30
-                        , Element.centerX
-                        , if Dimensions.isMobile model.dimensions then
-                            Element.width (Element.fill |> Element.maximum 600)
-
-                          else
-                            Element.width (Element.fill |> Element.maximum 700)
+                        , Element.alignTop
+                        , Element.width Element.fill
                         ]
-                ]
-        )
-            |> Element.layout [ Element.width Element.fill ]
-    }
+                        [ View.Navbar.view model animationView (toMsg StartAnimation)
+                        , View.Navbar.modalMenuView model.menuAnimation
+                        ]
+
+                 else
+                    Element.column [ Element.width Element.fill ]
+                        [ View.Navbar.view model animationView (toMsg StartAnimation)
+                        , elements
+                            |> Element.textColumn
+                                [ Element.height Element.fill
+                                , Element.padding 30
+                                , Element.spacing 30
+                                , Element.centerX
+                                , if Dimensions.isMobile model.dimensions then
+                                    Element.width (Element.fill |> Element.maximum 600)
+
+                                  else
+                                    Element.width (Element.fill |> Element.maximum 700)
+                                ]
+                        ]
+                )
+                    |> Element.layout [ Element.width Element.fill ]
+            }
+
+        View.Tailwind nodes ->
+            { title = pageView.title
+            , body =
+                nodes
+                    |> Html.Styled.div []
+                    |> Html.Styled.toUnstyled
+            }
 
 
 animationView model =
