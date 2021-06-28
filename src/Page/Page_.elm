@@ -97,7 +97,7 @@ view maybeUrl sharedModel static =
                 ]
                 [ div
                     [ css
-                        [ Tw.pt_16
+                        [ Tw.pt_32
                         , Tw.pb_16
                         , Tw.px_8
                         , Tw.flex

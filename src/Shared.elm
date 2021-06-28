@@ -24,6 +24,7 @@ import TwitchButton
 import View exposing (View)
 import View.MenuBar
 import View.Navbar
+import View.TailwindNavbar
 
 
 template : SharedTemplate Msg Model Data SharedMsg msg
@@ -196,8 +197,11 @@ view sharedData page model toMsg pageView =
         View.Tailwind nodes ->
             { title = pageView.title
             , body =
-                nodes
+                (((View.TailwindNavbar.view ToggleMobileMenu page.path |> Html.Styled.map toMsg)
+                    :: nodes
+                 )
                     |> Html.Styled.div []
+                )
                     |> Html.Styled.toUnstyled
             }
 
@@ -235,6 +239,7 @@ type Msg
     = StartAnimation
     | Animate Animation.Msg
     | InitialViewport Dom.Viewport
+    | ToggleMobileMenu
     | WindowResized Int Int
     | OnAirUpdated (Result Http.Error TwitchButton.IsOnAir)
     | GotCurrentTime Time.Posix
@@ -249,6 +254,9 @@ type Msg
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        ToggleMobileMenu ->
+            ( { model | showMenu = not model.showMenu }, Cmd.none )
+
         InitialViewport { viewport } ->
             ( { model
                 | dimensions =

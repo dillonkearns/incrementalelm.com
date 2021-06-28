@@ -117,9 +117,15 @@ renderer =
             --, Markdown.Html.tag "signup" Widget.Signup.view
             --    |> Markdown.Html.withAttribute "buttontext"
             --    |> Markdown.Html.withAttribute "formid"
-            --, Markdown.Html.tag "button"
-            --    (\url children -> buttonView { url = url, children = children })
-            --    |> Markdown.Html.withAttribute "url"
+            , Markdown.Html.tag "button"
+                (\url children ->
+                    Html.a
+                        [ Attr.href url
+                        ]
+                        children
+                )
+                |> Markdown.Html.withAttribute "url"
+
             --, Markdown.Html.tag "vimeo"
             --    (\id children -> vimeoView id)
             --    |> Markdown.Html.withAttribute "id"
@@ -161,7 +167,16 @@ renderer =
             --    |> Markdown.Html.withAttribute "title"
             --    |> Markdown.Html.withAttribute "icon"
             --    |> Markdown.Html.withAttribute "url"
-            --, Markdown.Html.tag "contact-button" (\body -> contactButtonView)
+            , Markdown.Html.tag "contact-button"
+                (\body ->
+                    --contactButtonView
+                    Html.a
+                        [ Attr.href "mailto:dillon@incrementalelm.com"
+                        , css
+                            []
+                        ]
+                        [ Html.text "Contact" ]
+                )
             ]
     , codeBlock = codeBlock
 
