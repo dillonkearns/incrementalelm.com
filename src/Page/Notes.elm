@@ -227,8 +227,10 @@ searchInput searchQuery =
                     [ Tw.shadow_sm
                     , Tw.block
                     , Tw.w_full
-                    , Tw.border_gray_200
+                    , Tw.form_input
                     , Tw.rounded_md
+                    , Tw.border_gray_700
+                    , Tw.rounded
                     , Bp.sm
                         [ Tw.text_sm
                         ]
