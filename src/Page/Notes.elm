@@ -1,5 +1,6 @@
 module Page.Notes exposing (Data, Model, Msg, Note, RouteParams, page)
 
+import Browser.Navigation
 import Css
 import DataSource exposing (DataSource)
 import DataSource.File
@@ -7,38 +8,62 @@ import DataSource.Glob as Glob
 import Head
 import Head.Seo as Seo
 import Html.Styled exposing (..)
-import Html.Styled.Attributes exposing (css)
+import Html.Styled.Attributes as Attr exposing (css)
+import Html.Styled.Events
+import Html.Styled.Lazy
 import Link
 import MarkdownCodec
 import OptimizedDecoder as Decode
-import Page exposing (Page, StaticPayload)
+import Page exposing (Page, PageWithState, StaticPayload)
 import Pages.PageUrl exposing (PageUrl)
 import Pages.Url
 import Route exposing (Route)
 import Shared
+import Tailwind.Breakpoints as Bp
 import Tailwind.Utilities as Tw
 import View exposing (View)
 
 
 type alias Model =
-    ()
+    String
 
 
-type alias Msg =
-    Never
+type Msg
+    = OnSearchInput String
 
 
 type alias RouteParams =
     {}
 
 
-page : Page RouteParams Data
+page : PageWithState RouteParams Data Model Msg
 page =
     Page.single
         { head = head
         , data = data
         }
-        |> Page.buildNoState { view = view }
+        |> Page.buildWithLocalState
+            { view = view
+            , update = update
+            , subscriptions = \_ _ _ _ -> Sub.none
+            , init =
+                \_ _ _ ->
+                    ( "", Cmd.none )
+            }
+
+
+update :
+    PageUrl
+    -> Maybe Browser.Navigation.Key
+    -> Shared.Model
+    -> StaticPayload Data RouteParams
+    -> Msg
+    -> Model
+    -> ( Model, Cmd Msg )
+update _ _ _ _ msg model =
+    case msg of
+        OnSearchInput newInput ->
+            ( newInput, Cmd.none )
 
 
 data : DataSource Data
@@ -55,9 +80,10 @@ type alias Data =
 view :
     Maybe PageUrl
     -> Shared.Model
+    -> Model
     -> StaticPayload Data RouteParams
     -> View Msg
-view maybeUrl sharedModel static =
+view maybeUrl sharedModel model static =
     { title = "Incremental Elm Wiki"
     , body =
         View.Tailwind
@@ -70,19 +96,46 @@ view maybeUrl sharedModel static =
                     ]
                 ]
                 [ text "Incremental Elm Notes" ]
-            , ul []
-                (static.data.notes
-                    |> List.map
-                        (\note ->
-                            note.route
-                                |> Link.htmlLink []
-                                    (text <| note.title ++ " #" ++ String.join ", " note.tags)
-                                |> List.singleton
-                                |> li []
-                        )
-                )
+
+            --, input
+            --    [ Attr.type_ "text"
+            --    , Attr.value model
+            --    , Html.Styled.Events.onInput OnSearchInput
+            --    ]
+            --    []
+            , searchInput model
+            , -- Html.Styled.Lazy.lazy2
+              notesList model static.data.notes
             ]
     }
+
+
+notesList searchQuery notes =
+    ul []
+        (notes
+            |> List.filterMap
+                (\note ->
+                    if noteMatches searchQuery note then
+                        note.route
+                            |> Link.htmlLink []
+                                (text <|
+                                    note.title
+                                 --++ " #"
+                                 --++ String.join ", " note.tags
+                                )
+                            |> List.singleton
+                            |> li []
+                            |> Just
+
+                    else
+                        Nothing
+                )
+        )
+
+
+noteMatches : String -> Note -> Bool
+noteMatches query note =
+    note.title |> String.toLower |> String.contains (query |> String.toLower)
 
 
 type alias Note =
@@ -144,3 +197,44 @@ head static =
             , modifiedTime = Nothing
             , expirationTime = Nothing
             }
+
+
+searchInput : String -> Html Msg
+searchInput searchQuery =
+    div
+        []
+        [ label
+            [ Attr.for "filter"
+            , css
+                [ Tw.block
+                , Tw.text_sm
+                , Tw.font_medium
+                ]
+            ]
+            [ text "Filter" ]
+        , div
+            [ css
+                [ Tw.mt_1
+                ]
+            ]
+            [ input
+                [ Attr.type_ "text"
+                , Attr.name "filter"
+                , Attr.id "search"
+                , Attr.value searchQuery
+                , Html.Styled.Events.onInput OnSearchInput
+                , css
+                    [ Tw.shadow_sm
+                    , Tw.block
+                    , Tw.w_full
+                    , Tw.border_gray_200
+                    , Tw.rounded_md
+                    , Bp.sm
+                        [ Tw.text_sm
+                        ]
+                    ]
+                , Attr.placeholder "Your Filter Query"
+                ]
+                []
+            ]
+        ]
