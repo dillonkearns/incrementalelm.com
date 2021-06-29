@@ -4,24 +4,17 @@ import Css
 import DataSource exposing (DataSource)
 import DataSource.File
 import DataSource.Glob as Glob
-import Element
-import Element.Font as Font
 import Head
 import Head.Seo as Seo
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (css)
 import Link
-import List.Extra
-import Markdown.Block as Block
-import Markdown.Parser
 import MarkdownCodec
 import OptimizedDecoder as Decode
 import Page exposing (Page, StaticPayload)
 import Pages.PageUrl exposing (PageUrl)
 import Pages.Url
-import Path
 import Route exposing (Route)
-import Serialize
 import Shared
 import Tailwind.Utilities as Tw
 import View exposing (View)
