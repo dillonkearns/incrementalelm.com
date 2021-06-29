@@ -63,12 +63,13 @@ data routeParams =
         filePath =
             Debug.log "filePath" ("content/" ++ routeParams.page ++ ".md")
     in
-    DataSource.map4
+    DataSource.map5
         Data
         (DataSource.File.onlyFrontmatter decoder filePath)
         (MarkdownCodec.withoutFrontmatter TailwindMarkdownRenderer.renderer filePath)
         (MarkdownCodec.noteTitle filePath)
         (backReferences routeParams.page)
+        (forwardRefs routeParams.page)
 
 
 type alias Data =
@@ -76,6 +77,7 @@ type alias Data =
     , body : List (Html Msg)
     , title : String
     , backReferences : List BackRef
+    , forwardReferences : List BackRef
     }
 
 
@@ -89,7 +91,9 @@ view maybeUrl sharedModel static =
     , body =
         View.Tailwind
             ([ static.data.body
-             , [ backReferencesView static.data.backReferences ]
+             , [ backReferencesView static.data.backReferences
+               , backReferencesView static.data.forwardReferences
+               ]
              ]
                 |> List.concat
             )
@@ -232,6 +236,24 @@ backReferences slug =
         |> DataSource.distillSerializeCodec "backrefs" (Serialize.list serializeBackRef)
 
 
+forwardRefs : String -> DataSource (List BackRef)
+forwardRefs slug =
+    DataSource.File.bodyWithoutFrontmatter ("content/" ++ slug ++ ".md")
+        |> DataSource.andThen
+            (\rawMarkdown ->
+                rawMarkdown
+                    |> Markdown.Parser.parse
+                    |> Result.map
+                        (\blocks ->
+                            blocks
+                                |> forwardReferences
+                        )
+                    |> Result.mapError (\_ -> "Markdown error")
+                    |> DataSource.fromResult
+                    |> DataSource.distillSerializeCodec "forwardRefs" (Serialize.list serializeBackRef)
+            )
+
+
 serializeBackRef : Serialize.Codec e { slug : String, title : String }
 serializeBackRef =
     Serialize.record BackRef
@@ -257,3 +279,31 @@ hasReferenceTo slug blocks =
                         links
             )
             False
+
+
+forwardReferences : List Block -> List BackRef
+forwardReferences blocks =
+    blocks
+        |> Block.inlineFoldl
+            (\inline links ->
+                case inline of
+                    Block.Link str _ _ ->
+                        if isWikiLink str then
+                            { slug = str
+                            , title =
+                                -- TODO real title, not slug
+                                str
+                            }
+                                :: links
+
+                        else
+                            links
+
+                    _ ->
+                        links
+            )
+            []
+
+
+isWikiLink destination =
+    not (destination |> String.startsWith "http")
