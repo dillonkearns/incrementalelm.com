@@ -1,5 +1,6 @@
 module Page.Notes exposing (Data, Model, Msg, Note, RouteParams, page)
 
+import Css
 import DataSource exposing (DataSource)
 import DataSource.File
 import DataSource.Glob as Glob
@@ -7,6 +8,9 @@ import Element
 import Element.Font as Font
 import Head
 import Head.Seo as Seo
+import Html.Styled exposing (..)
+import Html.Styled.Attributes exposing (css)
+import Link
 import List.Extra
 import Markdown.Block as Block
 import Markdown.Parser
@@ -19,6 +23,7 @@ import Path
 import Route exposing (Route)
 import Serialize
 import Shared
+import Tailwind.Utilities as Tw
 import View exposing (View)
 
 
@@ -62,24 +67,25 @@ view :
 view maybeUrl sharedModel static =
     { title = "Incremental Elm Wiki"
     , body =
-        View.ElmUi
-            [ Element.paragraph
-                [ Font.size 36
-                , Font.center
-                , Font.family [ Font.typeface "Raleway" ]
-                , Font.bold
+        View.Tailwind
+            [ div
+                [ css
+                    [ Tw.font_bold
+                    , Tw.text_xl
+                    , Tw.text_center
+                    , Css.fontFamilies [ "Raleway" ]
+                    ]
                 ]
-                [ Element.text "Incremental Elm Wiki" ]
-            , Element.column []
+                [ text "Incremental Elm Notes" ]
+            , ul []
                 (static.data.notes
                     |> List.map
                         (\note ->
-                            Element.link []
-                                { url = Route.toPath note.route |> Path.toAbsolute
-                                , label =
-                                    Element.el []
-                                        (Element.text <| note.title ++ " #" ++ String.join ", " note.tags)
-                                }
+                            note.route
+                                |> Link.htmlLink []
+                                    (text <| note.title ++ " #" ++ String.join ", " note.tags)
+                                |> List.singleton
+                                |> li []
                         )
                 )
             ]
