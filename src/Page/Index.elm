@@ -85,9 +85,7 @@ view maybeUrl sharedModel static =
         View.Tailwind
             [ div
                 [ css
-                    [ Tw.prose
-                    , Css.fontFamilies [ "Open Sans" ]
-                    ]
+                    []
                 ]
                 static.data.body
             ]

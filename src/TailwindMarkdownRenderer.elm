@@ -1,6 +1,7 @@
 module TailwindMarkdownRenderer exposing (renderer)
 
 import Css
+import DarkMode
 import Html.Styled as Html
 import Html.Styled.Attributes as Attr exposing (css)
 import Markdown.Block as Block
@@ -13,7 +14,14 @@ import Tailwind.Utilities as Tw
 renderer : Markdown.Renderer.Renderer (Html.Html msg)
 renderer =
     { heading = heading
-    , paragraph = Html.p []
+    , paragraph =
+        Html.p
+            [ css
+                [ Tw.bg_background |> Css.important
+                , Tw.text_foreground |> Css.important
+                , Tw.mb_4
+                ]
+            ]
     , thematicBreak = Html.hr [] []
     , text = Html.text
     , strong = \content -> Html.strong [ css [ Tw.font_bold ] ] content
@@ -51,7 +59,11 @@ renderer =
                     Html.img [ Attr.src image.src, Attr.alt image.alt ] []
     , unorderedList =
         \items ->
-            Html.ul []
+            Html.ul
+                [ css
+                    [ Tw.list_disc
+                    ]
+                ]
                 (items
                     |> List.map
                         (\item ->
@@ -79,7 +91,12 @@ renderer =
                                                         ]
                                                         []
                                     in
-                                    Html.li [] (checkbox :: children)
+                                    Html.li
+                                        [ css
+                                            [ Tw.ml_7
+                                            ]
+                                        ]
+                                        (checkbox :: children)
                         )
                 )
     , orderedList =
@@ -279,12 +296,14 @@ heading { level, rawText, children } =
         Block.H1 ->
             Html.h1
                 [ css
-                    [ Tw.text_2xl
+                    [ Tw.text_4xl
                     , Tw.font_bold
                     , Tw.tracking_tight
                     , Tw.mt_2
-                    , Tw.mb_4
+                    , Tw.mb_8
                     , [ Css.qt "Raleway" ] |> Css.fontFamilies
+
+                    --, Tw.mb_3_dot_5 |> Css.important
                     ]
                 ]
                 children

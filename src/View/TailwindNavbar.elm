@@ -1,6 +1,7 @@
 module View.TailwindNavbar exposing (view)
 
 import Css
+import DarkMode exposing (DarkMode)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes as Attr exposing (css)
 import Link
@@ -10,13 +11,14 @@ import Tailwind.Breakpoints as Bp
 import Tailwind.Utilities as Tw
 
 
-view : msg -> Path -> Html msg
-view toggleMobileMenuMsg currentPath =
+view : DarkMode -> msg -> Path -> Html msg
+view darkMode toggleMobileMenuMsg currentPath =
     nav
         [ css
             [ Tw.flex
             , Tw.items_center
-            , Tw.bg_white
+
+            --, Tw.bg_white
             , Tw.z_20
             , Tw.fixed
             , Tw.top_0
@@ -27,6 +29,9 @@ view toggleMobileMenuMsg currentPath =
             , Tw.border_gray_200
             , Tw.px_6
             , Tw.shadow
+            , Tw.bg_background
+            , Tw.border_gray_900
+            , Tw.text_foreground
 
             --, Bp.dark
             --    [ Tw.bg_dark
@@ -63,6 +68,8 @@ view toggleMobileMenuMsg currentPath =
                         , Tw.neg_ml_2
                         , Tw.font_extrabold
                         , Tw.inline
+
+                        -- TODO try with https://package.elm-lang.org/packages/rtfeldman/elm-css/latest/Css#pseudoClass
                         , Bp.md
                             [ Tw.inline
                             ]
@@ -72,23 +79,24 @@ view toggleMobileMenuMsg currentPath =
                     [ text "Incremental Elm" ]
                 ]
             ]
-        , headerLink currentPath Route.Notes "Notes"
-        , headerLink currentPath Route.Live "Live Streams"
-        , headerLink currentPath (Route.Page_ { page = "services" }) "Services"
+        , headerLink darkMode currentPath Route.Notes "Notes"
+        , headerLink darkMode currentPath Route.Live "Live Streams"
+        , headerLink darkMode currentPath (Route.Page_ { page = "services" }) "Services"
+        , DarkMode.view darkMode
         ]
 
 
-headerLink : Path -> Route -> String -> Html msg
-headerLink currentPagePath linkTo name =
+headerLink : DarkMode -> Path -> Route -> String -> Html msg
+headerLink darkMode currentPagePath linkTo name =
     linkTo
         |> Link.htmlLink
             [ css [ Css.fontFamilies [ "Raleway" ] ]
             ]
-            (linkInner currentPagePath linkTo name)
+            (linkInner darkMode currentPagePath linkTo name)
 
 
-linkInner : Path -> Route -> String -> Html msg
-linkInner currentPagePath linkTo name =
+linkInner : DarkMode -> Path -> Route -> String -> Html msg
+linkInner darkMode currentPagePath linkTo name =
     let
         isCurrentPath : Bool
         isCurrentPath =
@@ -109,7 +117,14 @@ linkInner currentPagePath linkTo name =
 
               else
                 Css.batch
-                    [ Tw.text_gray_600
+                    [ --Tw.text_gray_600
+                      Tw.text_foreground
+
+                    --, DarkMode.dark darkMode
+                    --    [ Tw.bg_black
+                    --    , Tw.border_gray_900
+                    --    , Tw.text_white
+                    --    ]
                     , Css.hover
                         [ Tw.text_gray_900
                         ]

@@ -5,6 +5,7 @@ import Browser.Dom as Dom
 import Browser.Events
 import Browser.Navigation
 import Css
+import DarkMode exposing (DarkMode)
 import DataSource
 import Dimensions exposing (Dimensions)
 import Ease
@@ -14,6 +15,7 @@ import Html exposing (Html)
 import Html.Styled exposing (div)
 import Html.Styled.Attributes exposing (css)
 import Http
+import Json.Decode
 import Pages.Flags
 import Pages.PageUrl exposing (PageUrl)
 import Path exposing (Path)
@@ -59,6 +61,7 @@ type alias Model =
     , showMenu : Bool
     , isOnAir : TwitchButton.IsOnAir
     , now : Maybe Time.Posix
+    , darkMode : DarkMode
     }
 
 
@@ -92,6 +95,14 @@ init navigationKey flags maybePagePath =
       , showMenu = False
       , isOnAir = TwitchButton.notOnAir
       , now = Nothing
+      , darkMode =
+            case flags of
+                Pages.Flags.BrowserFlags value ->
+                    Json.Decode.decodeValue (Json.Decode.field "darkMode" DarkMode.darkModeDecoder) value
+                        |> Result.withDefault DarkMode.Light
+
+                Pages.Flags.PreRenderFlags ->
+                    DarkMode.Light
       }
         |> updateStyles
     , Cmd.batch
@@ -208,7 +219,7 @@ view sharedData page model toMsg pageView =
                         , Tw.relative
                         ]
                     ]
-                    [ View.TailwindNavbar.view ToggleMobileMenu page.path |> Html.Styled.map toMsg
+                    [ View.TailwindNavbar.view model.darkMode ToggleMobileMenu page.path |> Html.Styled.map toMsg
                     , div
                         [ css
                             [ Tw.pt_32
@@ -216,6 +227,8 @@ view sharedData page model toMsg pageView =
                             , Tw.px_8
                             , Tw.flex
                             , Tw.flex_col
+                            , Tw.bg_background |> Css.important
+                            , Tw.text_foreground |> Css.important
                             ]
                         ]
                         [ div
@@ -225,8 +238,15 @@ view sharedData page model toMsg pageView =
                             ]
                             [ div
                                 [ css
-                                    [ Tw.prose
-                                    , Css.fontFamilies [ "Open Sans" ]
+                                    [ if model.darkMode == DarkMode.Light then
+                                        Css.batch [ Tw.prose ]
+
+                                      else
+                                        Css.batch
+                                            [ Css.fontFamilies [ "Open Sans" ]
+                                            , Tw.max_w_prose
+                                            , Tw.leading_7
+                                            ]
                                     ]
                                 ]
                                 nodes
