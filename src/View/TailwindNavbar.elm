@@ -79,9 +79,9 @@ view darkMode toggleDarkMode toggleMobileMenuMsg currentPath =
                     [ text "Incremental Elm" ]
                 ]
             ]
-        , headerLink darkMode currentPath Route.Notes "Notes"
-        , headerLink darkMode currentPath Route.Live "Live Streams"
-        , headerLink darkMode currentPath (Route.Page_ { page = "services" }) "Services"
+        , headerLink currentPath Route.Notes "Notes"
+        , headerLink currentPath Route.Live "Live Streams"
+        , headerLink currentPath (Route.Page_ { page = "services" }) "Services"
         , DarkMode.view
             [ css
                 [ Tw.ml_2
@@ -91,17 +91,17 @@ view darkMode toggleDarkMode toggleMobileMenuMsg currentPath =
         ]
 
 
-headerLink : DarkMode -> Path -> Route -> String -> Html msg
-headerLink darkMode currentPagePath linkTo name =
+headerLink : Path -> Route -> String -> Html msg
+headerLink currentPagePath linkTo name =
     linkTo
         |> Link.htmlLink
             [ css [ Css.fontFamilies [ "Raleway" ] ]
             ]
-            (linkInner darkMode currentPagePath linkTo name)
+            (linkInner currentPagePath linkTo name)
 
 
-linkInner : DarkMode -> Path -> Route -> String -> Html msg
-linkInner darkMode currentPagePath linkTo name =
+linkInner : Path -> Route -> String -> Html msg
+linkInner currentPagePath linkTo name =
     let
         isCurrentPath : Bool
         isCurrentPath =
