@@ -17,8 +17,8 @@ renderer =
     , paragraph =
         Html.p
             [ css
-                [ Tw.bg_background |> Css.important
-                , Tw.text_foreground |> Css.important
+                [ Tw.bg_background
+                , Tw.text_foreground
                 , Tw.mb_4
                 ]
             ]
@@ -45,6 +45,8 @@ renderer =
                 [ Attr.href destination
                 , css
                     [ Tw.underline
+                    , Tw.text_foregroundStrong
+                    , Tw.font_bold
                     ]
                 ]
                 body
@@ -302,6 +304,7 @@ heading { level, rawText, children } =
                     , Tw.mt_2
                     , Tw.mb_8
                     , [ Css.qt "Raleway" ] |> Css.fontFamilies
+                    , Tw.text_foregroundStrong
 
                     --, Tw.mb_3_dot_5 |> Css.important
                     ]
@@ -313,11 +316,13 @@ heading { level, rawText, children } =
                 [ Attr.id (rawTextToId rawText)
                 , Attr.attribute "name" (rawTextToId rawText)
                 , css
-                    [ Tw.text_xl
+                    [ Tw.text_2xl
                     , Tw.font_semibold
                     , Tw.tracking_tight
                     , Tw.mt_10
+                    , Tw.text_foregroundStrong
                     , Tw.pb_1
+                    , Tw.mb_6
                     , Tw.border_b
                     , [ Css.qt "Raleway" ] |> Css.fontFamilies
                     ]
@@ -335,6 +340,7 @@ heading { level, rawText, children } =
                                     [ Tw.ml_2
                                     , Tw.text_gray_500
                                     , Tw.select_none
+                                    , Tw.text_foregroundStrong
                                     ]
                                 ]
                                 [ Html.text "#" ]
@@ -367,6 +373,7 @@ heading { level, rawText, children } =
                     , Tw.text_lg
                     , Tw.mt_8
                     , Tw.mb_4
+                    , Tw.text_foregroundStrong
 
                     --, [ Css.qt "Raleway" ] |> Css.fontFamilies
                     ]
@@ -394,4 +401,18 @@ codeBlock details =
     SyntaxHighlight.elm details.body
         |> Result.map (SyntaxHighlight.toBlockHtml (Just 1))
         |> Result.map Html.fromUnstyled
-        |> Result.withDefault (Html.pre [] [ Html.code [] [ Html.text details.body ] ])
+        |> Result.withDefault
+            (Html.pre
+                [ css
+                    [ Tw.border_8 |> Css.important
+                    ]
+                ]
+                [ Html.code [] [ Html.text details.body ] ]
+            )
+        |> List.singleton
+        |> Html.div
+            [ css
+                [ Tw.mt_8
+                , Tw.mb_8
+                ]
+            ]

@@ -4,7 +4,8 @@
 :root {
   --background: #ffffff;
   --selection-background: #fdfdfd;
-  --foreground: #212121;
+  --foreground: #374151;
+  --foreground-strong: #111827;
   --accent1: #2aa198;
   --accent2: #b58900;
 }
@@ -12,7 +13,8 @@
 .dark {
   --background: #181c1f;
   --selection-background: #073642;
-  --foreground: #fdfdfd;
+  --foreground: #e4e1e1;
+  --foreground-strong: #fdfdfd;
   --accent1: #d33682;
   --accent2: #268bd2;
 }
@@ -69,7 +71,8 @@ iframe {
   border-radius: 50%;
 }
 pre.elmsh {
-  padding: 10px;
+  border-radius: 0.375rem;
+  padding: 1rem;
   margin: 0;
   text-align: left;
   overflow: auto;
@@ -140,6 +143,45 @@ code.elmsh {
 .elmsh-css-ar-i {
   font-weight: bold;
   color: #ff0000;
+}
+
+.dark .elmsh {
+  color: #abb2bf;
+  background: #282c34 !important;
+}
+.dark .elmsh-hl {
+  background: rgba(229, 231, 235, 0.1);
+}
+.dark .elmsh-add {
+  background: rgba(40, 124, 82, 0.4);
+}
+.dark .elmsh-del {
+  background: rgba(136, 64, 67, 0.4);
+}
+.dark .elmsh-comm {
+  font-style: italic;
+  color: #5c6370;
+}
+.dark .elmsh1 {
+  color: #d19a66;
+}
+.dark .elmsh2 {
+  color: #98c379;
+}
+.dark .elmsh3 {
+  color: #c678dd;
+}
+.dark .elmsh4 {
+  color: #c678dd;
+}
+.dark .elmsh5 {
+  color: #61aeee;
+}
+.dark .elmsh6 {
+  color: #d19a66;
+}
+.dark .elmsh7 {
+  color: #abb2bf;
 }
 
 /*! tailwindcss v2.1.2 | MIT License | https://tailwindcss.com */ /*! modern-normalize v1.0.0 | MIT License | https://github.com/sindresorhus/modern-normalize */
