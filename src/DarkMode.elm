@@ -38,8 +38,9 @@ type DarkMode
     | Light
 
 
-view onClick =
-    Html.Styled.button [ Html.Styled.Events.onClick onClick ]
+view attrs onClick =
+    Html.Styled.button
+        (Html.Styled.Events.onClick onClick :: attrs)
         [ sunIcon
         , moonIcon
         ]
