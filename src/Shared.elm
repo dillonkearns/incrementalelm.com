@@ -220,6 +220,7 @@ view sharedData page model toMsg pageView =
                         [ Tw.min_h_screen
                         , Tw.w_full
                         , Tw.relative
+                        , Tw.bg_background
                         ]
                     ]
                     [ View.TailwindNavbar.view model.darkMode ToggleDarkMode ToggleMobileMenu page.path |> Html.Styled.map toMsg
@@ -230,7 +231,6 @@ view sharedData page model toMsg pageView =
                             , Tw.px_8
                             , Tw.flex
                             , Tw.flex_col
-                            , Tw.bg_background
                             , Tw.text_foreground
                             ]
                         ]
