@@ -19,6 +19,7 @@ import Path
 import Route exposing (Route)
 import Serialize
 import Shared
+import String.Extra
 import Tailwind.Breakpoints as Bp
 import Tailwind.Utilities as Tw
 import TailwindMarkdownRenderer
@@ -91,8 +92,13 @@ view maybeUrl sharedModel static =
     , body =
         View.Tailwind
             ([ static.data.body
-             , [ backReferencesView static.data.backReferences
-               , backReferencesView static.data.forwardReferences
+             , [ div
+                    [ css
+                        []
+                    ]
+                    [ backReferencesView "Notes that link here" static.data.backReferences
+                    , backReferencesView "Links on this page" static.data.forwardReferences
+                    ]
                ]
              ]
                 |> List.concat
@@ -100,37 +106,97 @@ view maybeUrl sharedModel static =
     }
 
 
-backReferencesView : List BackRef -> Html msg
-backReferencesView backRefs =
+backReferencesView : String -> List BackRef -> Html msg
+backReferencesView title backRefs =
     if List.isEmpty backRefs then
         text ""
 
     else
-        div
-            []
-            [ h2
+        div []
+            [ h2 [] [ text title ]
+            , backReferencesView_ backRefs
+            ]
+
+
+backReferencesView_ : List BackRef -> Html msg
+backReferencesView_ allBackRefs =
+    div
+        [ css
+            [ Tw.mt_12
+            , Tw.max_w_lg
+            , Tw.mx_auto
+            , Tw.grid
+            , Tw.gap_5
+            , Bp.lg
+                [ Tw.grid_cols_2
+                , Tw.max_w_none
+                ]
+            ]
+        ]
+        (allBackRefs
+            |> List.map
+                (\backReference ->
+                    blogCard (Route.Page_ { page = backReference.slug }) backReference
+                )
+        )
+
+
+blogCard : Route -> { a | title : String, description : String } -> Html msg
+blogCard route info =
+    route
+        |> Link.htmlLink
+            [ css
+                [ Tw.flex
+                , Tw.flex_col
+                , Tw.rounded_lg
+                , Tw.shadow_lg
+                , Tw.overflow_hidden
+                ]
+            ]
+            (div
                 [ css
-                    [ Css.fontFamilies [ "Raleway" ]
-                    , Tw.text_2xl
-                    , Tw.font_bold
-                    , Tw.pb_4
+                    [ Tw.flex_1
+                    , Tw.bg_white
+                    , Tw.p_6
+                    , Tw.flex
+                    , Tw.flex_col
+                    , Tw.justify_between
                     ]
                 ]
-                [ text "Linked References" ]
-            , ul
-                [ css [ Css.fontFamilies [ "Open Sans" ] ]
-                ]
-                (backRefs
-                    |> List.map
-                        (\backReference ->
-                            li
-                                []
-                                [ Route.Page_ { page = backReference.slug }
-                                    |> Link.htmlLink [] (text backReference.title)
+                [ div
+                    [ css
+                        [ Tw.flex_1
+                        ]
+                    ]
+                    [ span
+                        [ css
+                            [ Tw.block
+                            , Tw.mt_2
+                            ]
+                        ]
+                        [ p
+                            [ css
+                                [ Tw.text_xl
+                                , Tw.font_semibold
+                                , Tw.text_gray_900
                                 ]
-                        )
-                )
-            ]
+                            ]
+                            [ text info.title ]
+                        , p
+                            [ css
+                                [ Tw.mt_3
+                                , Tw.text_base
+                                , Tw.text_gray_500
+                                ]
+                            ]
+                            [ info.description
+                                |> String.Extra.softEllipsis 160
+                                |> text
+                            ]
+                        ]
+                    ]
+                ]
+            )
 
 
 head :
@@ -186,16 +252,19 @@ type alias Note =
 
 
 type alias BackRef =
-    { slug : String, title : String }
+    { slug : String
+    , title : String
+    , description : String
+    }
 
 
 notes : DataSource (List BackRef)
 notes =
     Glob.succeed
         (\topic filePath ->
-            MarkdownCodec.noteTitle filePath
+            MarkdownCodec.titleAndDescription filePath
                 |> DataSource.map
-                    (BackRef topic)
+                    (\{ title, description } -> BackRef topic title description)
         )
         |> Glob.match (Glob.literal "content/")
         |> Glob.capture Glob.wildcard
@@ -250,15 +319,17 @@ forwardRefs slug =
                         )
                     |> Result.mapError (\_ -> "Markdown error")
                     |> DataSource.fromResult
+                    |> DataSource.resolve
                     |> DataSource.distillSerializeCodec "forwardRefs" (Serialize.list serializeBackRef)
             )
 
 
-serializeBackRef : Serialize.Codec e { slug : String, title : String }
+serializeBackRef : Serialize.Codec e BackRef
 serializeBackRef =
     Serialize.record BackRef
         |> Serialize.field .slug Serialize.string
         |> Serialize.field .title Serialize.string
+        |> Serialize.field .description Serialize.string
         |> Serialize.finishRecord
 
 
@@ -281,19 +352,18 @@ hasReferenceTo slug blocks =
             False
 
 
-forwardReferences : List Block -> List BackRef
+forwardReferences : List Block -> List (DataSource BackRef)
 forwardReferences blocks =
     blocks
         |> Block.inlineFoldl
             (\inline links ->
                 case inline of
-                    Block.Link str _ _ ->
-                        if isWikiLink str then
-                            { slug = str
-                            , title =
-                                -- TODO real title, not slug
-                                str
-                            }
+                    Block.Link slug _ _ ->
+                        if isWikiLink slug then
+                            (MarkdownCodec.titleAndDescription ("content/" ++ slug ++ ".md")
+                                |> DataSource.map
+                                    (\{ title, description } -> BackRef slug title description)
+                            )
                                 :: links
 
                         else

@@ -29,6 +29,7 @@
             "elm/url": "1.0.0",
             "elm-community/dict-extra": "2.4.0",
             "elm-community/list-extra": "8.3.0",
+            "elm-community/string-extra": "4.0.1",
             "justinmimbs/date": "3.2.1",
             "justinmimbs/time-extra": "1.1.0",
             "mdgriffith/elm-style-animation": "4.0.0",

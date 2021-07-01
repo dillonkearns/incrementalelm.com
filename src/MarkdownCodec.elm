@@ -1,4 +1,4 @@
-module MarkdownCodec exposing (noteTitle, withFrontmatter, withoutFrontmatter)
+module MarkdownCodec exposing (noteTitle, titleAndDescription, withFrontmatter, withoutFrontmatter)
 
 import DataSource exposing (DataSource)
 import DataSource.File as StaticFile
@@ -42,6 +42,84 @@ noteTitle filePath =
                         )
             )
         |> DataSource.distillSerializeCodec ("note-title-" ++ filePath) S.string
+
+
+titleAndDescription : String -> DataSource { title : String, description : String }
+titleAndDescription filePath =
+    filePath
+        |> StaticFile.onlyFrontmatter
+            (OptimizedDecoder.map2 (\title description -> { title = title, description = description })
+                (OptimizedDecoder.optionalField "title" OptimizedDecoder.string)
+                (OptimizedDecoder.optionalField "description" OptimizedDecoder.string)
+            )
+        |> DataSource.andThen
+            (\metadata ->
+                Maybe.map2 (\title description -> { title = title, description = description })
+                    metadata.title
+                    metadata.description
+                    |> Maybe.map DataSource.succeed
+                    |> Maybe.withDefault
+                        (StaticFile.bodyWithoutFrontmatter filePath
+                            |> DataSource.andThen
+                                (\rawContent ->
+                                    Markdown.Parser.parse rawContent
+                                        |> Result.mapError (\_ -> "Markdown error")
+                                        |> Result.map
+                                            (\blocks ->
+                                                Maybe.map
+                                                    (\title ->
+                                                        { title = title
+                                                        , description =
+                                                            case metadata.description of
+                                                                Just description ->
+                                                                    description
+
+                                                                Nothing ->
+                                                                    findDescription blocks
+                                                        }
+                                                    )
+                                                    (case metadata.title of
+                                                        Just title ->
+                                                            Just title
+
+                                                        Nothing ->
+                                                            findH1 blocks
+                                                    )
+                                            )
+                                        |> Result.andThen (Result.fromMaybe <| "Expected to find an H1 heading for page " ++ filePath)
+                                        |> DataSource.fromResult
+                                )
+                        )
+            )
+
+
+findH1 : List Block -> Maybe String
+findH1 blocks =
+    List.Extra.findMap
+        (\block ->
+            case block of
+                Block.Heading Block.H1 inlines ->
+                    Just (Block.extractInlineText inlines)
+
+                _ ->
+                    Nothing
+        )
+        blocks
+
+
+findDescription : List Block -> String
+findDescription blocks =
+    blocks
+        |> List.Extra.findMap
+            (\block ->
+                case block of
+                    Block.Paragraph inlines ->
+                        Just (Block.extractInlineText inlines)
+
+                    _ ->
+                        Nothing
+            )
+        |> Maybe.withDefault ""
 
 
 titleFromFrontmatter : String -> DataSource (Maybe String)
