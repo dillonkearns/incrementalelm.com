@@ -323,7 +323,7 @@ heading { level, rawText, children } =
                     [ Tw.text_2xl
                     , Tw.font_semibold
                     , Tw.tracking_tight
-                    , Tw.mt_10
+                    , Tw.mt_12
                     , Tw.text_foregroundStrong
                     , Tw.pb_1
                     , Tw.mb_6
