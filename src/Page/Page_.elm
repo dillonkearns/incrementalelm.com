@@ -16,6 +16,7 @@ import Page exposing (Page, StaticPayload)
 import Pages.PageUrl exposing (PageUrl)
 import Pages.Url
 import Path
+import Regex
 import Route exposing (Route)
 import Serialize
 import Shared
@@ -62,7 +63,7 @@ data routeParams =
     let
         filePath : String
         filePath =
-            Debug.log "filePath" ("content/" ++ routeParams.page ++ ".md")
+            "content/" ++ routeParams.page ++ ".md"
     in
     DataSource.map5
         Data
@@ -358,7 +359,14 @@ forwardReferences blocks =
         |> Block.inlineFoldl
             (\inline links ->
                 case inline of
-                    Block.Link slug _ _ ->
+                    Block.Link rawSlug _ _ ->
+                        let
+                            slug =
+                                rawSlug
+                                    |> Regex.replace (Regex.fromString "^/" |> Maybe.withDefault Regex.never) (\_ -> "")
+                                    |> Regex.replace (Regex.fromString "/$" |> Maybe.withDefault Regex.never) (\_ -> "")
+                                    |> Regex.replace (Regex.fromString "#.*" |> Maybe.withDefault Regex.never) (\_ -> "")
+                        in
                         if isWikiLink slug then
                             (MarkdownCodec.titleAndDescription ("content/" ++ slug ++ ".md")
                                 |> DataSource.map

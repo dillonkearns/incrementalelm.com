@@ -149,48 +149,55 @@ renderer =
                         children
                 )
                 |> Markdown.Html.withAttribute "url"
-
-            --, Markdown.Html.tag "vimeo"
-            --    (\id children -> vimeoView id)
-            --    |> Markdown.Html.withAttribute "id"
-            --, Markdown.Html.tag "ellie"
-            --    (\id children -> View.Ellie.view id)
-            --    |> Markdown.Html.withAttribute "id"
-            --, Markdown.Html.tag "resources"
-            --    (\children ->
-            --        Element.column
-            --            [ Element.spacing 16
-            --            , Element.centerX
-            --            , Element.padding 30
-            --            , Element.width Element.fill
-            --            ]
-            --            children
-            --    )
-            --, Markdown.Html.tag "resource"
-            --    (\name resourceKind url children ->
-            --        let
-            --            todo anything =
-            --                todo anything
-            --
-            --            kind =
-            --                case Dict.get resourceKind icons of
-            --                    Just myResource ->
-            --                        --Ok myResource
-            --                        myResource
-            --
-            --                    Nothing ->
-            --                        todo ""
-            --
-            --            --Err
-            --            --    { title = "Invalid resource name"
-            --            --    , message = []
-            --            --    }
-            --        in
-            --        View.Resource.view { name = name, url = url, kind = kind }
-            --    )
-            --    |> Markdown.Html.withAttribute "title"
-            --    |> Markdown.Html.withAttribute "icon"
-            --    |> Markdown.Html.withAttribute "url"
+            , Markdown.Html.tag "vimeo"
+                (\id children ->
+                    --vimeoView id
+                    Html.text "TODO"
+                )
+                |> Markdown.Html.withAttribute "id"
+            , Markdown.Html.tag "ellie"
+                (\id children ->
+                    --View.Ellie.view id
+                    Html.text "TODO"
+                )
+                |> Markdown.Html.withAttribute "id"
+            , Markdown.Html.tag "resources"
+                (\children ->
+                    --Element.column
+                    --    [ Element.spacing 16
+                    --    , Element.centerX
+                    --    , Element.padding 30
+                    --    , Element.width Element.fill
+                    --    ]
+                    --    children
+                    Html.text "TODO"
+                )
+            , Markdown.Html.tag "resource"
+                (\name resourceKind url children ->
+                    --let
+                    --    todo anything =
+                    --        todo anything
+                    --
+                    --    kind =
+                    --        case Dict.get resourceKind icons of
+                    --            Just myResource ->
+                    --                --Ok myResource
+                    --                myResource
+                    --
+                    --            Nothing ->
+                    --                todo ""
+                    --
+                    --    --Err
+                    --    --    { title = "Invalid resource name"
+                    --    --    , message = []
+                    --    --    }
+                    --in
+                    --View.Resource.view { name = name, url = url, kind = kind }
+                    Html.text "TODO"
+                )
+                |> Markdown.Html.withAttribute "title"
+                |> Markdown.Html.withAttribute "icon"
+                |> Markdown.Html.withAttribute "url"
             , Markdown.Html.tag "contact-button"
                 (\body ->
                     --contactButtonView
