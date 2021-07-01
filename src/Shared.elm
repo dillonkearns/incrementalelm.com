@@ -1,4 +1,4 @@
-module Shared exposing (Data, Model, Msg(..), SharedMsg(..), template)
+port module Shared exposing (Data, Model, Msg(..), SharedMsg(..), template)
 
 import Animation exposing (Interpolation)
 import Browser.Dom as Dom
@@ -31,6 +31,9 @@ import View exposing (View)
 import View.MenuBar
 import View.Navbar
 import View.TailwindNavbar
+
+
+port toggleDarkMode : () -> Cmd msg
 
 
 template : SharedTemplate Msg Model Data SharedMsg msg
@@ -219,7 +222,7 @@ view sharedData page model toMsg pageView =
                         , Tw.relative
                         ]
                     ]
-                    [ View.TailwindNavbar.view model.darkMode ToggleMobileMenu page.path |> Html.Styled.map toMsg
+                    [ View.TailwindNavbar.view model.darkMode ToggleDarkMode ToggleMobileMenu page.path |> Html.Styled.map toMsg
                     , div
                         [ css
                             [ Tw.pt_32
@@ -227,8 +230,8 @@ view sharedData page model toMsg pageView =
                             , Tw.px_8
                             , Tw.flex
                             , Tw.flex_col
-                            , Tw.bg_background |> Css.important
-                            , Tw.text_foreground |> Css.important
+                            , Tw.bg_background
+                            , Tw.text_foreground
                             ]
                         ]
                         [ div
@@ -238,15 +241,10 @@ view sharedData page model toMsg pageView =
                             ]
                             [ div
                                 [ css
-                                    [ if model.darkMode == DarkMode.Light then
-                                        Css.batch [ Tw.prose ]
-
-                                      else
-                                        Css.batch
-                                            [ Css.fontFamilies [ "Open Sans" ]
-                                            , Tw.max_w_prose
-                                            , Tw.leading_7
-                                            ]
+                                    [ Tw.text_foreground
+                                    , Css.fontFamilies [ "Open Sans" ]
+                                    , Tw.max_w_prose
+                                    , Tw.leading_7
                                     ]
                                 ]
                                 nodes
@@ -290,6 +288,7 @@ type Msg
     = StartAnimation
     | Animate Animation.Msg
     | InitialViewport Dom.Viewport
+    | ToggleDarkMode
     | ToggleMobileMenu
     | WindowResized Int Int
     | OnAirUpdated (Result Http.Error TwitchButton.IsOnAir)
@@ -305,6 +304,9 @@ type Msg
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        ToggleDarkMode ->
+            ( model, toggleDarkMode () )
+
         ToggleMobileMenu ->
             ( { model | showMenu = not model.showMenu }, Cmd.none )
 

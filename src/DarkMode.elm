@@ -3,6 +3,7 @@ module DarkMode exposing (DarkMode(..), dark, darkModeDecoder, view)
 import Css
 import Css.Global
 import Html.Styled
+import Html.Styled.Events
 import Json.Decode
 import Svg.Styled exposing (path, svg)
 import Svg.Styled.Attributes as SvgAttr
@@ -37,8 +38,8 @@ type DarkMode
     | Light
 
 
-view darkMode =
-    Html.Styled.button []
+view onClick =
+    Html.Styled.button [ Html.Styled.Events.onClick onClick ]
         [ sunIcon
         , moonIcon
         ]

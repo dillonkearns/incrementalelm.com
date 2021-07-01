@@ -11,8 +11,8 @@ import Tailwind.Breakpoints as Bp
 import Tailwind.Utilities as Tw
 
 
-view : DarkMode -> msg -> Path -> Html msg
-view darkMode toggleMobileMenuMsg currentPath =
+view : DarkMode -> msg -> msg -> Path -> Html msg
+view darkMode toggleDarkMode toggleMobileMenuMsg currentPath =
     nav
         [ css
             [ Tw.flex
@@ -82,7 +82,7 @@ view darkMode toggleMobileMenuMsg currentPath =
         , headerLink darkMode currentPath Route.Notes "Notes"
         , headerLink darkMode currentPath Route.Live "Live Streams"
         , headerLink darkMode currentPath (Route.Page_ { page = "services" }) "Services"
-        , DarkMode.view darkMode
+        , DarkMode.view toggleDarkMode
         ]
 
 
