@@ -19,7 +19,7 @@ renderer =
             [ css
                 [ Tw.bg_background
                 , Tw.text_foreground
-                , Tw.mb_4
+                , Tw.mb_5
                 ]
             ]
     , thematicBreak = Html.hr [] []
@@ -64,6 +64,8 @@ renderer =
             Html.ul
                 [ css
                     [ Tw.list_disc
+                    , Tw.mb_5
+                    , Tw.mt_5
                     ]
                 ]
                 (items
@@ -96,6 +98,8 @@ renderer =
                                     Html.li
                                         [ css
                                             [ Tw.ml_7
+                                            , Tw.mb_2
+                                            , Tw.mt_2
                                             ]
                                         ]
                                         (checkbox :: children)

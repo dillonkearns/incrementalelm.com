@@ -19,6 +19,10 @@
   --accent2: #268bd2;
 }
 
+li::marker {
+  color: #7b7c7e;
+}
+
 .dark-only {
   display: none;
 }

@@ -111,7 +111,13 @@ view maybeUrl sharedModel model static =
 
 
 notesList searchQuery notes =
-    ul []
+    ul
+        [ css
+            [ Tw.list_disc
+            , Tw.mb_5
+            , Tw.mt_5
+            ]
+        ]
         (notes
             |> List.filterMap
                 (\note ->
@@ -124,7 +130,13 @@ notesList searchQuery notes =
                                  --++ String.join ", " note.tags
                                 )
                             |> List.singleton
-                            |> li []
+                            |> li
+                                [ css
+                                    [ Tw.ml_7
+                                    , Tw.mb_2
+                                    , Tw.mt_2
+                                    ]
+                                ]
                             |> Just
 
                     else
