@@ -1,6 +1,6 @@
 [build]
   publish = "dist/"
-  command = "npm install -g elm && npm install && npx --no-install elm-tooling install && npx elm-tailwind-modules --dir ./gen --tailwind-config tailwind.config.js && npm run elm-graphql && mkdir .elm-pages && npx elm-pages build"
+  command = "npm install -g elm && npm install && npx --no-install elm-tooling install && npx elm-tailwind-modules --dir ./gen --tailwind-config tailwind.config.js && mkdir .elm-pages && npm run elm-graphql && npx elm-pages build"
 [build.environment]
   ELM_HOME = "$NETLIFY_BUILD_BASE/cache/elm"
   NO_ELM_TOOLING_INSTALL = "1"
