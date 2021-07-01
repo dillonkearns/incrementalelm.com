@@ -1,4 +1,6 @@
-# Key Elm Skills
+# Key Elm Techniques
+
+There are a handful of techniques that help you make the most of Elm.
 
 - [[parse-dont-validate]]
 - [[opaque-type]]
