@@ -42,11 +42,11 @@ page =
 
 data : DataSource Data
 data =
-    --DataSource.succeed []
-    Request.staticGraphqlRequest Request.Events.selection
+    DataSource.succeed []
 
 
 
+--Request.staticGraphqlRequest Request.Events.selection
 --head :
 --    StaticPayload Data RouteParams
 --    -> List Head.Tag
