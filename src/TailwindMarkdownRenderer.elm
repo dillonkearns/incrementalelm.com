@@ -40,7 +40,7 @@ renderer =
 
     --, codeSpan = code
     , link =
-        \{ destination } body ->
+        \{ destination, title } body ->
             Html.a
                 [ Attr.href destination
                 , css
@@ -49,7 +49,11 @@ renderer =
                     , Tw.font_bold
                     ]
                 ]
-                body
+                (title
+                    |> Maybe.map Html.text
+                    |> Maybe.map List.singleton
+                    |> Maybe.withDefault body
+                )
     , hardLineBreak = Html.br [] []
     , image =
         \image ->
