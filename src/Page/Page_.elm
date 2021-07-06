@@ -56,6 +56,10 @@ routes =
         |> Glob.capture Glob.wildcard
         |> Glob.match (Glob.literal ".md")
         |> Glob.toDataSource
+        |> DataSource.map
+            (List.filter
+                (\value -> value.page /= "index")
+            )
 
 
 data : RouteParams -> DataSource Data
