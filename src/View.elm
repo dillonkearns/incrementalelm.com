@@ -35,5 +35,5 @@ map fn doc =
 placeholder : String -> View msg
 placeholder moduleName =
     { title = "Placeholder - " ++ moduleName
-    , body = ElmUi [ Element.text moduleName ]
+    , body = Tailwind [ Html.text moduleName ]
     }
