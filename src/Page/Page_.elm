@@ -1,6 +1,5 @@
 module Page.Page_ exposing (BackRef, Data, Model, Msg, PageMetadata, RouteParams, page)
 
-import Css
 import DataSource exposing (DataSource)
 import DataSource.File
 import DataSource.Glob as Glob
@@ -263,31 +262,26 @@ type alias BackRef =
     }
 
 
-notes : DataSource (List BackRef)
+notes : DataSource (List { topic : String, filePath : String })
 notes =
     Glob.succeed
-        (\topic filePath ->
-            MarkdownCodec.titleAndDescription filePath
-                |> DataSource.map
-                    (\{ title, description } -> BackRef topic title description)
-        )
+        (\topic filePath -> { topic = topic, filePath = filePath })
         |> Glob.match (Glob.literal "content/")
         |> Glob.capture Glob.wildcard
         |> Glob.match (Glob.literal ".md")
         |> Glob.captureFilePath
         |> Glob.toDataSource
-        |> DataSource.resolve
 
 
 backReferences : String -> DataSource (List BackRef)
 backReferences slug =
     notes
-        |> DataSource.map
+        |> DataSource.andThen
             (\allNotes ->
                 allNotes
                     |> List.map
                         (\note ->
-                            DataSource.File.bodyWithoutFrontmatter ("content/" ++ note.slug ++ ".md")
+                            DataSource.File.bodyWithoutFrontmatter ("content/" ++ note.topic ++ ".md")
                                 |> DataSource.andThen
                                     (\rawMarkdown ->
                                         rawMarkdown
@@ -295,7 +289,10 @@ backReferences slug =
                                             |> Result.map
                                                 (\blocks ->
                                                     if hasReferenceTo slug blocks then
-                                                        Just note
+                                                        MarkdownCodec.titleAndDescription note.filePath
+                                                            |> DataSource.map
+                                                                (\{ title, description } -> BackRef note.topic title description)
+                                                            |> Just
 
                                                     else
                                                         Nothing
@@ -304,9 +301,10 @@ backReferences slug =
                                             |> DataSource.fromResult
                                     )
                         )
+                    |> DataSource.combine
+                    |> DataSource.map (List.filterMap identity)
+                    |> DataSource.resolve
             )
-        |> DataSource.resolve
-        |> DataSource.map (List.filterMap identity)
         |> DataSource.distillSerializeCodec "backrefs" (Serialize.list serializeBackRef)
 
 
