@@ -30,6 +30,7 @@
             "elm-community/dict-extra": "2.4.0",
             "elm-community/list-extra": "8.3.0",
             "elm-community/string-extra": "4.0.1",
+            "hecrj/html-parser": "2.4.0",
             "justinmimbs/date": "3.2.1",
             "justinmimbs/time-extra": "1.1.0",
             "mdgriffith/elm-style-animation": "4.0.0",
@@ -42,6 +43,7 @@
             "ryannhg/date-format": "2.3.0",
             "tripokey/elm-fuzzy": "5.2.1",
             "turboMaCk/non-empty-list-alias": "1.1.0",
+            "vito/elm-ansi": "10.0.1",
             "zwilias/json-decode-exploration": "6.0.0"
         },
         "indirect": {
