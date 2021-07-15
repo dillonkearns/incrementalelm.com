@@ -114,10 +114,23 @@ renderer =
             Html.ol
                 (case startingIndex of
                     1 ->
-                        [ Attr.start startingIndex ]
+                        [ Attr.start startingIndex
+                        , css
+                            [ Tw.list_decimal
+                            , Tw.list_inside
+                            , Tw.mt_5
+                            , Tw.mb_5
+                            ]
+                        ]
 
                     _ ->
-                        []
+                        [ css
+                            [ Tw.list_decimal
+                            , Tw.list_inside
+                            , Tw.mt_5
+                            , Tw.mb_5
+                            ]
+                        ]
                 )
                 (items
                     |> List.map
