@@ -1,9 +1,9 @@
 const child_process = require("child_process");
 const kleur = require("kleur");
 const spawn = require("cross-spawn").spawn;
+const fs = require("fs");
 
 const shiki = require("shiki");
-const highlighter = shiki.getHighlighter({ theme: "dark-plus" });
 
 module.exports =
   /**
@@ -27,8 +27,21 @@ module.exports =
       }
     },
     highlight: async function (fromElm) {
+      const highlighter = shiki.getHighlighter({
+        theme: JSON.parse(await fs.promises.readFile("./Panda.json", "utf-8")),
+      });
       return await highlighter.then((highlighter) => {
-        return highlighter.codeToHtml(fromElm, "elm");
+        return {
+          tokens: highlighter.codeToThemedTokens(
+            fromElm,
+            "elm",
+            highlighter.getTheme(),
+            {
+              includeExplanation: false,
+            }
+          ),
+          bg: highlighter.getTheme().bg,
+        };
       });
     },
     gitFileLastUpdatedTime: async function (filePath) {
