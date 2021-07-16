@@ -23,6 +23,7 @@ import String.Extra
 import Tailwind.Breakpoints as Bp
 import Tailwind.Utilities as Tw
 import TailwindMarkdownRenderer
+import Timestamps exposing (Timestamps)
 import View exposing (View)
 
 
@@ -68,13 +69,14 @@ data routeParams =
         filePath =
             "content/" ++ routeParams.page ++ ".md"
     in
-    DataSource.map5
+    DataSource.map6
         Data
         (DataSource.File.onlyFrontmatter decoder filePath)
         (MarkdownCodec.withoutFrontmatter TailwindMarkdownRenderer.renderer filePath)
         (MarkdownCodec.noteTitle filePath)
         (backReferences routeParams.page)
         (forwardRefs routeParams.page)
+        (Timestamps.data filePath)
 
 
 type alias Data =
@@ -83,6 +85,7 @@ type alias Data =
     , title : String
     , backReferences : List BackRef
     , forwardReferences : List BackRef
+    , timestamps : Timestamps
     }
 
 
@@ -95,7 +98,25 @@ view maybeUrl sharedModel static =
     { title = static.data.title
     , body =
         View.Tailwind
-            ([ static.data.body
+            ([ [ div
+                    [ css
+                        [ Tw.text_xs
+                        ]
+                    ]
+                    [ div
+                        []
+                        [ text <|
+                            "Created "
+                                ++ Timestamps.format static.data.timestamps.created
+                        ]
+                    , div []
+                        [ text <|
+                            "Updated "
+                                ++ Timestamps.format static.data.timestamps.updated
+                        ]
+                    ]
+               ]
+             , static.data.body
              , [ div
                     [ css
                         []
