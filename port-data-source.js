@@ -41,6 +41,7 @@ module.exports =
             }
           ),
           bg: highlighter.getTheme().bg,
+          fg: highlighter.getTheme().fg,
         };
       });
     },
