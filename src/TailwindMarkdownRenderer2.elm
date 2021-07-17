@@ -331,7 +331,9 @@ shikiDataSource info =
             |> Decode.map
                 (Shiki.view
                     [ Html.Attributes.style "font-family" "IBM Plex Mono"
-                    , Html.Attributes.style "padding" "2rem"
+                    , Html.Attributes.style "padding" "0.75rem 1.25rem"
+                    , Html.Attributes.style "font-size" "13px"
+                    , Html.Attributes.style "border-radius" "0.5rem"
                     ]
                 )
             |> Decode.map Html.fromUnstyled
