@@ -347,8 +347,8 @@ forwardRefs slug =
                     |> Result.mapError (\_ -> "Markdown error")
                     |> DataSource.fromResult
                     |> DataSource.resolve
-                    |> DataSource.distillSerializeCodec "forwardRefs" (Serialize.list serializeBackRef)
             )
+        |> DataSource.distillSerializeCodec "forwardRefs" (Serialize.list serializeBackRef)
 
 
 serializeBackRef : Serialize.Codec e BackRef
