@@ -44,8 +44,7 @@ page =
 
 
 type alias Data =
-    { highlight : Html.Html Msg
-    , environment : String
+    { environment : String
 
     --, shell : Html.Html Msg
     }
@@ -53,37 +52,7 @@ type alias Data =
 
 data : DataSource Data
 data =
-    DataSource.map2 Data
-        (shikiDataSource 1
-            """import Browser
-import Html exposing (Html, button, div, text)
-import Html.Events exposing (onClick)
-
-main =
- Browser.sandbox { init = 0, update = update, view = view }
-
-type Msg = Increment | Decrement
-
-{-| <https://github.com/shikijs/shiki/blob/2a31dc50f4fbdb9a63990ccd15e08cccc9c1566a/packages/shiki/src/renderer.ts#L16>
--}
-
-update : Msg -> Model -> ( Model, Cmd Msg )
-update msg model =
- case msg of
-   Increment ->
-     model + 1
-
-   Decrement ->
-     model - 1
-
-view model =
- div []
-   [ button [ onClick Decrement ] [ text "-" ]
-   , div [] [ text (String.fromInt model) ]
-   , button [ onClick Increment ] [ text "+" ]
-   ]
-"""
-        )
+    DataSource.map Data
         (DataSource.Port.send "environmentVariable"
             (Json.Encode.string "EDITOR")
             Decode.string
@@ -127,12 +96,7 @@ view maybeUrl sharedModel static =
     { title = "Placeholder"
     , body =
         View.Tailwind
-            [ static.data.highlight
-
-            --|> Html.Parser.Util.toVirtualDom
-            --|> PlainHtml.div []
-            --|> Html.fromUnstyled
-            , Html.div []
+            [ Html.div []
                 [ Html.text static.data.environment
                 ]
 

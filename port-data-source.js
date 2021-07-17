@@ -33,8 +33,8 @@ module.exports =
       return await highlighter.then((highlighter) => {
         return {
           tokens: highlighter.codeToThemedTokens(
-            fromElm,
-            "elm",
+            fromElm.body,
+            fromElm.language,
             highlighter.getTheme(),
             {
               includeExplanation: false,

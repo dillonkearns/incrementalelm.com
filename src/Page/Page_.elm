@@ -22,7 +22,7 @@ import Shared
 import String.Extra
 import Tailwind.Breakpoints as Bp
 import Tailwind.Utilities as Tw
-import TailwindMarkdownRenderer
+import TailwindMarkdownRenderer2
 import Timestamps exposing (Timestamps)
 import View exposing (View)
 
@@ -72,7 +72,10 @@ data routeParams =
     DataSource.map6
         Data
         (DataSource.File.onlyFrontmatter decoder filePath)
-        (MarkdownCodec.withoutFrontmatter TailwindMarkdownRenderer.renderer filePath)
+        --(MarkdownCodec.withoutFrontmatter TailwindMarkdownRenderer.renderer filePath)
+        (MarkdownCodec.withoutFrontmatter TailwindMarkdownRenderer2.renderer filePath
+            |> DataSource.resolve
+        )
         (MarkdownCodec.noteTitle filePath)
         (backReferences routeParams.page)
         (forwardRefs routeParams.page)
