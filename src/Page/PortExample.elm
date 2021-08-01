@@ -53,14 +53,14 @@ type alias Data =
 data : DataSource Data
 data =
     DataSource.map Data
-        (DataSource.Port.send "environmentVariable"
+        (DataSource.Port.get "environmentVariable"
             (Json.Encode.string "EDITOR")
             Decode.string
         )
 
 
 
---(DataSource.Port.send "shell"
+--(DataSource.Port.get "shell"
 --    (Json.Encode.string "ls")
 --    Decode.string
 --    |> DataSource.andThen (shikiDataSource 2)
@@ -119,7 +119,7 @@ shikiView htmlString =
 
 shikiDataSource : a -> String -> DataSource (Html.Html msg)
 shikiDataSource key codeSnippet =
-    DataSource.Port.send "highlight"
+    DataSource.Port.get "highlight"
         (Json.Encode.string codeSnippet)
         (Shiki.decoder
             |> Decode.map
@@ -155,7 +155,7 @@ fontStyleDecoder =
 --|> DataSource.distillSerializeCodec (String.fromInt key) (Serialize.list nodeCodec)
 --shikiDataSource : Int -> String -> DataSource (List Html.Parser.Node)
 --shikiDataSource key codeSnippet =
---    DataSource.Port.send "highlight"
+--    DataSource.Port.get "highlight"
 --        (Json.Encode.string codeSnippet)
 --        Decode.string
 --        |> DataSource.andThen

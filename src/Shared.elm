@@ -1,4 +1,4 @@
-port module Shared exposing (Data, Model, Msg(..), SharedMsg(..), template)
+port module Shared exposing (Data, Model, Msg(..), template)
 
 import Animation exposing (Interpolation)
 import Browser.Dom as Dom
@@ -37,7 +37,7 @@ import View.TailwindNavbar
 port toggleDarkMode : () -> Cmd msg
 
 
-template : SharedTemplate Msg Model Data SharedMsg msg
+template : SharedTemplate Msg Model Data msg
 template =
     { init = init
     , update = update
@@ -45,16 +45,11 @@ template =
     , data = data
     , subscriptions = subscriptions
     , onPageChange = Just OnPageChange
-    , sharedMsg = SharedMsg
     }
 
 
 type alias Data =
     ()
-
-
-type SharedMsg
-    = NoOp
 
 
 type alias Model =
@@ -156,8 +151,6 @@ updateStyles model =
 --        OnPageChange _ ->
 --            ( { model | showMobileMenu = False }, Cmd.none )
 --
---        SharedMsg globalMsg ->
---            ( model, Cmd.none )
 --subscriptions : Path -> Model -> Sub Msg
 --subscriptions _ _ =
 --    Sub.none
@@ -172,17 +165,13 @@ view :
     Data
     ->
         { path : Path
-        , frontmatter : Maybe Route
+        , route : Maybe Route
         }
     -> Model
     -> (Msg -> msg)
     -> View msg
     -> { body : Html msg, title : String }
 view sharedData page model toMsg pageView =
-    let
-        thing =
-            page.frontmatter
-    in
     case pageView.body of
         View.ElmUi elements ->
             { title = pageView.title
@@ -304,7 +293,6 @@ type Msg
         , query : Maybe String
         , fragment : Maybe String
         }
-    | SharedMsg SharedMsg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -401,11 +389,6 @@ update msg model =
 
         GotCurrentTime posix ->
             ( { model | now = Just posix }, Cmd.none )
-
-        SharedMsg sharedMsg ->
-            case sharedMsg of
-                NoOp ->
-                    ( model, Cmd.none )
 
 
 subscriptions : Path -> Model -> Sub Msg

@@ -17,7 +17,7 @@ staticGraphqlRequest selectionSet =
             , method = "POST"
             , headers = []
             , body =
-                DataSource.jsonBody
+                DataSource.Http.jsonBody
                     (Encode.object
                         [ ( "query"
                           , selectionSet

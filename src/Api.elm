@@ -19,28 +19,33 @@ import UnsplashImage exposing (UnsplashImage)
 routes :
     DataSource (List Route)
     -> (Html Never -> String)
-    -> List (ApiRoute.Done ApiRoute.Response)
+    -> List (ApiRoute.ApiRoute ApiRoute.Response)
 routes getStaticRoutes htmlToString =
-    [--ApiRoute.succeed
-     --    (tipsFeedItems htmlToString
-     --        |> DataSource.map
-     --            (\feedItems ->
-     --                Rss.generate
-     --                    { title = "Incremental Elm Tips"
-     --                    , description = "Incremental Elm Consulting"
-     --                    , url = Site.canonicalUrl ++ "/tips"
-     --                    , lastBuildTime = Pages.builtAt
-     --                    , generator = Just "elm-pages"
-     --                    , items = feedItems
-     --                    , siteUrl = Site.canonicalUrl
-     --                    }
-     --            )
-     --        |> DataSource.map (\body -> { body = body })
-     --    )
-     --    |> ApiRoute.literal "tips"
-     --    |> ApiRoute.slash
-     --    |> ApiRoute.literal "feed.xml"
-     --    |> ApiRoute.single
+    [ --ApiRoute.succeed
+      --   (tipsFeedItems htmlToString
+      --       |> DataSource.map
+      --           (\feedItems ->
+      --               Rss.generate
+      --                   { title = "Incremental Elm Tips"
+      --                   , description = "Incremental Elm Consulting"
+      --                   , url = Site.canonicalUrl ++ "/tips"
+      --                   , lastBuildTime = Pages.builtAt
+      --                   , generator = Just "elm-pages"
+      --                   , items = feedItems
+      --                   , siteUrl = Site.canonicalUrl
+      --                   }
+      --           )
+      --       |> DataSource.map (\body -> { body = body })
+      --   )
+      --   |> ApiRoute.literal "tips"
+      --   |> ApiRoute.slash
+      --   |> ApiRoute.literal "feed.xml"
+      --   |> ApiRoute.single
+      ApiRoute.succeed
+        (DataSource.succeed { body = "Hi there!" })
+        --(DataSource.fail "Fail from API")
+        |> ApiRoute.literal "hello.txt"
+        |> ApiRoute.single
     ]
 
 
@@ -49,17 +54,21 @@ tipsFeedItems htmlToString =
     Glob.succeed
         (\slug filePath ->
             MarkdownCodec.withFrontmatter
-                (\metadata body ->
-                    { body = body |> List.map htmlToString |> String.join ""
-                    , metadata = metadata
-                    , slug = slug
-                    }
+                (\maybeMetadata body ->
+                    maybeMetadata
+                        |> Maybe.map
+                            (\metadata ->
+                                { body = body |> List.map htmlToString |> String.join ""
+                                , metadata = metadata
+                                , slug = slug
+                                }
+                            )
                 )
                 tipDecoder
                 Markdown.Renderer.defaultHtmlRenderer
                 filePath
         )
-        |> Glob.match (Glob.literal "content/tips/")
+        |> Glob.match (Glob.literal "content/")
         |> Glob.capture Glob.wildcard
         |> Glob.match (Glob.literal ".md")
         |> Glob.captureFilePath
@@ -68,6 +77,7 @@ tipsFeedItems htmlToString =
         |> DataSource.map
             (\coreItems ->
                 coreItems
+                    |> List.filterMap identity
                     |> List.map tipToFeedItem
             )
 
@@ -80,27 +90,42 @@ type alias TipMetadata =
     }
 
 
-tipDecoder : Decode.Decoder TipMetadata
+tipDecoder : Decode.Decoder (Maybe TipMetadata)
 tipDecoder =
-    Decode.map4 TipMetadata
-        (Decode.field "title" Decode.string)
-        (Decode.field "description" Decode.string)
-        (Decode.field "publishAt"
-            (Decode.string
-                |> Decode.andThen
-                    (\isoString ->
-                        case Date.fromIsoString isoString of
-                            Ok date ->
-                                Decode.succeed date
+    Decode.optionalField "publishAt"
+        (Decode.string
+            |> Decode.andThen
+                (\isoString ->
+                    case Date.fromIsoString isoString of
+                        Ok date ->
+                            Decode.succeed date
 
-                            Err error ->
-                                Decode.fail error
-                    )
+                        Err error ->
+                            Decode.fail error
+                )
+        )
+        |> Decode.andThen
+            (\maybePublishAt ->
+                case maybePublishAt of
+                    Just publishAt ->
+                        Decode.map3
+                            (\title description cover ->
+                                TipMetadata
+                                    title
+                                    description
+                                    publishAt
+                                    cover
+                                    |> Just
+                            )
+                            (Decode.field "title" Decode.string)
+                            (Decode.field "description" Decode.string)
+                            (Decode.optionalField "cover" UnsplashImage.decoder
+                                |> Decode.map (Maybe.withDefault UnsplashImage.default)
+                            )
+
+                    Nothing ->
+                        Decode.succeed Nothing
             )
-        )
-        (Decode.optionalField "cover" UnsplashImage.decoder
-            |> Decode.map (Maybe.withDefault UnsplashImage.default)
-        )
 
 
 tipToFeedItem :

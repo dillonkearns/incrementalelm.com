@@ -1,4 +1,4 @@
-module TailwindMarkdownRenderer2 exposing (..)
+module TailwindMarkdownRenderer3 exposing (..)
 
 import Css
 import DataSource exposing (DataSource)
@@ -16,15 +16,15 @@ import Shiki
 import Tailwind.Utilities as Tw
 
 
-renderer : Markdown.Renderer.Renderer (DataSource (Html msg))
+renderer : Markdown.Renderer.Renderer (Html msg)
 renderer =
     Scaffolded.toRenderer
-        { renderHtml = Markdown.Html.oneOf htmlRenderers
-        , renderMarkdown = Scaffolded.withDataSource reduceHtmlDataSource
+        { renderHtml = Markdown.Html.oneOf []
+        , renderMarkdown = reduceHtmlDataSource
         }
 
 
-reduceHtmlDataSource : Block (Html msg) -> DataSource (Html msg)
+reduceHtmlDataSource : Block (Html msg) -> Html msg
 reduceHtmlDataSource block =
     case block of
         Scaffolded.Paragraph children ->
@@ -36,10 +36,9 @@ reduceHtmlDataSource block =
                     ]
                 ]
                 children
-                |> DataSource.succeed
 
         Scaffolded.Heading { rawText, level, children } ->
-            (case level of
+            case level of
                 Block.H1 ->
                     Html.h1
                         [ css
@@ -124,11 +123,10 @@ reduceHtmlDataSource block =
                             ]
                         ]
                         children
-            )
-                |> DataSource.succeed
 
-        Scaffolded.CodeBlock info ->
-            shikiDataSource info
+        Scaffolded.CodeBlock { body, language } ->
+            --shikiDataSource body
+            Html.pre [] [ Html.code [] [ Html.text body ] ]
 
         --SyntaxHighlight.elm body
         --    |> Result.map (SyntaxHighlight.toBlockHtml (Just 1))
@@ -148,20 +146,17 @@ reduceHtmlDataSource block =
         --            , Tw.mb_8
         --            ]
         --        ]
-        --    |> DataSource.succeed
         Scaffolded.Text string ->
-            DataSource.succeed (Html.text string)
+            Html.text string
 
         Scaffolded.Emphasis content ->
-            DataSource.succeed (Html.em [ css [ Tw.italic ] ] content)
+            Html.em [ css [ Tw.italic ] ] content
 
         Scaffolded.Strong content ->
             Html.strong [ css [ Tw.font_bold ] ] content
-                |> DataSource.succeed
 
         Scaffolded.BlockQuote children ->
             Html.blockquote [] children
-                |> DataSource.succeed
 
         Scaffolded.CodeSpan content ->
             Html.code
@@ -172,11 +167,9 @@ reduceHtmlDataSource block =
                     ]
                 ]
                 [ Html.text content ]
-                |> DataSource.succeed
 
         Scaffolded.Strikethrough children ->
             Html.del [] children
-                |> DataSource.succeed
 
         Link { destination, title, children } ->
             Html.a
@@ -192,17 +185,14 @@ reduceHtmlDataSource block =
                     |> Maybe.map List.singleton
                     |> Maybe.withDefault children
                 )
-                |> DataSource.succeed
 
         Image image ->
             case image.title of
                 Just _ ->
                     Html.img [ Attr.src image.src, Attr.alt image.alt ] []
-                        |> DataSource.succeed
 
                 Nothing ->
                     Html.img [ Attr.src image.src, Attr.alt image.alt ] []
-                        |> DataSource.succeed
 
         UnorderedList { items } ->
             Html.ul
@@ -249,7 +239,6 @@ reduceHtmlDataSource block =
                                         (checkbox :: children)
                         )
                 )
-                |> DataSource.succeed
 
         OrderedList { startingIndex, items } ->
             Html.ol
@@ -280,11 +269,9 @@ reduceHtmlDataSource block =
                                 itemBlocks
                         )
                 )
-                |> DataSource.succeed
 
         ThematicBreak ->
             Html.hr [] []
-                |> DataSource.succeed
 
         --HardLineBreak ->
         --Table list ->
@@ -304,7 +291,7 @@ reduceHtmlDataSource block =
         --
         --TableHeaderCell maybeAlignment list ->
         _ ->
-            DataSource.succeed (Html.text "TODO")
+            Html.text "TODO"
 
 
 rawTextToId : String -> String
@@ -315,133 +302,16 @@ rawTextToId rawText =
         |> String.toLower
 
 
-shikiDataSource : { body : String, language : Maybe String } -> DataSource (Html.Html msg)
-shikiDataSource info =
+shikiDataSource : String -> DataSource (Html.Html msg)
+shikiDataSource codeSnippet =
     DataSource.Port.get "highlight"
-        (Json.Encode.object
-            [ ( "body", Json.Encode.string info.body )
-            , ( "language"
-              , info.language
-                    |> Maybe.map Json.Encode.string
-                    |> Maybe.withDefault Json.Encode.null
-              )
-            ]
-        )
+        (Json.Encode.string codeSnippet)
         (Shiki.decoder
             |> Decode.map
                 (Shiki.view
                     [ Html.Attributes.style "font-family" "IBM Plex Mono"
-                    , Html.Attributes.style "padding" "0.75rem 1.25rem"
-                    , Html.Attributes.style "font-size" "13px"
-                    , Html.Attributes.style "border-radius" "0.5rem"
+                    , Html.Attributes.style "padding" "2rem"
                     ]
                 )
             |> Decode.map Html.fromUnstyled
         )
-
-
-
---htmlRenderers : List (Markdown.Html.Renderer (List (Html msg) -> Html msg))
-
-
-htmlRenderers : List (Markdown.Html.Renderer (List (DataSource (Html msg)) -> DataSource (Html msg)))
-htmlRenderers =
-    [ Markdown.Html.tag "discord"
-        (\children ->
-            Html.iframe
-                [ Attr.src "https://discordapp.com/widget?id=534524278847045633&theme=dark"
-                , Attr.width 350
-                , Attr.height 500
-                , Attr.attribute "allowtransparency" "true"
-                , Attr.attribute "frameborder" "0"
-                , Attr.attribute "sandbox" "allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"
-                ]
-                []
-                |> DataSource.succeed
-        )
-    , Markdown.Html.tag "signup"
-        --Widget.Signup.view
-        (\_ _ _ ->
-            Html.text "signup TODO"
-                |> DataSource.succeed
-        )
-        |> Markdown.Html.withAttribute "buttontext"
-        |> Markdown.Html.withAttribute "formid"
-    , Markdown.Html.tag "button"
-        (\url children ->
-            children
-                |> DataSource.combine
-                |> DataSource.map
-                    (\resolvedChildren ->
-                        Html.a
-                            [ Attr.href url
-                            ]
-                            resolvedChildren
-                    )
-        )
-        |> Markdown.Html.withAttribute "url"
-    , Markdown.Html.tag "vimeo"
-        (\id children ->
-            --vimeoView id
-            Html.text "TODO"
-                |> DataSource.succeed
-        )
-        |> Markdown.Html.withAttribute "id"
-    , Markdown.Html.tag "ellie"
-        (\id children ->
-            --View.Ellie.view id
-            Html.text "TODO"
-                |> DataSource.succeed
-        )
-        |> Markdown.Html.withAttribute "id"
-    , Markdown.Html.tag "resources"
-        (\children ->
-            --Element.column
-            --    [ Element.spacing 16
-            --    , Element.centerX
-            --    , Element.padding 30
-            --    , Element.width Element.fill
-            --    ]
-            --    children
-            Html.text "TODO"
-                |> DataSource.succeed
-        )
-    , Markdown.Html.tag "resource"
-        (\name resourceKind url children ->
-            --let
-            --    todo anything =
-            --        todo anything
-            --
-            --    kind =
-            --        case Dict.get resourceKind icons of
-            --            Just myResource ->
-            --                --Ok myResource
-            --                myResource
-            --
-            --            Nothing ->
-            --                todo ""
-            --
-            --    --Err
-            --    --    { title = "Invalid resource name"
-            --    --    , message = []
-            --    --    }
-            --in
-            --View.Resource.view { name = name, url = url, kind = kind }
-            Html.text "TODO"
-                |> DataSource.succeed
-        )
-        |> Markdown.Html.withAttribute "title"
-        |> Markdown.Html.withAttribute "icon"
-        |> Markdown.Html.withAttribute "url"
-    , Markdown.Html.tag "contact-button"
-        (\body ->
-            --contactButtonView
-            Html.a
-                [ Attr.href "mailto:dillon@incrementalelm.com"
-                , css
-                    []
-                ]
-                [ Html.text "Contact" ]
-                |> DataSource.succeed
-        )
-    ]
