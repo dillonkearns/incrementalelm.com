@@ -19,6 +19,7 @@ import Json.Decode
 import Pages.Flags
 import Pages.PageUrl exposing (PageUrl)
 import Path exposing (Path)
+import Route exposing (Route)
 import SharedTemplate exposing (SharedTemplate)
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
@@ -109,9 +110,9 @@ init navigationKey flags maybePagePath =
       }
         |> updateStyles
     , Cmd.batch
-        [ Dom.getViewport
-            |> Task.perform InitialViewport
-        , TwitchButton.request |> Cmd.map OnAirUpdated
+        [ --Dom.getViewport
+          --    |> Task.perform InitialViewport
+          TwitchButton.request |> Cmd.map OnAirUpdated
         , Time.now |> Task.perform GotCurrentTime
         ]
     )
@@ -171,45 +172,50 @@ view :
     Data
     ->
         { path : Path
-        , frontmatter : route
+        , frontmatter : Maybe Route
         }
     -> Model
     -> (Msg -> msg)
     -> View msg
     -> { body : Html msg, title : String }
 view sharedData page model toMsg pageView =
+    let
+        thing =
+            page.frontmatter
+    in
     case pageView.body of
         View.ElmUi elements ->
             { title = pageView.title
             , body =
-                (if model.showMenu then
-                    Element.column
-                        [ Element.height Element.fill
-                        , Element.alignTop
-                        , Element.width Element.fill
-                        ]
-                        [ View.Navbar.view model animationView (toMsg StartAnimation)
-                        , View.Navbar.modalMenuView model.menuAnimation
-                        ]
-
-                 else
-                    Element.column [ Element.width Element.fill ]
-                        [ View.Navbar.view model animationView (toMsg StartAnimation)
-                        , elements
-                            |> Element.textColumn
-                                [ Element.height Element.fill
-                                , Element.padding 30
-                                , Element.spacing 30
-                                , Element.centerX
-                                , if Dimensions.isMobile model.dimensions then
-                                    Element.width (Element.fill |> Element.maximum 600)
-
-                                  else
-                                    Element.width (Element.fill |> Element.maximum 700)
-                                ]
-                        ]
-                )
-                    |> Element.layout [ Element.width Element.fill ]
+                --(if model.showMenu then
+                --    Element.column
+                --        [ Element.height Element.fill
+                --        , Element.alignTop
+                --        , Element.width Element.fill
+                --        ]
+                --        [ View.Navbar.view model animationView (toMsg StartAnimation)
+                --        , View.Navbar.modalMenuView model.menuAnimation
+                --        ]
+                --
+                -- else
+                --    Element.column [ Element.width Element.fill ]
+                --        [ View.Navbar.view model animationView (toMsg StartAnimation)
+                --        , elements
+                --            |> Element.textColumn
+                --                [ Element.height Element.fill
+                --                , Element.padding 30
+                --                , Element.spacing 30
+                --                , Element.centerX
+                --                , if Dimensions.isMobile model.dimensions then
+                --                    Element.width (Element.fill |> Element.maximum 600)
+                --
+                --                  else
+                --                    Element.width (Element.fill |> Element.maximum 700)
+                --                ]
+                --        ]
+                --)
+                --    |> Element.layout [ Element.width Element.fill ]
+                Html.div [] []
             }
 
         View.Tailwind nodes ->
@@ -285,12 +291,12 @@ second =
 
 
 type Msg
-    = StartAnimation
-    | Animate Animation.Msg
-    | InitialViewport Dom.Viewport
-    | ToggleDarkMode
+    = --StartAnimation
+      --| Animate Animation.Msg
+      --| InitialViewport Dom.Viewport
+      ToggleDarkMode
     | ToggleMobileMenu
-    | WindowResized Int Int
+      --| WindowResized Int Int
     | OnAirUpdated (Result Http.Error TwitchButton.IsOnAir)
     | GotCurrentTime Time.Posix
     | OnPageChange
@@ -310,75 +316,73 @@ update msg model =
         ToggleMobileMenu ->
             ( { model | showMenu = not model.showMenu }, Cmd.none )
 
-        InitialViewport { viewport } ->
-            ( { model
-                | dimensions =
-                    Dimensions.init
-                        { width = viewport.width
-                        , height = viewport.height
-                        , device =
-                            Element.classifyDevice
-                                { height = round viewport.height
-                                , width = round viewport.width
-                                }
-                        }
-              }
-            , Cmd.none
-            )
-
-        WindowResized width height ->
-            ( { model
-                | dimensions =
-                    Dimensions.init
-                        { width = toFloat width
-                        , height = toFloat height
-                        , device = Element.classifyDevice { height = height, width = width }
-                        }
-              }
-            , Cmd.none
-            )
-
-        StartAnimation ->
-            case model.showMenu of
-                True ->
-                    ( { model
-                        | showMenu = False
-                        , menuBarAnimation = View.MenuBar.startAnimation model
-                        , menuAnimation =
-                            model.menuAnimation
-                                |> Animation.interrupt
-                                    [ Animation.toWith interpolation
-                                        [ Animation.opacity 100
-                                        ]
-                                    ]
-                      }
-                    , Cmd.none
-                    )
-
-                False ->
-                    ( { model
-                        | showMenu = True
-                        , menuBarAnimation = View.MenuBar.startAnimation model
-                        , menuAnimation =
-                            model.menuAnimation
-                                |> Animation.interrupt
-                                    [ Animation.toWith interpolation
-                                        [ Animation.opacity 100
-                                        ]
-                                    ]
-                      }
-                    , Cmd.none
-                    )
-
-        Animate time ->
-            ( { model
-                | styles = List.map (Animation.update time) model.styles
-                , menuBarAnimation = View.MenuBar.update time model.menuBarAnimation
-                , menuAnimation = Animation.update time model.menuAnimation
-              }
-            , Cmd.none
-            )
-
+        --InitialViewport { viewport } ->
+        --    ( { model
+        --        | dimensions =
+        --            Dimensions.init
+        --                { width = viewport.width
+        --                , height = viewport.height
+        --                , device =
+        --                    Element.classifyDevice
+        --                        { height = round viewport.height
+        --                        , width = round viewport.width
+        --                        }
+        --                }
+        --      }
+        --    , Cmd.none
+        --    )
+        --
+        --WindowResized width height ->
+        --    ( { model
+        --        | dimensions =
+        --            Dimensions.init
+        --                { width = toFloat width
+        --                , height = toFloat height
+        --                , device = Element.classifyDevice { height = height, width = width }
+        --                }
+        --      }
+        --    , Cmd.none
+        --    )
+        --StartAnimation ->
+        --    case model.showMenu of
+        --        True ->
+        --            ( { model
+        --                | showMenu = False
+        --                , menuBarAnimation = View.MenuBar.startAnimation model
+        --                , menuAnimation =
+        --                    model.menuAnimation
+        --                        |> Animation.interrupt
+        --                            [ Animation.toWith interpolation
+        --                                [ Animation.opacity 100
+        --                                ]
+        --                            ]
+        --              }
+        --            , Cmd.none
+        --            )
+        --
+        --        False ->
+        --            ( { model
+        --                | showMenu = True
+        --                , menuBarAnimation = View.MenuBar.startAnimation model
+        --                , menuAnimation =
+        --                    model.menuAnimation
+        --                        |> Animation.interrupt
+        --                            [ Animation.toWith interpolation
+        --                                [ Animation.opacity 100
+        --                                ]
+        --                            ]
+        --              }
+        --            , Cmd.none
+        --            )
+        --
+        --Animate time ->
+        --    ( { model
+        --        | styles = List.map (Animation.update time) model.styles
+        --        , menuBarAnimation = View.MenuBar.update time model.menuBarAnimation
+        --        , menuAnimation = Animation.update time model.menuAnimation
+        --      }
+        --    , Cmd.none
+        --    )
         OnPageChange _ ->
             ( { model
                 | showMenu = False
@@ -407,14 +411,13 @@ update msg model =
 subscriptions : Path -> Model -> Sub Msg
 subscriptions _ model =
     Sub.batch
-        [ Animation.subscription Animate
-            (model.styles
-                ++ View.MenuBar.animationStates model.menuBarAnimation
-                ++ [ model.menuAnimation ]
-            )
-        , Browser.Events.onResize WindowResized
-
-        --, Time.every (oneSecond * 60) GotCurrentTime
+        [--Animation.subscription Animate
+         --    (model.styles
+         --        ++ View.MenuBar.animationStates model.menuBarAnimation
+         --        ++ [ model.menuAnimation ]
+         --    )
+         --, Browser.Events.onResize WindowResized
+         --, Time.every (oneSecond * 60) GotCurrentTime
         ]
 
 
