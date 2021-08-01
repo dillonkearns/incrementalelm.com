@@ -105,7 +105,7 @@ linkInner currentPagePath linkTo name =
     let
         isCurrentPath : Bool
         isCurrentPath =
-            List.head (Path.toSegments currentPagePath) == (linkTo |> Route.toPath |> Path.toSegments |> List.head)
+            (Path.toSegments currentPagePath |> List.head) == (linkTo |> Route.toPath |> Path.toSegments |> List.head)
     in
     span
         [ css
