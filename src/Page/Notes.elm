@@ -124,11 +124,7 @@ notesList searchQuery notes =
                     if noteMatches searchQuery note then
                         note.route
                             |> Link.htmlLink []
-                                (text <|
-                                    note.title
-                                 --++ " #"
-                                 --++ String.join ", " note.tags
-                                )
+                                (text note.title)
                             |> List.singleton
                             |> li
                                 [ css
@@ -154,7 +150,6 @@ type alias Note =
     { route : Route
     , slug : String
     , title : String
-    , tags : List String
     }
 
 
@@ -162,20 +157,9 @@ wikiEntries : DataSource (List Note)
 wikiEntries =
     Glob.succeed
         (\topic filePath ->
-            DataSource.map2
+            DataSource.map
                 (Note (Route.Page_ { page = topic }) topic)
                 (MarkdownCodec.noteTitle filePath)
-                (DataSource.File.onlyFrontmatter
-                    (Decode.optionalField "tags"
-                        (Decode.oneOf
-                            [ Decode.list Decode.string
-                            , Decode.string |> Decode.map List.singleton
-                            ]
-                        )
-                        |> Decode.map (Maybe.withDefault [])
-                    )
-                    filePath
-                )
         )
         |> Glob.match (Glob.literal "content/")
         |> Glob.capture Glob.wildcard
@@ -183,6 +167,7 @@ wikiEntries =
         |> Glob.captureFilePath
         |> Glob.toDataSource
         |> DataSource.resolve
+        |> DataSource.map (List.filter (\{ slug } -> slug /= "index"))
 
 
 head :

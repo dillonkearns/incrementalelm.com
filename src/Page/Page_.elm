@@ -23,6 +23,7 @@ import String.Extra
 import Tailwind.Breakpoints as Bp
 import Tailwind.Utilities as Tw
 import TailwindMarkdownRenderer2
+import Time
 import Timestamps exposing (Timestamps)
 import View exposing (View)
 
@@ -53,6 +54,7 @@ routes : DataSource (List RouteParams)
 routes =
     Glob.succeed RouteParams
         |> Glob.match (Glob.literal "content/")
+        |> Glob.match (Glob.oneOf ( ( "page/", () ), [ ( "", () ) ] ))
         |> Glob.capture Glob.wildcard
         |> Glob.match (Glob.literal ".md")
         |> Glob.toDataSource
@@ -62,24 +64,40 @@ routes =
             )
 
 
+findFilePath : String -> DataSource String
+findFilePath slug =
+    Glob.succeed identity
+        |> Glob.captureFilePath
+        |> Glob.match (Glob.literal "content/")
+        |> Glob.match (Glob.oneOf ( ( "page/", () ), [ ( "", () ) ] ))
+        |> Glob.match (Glob.literal slug)
+        |> Glob.match (Glob.literal ".md")
+        |> Glob.expectUniqueMatch
+
+
 data : RouteParams -> DataSource Data
 data routeParams =
-    let
-        filePath : String
-        filePath =
-            "content/" ++ routeParams.page ++ ".md"
-    in
-    DataSource.map6
-        Data
-        (DataSource.File.onlyFrontmatter decoder filePath)
-        --(MarkdownCodec.withoutFrontmatter TailwindMarkdownRenderer.renderer filePath)
-        (MarkdownCodec.withoutFrontmatter TailwindMarkdownRenderer2.renderer filePath
-            |> DataSource.resolve
-        )
-        (MarkdownCodec.noteTitle filePath)
-        (backReferences routeParams.page)
-        (forwardRefs routeParams.page)
-        (Timestamps.data filePath)
+    findFilePath routeParams.page
+        |> DataSource.andThen
+            (\filePath ->
+                DataSource.map6
+                    Data
+                    (DataSource.File.onlyFrontmatter decoder filePath)
+                    --(MarkdownCodec.withoutFrontmatter TailwindMarkdownRenderer.renderer filePath)
+                    (MarkdownCodec.withoutFrontmatter TailwindMarkdownRenderer2.renderer filePath
+                        |> DataSource.resolve
+                    )
+                    (MarkdownCodec.noteTitle filePath)
+                    (backReferences routeParams.page)
+                    --(forwardRefs routeParams.page)
+                    (DataSource.succeed [])
+                    --(Timestamps.data filePath)
+                    (DataSource.succeed
+                        { updated = Time.millisToPosix 0
+                        , created = Time.millisToPosix 0
+                        }
+                    )
+            )
 
 
 type alias Data =
@@ -295,6 +313,7 @@ notes =
         |> Glob.match (Glob.literal ".md")
         |> Glob.captureFilePath
         |> Glob.toDataSource
+        |> DataSource.map (List.filter (\value -> value.topic /= "index"))
 
 
 backReferences : String -> DataSource (List BackRef)

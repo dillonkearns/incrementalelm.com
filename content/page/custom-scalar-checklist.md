@@ -10,29 +10,29 @@ Use Custom Scalars instead of GraphQL primitives.
 
 Instead of:
 
-```
+```graphql
 type Book {
-    publicationDate: String!
-    priceInCents: Int!
+  publicationDate: String!
+  priceInCents: Int!
 
-    # cover assets are stored at
-    # `/covers/<coverImage>?format=<large|small>`
-    coverImage: String!
+  # cover assets are stored at
+  # `/covers/<coverImage>?format=<large|small>`
+  coverImage: String!
 
-    averageRating: Float!
-    id: String!
+  averageRating: Float!
+  id: String!
 }
 ```
 
 Try using Custom Scalars like this:
 
-```
+```graphql
 type Book {
-    publicationDate: DateTime!
-    price: USD!
-    coverImage: CoverImage!
-    averageRating: StarRating!
-    id: BookId!
+  publicationDate: DateTime!
+  price: USD!
+  coverImage: CoverImage!
+  averageRating: StarRating!
+  id: BookId!
 }
 ```
 

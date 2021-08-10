@@ -1,6 +1,5 @@
 ---
 type: tip
-description: TODO
 publishAt: "2020-09-28"
 ---
 
@@ -44,9 +43,11 @@ What's the fix?
 
 We need a FuzzyDropdown module.
 
+```elm
 module FuzzyDropdown
 
 view : Html Msg
 filter : String -> Bool
+```
 
 Notice that the function names become much shorter because in the context of this module the meaning is clear. That's a good sign that you've found a cohesive grouping (and also a good technique for looking for opportunities for splitting modules).
