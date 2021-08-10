@@ -5,6 +5,7 @@
     <mapping directory="$PROJECT_DIR$/elm-pages" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/elm-pages/benchmark/node_modules/elm-pages" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/elm-pages/examples/docs/node_modules/elm-pages" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/elm-pages/examples/routing/node_modules/elm-pages" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/elm-pages/examples/slides/node_modules/elm-pages" vcs="Git" />
   </component>
 </project>

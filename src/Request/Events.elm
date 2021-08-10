@@ -1,13 +1,10 @@
-module Request.Events exposing (Guest, LiveStream, NamedZone, Project, guestSelection, guestView, guestsView, imageSelection, liveStreamSelection, projectSelection, projectView, recordingView, selection, socialBadges, view)
+module Request.Events exposing (Guest, LiveStream, NamedZone, Project, guestSelection, imageSelection, liveStreamSelection, projectSelection, recordingView2, selection, view)
 
-import Element exposing (Element)
-import Element.Border as Border
-import Element.Font as Font
-import Element.Keyed
 import Graphql.Operation exposing (RootQuery)
 import Graphql.SelectionSet as SelectionSet exposing (SelectionSet)
-import Html
-import Html.Attributes as Attr
+import Html.Styled as Html exposing (Html)
+import Html.Styled.Attributes as Attr exposing (css)
+import Icon
 import Json.Encode as Encode
 import Request.GoogleCalendar as GoogleCalendar
 import SanityApi.Object
@@ -18,10 +15,8 @@ import SanityApi.Object.Project
 import SanityApi.Object.SanityImageAsset
 import SanityApi.Query as Query
 import Scalar exposing (DateTime)
-import Style
-import Style.Helpers as Helpers
+import Tailwind.Utilities as Tw
 import Time
-import View.FontAwesome as FontAwesome
 import Youtube
 
 
@@ -103,118 +98,136 @@ liveStreamSelection =
         SanityApi.Object.LiveStream.createdAt_
 
 
-view : LiveStream -> Element msg
+view : LiveStream -> Html msg
 view event =
-    Element.column
-        [ Element.spacing 20
-        , Element.width (Element.fill |> Element.maximum 550)
-        , Element.padding 30
-        , Border.shadow { offset = ( 1, 1 ), size = 1, blur = 2, color = Element.rgba255 0 0 0 0.3 }
-        ]
-        [ Element.paragraph
-            [ Font.bold
-            , Font.size 24
-            ]
-            [ Element.text event.title ]
-        , guestsView event.guest
-        , event.project |> Maybe.map projectView |> Maybe.withDefault Element.none
-        , [ Element.text event.description ] |> Element.paragraph [ Font.size 14, Element.width Element.fill ]
-        , ( event.startsAt |> Time.posixToMillis |> String.fromInt
-          , Html.node "intl-time" [ Attr.property "editorValue" (event.startsAt |> Time.posixToMillis |> Encode.int) ] []
-                |> Element.html
-          )
-            |> Element.Keyed.el
-                [ Font.size 20
+    Html.div
+        []
+        [ Html.p
+            [ css
+                [ Tw.shadow_lg
+                , Tw.p_8
+                , Tw.max_w_md
+                , Tw.space_y_5
                 ]
-        , Element.newTabLink []
-            { url = GoogleCalendar.googleAddToCalendarLink event
-            , label =
-                Helpers.button
-                    { fontColor = .mainBackground
-                    , backgroundColor = .light
-                    , size = Style.fontSize.body
-                    }
-                    [ Element.text "Add to Google Calendar"
+            ]
+            [ Html.text event.title
+            ]
+        , guestsView event.guest
+        , Html.p
+            [ css [ Tw.text_xs ]
+            ]
+            [ Html.text event.description ]
+        , Html.div []
+            [ Html.node "intl-time"
+                [ Attr.property "editorValue" (event.startsAt |> Time.posixToMillis |> Encode.int)
+                , css
+                    [ Tw.text_sm
+                    , Tw.font_bold
                     ]
-            }
+                ]
+                []
+            ]
+        , Html.a
+            [ Attr.href (GoogleCalendar.googleAddToCalendarLink event)
+            , css
+                [ Tw.rounded_xl
+                , Tw.text_background
+                , Tw.bg_foreground
+                ]
+            ]
+            [ Html.text "Add to Google Calendar"
+            ]
 
         -- , TwitchButton.view
         ]
 
 
-recordingView : LiveStream -> Element msg
-recordingView event =
+recordingView2 : LiveStream -> Html msg
+recordingView2 event =
     case event.youtubeId of
         Nothing ->
-            Element.none
+            Html.text ""
 
         Just youtubeId ->
-            Element.column
-                [ Element.spacing 20
-                , Element.width (Element.fill |> Element.maximum 550)
-                , Element.padding 30
-                , Border.shadow { offset = ( 1, 1 ), size = 1, blur = 2, color = Element.rgba255 0 0 0 0.3 }
-                ]
-                [ Youtube.view youtubeId
-                , Element.paragraph
-                    [ Font.bold
-                    , Font.size 24
+            Html.div
+                [ css
+                    [ Tw.shadow_lg
+                    , Tw.p_8
+                    , Tw.max_w_md
+                    , Tw.space_y_5
                     ]
-                    [ Element.text event.title ]
-                , guestsView event.guest
-                , event.project |> Maybe.map projectView |> Maybe.withDefault Element.none
-                , [ Element.text event.description ] |> Element.paragraph [ Font.size 14, Element.width Element.fill ]
-                , Html.node "intl-time" [ Attr.property "editorValue" (event.startsAt |> Time.posixToMillis |> Encode.int) ] []
-                    |> Element.html
-                    |> Element.el
-                        [ Font.size 20
+                ]
+                [ Youtube.view youtubeId |> Html.fromUnstyled
+                , Html.p
+                    [ css
+                        [ Tw.font_bold
+                        , Tw.text_xl
                         ]
+                    ]
+                    [ Html.text event.title ]
+                , guestsView event.guest
+                , Html.p
+                    [ css [ Tw.text_xs ]
+                    ]
+                    [ Html.text event.description ]
+                , Html.div []
+                    [ Html.node "intl-time"
+                        [ Attr.property "editorValue" (event.startsAt |> Time.posixToMillis |> Encode.int)
+                        , css
+                            [ Tw.text_sm
+                            , Tw.font_bold
+                            ]
+                        ]
+                        []
+                    ]
                 ]
 
 
-guestsView : List Guest -> Element msg
+guestsView : List Guest -> Html msg
 guestsView guests =
-    Element.column [ Font.size 18, Element.spacing 15 ]
+    Html.div
+        [ css [ Tw.text_sm ]
+        ]
         (List.map guestView guests)
 
 
+guestView : { a | name : String, twitter : Maybe String, github : Maybe String } -> Html msg
 guestView guest =
-    Element.row [ Element.spacing 10 ]
-        [ Element.row []
-            [ Element.text "Guest: " |> Element.el [ Font.color Style.color.darkGray ]
-            , Element.text guest.name
+    Html.div
+        [ css [ Tw.space_x_2, Tw.flex ]
+        ]
+        [ Html.div []
+            [ [ Html.text "Guest: " ]
+                |> Html.span
+                    [ css [] ]
+            , Html.text guest.name
             ]
         , socialBadges guest
         ]
 
 
+socialBadges : { a | twitter : Maybe String, github : Maybe String } -> Html msg
 socialBadges guest =
-    Element.row [ Element.spacing 5 ]
+    Html.div
+        [ css
+            [ Tw.flex
+            , Tw.space_x_2
+            ]
+        ]
         ([ guest.twitter
             |> Maybe.map
                 (\twitter ->
-                    Helpers.fontAwesomeLink { url = "https://twitter.com/" ++ twitter, name = "fab fa-twitter" }
+                    Html.a
+                        [ Attr.href ("https://twitter.com/" ++ twitter) ]
+                        [ Icon.twitter ]
                 )
          , guest.github
             |> Maybe.map
                 (\github ->
-                    Helpers.fontAwesomeLink { url = "https://github.com/" ++ github, name = "fab fa-github" }
+                    Html.a
+                        [ Attr.href ("https://github.com/" ++ github) ]
+                        [ Icon.github ]
                 )
          ]
             |> List.filterMap identity
         )
-
-
-projectView : Project -> Element msg
-projectView project =
-    Element.paragraph [ Font.size 18 ]
-        [ Element.text "working on "
-        , Helpers.link2
-            { url = "https://github.com/dillonkearns/" ++ project.name
-            , content =
-                Element.row [ Element.spacing 4, Font.underline ]
-                    [ FontAwesome.styledIcon "fab fa-github" []
-                    , Element.text project.name
-                    ]
-            }
-        ]

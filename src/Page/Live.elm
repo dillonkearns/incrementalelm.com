@@ -6,6 +6,7 @@ import DataSource exposing (DataSource)
 import Element exposing (Element)
 import Head
 import Head.Seo as Seo
+import Html.Styled as Html exposing (Html)
 import Page exposing (Page, StaticPayload)
 import Pages
 import Pages.PageUrl exposing (PageUrl)
@@ -70,30 +71,6 @@ type alias Data =
     List LiveStream
 
 
-
---view :
---    Maybe PageUrl
---    -> Shared.Model
---    -> StaticPayload Data RouteParams
---    -> View Msg
---view maybeUrl sharedModel static =
---    { title = "elm-pages live streams"
---    , body =
---        []
---    }
---staticData :
---    List ( PagePath Pages.PathKey, TemplateType )
---    -> StaticHttp.Request StaticData
---staticData siteMetadata =
---    Request.staticGraphqlRequest Request.Events.selection
---view :
---    List ( Pages.PagePath.PagePath Pages.PathKey, TemplateType.TemplateType )
---    -> Template.StaticPayload TemplateType.LiveIndexMetadata StaticData
---    -> Shared.RenderedBody
---    -> Shared.PageView Never
---view allMetadata static viewForPage =
-
-
 view :
     Maybe PageUrl
     -> Shared.Model
@@ -111,11 +88,11 @@ view maybeUrl sharedModel static =
             -- TODO
             TwitchButton.notOnAir
     in
-    { title = "Incremental Elm Live Streams" --static.metadata.title
+    { title = "Incremental Elm Live Streams"
     , body =
-        --viewForPage
-        View.ElmUi
-            [ eventsView now isOnAir static.data ]
+        View.Tailwind
+            [ eventsView now isOnAir static.data
+            ]
     }
 
 
@@ -139,7 +116,7 @@ head static =
         |> Seo.website
 
 
-eventsView : Maybe Time.Posix -> TwitchButton.IsOnAir -> List LiveStream -> Element msg
+eventsView : Maybe Time.Posix -> TwitchButton.IsOnAir -> List LiveStream -> Html msg
 eventsView maybeNow isOnAir events =
     let
         upcoming =
@@ -185,8 +162,9 @@ eventsView maybeNow isOnAir events =
                         -(Time.posixToMillis event.startsAt)
                     )
     in
-    TwitchButton.viewIfOnAir isOnAir Element.none
-        :: ((upcoming |> List.map Request.Events.view)
-                ++ (recordings |> List.map Request.Events.recordingView)
-           )
-        |> Element.column [ Element.spacing 30, Element.centerX ]
+    Html.div []
+        (TwitchButton.viewIfOnAir isOnAir (Html.text "")
+            :: ((upcoming |> List.map Request.Events.view)
+                    ++ (recordings |> List.map Request.Events.recordingView2)
+               )
+        )

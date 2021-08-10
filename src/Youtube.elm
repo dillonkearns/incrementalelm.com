@@ -1,11 +1,10 @@
 module Youtube exposing (view)
 
-import Element exposing (Element)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 
 
-view : String -> Element msg
+view : String -> Html msg
 view id =
     div
         [ class "embed-container"
@@ -20,8 +19,3 @@ view id =
             ]
             []
         ]
-        |> Element.html
-        |> Element.el
-            [ Element.centerX
-            , Element.width (Element.maximum 640 Element.fill)
-            ]

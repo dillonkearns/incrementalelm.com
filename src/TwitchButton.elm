@@ -1,17 +1,14 @@
 module TwitchButton exposing (IsOnAir, notOnAir, request, viewIfOnAir)
 
-import Element
-import Element.Background as Background
-import Element.Border as Border
-import Element.Font
-import Html.Attributes as Attr
+import Css
+import Html.Styled as Html exposing (Html)
+import Html.Styled.Attributes as Attr exposing (css)
 import Http
 import Json.Decode as Decode
-import Style exposing (palette)
-import View.FontAwesome
+import Tailwind.Utilities as Tw
 
 
-viewIfOnAir : IsOnAir -> Element.Element msg -> Element.Element msg
+viewIfOnAir : IsOnAir -> Html msg -> Html msg
 viewIfOnAir isOnAir ifNotOnAirView =
     case isOnAir of
         OnAir ->
@@ -21,25 +18,23 @@ viewIfOnAir isOnAir ifNotOnAirView =
             ifNotOnAirView
 
 
-view : Element.Element msg
+view : Html msg
 view =
-    Element.newTabLink []
-        { url = "https://twitch.tv/dillonkearns"
-        , label =
-            Element.row
-                [ Element.spacing 5
-                , Element.Font.color palette.mainBackground
-                , Element.htmlAttribute (Attr.class "on-air")
-                , Element.mouseOver
-                    [ Background.color (Element.rgba255 200 20 20 1)
-                    ]
-                , Background.color (Element.rgba255 200 20 20 1)
-                , Element.padding 15
-                , Border.rounded 10
-                , Style.fontSize.body
-                ]
-                [ View.FontAwesome.icon "fas fa-broadcast-tower" |> Element.el [], Element.text "On Air" ]
-        }
+    Html.a
+        [ Attr.href "https://twitch.tv/dillonkearns"
+        , Attr.class "on-air"
+        , css
+            [ Css.backgroundColor (Css.rgb 200 20 20)
+            , Css.hover [ Css.backgroundColor (Css.rgb 180 10 10) ]
+            , Tw.text_background
+            , Tw.rounded
+            , Tw.p_2
+            , Tw.font_bold
+            ]
+        ]
+        [ --View.FontAwesome.icon "fas fa-broadcast-tower" |> Element.el [],
+          Html.text "On Air"
+        ]
 
 
 type IsOnAir
