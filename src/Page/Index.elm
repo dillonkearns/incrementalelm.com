@@ -57,7 +57,7 @@ head static =
             , dimensions = Nothing
             , mimeType = Nothing
             }
-        , description = "TODO"
+        , description = "Tips and tools for Elm programmers."
         , locale = Nothing
         , title = "Incremental Elm"
         }
