@@ -11,6 +11,7 @@ import Pages.PageUrl exposing (PageUrl)
 import Pages.Url
 import Shared
 import TailwindMarkdownRenderer2
+import UnsplashImage
 import View exposing (View)
 
 
@@ -51,7 +52,7 @@ head static =
         { canonicalUrlOverride = Nothing
         , siteName = "elm-pages"
         , image =
-            { url = Pages.Url.external "TODO"
+            { url = UnsplashImage.default |> UnsplashImage.rawUrl |> Pages.Url.external
             , alt = "elm-pages logo"
             , dimensions = Nothing
             , mimeType = Nothing
