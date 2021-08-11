@@ -64,12 +64,17 @@ routes =
             )
 
 
-findFilePath : String -> DataSource String
+type PageKind
+    = Page
+    | NotePage
+
+
+findFilePath : String -> DataSource ( String, PageKind )
 findFilePath slug =
-    Glob.succeed identity
+    Glob.succeed Tuple.pair
         |> Glob.captureFilePath
         |> Glob.match (Glob.literal "content/")
-        |> Glob.match (Glob.oneOf ( ( "page/", () ), [ ( "", () ) ] ))
+        |> Glob.capture (Glob.oneOf ( ( "page/", Page ), [ ( "", NotePage ) ] ))
         |> Glob.match (Glob.literal slug)
         |> Glob.match (Glob.literal ".md")
         |> Glob.expectUniqueMatch
@@ -79,18 +84,33 @@ data : RouteParams -> DataSource Data
 data routeParams =
     findFilePath routeParams.page
         |> DataSource.andThen
-            (\filePath ->
-                DataSource.map6
-                    Data
-                    (DataSource.File.onlyFrontmatter decoder filePath)
-                    (MarkdownCodec.withoutFrontmatter TailwindMarkdownRenderer2.renderer filePath
-                        |> DataSource.resolve
-                    )
-                    (MarkdownCodec.noteTitle filePath)
-                    (backReferences routeParams.page)
-                    --(forwardRefs routeParams.page)
-                    (DataSource.succeed [])
-                    (Timestamps.data filePath)
+            (\( filePath, pageKind ) ->
+                case pageKind of
+                    NotePage ->
+                        DataSource.map3
+                            Data
+                            (DataSource.File.onlyFrontmatter decoder filePath)
+                            (MarkdownCodec.withoutFrontmatter TailwindMarkdownRenderer2.renderer filePath
+                                |> DataSource.resolve
+                            )
+                            (MarkdownCodec.noteTitle filePath)
+                            |> DataSource.andMap
+                                (DataSource.map3 NoteRecord
+                                    (backReferences routeParams.page)
+                                    (forwardRefs routeParams.page)
+                                    (Timestamps.data filePath)
+                                    |> DataSource.map Just
+                                )
+
+                    Page ->
+                        DataSource.map3
+                            Data
+                            (DataSource.File.onlyFrontmatter decoder filePath)
+                            (MarkdownCodec.withoutFrontmatter TailwindMarkdownRenderer2.renderer filePath
+                                |> DataSource.resolve
+                            )
+                            (MarkdownCodec.noteTitle filePath)
+                            |> DataSource.andMap (DataSource.succeed Nothing)
             )
 
 
@@ -98,7 +118,19 @@ type alias Data =
     { metadata : PageMetadata
     , body : List (Html Msg)
     , title : String
-    , backReferences : List BackRef
+    , noteData : Maybe NoteRecord
+    }
+
+
+type alias CommonData =
+    { metadata : PageMetadata
+    , body : List (Html Msg)
+    , title : String
+    }
+
+
+type alias NoteRecord =
+    { backReferences : List BackRef
     , forwardReferences : List BackRef
     , timestamps : Timestamps
     }
@@ -120,30 +152,37 @@ view maybeUrl sharedModel static =
                     ]
                     [ div
                         []
-                        [ text <|
-                            "Created "
-                                ++ Timestamps.format static.data.timestamps.created
+                        [ viewIf static.data.noteData
+                            (\note -> text <| "Created " ++ Timestamps.format note.timestamps.created)
                         ]
                     , div []
-                        [ text <|
-                            "Updated "
-                                ++ Timestamps.format static.data.timestamps.updated
+                        [ viewIf static.data.noteData
+                            (\note -> text <| "Updated " ++ Timestamps.format note.timestamps.updated)
                         ]
                     ]
                ]
              , static.data.body
-             , [ div
-                    [ css
-                        []
-                    ]
-                    [ backReferencesView "Notes that link here" static.data.backReferences
-                    , backReferencesView "Links on this page" static.data.forwardReferences
-                    ]
+             , [ viewIf static.data.noteData
+                    (\note ->
+                        div
+                            [ css
+                                []
+                            ]
+                            [ backReferencesView "Notes that link here" note.backReferences
+                            , backReferencesView "Links on this page" note.forwardReferences
+                            ]
+                    )
                ]
              ]
                 |> List.concat
             )
     }
+
+
+viewIf : Maybe a -> (a -> Html msg) -> Html msg
+viewIf maybeData dataToView =
+    Maybe.map dataToView maybeData
+        |> Maybe.withDefault (text "")
 
 
 backReferencesView : String -> List BackRef -> Html msg
