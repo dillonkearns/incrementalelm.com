@@ -392,8 +392,7 @@ htmlRenderers =
         |> Markdown.Html.withAttribute "url"
     , Markdown.Html.tag "vimeo"
         (\id children ->
-            --vimeoView id
-            Html.text "TODO"
+            vimeoView id
                 |> DataSource.succeed
         )
         |> Markdown.Html.withAttribute "id"
@@ -460,3 +459,17 @@ htmlRenderers =
                 |> DataSource.succeed
         )
     ]
+
+
+vimeoView : String -> Html msg
+vimeoView videoId =
+    Html.div [ Attr.class "embed-container" ]
+        [ Html.iframe
+            [ Attr.src <| "https://player.vimeo.com/video/" ++ videoId
+            , Attr.attribute "width" "100%"
+            , Attr.attribute "height" "100%"
+            , Attr.attribute "allow" "autoplay; fullscreen"
+            , Attr.attribute "allowfullscreen" ""
+            ]
+            []
+        ]
