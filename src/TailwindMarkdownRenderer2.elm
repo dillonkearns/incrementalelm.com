@@ -349,15 +349,23 @@ htmlRenderers : List (Markdown.Html.Renderer (List (DataSource (Html msg)) -> Da
 htmlRenderers =
     [ Markdown.Html.tag "discord"
         (\children ->
-            Html.iframe
-                [ Attr.src "https://discordapp.com/widget?id=534524278847045633&theme=dark"
-                , Attr.width 350
-                , Attr.height 500
-                , Attr.attribute "allowtransparency" "true"
-                , Attr.attribute "frameborder" "0"
-                , Attr.attribute "sandbox" "allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"
+            Html.div
+                [ css
+                    [ Tw.flex
+                    , Tw.justify_center
+                    , Tw.p_8
+                    ]
                 ]
-                []
+                [ Html.iframe
+                    [ Attr.src "https://discordapp.com/widget?id=534524278847045633&theme=dark"
+                    , Attr.width 350
+                    , Attr.height 500
+                    , Attr.attribute "allowtransparency" "true"
+                    , Attr.attribute "frameborder" "0"
+                    , Attr.attribute "sandbox" "allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"
+                    ]
+                    []
+                ]
                 |> DataSource.succeed
         )
     , Markdown.Html.tag "signup"
@@ -411,9 +419,6 @@ htmlRenderers =
     , Markdown.Html.tag "resource"
         (\name resourceKind url children ->
             --let
-            --    todo anything =
-            --        todo anything
-            --
             --    kind =
             --        case Dict.get resourceKind icons of
             --            Just myResource ->
@@ -429,7 +434,15 @@ htmlRenderers =
             --    --    }
             --in
             --View.Resource.view { name = name, url = url, kind = kind }
-            Html.text "TODO"
+            Html.a
+                [ css
+                    [ Tw.font_bold
+                    , Tw.text_lg
+                    , Tw.underline
+                    ]
+                , Attr.href url
+                ]
+                [ Html.text name ]
                 |> DataSource.succeed
         )
         |> Markdown.Html.withAttribute "title"
