@@ -50,8 +50,7 @@ tipsFeedItems : (Html Never -> String) -> DataSource (List Rss.Item)
 tipsFeedItems htmlToString =
     Glob.succeed
         (\slug filePath ->
-            filePath
-                |> DataSource.File.onlyFrontmatter tipDecoder
+            tipDecoder filePath
                 |> DataSource.andThen
                     (\maybeMetadata ->
                         case maybeMetadata of
@@ -97,43 +96,46 @@ type alias TipMetadata =
     }
 
 
-tipDecoder : Decode.Decoder (Maybe TipMetadata)
-tipDecoder =
-    Decode.optionalField "publishAt"
-        (Decode.string
-            |> Decode.andThen
-                (\isoString ->
-                    case Date.fromIsoString isoString of
-                        Ok date ->
-                            Decode.succeed date
+tipDecoder : String -> DataSource (Maybe TipMetadata)
+tipDecoder filePath =
+    filePath
+        |> DataSource.File.onlyFrontmatter
+            (Decode.map2 Tuple.pair
+                (Decode.optionalField
+                    "publishAt"
+                    (Decode.string
+                        |> Decode.andThen
+                            (\isoString ->
+                                case Date.fromIsoString isoString of
+                                    Ok date ->
+                                        Decode.succeed date
 
-                        Err error ->
-                            Decode.fail error
+                                    Err error ->
+                                        Decode.fail error
+                            )
+                    )
                 )
-        )
-        |> Decode.andThen
-            (\maybePublishAt ->
+                (Decode.optionalField "cover" UnsplashImage.decoder
+                    |> Decode.map (Maybe.withDefault UnsplashImage.default)
+                )
+            )
+        |> DataSource.andThen
+            (\( maybePublishAt, cover ) ->
                 case maybePublishAt of
                     Just publishAt ->
-                        Decode.map3
-                            (\title description cover ->
-                                TipMetadata
-                                    title
-                                    description
-                                    publishAt
-                                    cover
-                                    |> Just
-                            )
-                            --(Decode.field "title" Decode.string)
-                            (Decode.succeed "TODO TITLE")
-                            --(Decode.field "description" Decode.string)
-                            (Decode.succeed "TODO DESCRIPTION")
-                            (Decode.optionalField "cover" UnsplashImage.decoder
-                                |> Decode.map (Maybe.withDefault UnsplashImage.default)
-                            )
+                        MarkdownCodec.titleAndDescription filePath
+                            |> DataSource.map
+                                (\{ title, description } ->
+                                    Just
+                                        { title = title
+                                        , description = description
+                                        , publishedAt = publishAt
+                                        , cover = cover
+                                        }
+                                )
 
                     Nothing ->
-                        Decode.succeed Nothing
+                        DataSource.succeed Nothing
             )
 
 
