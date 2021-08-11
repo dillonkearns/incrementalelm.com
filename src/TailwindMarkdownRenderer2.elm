@@ -14,6 +14,7 @@ import Markdown.Scaffolded as Scaffolded exposing (..)
 import OptimizedDecoder as Decode
 import Shiki
 import Tailwind.Utilities as Tw
+import View.Ellie
 import Widget.Signup
 
 
@@ -398,8 +399,7 @@ htmlRenderers =
         |> Markdown.Html.withAttribute "id"
     , Markdown.Html.tag "ellie"
         (\id children ->
-            --View.Ellie.view id
-            Html.text "TODO"
+            View.Ellie.view id
                 |> DataSource.succeed
         )
         |> Markdown.Html.withAttribute "id"
