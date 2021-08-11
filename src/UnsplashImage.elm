@@ -45,8 +45,7 @@ fromId id =
 decoder : Decoder UnsplashImage
 decoder =
     Decode.string
-        |> Decode.map url
-        |> Decode.map UnsplashImage
+        |> Decode.map fromId
 
 
 url : String -> String

@@ -4,6 +4,7 @@ import DataSource exposing (DataSource)
 import DataSource.File
 import DataSource.Glob as Glob
 import Head
+import Head.Seo as Seo
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (css)
 import Link
@@ -14,7 +15,6 @@ import OptimizedDecoder as Decode exposing (Decoder)
 import Page exposing (Page, StaticPayload)
 import Pages.PageUrl exposing (PageUrl)
 import Pages.Url
-import Path
 import Regex
 import Route exposing (Route)
 import Serialize
@@ -23,8 +23,8 @@ import String.Extra
 import Tailwind.Breakpoints as Bp
 import Tailwind.Utilities as Tw
 import TailwindMarkdownRenderer2
-import Time
 import Timestamps exposing (Timestamps)
+import UnsplashImage exposing (UnsplashImage)
 import View exposing (View)
 
 
@@ -282,26 +282,33 @@ head :
     StaticPayload Data RouteParams
     -> List Head.Tag
 head static =
-    --Seo.summaryLarge
-    --    { canonicalUrlOverride = Nothing
-    --    , siteName = "Incremental Elm"
-    --    , image =
-    --        { url = static.data.metadata.image |> Maybe.withDefault (Pages.Url.external "")
-    --        , alt = static.data.title
-    --        , dimensions = Nothing
-    --        , mimeType = Nothing
-    --        }
-    --    , description = static.data.metadata.description |> Maybe.withDefault static.data.title
-    --    , title = static.data.title
-    --    , locale = Nothing
-    --    }
-    --    |> Seo.website
-    []
+    Seo.summaryLarge
+        { canonicalUrlOverride = Nothing
+        , siteName = "Incremental Elm"
+        , image =
+            { url =
+                static.data.metadata.image
+                    |> Maybe.withDefault UnsplashImage.default
+                    |> UnsplashImage.rawUrl
+                    |> Pages.Url.external
+            , alt = static.data.title
+            , dimensions = Nothing
+            , mimeType = Nothing
+            }
+        , description = static.data.metadata.description |> Maybe.withDefault static.data.title
+        , title = static.data.title
+        , locale = Nothing
+        }
+        |> Seo.website
+
+
+
+--[]
 
 
 type alias PageMetadata =
     { description : Maybe String
-    , image : Maybe Pages.Url.Url
+    , image : Maybe UnsplashImage
     }
 
 
@@ -309,18 +316,7 @@ decoder : Decoder PageMetadata
 decoder =
     Decode.map2 PageMetadata
         (Decode.maybe (Decode.field "description" Decode.string))
-        (Decode.maybe (Decode.field "image" imageDecoder))
-
-
-imageDecoder : Decoder Pages.Url.Url
-imageDecoder =
-    Decode.string
-        |> Decode.map
-            (\src ->
-                [ "images", src ]
-                    |> Path.join
-                    |> Pages.Url.fromPath
-            )
+        (Decode.optionalField "cover" UnsplashImage.decoder)
 
 
 type alias Note =
