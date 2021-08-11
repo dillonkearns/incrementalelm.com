@@ -91,12 +91,7 @@ data routeParams =
                     (backReferences routeParams.page)
                     --(forwardRefs routeParams.page)
                     (DataSource.succeed [])
-                    --(Timestamps.data filePath)
-                    (DataSource.succeed
-                        { updated = Time.millisToPosix 0
-                        , created = Time.millisToPosix 0
-                        }
-                    )
+                    (Timestamps.data filePath)
             )
 
 
