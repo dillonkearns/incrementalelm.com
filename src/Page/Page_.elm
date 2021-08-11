@@ -83,7 +83,6 @@ data routeParams =
                 DataSource.map6
                     Data
                     (DataSource.File.onlyFrontmatter decoder filePath)
-                    --(MarkdownCodec.withoutFrontmatter TailwindMarkdownRenderer.renderer filePath)
                     (MarkdownCodec.withoutFrontmatter TailwindMarkdownRenderer2.renderer filePath
                         |> DataSource.resolve
                     )
