@@ -361,10 +361,11 @@ htmlRenderers =
                 |> DataSource.succeed
         )
     , Markdown.Html.tag "signup"
-        --Widget.Signup.view
         (\buttonText formId children ->
-            Widget.Signup.view2 buttonText formId []
-                |> DataSource.succeed
+            children
+                |> DataSource.combine
+                |> DataSource.andThen
+                    (\resolvedChildren -> DataSource.succeed (Widget.Signup.view2 buttonText formId resolvedChildren))
         )
         |> Markdown.Html.withAttribute "buttontext"
         |> Markdown.Html.withAttribute "formid"
