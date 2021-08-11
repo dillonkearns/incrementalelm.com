@@ -119,8 +119,11 @@
   --selection-background: #fdfdfd;
   --foreground: #374151;
   --foreground-strong: #111827;
-  --accent1: #2aa198;
-  --accent2: #b58900;
+  /* --accent1: #2aa198; */
+  /* --accent1: rgba(0, 168, 232, 1);
+  --accent2: #b58900; */
+  --accent1: rgba(0, 168, 232, 1);
+  --accent2: rgba(0, 168, 232, 1);
 }
 
 .dark {
@@ -128,8 +131,9 @@
   --selection-background: #073642;
   --foreground: #e4e1e1;
   --foreground-strong: #fdfdfd;
-  --accent1: #d33682;
-  --accent2: #268bd2;
+  /* --accent1: #d33682; */
+  --accent1: #268bd2;
+  --accent2: rgba(0, 168, 232, 1);
 }
 
 li::marker {

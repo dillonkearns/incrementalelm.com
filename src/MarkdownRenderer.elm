@@ -260,9 +260,10 @@ renderer =
                         []
                         |> Element.html
                 )
-            , Markdown.Html.tag "signup" Widget.Signup.view
-                |> Markdown.Html.withAttribute "buttontext"
-                |> Markdown.Html.withAttribute "formid"
+
+            --, Markdown.Html.tag "signup" Widget.Signup.view
+            --    |> Markdown.Html.withAttribute "buttontext"
+            --    |> Markdown.Html.withAttribute "formid"
             , Markdown.Html.tag "button"
                 (\url children -> buttonView { url = url, children = children })
                 |> Markdown.Html.withAttribute "url"

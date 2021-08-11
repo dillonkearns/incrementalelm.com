@@ -123,7 +123,8 @@ view maybeUrl sharedModel static =
              --, [ UnsplashImage.image [ Element.width Element.fill ] static.data.metadata.cover ]
              , [ Element.paragraph [ Element.padding 20 ] [ Palette.textQuote static.data.metadata.description ] ]
              , static.data.body
-             , [ Widget.Signup.view "Get Weekly Tips" "906002494" [] ]
+             , [--Widget.Signup.view "Get Weekly Tips" "906002494" []
+               ]
              ]
                 |> List.concat
             )

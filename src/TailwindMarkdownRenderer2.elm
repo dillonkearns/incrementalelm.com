@@ -14,6 +14,7 @@ import Markdown.Scaffolded as Scaffolded exposing (..)
 import OptimizedDecoder as Decode
 import Shiki
 import Tailwind.Utilities as Tw
+import Widget.Signup
 
 
 renderer : Markdown.Renderer.Renderer (DataSource (Html msg))
@@ -361,8 +362,8 @@ htmlRenderers =
         )
     , Markdown.Html.tag "signup"
         --Widget.Signup.view
-        (\_ _ _ ->
-            Html.text "signup TODO"
+        (\buttonText formId children ->
+            Widget.Signup.view2 buttonText formId []
                 |> DataSource.succeed
         )
         |> Markdown.Html.withAttribute "buttontext"

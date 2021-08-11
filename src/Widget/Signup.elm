@@ -1,37 +1,31 @@
-module Widget.Signup exposing (view)
+module Widget.Signup exposing (view2)
 
-import Element exposing (Element)
-import Element.Border
-import Element.Font as Font
+import Html.Styled as Html exposing (Html)
+import Html.Styled.Attributes exposing (css)
+import Tailwind.Utilities as Tw
 import View.DripSignupForm
 
 
-view : String -> String -> List (Element msg) -> Element msg
-view buttonText formId body =
-    [ Element.column
-        [ Font.center
-        , Element.spacing 30
-        , Element.centerX
+view2 : String -> String -> List (Html msg) -> Html msg
+view2 buttonText formId body =
+    Html.div [ css [ Tw.flex, Tw.justify_center ] ]
+        [ Html.div
+            [ css
+                [ Tw.p_4
+                , Tw.max_w_lg
+                , Tw.shadow_xl
+                , Tw.border_foreground
+                , Tw.border_2
+                ]
+            ]
+            [ Html.div
+                [ --Font.center
+                  --, Element.spacing 30
+                  --, Element.centerX
+                  css [ Tw.text_center ]
+                ]
+                body
+            , View.DripSignupForm.viewNew buttonText formId { maybeReferenceId = Nothing }
+            , Html.p [] [ Html.text "We'll never share your email. Unsubscribe any time." ]
+            ]
         ]
-        body
-    , View.DripSignupForm.viewNew buttonText formId { maybeReferenceId = Nothing }
-        |> Element.html
-        |> Element.el [ Element.width Element.fill ]
-    , [ Element.text "We'll never share your email. Unsubscribe any time." ]
-        |> Element.paragraph
-            [ Font.color (Element.rgba255 0 0 0 0.5)
-            , Font.size 14
-            , Font.center
-            ]
-    ]
-        |> Element.column
-            [ Element.width Element.fill
-            , Element.padding 20
-            , Element.spacing 20
-            , Element.Border.shadow { offset = ( 0, 0 ), size = 1, blur = 4, color = Element.rgb 0.8 0.8 0.8 }
-            , Element.mouseOver
-                [ Element.Border.shadow { offset = ( 0, 0 ), size = 1, blur = 4, color = Element.rgb 0.85 0.85 0.85 } ]
-            , Element.width (Element.fill |> Element.maximum 500)
-            , Element.centerX
-            ]
-        |> Element.el []

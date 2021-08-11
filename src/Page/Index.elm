@@ -1,21 +1,16 @@
 module Page.Index exposing (Data, Model, Msg, RouteParams, page)
 
-import Css
 import DataSource exposing (DataSource)
-import Element exposing (Element)
 import Head
 import Head.Seo as Seo
 import Html.Styled exposing (Html, div)
 import Html.Styled.Attributes exposing (css)
 import MarkdownCodec
-import MarkdownRenderer
-import OptimizedDecoder as Decode
 import Page exposing (Page, StaticPayload)
 import Pages.PageUrl exposing (PageUrl)
 import Pages.Url
 import Shared
-import Tailwind.Utilities as Tw
-import TailwindMarkdownRenderer
+import TailwindMarkdownRenderer2
 import View exposing (View)
 
 
@@ -42,10 +37,10 @@ page =
 
 data : DataSource Data
 data =
-    MarkdownCodec.withFrontmatter Data
-        (Decode.field "title" Decode.string)
-        TailwindMarkdownRenderer.renderer
-        "content/index.md"
+    DataSource.map Data
+        (MarkdownCodec.withoutFrontmatter TailwindMarkdownRenderer2.renderer "content/index.md"
+            |> DataSource.resolve
+        )
 
 
 head :
@@ -63,14 +58,13 @@ head static =
             }
         , description = "TODO"
         , locale = Nothing
-        , title = "TODO title" -- metadata.title -- TODO
+        , title = "Incremental Elm"
         }
         |> Seo.website
 
 
 type alias Data =
-    { metadata : String
-    , body : List (Html Msg)
+    { body : List (Html Msg)
     }
 
 
@@ -80,7 +74,7 @@ view :
     -> StaticPayload Data RouteParams
     -> View Msg
 view maybeUrl sharedModel static =
-    { title = static.data.metadata
+    { title = "Incremental Elm"
     , body =
         View.Tailwind
             [ div

@@ -1,7 +1,9 @@
 module View.DripSignupForm exposing (viewNew)
 
-import Html exposing (..)
-import Html.Attributes exposing (..)
+import Css
+import Html.Styled as Html exposing (..)
+import Html.Styled.Attributes as Attr exposing (..)
+import Tailwind.Utilities as Tw
 
 
 dripAttribute : String -> Attribute msg
@@ -49,6 +51,8 @@ dripInput details =
             ([ type_ details.type_
              , id details.inputId
              , name details.name
+             , css
+                [ Tw.w_full ]
              ]
                 |> includeValueIfPresent details.value
             )
@@ -105,6 +109,7 @@ viewNew buttonText formId signupDetails =
         , method "post"
         , attribute "data-drip-embedded-form" formId
         , style "font-family" "'Open Sans'"
+        , css [ Tw.p_4 ]
         ]
         [ h2 [ dripAttribute "headline", style "display" "none" ] [ text "Incremental Elm" ]
         , div [ dripAttribute "description" ] []
@@ -120,6 +125,15 @@ viewNew buttonText formId signupDetails =
                 , type_ "submit"
                 , value buttonText
                 , style "width" "100%"
+                , css
+                    [ Tw.bg_accent1
+                    , Tw.cursor_pointer
+                    , Tw.p_2
+                    , Tw.text_white
+                    , Css.hover
+                        [ Tw.bg_accent2
+                        ]
+                    ]
                 ]
                 []
             ]
