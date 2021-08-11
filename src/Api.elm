@@ -137,7 +137,7 @@ tipToFeedItem :
 tipToFeedItem { metadata, body, slug } =
     { title = metadata.title
     , description = metadata.description
-    , url = Route.Tips__Slug_ { slug = slug } |> Route.toPath |> Path.toAbsolute
+    , url = Route.Page_ { page = slug } |> Route.toPath |> Path.toAbsolute
     , categories = []
     , author = "Dillon Kearns"
     , pubDate = Rss.Date metadata.publishedAt
