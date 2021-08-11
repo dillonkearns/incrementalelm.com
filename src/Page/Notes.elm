@@ -69,7 +69,7 @@ update _ _ _ _ msg model =
 data : DataSource Data
 data =
     DataSource.map Data
-        wikiEntries
+        nonEmptyNotes
 
 
 type alias Data =
@@ -153,19 +153,32 @@ type alias Note =
     }
 
 
-wikiEntries : DataSource (List Note)
-wikiEntries =
+nonEmptyNotes : DataSource (List Note)
+nonEmptyNotes =
     Glob.succeed
-        (\topic filePath ->
-            DataSource.map
-                (Note (Route.Page_ { page = topic }) topic)
-                (MarkdownCodec.noteTitle filePath)
+        (\filePath topic ->
+            MarkdownCodec.isPlaceholder filePath
+                |> DataSource.map
+                    (Maybe.map
+                        (\() ->
+                            MarkdownCodec.noteTitle filePath
+                                |> DataSource.map
+                                    (\title ->
+                                        { route = Route.Page_ { page = topic }
+                                        , slug = topic
+                                        , title = title
+                                        }
+                                    )
+                        )
+                    )
         )
+        |> Glob.captureFilePath
         |> Glob.match (Glob.literal "content/")
         |> Glob.capture Glob.wildcard
         |> Glob.match (Glob.literal ".md")
-        |> Glob.captureFilePath
         |> Glob.toDataSource
+        |> DataSource.resolve
+        |> DataSource.map (List.filterMap identity)
         |> DataSource.resolve
         |> DataSource.map (List.filter (\{ slug } -> slug /= "index"))
 
