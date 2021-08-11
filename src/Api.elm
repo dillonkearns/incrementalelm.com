@@ -2,11 +2,13 @@ module Api exposing (routes)
 
 import ApiRoute
 import DataSource exposing (DataSource)
+import DataSource.File
 import DataSource.Glob as Glob
 import Date exposing (Date)
 import Html exposing (Html)
-import Markdown.Renderer
+import Html.String
 import MarkdownCodec
+import MarkdownHtmlRenderer
 import OptimizedDecoder as Decode
 import Pages
 import Path
@@ -21,30 +23,25 @@ routes :
     -> (Html Never -> String)
     -> List (ApiRoute.ApiRoute ApiRoute.Response)
 routes getStaticRoutes htmlToString =
-    [ --ApiRoute.succeed
-      --   (tipsFeedItems htmlToString
-      --       |> DataSource.map
-      --           (\feedItems ->
-      --               Rss.generate
-      --                   { title = "Incremental Elm Tips"
-      --                   , description = "Incremental Elm Consulting"
-      --                   , url = Site.canonicalUrl ++ "/tips"
-      --                   , lastBuildTime = Pages.builtAt
-      --                   , generator = Just "elm-pages"
-      --                   , items = feedItems
-      --                   , siteUrl = Site.canonicalUrl
-      --                   }
-      --           )
-      --       |> DataSource.map (\body -> { body = body })
-      --   )
-      --   |> ApiRoute.literal "tips"
-      --   |> ApiRoute.slash
-      --   |> ApiRoute.literal "feed.xml"
-      --   |> ApiRoute.single
-      ApiRoute.succeed
-        (DataSource.succeed { body = "Hi there!" })
-        --(DataSource.fail "Fail from API")
-        |> ApiRoute.literal "hello.txt"
+    [ ApiRoute.succeed
+        (tipsFeedItems htmlToString
+            |> DataSource.map
+                (\feedItems ->
+                    Rss.generate
+                        { title = "Incremental Elm Tips"
+                        , description = "Incremental Elm Consulting"
+                        , url = Site.canonicalUrl ++ "/tips"
+                        , lastBuildTime = Pages.builtAt
+                        , generator = Just "elm-pages"
+                        , items = feedItems
+                        , siteUrl = Site.canonicalUrl
+                        }
+                )
+            |> DataSource.map (\body -> { body = body })
+        )
+        |> ApiRoute.literal "tips"
+        |> ApiRoute.slash
+        |> ApiRoute.literal "feed.xml"
         |> ApiRoute.single
     ]
 
@@ -53,20 +50,30 @@ tipsFeedItems : (Html Never -> String) -> DataSource (List Rss.Item)
 tipsFeedItems htmlToString =
     Glob.succeed
         (\slug filePath ->
-            MarkdownCodec.withFrontmatter
-                (\maybeMetadata body ->
-                    maybeMetadata
-                        |> Maybe.map
-                            (\metadata ->
-                                { body = body |> List.map htmlToString |> String.join ""
-                                , metadata = metadata
-                                , slug = slug
-                                }
-                            )
-                )
-                tipDecoder
-                Markdown.Renderer.defaultHtmlRenderer
-                filePath
+            filePath
+                |> DataSource.File.onlyFrontmatter tipDecoder
+                |> DataSource.andThen
+                    (\maybeMetadata ->
+                        case maybeMetadata of
+                            Nothing ->
+                                DataSource.succeed Nothing
+
+                            Just metadata ->
+                                filePath
+                                    |> MarkdownCodec.withoutFrontmatter
+                                        MarkdownHtmlRenderer.renderer
+                                    |> DataSource.map
+                                        (\body ->
+                                            Just
+                                                { body =
+                                                    body
+                                                        |> List.map (Html.String.toString 0)
+                                                        |> String.join ""
+                                                , metadata = metadata
+                                                , slug = slug
+                                                }
+                                        )
+                    )
         )
         |> Glob.match (Glob.literal "content/")
         |> Glob.capture Glob.wildcard
@@ -117,8 +124,10 @@ tipDecoder =
                                     cover
                                     |> Just
                             )
-                            (Decode.field "title" Decode.string)
-                            (Decode.field "description" Decode.string)
+                            --(Decode.field "title" Decode.string)
+                            (Decode.succeed "TODO TITLE")
+                            --(Decode.field "description" Decode.string)
+                            (Decode.succeed "TODO DESCRIPTION")
                             (Decode.optionalField "cover" UnsplashImage.decoder
                                 |> Decode.map (Maybe.withDefault UnsplashImage.default)
                             )
