@@ -288,25 +288,71 @@ reduceHtmlDataSource block =
             Html.hr [] []
                 |> DataSource.succeed
 
-        --HardLineBreak ->
-        --Table list ->
-        --
-        --
-        --TableHeader list ->
-        --
-        --
-        --TableBody list ->
-        --
-        --
-        --TableRow list ->
-        --
-        --
-        --TableCell maybeAlignment list ->
-        --
-        --
-        --TableHeaderCell maybeAlignment list ->
-        _ ->
-            DataSource.succeed (Html.text "TODO")
+        HardLineBreak ->
+            Html.br [] []
+                |> DataSource.succeed
+
+        Table children ->
+            Html.table [] children
+                |> DataSource.succeed
+
+        TableHeader children ->
+            Html.thead [] children
+                |> DataSource.succeed
+
+        TableBody children ->
+            Html.tbody [] children
+                |> DataSource.succeed
+
+        TableRow children ->
+            Html.tr [] children
+                |> DataSource.succeed
+
+        TableCell maybeAlignment children ->
+            let
+                attrs =
+                    maybeAlignment
+                        |> Maybe.map
+                            (\alignment ->
+                                case alignment of
+                                    Block.AlignLeft ->
+                                        "left"
+
+                                    Block.AlignCenter ->
+                                        "center"
+
+                                    Block.AlignRight ->
+                                        "right"
+                            )
+                        |> Maybe.map Attr.align
+                        |> Maybe.map List.singleton
+                        |> Maybe.withDefault []
+            in
+            Html.td attrs children
+                |> DataSource.succeed
+
+        TableHeaderCell maybeAlignment children ->
+            let
+                attrs =
+                    maybeAlignment
+                        |> Maybe.map
+                            (\alignment ->
+                                case alignment of
+                                    Block.AlignLeft ->
+                                        "left"
+
+                                    Block.AlignCenter ->
+                                        "center"
+
+                                    Block.AlignRight ->
+                                        "right"
+                            )
+                        |> Maybe.map Attr.align
+                        |> Maybe.map List.singleton
+                        |> Maybe.withDefault []
+            in
+            Html.th attrs children
+                |> DataSource.succeed
 
 
 rawTextToId : String -> String
