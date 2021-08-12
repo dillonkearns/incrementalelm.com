@@ -122,16 +122,9 @@ linkInner currentPagePath linkTo name =
 
               else
                 Css.batch
-                    [ --Tw.text_gray_600
-                      Tw.text_foreground
-
-                    --, DarkMode.dark darkMode
-                    --    [ Tw.bg_black
-                    --    , Tw.border_gray_900
-                    --    , Tw.text_white
-                    --    ]
+                    [ Tw.text_foreground
                     , Css.hover
-                        [ Tw.text_gray_900
+                        [ Tw.text_blue_700
                         ]
                     ]
             ]
