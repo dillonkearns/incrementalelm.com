@@ -452,18 +452,6 @@ htmlRenderers =
                 |> DataSource.succeed
         )
         |> Markdown.Html.withAttribute "id"
-    , Markdown.Html.tag "resources"
-        (\children ->
-            --Element.column
-            --    [ Element.spacing 16
-            --    , Element.centerX
-            --    , Element.padding 30
-            --    , Element.width Element.fill
-            --    ]
-            --    children
-            Html.text "TODO"
-                |> DataSource.succeed
-        )
     , Markdown.Html.tag "resource"
         (\name resourceKind url children ->
             --let
