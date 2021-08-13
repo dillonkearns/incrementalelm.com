@@ -187,8 +187,9 @@ reduceHtmlDataSource block =
                     [ Tw.underline
                     , Tw.text_foregroundStrong
                     , Tw.font_bold
+                    , Tw.text_accent2
                     , Css.hover
-                        [ Css.color (Css.hex "d33682")
+                        [ Css.color (Css.rgb 226 0 124)
                         ]
                     ]
                 ]

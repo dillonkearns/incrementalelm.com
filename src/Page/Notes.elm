@@ -123,7 +123,13 @@ notesList searchQuery notes =
                 (\note ->
                     if noteMatches searchQuery note then
                         note.route
-                            |> Link.htmlLink []
+                            |> Link.htmlLink
+                                [ css
+                                    [ Css.hover
+                                        [ Css.color (Css.rgb 226 0 124)
+                                        ]
+                                    ]
+                                ]
                                 (text note.title)
                             |> List.singleton
                             |> li
