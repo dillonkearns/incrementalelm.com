@@ -182,7 +182,7 @@ reduceHtmlDataSource block =
 
         Link { destination, title, children } ->
             Html.a
-                [ Attr.href destination
+                [ Attr.href <| slugToAbsoluteUrl destination
                 , css
                     [ Tw.underline
                     , Tw.text_foregroundStrong
@@ -497,6 +497,15 @@ htmlRenderers =
                 |> DataSource.succeed
         )
     ]
+
+
+slugToAbsoluteUrl : String -> String
+slugToAbsoluteUrl slugOrUrl =
+    if slugOrUrl |> String.contains "/" then
+        slugOrUrl
+
+    else
+        "/" ++ slugOrUrl
 
 
 vimeoView : String -> Html msg
