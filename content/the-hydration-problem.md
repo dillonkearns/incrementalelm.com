@@ -1,3 +1,7 @@
+---
+cover: 1599717127111-5c0b51637912
+---
+
 # The Hydration Problem
 
 Let's take an honest look at whether Elm is a good fit for building static sites.
