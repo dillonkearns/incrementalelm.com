@@ -93,7 +93,7 @@ data routeParams =
                             (MarkdownCodec.withoutFrontmatter TailwindMarkdownRenderer2.renderer filePath
                                 |> DataSource.resolve
                             )
-                            (MarkdownCodec.noteTitle filePath)
+                            (MarkdownCodec.titleAndDescription filePath)
                             |> DataSource.andMap
                                 (DataSource.map3 NoteRecord
                                     (backReferences routeParams.page)
@@ -109,15 +109,15 @@ data routeParams =
                             (MarkdownCodec.withoutFrontmatter TailwindMarkdownRenderer2.renderer filePath
                                 |> DataSource.resolve
                             )
-                            (MarkdownCodec.noteTitle filePath)
+                            (MarkdownCodec.titleAndDescription filePath)
                             |> DataSource.andMap (DataSource.succeed Nothing)
             )
 
 
 type alias Data =
-    { metadata : PageMetadata
+    { cover : Maybe UnsplashImage
     , body : List (Html Msg)
-    , title : String
+    , info : { title : String, description : String }
     , noteData : Maybe NoteRecord
     }
 
@@ -142,7 +142,7 @@ view :
     -> StaticPayload Data RouteParams
     -> View Msg
 view maybeUrl sharedModel static =
-    { title = static.data.title
+    { title = static.data.info.title
     , body =
         View.Tailwind
             ([ [ div
@@ -287,16 +287,16 @@ head static =
         , siteName = "Incremental Elm"
         , image =
             { url =
-                static.data.metadata.image
+                static.data.cover
                     |> Maybe.withDefault UnsplashImage.default
                     |> UnsplashImage.rawUrl
                     |> Pages.Url.external
-            , alt = static.data.title
+            , alt = static.data.info.title
             , dimensions = Nothing
             , mimeType = Nothing
             }
-        , description = static.data.metadata.description |> Maybe.withDefault static.data.title
-        , title = static.data.title
+        , description = static.data.info.description
+        , title = static.data.info.title
         , locale = Nothing
         }
         |> Seo.website
@@ -312,11 +312,9 @@ type alias PageMetadata =
     }
 
 
-decoder : Decoder PageMetadata
+decoder : Decoder (Maybe UnsplashImage)
 decoder =
-    Decode.map2 PageMetadata
-        (Decode.maybe (Decode.field "description" Decode.string))
-        (Decode.optionalField "cover" UnsplashImage.decoder)
+    Decode.optionalField "cover" UnsplashImage.decoder
 
 
 type alias Note =
