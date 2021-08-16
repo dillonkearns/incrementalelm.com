@@ -1,1 +1,3 @@
 /assets/custom-scalar-checklist.pdf              /custom-scalar-checklist.pdf
+/articles/* /:splat 301
+/learn/* /:splat 301
