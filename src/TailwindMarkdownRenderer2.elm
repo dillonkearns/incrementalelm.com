@@ -132,25 +132,6 @@ reduceHtmlDataSource block =
         Scaffolded.CodeBlock info ->
             shikiDataSource info
 
-        --SyntaxHighlight.elm body
-        --    |> Result.map (SyntaxHighlight.toBlockHtml (Just 1))
-        --    |> Result.map Html.fromUnstyled
-        --    |> Result.withDefault
-        --        (Html.pre
-        --            [ css
-        --                [ Tw.border_8 |> Css.important
-        --                ]
-        --            ]
-        --            [ Html.code [] [ Html.text details.body ] ]
-        --        )
-        --    |> List.singleton
-        --    |> Html.div
-        --        [ css
-        --            [ Tw.mt_8
-        --            , Tw.mb_8
-        --            ]
-        --        ]
-        --    |> DataSource.succeed
         Scaffolded.Text string ->
             DataSource.succeed (Html.text string)
 
