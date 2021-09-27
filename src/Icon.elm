@@ -1,31 +1,8 @@
 module Icon exposing (github, twitter)
 
-import Element exposing (Element)
-import Element.Border as Border
-import Element.Font as Font
-import Element.Keyed
-import Graphql.Operation exposing (RootQuery)
-import Graphql.SelectionSet as SelectionSet exposing (SelectionSet)
-import Html.Styled as Html exposing (Html)
-import Html.Styled.Attributes as Attr exposing (css)
-import Json.Encode as Encode
-import Request.GoogleCalendar as GoogleCalendar
-import SanityApi.Object
-import SanityApi.Object.Guest
-import SanityApi.Object.Image
-import SanityApi.Object.LiveStream
-import SanityApi.Object.Project
-import SanityApi.Object.SanityImageAsset
-import SanityApi.Query as Query
-import Scalar exposing (DateTime)
-import Style
-import Style.Helpers as Helpers
+import Html.Styled exposing (Html)
 import Svg.Styled as Svg
 import Svg.Styled.Attributes as SvgAttr
-import Tailwind.Utilities as Tw
-import Time
-import View.FontAwesome as FontAwesome
-import Youtube
 
 
 twitter : Html msg
