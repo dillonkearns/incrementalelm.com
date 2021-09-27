@@ -94,6 +94,7 @@ config =
                         , ".elm-pages"
                         , "elm-pages/src"
                         , "elm-graphql-gen"
+                        , "gen"
                         ]
                     |> Rule.ignoreErrorsForFiles
                         [ "src/MarkdownRenderer.elm"
