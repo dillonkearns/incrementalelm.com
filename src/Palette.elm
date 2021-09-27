@@ -1,4 +1,4 @@
-module Palette exposing (blockQuote, textQuote)
+module Palette exposing (textQuote)
 
 import Element exposing (..)
 import Element.Background as Background

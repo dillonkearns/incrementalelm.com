@@ -3,7 +3,6 @@ module Page.Live exposing (Data, Model, Msg, RouteParams, page)
 --import TemplateType exposing (TemplateType)
 
 import DataSource exposing (DataSource)
-import Element exposing (Element)
 import Head
 import Head.Seo as Seo
 import Html.Styled as Html exposing (Html)

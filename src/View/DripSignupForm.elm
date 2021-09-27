@@ -1,8 +1,8 @@
 module View.DripSignupForm exposing (viewNew)
 
 import Css
-import Html.Styled as Html exposing (..)
-import Html.Styled.Attributes as Attr exposing (..)
+import Html.Styled exposing (..)
+import Html.Styled.Attributes exposing (..)
 import Tailwind.Utilities as Tw
 
 
@@ -104,7 +104,7 @@ referenceIdInput maybeReferenceId =
 
 viewNew : String -> String -> { details | maybeReferenceId : Maybe String } -> Html msg
 viewNew buttonText formId signupDetails =
-    Html.form
+    Html.Styled.form
         [ action <| "https://www.getdrip.com/forms/" ++ formId ++ "/submissions"
         , method "post"
         , attribute "data-drip-embedded-form" formId

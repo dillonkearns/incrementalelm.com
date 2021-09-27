@@ -1,23 +1,11 @@
-module DarkMode exposing (DarkMode(..), dark, darkModeDecoder, view)
+module DarkMode exposing (DarkMode(..), darkModeDecoder, view)
 
-import Css
-import Css.Global
 import Html.Styled
 import Html.Styled.Events
 import Json.Decode
 import Svg.Styled exposing (path, svg)
 import Svg.Styled.Attributes as SvgAttr
 import Tailwind.Utilities as Tw
-
-
-dark : DarkMode -> List Css.Style -> Css.Style
-dark darkMode attrs =
-    case darkMode of
-        Dark ->
-            Css.batch attrs
-
-        Light ->
-            Css.batch []
 
 
 darkModeDecoder : Json.Decode.Decoder DarkMode

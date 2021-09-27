@@ -3,18 +3,15 @@ module Page.Notes exposing (Data, Model, Msg, Note, RouteParams, page)
 import Browser.Navigation
 import Css
 import DataSource exposing (DataSource)
-import DataSource.File
 import DataSource.Glob as Glob
 import Head
 import Head.Seo as Seo
 import Html.Styled exposing (..)
 import Html.Styled.Attributes as Attr exposing (css)
 import Html.Styled.Events
-import Html.Styled.Lazy
 import Link
 import MarkdownCodec
-import OptimizedDecoder as Decode
-import Page exposing (Page, PageWithState, StaticPayload)
+import Page exposing (PageWithState, StaticPayload)
 import Pages.PageUrl exposing (PageUrl)
 import Pages.Url
 import Route exposing (Route)

@@ -122,7 +122,7 @@ view :
     -> { body : Html msg, title : String }
 view sharedData page model toMsg pageView =
     case pageView.body of
-        View.ElmUi elements ->
+        View.ElmUi _ ->
             { title = pageView.title
             , body =
                 Html.div [] []

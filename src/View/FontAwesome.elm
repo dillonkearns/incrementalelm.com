@@ -1,4 +1,4 @@
-module View.FontAwesome exposing (icon, styledIcon)
+module View.FontAwesome exposing (styledIcon)
 
 import Element exposing (Element)
 import Html
@@ -10,9 +10,3 @@ styledIcon classString styles =
     Html.i [ Attr.class classString ] []
         |> Element.html
         |> Element.el styles
-
-
-icon : String -> Element msg
-icon classString =
-    Html.i [ Attr.class classString ] []
-        |> Element.html

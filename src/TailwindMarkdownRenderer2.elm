@@ -1,16 +1,16 @@
-module TailwindMarkdownRenderer2 exposing (..)
+module TailwindMarkdownRenderer2 exposing (renderer)
 
 import Css
 import DataSource exposing (DataSource)
 import DataSource.Port
-import Html.Attributes
+import Html.Attributes as HtmlAttr
 import Html.Styled as Html exposing (Html)
 import Html.Styled.Attributes as Attr exposing (css)
 import Json.Encode
 import Markdown.Block as Block
 import Markdown.Html
 import Markdown.Renderer
-import Markdown.Scaffolded as Scaffolded exposing (..)
+import Markdown.Scaffolded exposing (..)
 import OptimizedDecoder as Decode
 import Shiki
 import Tailwind.Utilities as Tw
@@ -20,16 +20,16 @@ import Widget.Signup
 
 renderer : Markdown.Renderer.Renderer (DataSource (Html msg))
 renderer =
-    Scaffolded.toRenderer
+    toRenderer
         { renderHtml = Markdown.Html.oneOf htmlRenderers
-        , renderMarkdown = Scaffolded.withDataSource reduceHtmlDataSource
+        , renderMarkdown = withDataSource reduceHtmlDataSource
         }
 
 
 reduceHtmlDataSource : Block (Html msg) -> DataSource (Html msg)
 reduceHtmlDataSource block =
     case block of
-        Scaffolded.Paragraph children ->
+        Paragraph children ->
             Html.p
                 [ css
                     [ Tw.bg_background
@@ -40,7 +40,7 @@ reduceHtmlDataSource block =
                 children
                 |> DataSource.succeed
 
-        Scaffolded.Heading { rawText, level, children } ->
+        Heading { rawText, level, children } ->
             (case level of
                 Block.H1 ->
                     Html.h1
@@ -129,24 +129,24 @@ reduceHtmlDataSource block =
             )
                 |> DataSource.succeed
 
-        Scaffolded.CodeBlock info ->
+        CodeBlock info ->
             shikiDataSource info
 
-        Scaffolded.Text string ->
+        Text string ->
             DataSource.succeed (Html.text string)
 
-        Scaffolded.Emphasis content ->
+        Emphasis content ->
             DataSource.succeed (Html.em [ css [ Tw.italic ] ] content)
 
-        Scaffolded.Strong content ->
+        Strong content ->
             Html.strong [ css [ Tw.font_bold ] ] content
                 |> DataSource.succeed
 
-        Scaffolded.BlockQuote children ->
+        BlockQuote children ->
             Html.blockquote [] children
                 |> DataSource.succeed
 
-        Scaffolded.CodeSpan content ->
+        CodeSpan content ->
             Html.code
                 [ css
                     [ Tw.font_semibold
@@ -157,7 +157,7 @@ reduceHtmlDataSource block =
                 [ Html.text content ]
                 |> DataSource.succeed
 
-        Scaffolded.Strikethrough children ->
+        Strikethrough children ->
             Html.del [] children
                 |> DataSource.succeed
 
@@ -348,7 +348,7 @@ rawTextToId rawText =
         |> String.toLower
 
 
-shikiDataSource : { body : String, language : Maybe String } -> DataSource (Html.Html msg)
+shikiDataSource : { body : String, language : Maybe String } -> DataSource (Html msg)
 shikiDataSource info =
     DataSource.Port.get "highlight"
         (Json.Encode.object
@@ -363,10 +363,10 @@ shikiDataSource info =
         (Shiki.decoder
             |> Decode.map
                 (Shiki.view
-                    [ Html.Attributes.style "font-family" "IBM Plex Mono"
-                    , Html.Attributes.style "padding" "0.75rem 1.25rem"
-                    , Html.Attributes.style "font-size" "13px"
-                    , Html.Attributes.style "border-radius" "0.5rem"
+                    [ HtmlAttr.style "font-family" "IBM Plex Mono"
+                    , HtmlAttr.style "padding" "0.75rem 1.25rem"
+                    , HtmlAttr.style "font-size" "13px"
+                    , HtmlAttr.style "border-radius" "0.5rem"
                     ]
                 )
             |> Decode.map Html.fromUnstyled
@@ -380,7 +380,7 @@ shikiDataSource info =
 htmlRenderers : List (Markdown.Html.Renderer (List (DataSource (Html msg)) -> DataSource (Html msg)))
 htmlRenderers =
     [ Markdown.Html.tag "discord"
-        (\children ->
+        (\_ ->
             Html.div
                 [ css
                     [ Tw.flex
@@ -423,19 +423,19 @@ htmlRenderers =
         )
         |> Markdown.Html.withAttribute "url"
     , Markdown.Html.tag "vimeo"
-        (\id children ->
+        (\id _ ->
             vimeoView id
                 |> DataSource.succeed
         )
         |> Markdown.Html.withAttribute "id"
     , Markdown.Html.tag "ellie"
-        (\id children ->
+        (\id _ ->
             View.Ellie.view id
                 |> DataSource.succeed
         )
         |> Markdown.Html.withAttribute "id"
     , Markdown.Html.tag "resource"
-        (\name resourceKind url children ->
+        (\name _ url _ ->
             --let
             --    kind =
             --        case Dict.get resourceKind icons of
@@ -467,7 +467,7 @@ htmlRenderers =
         |> Markdown.Html.withAttribute "icon"
         |> Markdown.Html.withAttribute "url"
     , Markdown.Html.tag "contact-button"
-        (\body ->
+        (\_ ->
             --contactButtonView
             Html.a
                 [ Attr.href "mailto:dillon@incrementalelm.com"

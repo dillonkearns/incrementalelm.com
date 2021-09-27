@@ -137,21 +137,21 @@ renderer =
               --    (\id children -> vimeoView id)
               --    |> Markdown.Html.withAttribute "id"
               Markdown.Html.tag "ellie"
-                (\id children ->
+                (\_ _ ->
                     --View.Ellie.view id
                     Html.text "ellie"
                 )
                 |> Markdown.Html.withAttribute "id"
             , Markdown.Html.tag "signup"
-                (\buttonText formId children ->
+                (\_ _ _ ->
                     Html.text ""
                 )
                 |> Markdown.Html.withAttribute "buttontext"
                 |> Markdown.Html.withAttribute "formid"
-            , Markdown.Html.tag "contact-button" (\body -> Html.text "")
+            , Markdown.Html.tag "contact-button" (\_ -> Html.text "")
             ]
     , codeBlock =
-        \{ body, language } ->
+        \{ body } ->
             Html.pre []
                 [ Html.code []
                     [ Html.text body

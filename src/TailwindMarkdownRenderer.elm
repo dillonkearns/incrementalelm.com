@@ -1,7 +1,6 @@
 module TailwindMarkdownRenderer exposing (renderer)
 
 import Css
-import DarkMode
 import Html.Styled as Html
 import Html.Styled.Attributes as Attr exposing (css)
 import Markdown.Block as Block
@@ -142,7 +141,7 @@ renderer =
     , html =
         Markdown.Html.oneOf
             [ Markdown.Html.tag "discord"
-                (\children ->
+                (\_ ->
                     Html.iframe
                         [ Attr.src "https://discordapp.com/widget?id=534524278847045633&theme=dark"
                         , Attr.width 350
@@ -167,19 +166,19 @@ renderer =
                 )
                 |> Markdown.Html.withAttribute "url"
             , Markdown.Html.tag "vimeo"
-                (\id children ->
+                (\_ _ ->
                     --vimeoView id
                     Html.text "TODO"
                 )
                 |> Markdown.Html.withAttribute "id"
             , Markdown.Html.tag "ellie"
-                (\id children ->
+                (\_ _ ->
                     --View.Ellie.view id
                     Html.text "TODO"
                 )
                 |> Markdown.Html.withAttribute "id"
             , Markdown.Html.tag "resources"
-                (\children ->
+                (\_ ->
                     --Element.column
                     --    [ Element.spacing 16
                     --    , Element.centerX
@@ -190,7 +189,7 @@ renderer =
                     Html.text "TODO"
                 )
             , Markdown.Html.tag "resource"
-                (\name resourceKind url children ->
+                (\_ _ _ _ ->
                     --let
                     --    todo anything =
                     --        todo anything
@@ -216,7 +215,7 @@ renderer =
                 |> Markdown.Html.withAttribute "icon"
                 |> Markdown.Html.withAttribute "url"
             , Markdown.Html.tag "contact-button"
-                (\body ->
+                (\_ ->
                     --contactButtonView
                     Html.a
                         [ Attr.href "mailto:dillon@incrementalelm.com"
