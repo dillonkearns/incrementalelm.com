@@ -23,7 +23,7 @@
     "@types/node": "^12.6.8",
     "codemirror": "^5.48.2",
     "elm-format": "0.8.3",
-    "elm-optimize-level-2": "^0.2.2",
+    "elm-optimize-level-2": "^0.1.5",
     "elm-pages": "file:elm-pages",
     "elm-review": "^2.6.0",
     "elm-tailwind-modules": "^0.3.2",
