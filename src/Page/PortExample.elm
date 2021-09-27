@@ -1,22 +1,16 @@
 module Page.PortExample exposing (Data, Model, Msg, page)
 
 import DataSource exposing (DataSource)
-import DataSource.Http
 import DataSource.Port
 import Head
 import Head.Seo as Seo
-import Html as PlainHtml
 import Html.Attributes as Attr
-import Html.Parser
-import Html.Parser.Util
 import Html.Styled as Html
 import Json.Encode
 import OptimizedDecoder as Decode
 import Page exposing (Page, PageWithState, StaticPayload)
 import Pages.PageUrl exposing (PageUrl)
 import Pages.Url
-import Secrets
-import Serialize
 import Shared
 import Shiki
 import View exposing (View)
@@ -106,13 +100,6 @@ view maybeUrl sharedModel static =
     }
 
 
-shikiView htmlString =
-    htmlString
-        |> Html.Parser.Util.toVirtualDom
-        |> PlainHtml.div []
-        |> Html.fromUnstyled
-
-
 
 --shikiDataSource : Int -> String -> DataSource (List String)
 
@@ -149,39 +136,3 @@ shikiTokenDecoder =
 
 fontStyleDecoder =
     Decode.int
-
-
-
---|> DataSource.distillSerializeCodec (String.fromInt key) (Serialize.list nodeCodec)
---shikiDataSource : Int -> String -> DataSource (List Html.Parser.Node)
---shikiDataSource key codeSnippet =
---    DataSource.Port.get "highlight"
---        (Json.Encode.string codeSnippet)
---        Decode.string
---        |> DataSource.andThen
---            (\htmlString ->
---                Html.Parser.run htmlString
---                    |> Result.mapError (\_ -> "HTML parsing error")
---                    |> DataSource.fromResult
---            )
---        |> DataSource.distillSerializeCodec (String.fromInt key) (Serialize.list nodeCodec)
-
-
-nodeCodec : Serialize.Codec Never Html.Parser.Node
-nodeCodec =
-    Serialize.customType
-        (\vText vElement vComment value ->
-            case value of
-                Html.Parser.Text string ->
-                    vText string
-
-                Html.Parser.Element nodeName attributes children ->
-                    vElement nodeName attributes children
-
-                Html.Parser.Comment string ->
-                    vComment string
-        )
-        |> Serialize.variant1 Html.Parser.Text Serialize.string
-        |> Serialize.variant3 Html.Parser.Element Serialize.string (Serialize.list (Serialize.tuple Serialize.string Serialize.string)) (Serialize.list (Serialize.lazy (\() -> nodeCodec)))
-        |> Serialize.variant1 Html.Parser.Comment Serialize.string
-        |> Serialize.finishCustomType
