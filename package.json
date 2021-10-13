@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Incremental Elm Consulting site.",
   "scripts": {
-    "start": "npm run elm-graphql && elm-pages develop --port 1234",
+    "start": "npm run elm-graphql && elm-pages dev --port 1234",
     "serve": "npm run build && http-server ./dist -a localhost -p 3000 --gzip -c31557600",
     "elm-graphql": "PATH=$(npm bin):$PATH elm-graphql https://oqagd84p.api.sanity.io/v1/graphql/production/default --skip-elm-format --output elm-graphql-gen/ --base SanityApi --scalar-codecs Scalar",
     "build": "npm run elm-graphql && elm-pages build --keep-cache",
