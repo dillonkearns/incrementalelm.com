@@ -1,3 +1,8 @@
+---
+type: tip
+publishAt: "2021-10-18"
+---
+
 # `elm-ts-interop` init Command, Codec and Pipeline APIs, and docs site
 
 This week I have some improvements to announce for `elm-ts-interop`. In particular, I've been focused on making it easier to get started with the free Community Edition. And I've also shipped some new APIs for building up your type-safe Encoders and Decoders.
