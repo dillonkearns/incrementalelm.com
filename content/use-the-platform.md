@@ -1,5 +1,6 @@
 ---
 description: Avoid reinventing wheels with progressive enhancement.
+cover: 1612016834422-ab208e8c9f31
 ---
 
 # Use the Platform
@@ -21,5 +22,7 @@ You'll at least want some of the basic user experience that people expect with f
 You'll periodically want to run through this checklist again in case any new built-in form functionality comes out with browser updates, or updates to assitive tools.
 
 Or, you could just use a `<form>` tag. Why reinvent the wheel when the platform has put all this thought in for us already?
+
+Have you ever tried middle clicking on a link to open a page in a new tag and found that it did nothing, or opened a new tab with the landing page instead of the page you middle clicked? The problem is the same here. Reinventing the (mouse) wheel. There are too many things to keep track of when you build that behavior yourself. The culprit is using onclick handlers in JavaScript rather than a good old fashioned `<a>` tag. Let's not reinvent links!
 
 In my opinion, this is always a good strategy: **Use the platform**.
