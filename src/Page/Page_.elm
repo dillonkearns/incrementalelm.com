@@ -3,6 +3,7 @@ module Page.Page_ exposing (BackRef, Data, Model, Msg, PageMetadata, RouteParams
 import DataSource exposing (DataSource)
 import DataSource.File
 import DataSource.Glob as Glob
+import Date exposing (Date)
 import Head
 import Head.Seo as Seo
 import Html.Styled exposing (..)
@@ -23,6 +24,7 @@ import String.Extra
 import Tailwind.Breakpoints as Bp
 import Tailwind.Utilities as Tw
 import TailwindMarkdownRenderer2
+import Time
 import Timestamps exposing (Timestamps)
 import UnsplashImage exposing (UnsplashImage)
 import View exposing (View)
@@ -114,8 +116,14 @@ data routeParams =
             )
 
 
-type alias Data =
+type alias Metadata =
     { cover : Maybe UnsplashImage
+    , publishedAt : Maybe Date
+    }
+
+
+type alias Data =
+    { metadata : Metadata
     , body : List (Html Msg)
     , info : { title : String, description : String }
     , noteData : Maybe NoteRecord
@@ -136,6 +144,11 @@ type alias NoteRecord =
     }
 
 
+formatDate : Date -> String
+formatDate =
+    Date.format "MMMM dd, y"
+
+
 view :
     Maybe PageUrl
     -> Shared.Model
@@ -153,11 +166,47 @@ view maybeUrl sharedModel static =
                     [ div
                         []
                         [ viewIf static.data.noteData
-                            (\note -> text <| "Created " ++ Timestamps.format note.timestamps.created)
+                            (\note ->
+                                case static.data.metadata.publishedAt of
+                                    Just publishDate ->
+                                        text <| "Published " ++ formatDate publishDate
+
+                                    Nothing ->
+                                        let
+                                            asDate : Date
+                                            asDate =
+                                                note.timestamps.created |> Date.fromPosix Time.utc
+                                        in
+                                        text <|
+                                            "Created "
+                                                ++ (note.timestamps.created
+                                                        |> Date.fromPosix Time.utc
+                                                        |> formatDate
+                                                   )
+                            )
                         ]
                     , div []
                         [ viewIf static.data.noteData
-                            (\note -> text <| "Updated " ++ Timestamps.format note.timestamps.updated)
+                            (\note ->
+                                let
+                                    publishedOrCreatedDate =
+                                        static.data.metadata.publishedAt
+                                            |> Maybe.withDefault
+                                                (note.timestamps.created
+                                                    |> Date.fromPosix Time.utc
+                                                )
+                                in
+                                if publishedOrCreatedDate == (note.timestamps.updated |> Date.fromPosix Time.utc) then
+                                    text ""
+
+                                else
+                                    text <|
+                                        "Updated "
+                                            ++ (note.timestamps.updated
+                                                    |> Date.fromPosix Time.utc
+                                                    |> formatDate
+                                               )
+                            )
                         ]
                     ]
                ]
@@ -287,7 +336,7 @@ head static =
         , siteName = "Incremental Elm"
         , image =
             { url =
-                static.data.cover
+                static.data.metadata.cover
                     |> Maybe.withDefault UnsplashImage.default
                     |> UnsplashImage.rawUrl
                     |> Pages.Url.external
@@ -312,9 +361,24 @@ type alias PageMetadata =
     }
 
 
-decoder : Decoder (Maybe UnsplashImage)
+decoder : Decoder Metadata
 decoder =
-    Decode.optionalField "cover" UnsplashImage.decoder
+    Decode.map2 Metadata
+        (Decode.optionalField "cover" UnsplashImage.decoder)
+        (Decode.optionalField
+            "publishAt"
+            (Decode.string
+                |> Decode.andThen
+                    (\isoString ->
+                        case Date.fromIsoString isoString of
+                            Ok date ->
+                                Decode.succeed date
+
+                            Err error ->
+                                Decode.fail error
+                    )
+            )
+        )
 
 
 type alias Note =
