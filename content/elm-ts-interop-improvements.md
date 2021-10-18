@@ -10,11 +10,11 @@ This week I have some improvements to announce for `elm-ts-interop`. In particul
 
 If you're not familiar with `elm-ts-interop`, it's a tool that generates TypeScript types from your custom JSON Decoders and Encoders to ensure that the types are in sync between your Elm app and TypeScript code. If you're not using TypeScript in your project, you can even benefit from the improved type-safety using vanilla JavaScript by using JSDoc comments ([[typescript-without-transpilation]]).
 
-You can learn more about [How elm-ts-interop works](https://elm-ts-interop.com/how-it-works) and find some [learning resources](https://elm-ts-interop.com/resources).
+You can learn more about [how elm-ts-interop works](https://elm-ts-interop.com/how-it-works) and find some [learning resources](https://elm-ts-interop.com/resources).
 
 ## Starter Repo with ViteJS and TypeScript
 
-There is now a starter setup for the `elm-ts-interop` Community Edition. Check it out, it uses a simple ViteJS config to load in Elm and TypeScript code, and it also has an `eslint` rule to enforce exhaustive switch statements so you can add a new `FromElm` port (Cmd port) and get a type error reminding you to handle that new data in your TypeScript code (just like adding a `Msg` and handling it in your `update` function).
+There is now [a starter setup for the `elm-ts-interop` Community Edition](https://github.com/dillonkearns/elm-ts-interop-starter). It uses a simple ViteJS config to load in Elm and TypeScript code, and it also has an `eslint` rule to enforce exhaustive switch statements so you can add a new `FromElm` port (Cmd port) and get a type error reminding you to handle that new data in TypeScript. It feels just like adding a new `Msg` variant and handling it in your Elm `update` function.
 
 The starter repo is at [github.com/dillonkearns/elm-ts-interop-starter](https://github.com/dillonkearns/elm-ts-interop-starter). And if you're a pro user, you can see the example Pro setup [on the `pro` branch](https://github.com/dillonkearns/elm-ts-interop-starter/tree/pro).
 
