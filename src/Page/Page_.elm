@@ -351,10 +351,6 @@ head static =
         |> Seo.website
 
 
-
---[]
-
-
 type alias PageMetadata =
     { description : Maybe String
     , image : Maybe UnsplashImage
