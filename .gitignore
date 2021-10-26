@@ -8,3 +8,6 @@ gen/Pages.elm
 elm-graphql-gen/
 gen/
 .elm-pages/
+
+# Local Netlify folder
+.netlify

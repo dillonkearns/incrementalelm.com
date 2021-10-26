@@ -6,7 +6,7 @@ import DarkMode exposing (DarkMode)
 import DataSource
 import Html exposing (Html)
 import Html.Styled exposing (div)
-import Html.Styled.Attributes exposing (css)
+import Html.Styled.Attributes as Attr exposing (css)
 import Http
 import Json.Decode
 import Pages.Flags
@@ -148,19 +148,22 @@ view sharedData page model toMsg pageView =
                             , Tw.flex
                             , Tw.flex_col
                             , Tw.text_foreground
+                            , Tw.items_center
                             ]
                         ]
                         [ div
                             [ css
                                 [ Bp.md [ Tw.mx_auto ]
+                                , Tw.max_w_prose
                                 ]
                             ]
                             [ div
                                 [ css
                                     [ Tw.text_foreground
                                     , Css.fontFamilies [ "Open Sans" ]
-                                    , Tw.max_w_prose
                                     , Tw.leading_7
+                                    , Tw.flex
+                                    , Tw.flex_col
                                     ]
                                 ]
                                 nodes

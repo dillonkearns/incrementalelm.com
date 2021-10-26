@@ -1,5 +1,6 @@
 import "./js/code-editor.js";
 import "./lib/native-shim.js";
+import "https://unpkg.com/hls-video-element@0.0";
 
 export default {
   load: async function (elmLoaded) {
