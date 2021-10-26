@@ -53,7 +53,7 @@ Another example of a Branded Type in TypeScript is marking a type as representin
 type Usd = number & { __brand: "USD" };
 
 function fromCents(cents: number): Usd {
-  return cents;
+  return cents as Usd;
 }
 ```
 
@@ -86,6 +86,46 @@ fromUsCents usCents = Usd usCents
 ```
 
 Our Elm `Usd` type cannot be created outside of that module. If we want to see how that type is being used, we only have one place to look: within the `Money` module where it's defined. Since it isn't exposed to the outside world, we know that we've limited the possible ways that outside code can use that type.
+
+## Branded Types and Unique Symbols
+
+The technique described above is the idiomatic approach to branded types in TypeScript ([used in the official TypeScript examples](https://www.typescriptlang.org/play#example/nominal-typing) and [in the TypeScript codebase](https://github.com/Microsoft/TypeScript/blob/7b48a182c05ea4dea81bab73ecbbe9e013a79e99/src/compiler/types.ts#L693-L698)). There is another technique that allows you to provide unique brands that are enclosed within a given scope using Unique Symbols.
+
+```typescript
+module Email {
+  declare const confirmedEmail_: unique symbol;
+
+  type ConfirmedEmail = string & {[confirmedEmail_]: true};
+
+  export function fromServer(emailAddress: string): ConfirmedEmail {
+    // validate email address
+    return emailAddress as ConfirmedEmail;
+  }
+}
+
+const unconfirmedEmail = "unconfirmed-email@example.com" as // ??? there's no exported type to use here
+```
+
+This technique succeeds in ensuring that the `ConfirmedEmail` type cannot be constructed outside of the scope of `Email` (assuming you don't use `any` types of course).
+
+However, now we have no exported type to use to annotate values to ensure that the correct type is used. That means we can't write code like this outside of the scope of `Email`:
+
+```typescript
+function sendEmail(email: Email.ConfirmedEmail) {
+  // ...
+}
+```
+
+You could certainly implement `sendEmail` within the scope of `Email`. But I think being able to annotate values is an important feature that is likely to become a roadblock when we want to ensure we receive our unique branded type as a parameter somewhere outside of `Email`.
+
+We could `export` the `ConfirmedEmail` type to outside of the `Email` module, but then that gets us back at the initial challenge with branded types: the type can be used to cast a value that is constructed anywhere in our codebase.
+
+```typescript
+const unconfirmedEmail =
+  "unconfirmed-email@example.com" as Email.ConfirmedEmail;
+```
+
+The TypeScript language have a specific feature for opaque types (like [Flow's Opaque Type Aliases](https://flow.org/en/docs/types/opaque-types/)), but it [seems that they plan to stick with the current branded types approach as the recommended solution](https://github.com/microsoft/TypeScript/issues/15807).
 
 ## More Resources
 
