@@ -261,10 +261,15 @@ view maybeUrl sharedModel model static =
                                                )
                             )
                         ]
-                    , viewIf model.views
-                        (\views ->
-                            text <| String.fromInt views ++ " views"
-                        )
+                    , div []
+                        [ model.views
+                            |> Maybe.map
+                                (\views ->
+                                    String.fromInt views ++ " views"
+                                )
+                            |> Maybe.map text
+                            |> Maybe.withDefault (br [] [])
+                        ]
                     ]
                ]
              , static.data.body

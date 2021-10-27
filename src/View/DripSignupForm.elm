@@ -3,6 +3,7 @@ module View.DripSignupForm exposing (viewNew)
 import Css
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (..)
+import Tailwind.Breakpoints as Bp
 import Tailwind.Utilities as Tw
 
 
@@ -52,7 +53,14 @@ dripInput details =
              , id details.inputId
              , name details.name
              , css
-                [ Tw.w_full ]
+                [ Tw.w_full
+                , Tw.border_foregroundLight
+                , Tw.border_2
+                , Tw.border_solid
+                , Tw.rounded_md
+                , Tw.pt_1
+                , Tw.mt_1
+                ]
              ]
                 |> includeValueIfPresent details.value
             )

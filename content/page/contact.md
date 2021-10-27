@@ -1,8 +1,4 @@
----
-{ "type": "page", "title": "Contact" }
----
-
-# Contact Incremental Elm
+# Contact me
 
 ![Contact Image](/images/contact.jpg)
 
