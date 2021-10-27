@@ -87,7 +87,20 @@ page =
                         GotViewCount _ ->
                             ( { model | views = Nothing }, Cmd.none )
             , subscriptions = \_ _ _ _ -> Sub.none
-            , init = \_ _ static -> ( { views = Nothing }, getViewCount static.routeParams )
+            , init =
+                \_ _ static ->
+                    let
+                        isNote : Bool
+                        isNote =
+                            static.data.noteData /= Nothing
+                    in
+                    ( { views = Nothing }
+                    , if isNote then
+                        getViewCount static.routeParams
+
+                      else
+                        Cmd.none
+                    )
             }
 
 
