@@ -4,6 +4,11 @@ import DataSource exposing (DataSource)
 import DataSource.File
 import DataSource.Glob as Glob
 import Date exposing (Date)
+import Fauna.Mutation
+import Fauna.Object.Views
+import Graphql.Http
+import Graphql.Operation exposing (RootMutation)
+import Graphql.SelectionSet exposing (SelectionSet)
 import Head
 import Head.Seo as Seo
 import Html.Styled exposing (..)
@@ -13,9 +18,10 @@ import Markdown.Block as Block exposing (Block)
 import Markdown.Parser
 import MarkdownCodec
 import OptimizedDecoder as Decode exposing (Decoder)
-import Page exposing (Page, StaticPayload)
+import Page exposing (Page, PageWithState, StaticPayload)
 import Pages.PageUrl exposing (PageUrl)
 import Pages.Url
+import Path
 import Regex
 import Route exposing (Route)
 import Serialize
@@ -30,26 +36,59 @@ import UnsplashImage exposing (UnsplashImage)
 import View exposing (View)
 
 
+hitsForPath : String -> SelectionSet Int RootMutation
+hitsForPath path =
+    Fauna.Mutation.viewPath
+        { path = path
+        }
+        Fauna.Object.Views.hits
+
+
+getViewCount : RouteParams -> Cmd Msg
+getViewCount routeParams =
+    let
+        selection =
+            hitsForPath (Route.toPath (Route.Page_ routeParams) |> Path.toAbsolute)
+    in
+    selection
+        |> Graphql.Http.mutationRequest "https://graphql.us.fauna.com/graphql"
+        |> Graphql.Http.withHeader "authorization" "Bearer fnAEWjYIVjAASOb7tn1P4EkEY4hUXnKyqw6kenuA"
+        |> Graphql.Http.send GotViewCount
+
+
 type alias Model =
-    ()
+    { views : Maybe Int
+    }
 
 
-type alias Msg =
-    Never
+type Msg
+    = GotViewCount (Result (Graphql.Http.Error Int) Int)
 
 
 type alias RouteParams =
     { page : String }
 
 
-page : Page RouteParams Data
+page : PageWithState RouteParams Data Model Msg
 page =
     Page.prerender
         { head = head
         , routes = routes
         , data = data
         }
-        |> Page.buildNoState { view = view }
+        |> Page.buildWithLocalState
+            { view = view
+            , update =
+                \_ _ _ _ msg model ->
+                    case msg of
+                        GotViewCount (Ok viewCount) ->
+                            ( { model | views = Just viewCount }, Cmd.none )
+
+                        GotViewCount _ ->
+                            ( { model | views = Nothing }, Cmd.none )
+            , subscriptions = \_ _ _ _ -> Sub.none
+            , init = \_ _ static -> ( { views = Nothing }, getViewCount static.routeParams )
+            }
 
 
 routes : DataSource (List RouteParams)
@@ -152,9 +191,10 @@ formatDate =
 view :
     Maybe PageUrl
     -> Shared.Model
+    -> Model
     -> StaticPayload Data RouteParams
     -> View Msg
-view maybeUrl sharedModel static =
+view maybeUrl sharedModel model static =
     { title = static.data.info.title
     , body =
         View.Tailwind
@@ -208,6 +248,10 @@ view maybeUrl sharedModel static =
                                                )
                             )
                         ]
+                    , viewIf model.views
+                        (\views ->
+                            text <| String.fromInt views ++ " views"
+                        )
                     ]
                ]
              , static.data.body
@@ -515,5 +559,6 @@ forwardReferences blocks =
             []
 
 
+isWikiLink : String -> Bool
 isWikiLink destination =
     not (destination |> String.startsWith "http")
