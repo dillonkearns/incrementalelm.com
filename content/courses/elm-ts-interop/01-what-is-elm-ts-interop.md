@@ -1,5 +1,6 @@
 ---
 mediaId: QS9k00cJBO4h1i4RpMWiURbMrvdPADMx6k00yNw8rIhCo
+title: What Is elm-ts-interop?
 ---
 
 - It's still important to be aware of [[typescript-blind-spots]].

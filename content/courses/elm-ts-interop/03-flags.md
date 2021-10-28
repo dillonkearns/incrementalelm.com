@@ -1,5 +1,6 @@
 ---
 mediaId: JWmH3lXPgAD4pjo56HQIJ6IJq3P60163vna6mpcdgHhU
+title: Flags
 ---
 
 ## Wire in the Flags

@@ -46,6 +46,27 @@ routes =
     pages
 
 
+courseChapters : RouteParams -> DataSource (List Metadata)
+courseChapters current =
+    pages
+        |> DataSource.map
+            (List.filterMap
+                (\chapter ->
+                    if chapter.course == current.course then
+                        findFilePath chapter
+                            |> DataSource.andThen
+                                (\filePath ->
+                                    DataSource.File.onlyFrontmatter metadataDecoder filePath
+                                )
+                            |> Just
+
+                    else
+                        Nothing
+                )
+            )
+        |> DataSource.resolve
+
+
 pages : DataSource (List RouteParams)
 pages =
     Glob.succeed
@@ -78,6 +99,7 @@ pages =
 
 type alias Metadata =
     { mediaId : String
+    , title : String
     }
 
 
@@ -86,18 +108,20 @@ data routeParams =
     findFilePath routeParams
         |> DataSource.andThen
             (\filePath ->
-                DataSource.map2 Data
+                DataSource.map3 Data
                     (DataSource.File.onlyFrontmatter metadataDecoder filePath)
                     (MarkdownCodec.withoutFrontmatter TailwindMarkdownRenderer2.renderer filePath
                         |> DataSource.resolve
                     )
+                    (courseChapters routeParams)
             )
 
 
 metadataDecoder : Decoder Metadata
 metadataDecoder =
-    Decode.map Metadata
+    Decode.map2 Metadata
         (Decode.field "mediaId" Decode.string)
+        (Decode.field "title" Decode.string)
 
 
 findFilePath : RouteParams -> DataSource String
@@ -137,6 +161,7 @@ head static =
 type alias Data =
     { metadata : Metadata
     , body : List (Html.Html Never)
+    , chapters : List Metadata
     }
 
 
@@ -168,6 +193,19 @@ view maybeUrl sharedModel static =
                     ]
                     []
                 ]
+            , chaptersView static.data.chapters
             , Html.div [] static.data.body
             ]
     }
+
+
+chaptersView chapters =
+    Html.ol []
+        (chapters |> List.indexedMap chapterView)
+
+
+chapterView index chapter =
+    Html.li []
+        [ Html.text <| String.fromInt (index + 1) ++ ". "
+        , Html.text chapter.title
+        ]
