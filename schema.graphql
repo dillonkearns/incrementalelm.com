@@ -1,0 +1,14 @@
+type Query {
+  viewsForAllPaths: [Views!]!
+  mostViewedPaths: [Views!]! @resolver(name: "most_viewed_paths")
+}
+
+type Mutation {
+  viewPath(path: String!): Views! @resolver(name: "view_path")
+}
+
+type Views {
+  path: String!
+  hits: Int!
+  likes: Int!
+}
