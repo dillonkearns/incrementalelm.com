@@ -1,5 +1,6 @@
 module Page.Courses.Course_.Section_ exposing (Data, Model, Msg, page)
 
+import Css
 import DataSource exposing (DataSource)
 import DataSource.File
 import DataSource.Glob as Glob
@@ -8,11 +9,13 @@ import Head.Seo as Seo
 import Html.Styled as Html
 import Html.Styled.Attributes as Attr exposing (css)
 import Html.Styled.Keyed
+import Link
 import MarkdownCodec
 import OptimizedDecoder as Decode exposing (Decoder)
 import Page exposing (Page, PageWithState, StaticPayload)
 import Pages.PageUrl exposing (PageUrl)
 import Pages.Url
+import Route
 import Shared
 import Tailwind.Utilities as Tw
 import TailwindMarkdownRenderer2
@@ -56,7 +59,7 @@ courseChapters current =
                         findFilePath chapter
                             |> DataSource.andThen
                                 (\filePath ->
-                                    DataSource.File.onlyFrontmatter metadataDecoder filePath
+                                    DataSource.File.onlyFrontmatter (metadataDecoder chapter) filePath
                                 )
                             |> Just
 
@@ -98,7 +101,8 @@ pages =
 
 
 type alias Metadata =
-    { mediaId : String
+    { routeParams : RouteParams
+    , mediaId : String
     , title : String
     }
 
@@ -109,7 +113,7 @@ data routeParams =
         |> DataSource.andThen
             (\filePath ->
                 DataSource.map3 Data
-                    (DataSource.File.onlyFrontmatter metadataDecoder filePath)
+                    (DataSource.File.onlyFrontmatter (metadataDecoder routeParams) filePath)
                     (MarkdownCodec.withoutFrontmatter TailwindMarkdownRenderer2.renderer filePath
                         |> DataSource.resolve
                     )
@@ -117,9 +121,9 @@ data routeParams =
             )
 
 
-metadataDecoder : Decoder Metadata
-metadataDecoder =
-    Decode.map2 Metadata
+metadataDecoder : RouteParams -> Decoder Metadata
+metadataDecoder routeParams =
+    Decode.map2 (Metadata routeParams)
         (Decode.field "mediaId" Decode.string)
         (Decode.field "title" Decode.string)
 
@@ -174,38 +178,60 @@ view maybeUrl sharedModel static =
     { title = ""
     , body =
         View.Tailwind
-            [ Html.div
+            [ Html.Styled.Keyed.node "div"
                 [ css
                     [ Tw.flex
                     , Tw.justify_around
                     , Tw.flex_grow
                     ]
                 ]
-                [ Html.Styled.Keyed.node "hls-video"
-                    [ Attr.id "my-player"
-                    , Attr.src <| "/.netlify/functions/sign_playback_id?playbackId=" ++ static.data.metadata.mediaId
-                    , Attr.controls True
-                    , Attr.preload "auto"
-                    , Attr.style "border" "solid 2px blue"
-                    , Attr.style "width" "800px"
-                    , Attr.style "width" "800px"
-                    , Attr.style "height" "450px"
-                    ]
-                    []
+                [ ( "my-player-" ++ static.routeParams.section
+                  , Html.Styled.Keyed.node "hls-video"
+                        [ Attr.id <| "my-player-" ++ static.routeParams.section
+                        , Attr.src <| "/.netlify/functions/sign_playback_id?playbackId=" ++ static.data.metadata.mediaId
+                        , Attr.controls True
+                        , Attr.preload "auto"
+                        , Attr.style "border" "solid 2px blue"
+                        , Attr.style "width" "800px"
+                        , Attr.style "width" "800px"
+                        , Attr.style "height" "450px"
+                        ]
+                        []
+                  )
                 ]
-            , chaptersView static.data.chapters
+            , chaptersView static.data.metadata static.data.chapters
             , Html.div [] static.data.body
             ]
     }
 
 
-chaptersView chapters =
+chaptersView : Metadata -> List Metadata -> Html.Html msg
+chaptersView current chapters =
     Html.ol []
-        (chapters |> List.indexedMap chapterView)
+        (chapters |> List.indexedMap (chapterView current))
 
 
-chapterView index chapter =
-    Html.li []
-        [ Html.text <| String.fromInt (index + 1) ++ ". "
-        , Html.text chapter.title
+chapterView : Metadata -> Int -> Metadata -> Html.Html msg
+chapterView currentPage index chapter =
+    Html.li
+        [ css
+            [ if currentPage.routeParams == chapter.routeParams then
+                Tw.bg_accent1
+
+              else
+                Tw.bg_background
+            , Css.hover
+                [ Tw.bg_accent1
+                ]
+            ]
+        ]
+        [ Route.Courses__Course___Section_ chapter.routeParams
+            |> Link.htmlLink2
+                [ css
+                    [ Tw.w_full
+                    ]
+                ]
+                [ Html.text <| String.fromInt (index + 1) ++ ". "
+                , Html.text chapter.title
+                ]
         ]
