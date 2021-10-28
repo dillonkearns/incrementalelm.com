@@ -14,7 +14,8 @@
     "@sanity/default-login",
     "@sanity/desk-tool",
     "@sanity/google-maps-input",
-    "markdown"
+    "markdown",
+    "mux-input"
   ],
   "env": {
     "development": {
