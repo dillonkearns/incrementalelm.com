@@ -94,8 +94,8 @@ liveStreamSelection =
         )
         (SanityApi.Object.LiveStream.project projectSelection)
         SanityApi.Object.LiveStream.youtubeID
-        SanityApi.Object.LiveStream.id_
-        SanityApi.Object.LiveStream.createdAt_
+        (SanityApi.Object.LiveStream.id_ |> SelectionSet.nonNullOrFail)
+        (SanityApi.Object.LiveStream.createdAt_ |> SelectionSet.nonNullOrFail)
 
 
 view : LiveStream -> Html msg
