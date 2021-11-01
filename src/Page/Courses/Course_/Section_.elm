@@ -83,10 +83,6 @@ muxIdToDuration muxId =
 
 currentChapterMuxId : RouteParams -> DataSource { assetId : String, playbackId : String }
 currentChapterMuxId routeParams =
-    let
-        _ =
-            Debug.log "routeParams" routeParams.section
-    in
     SanityApi.Query.allChapter
         (\optionals ->
             { optionals
