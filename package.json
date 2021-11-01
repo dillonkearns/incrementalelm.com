@@ -6,7 +6,7 @@
     "start": "npm run elm-graphql && elm-pages dev --port 1234",
     "serve": "npm run build && http-server ./dist -a localhost -p 3000 --gzip -c31557600",
     "elm-graphql": "PATH=$(npm bin):$PATH elm-graphql https://oqagd84p.api.sanity.io/v1/graphql/production/default --skip-elm-format --output elm-graphql-gen/ --base SanityApi --scalar-codecs Scalar && elm-graphql https://graphql.us.fauna.com/graphql --header 'authorization: Bearer fnAEWjYIVjAASOb7tn1P4EkEY4hUXnKyqw6kenuA' --output elm-graphql-gen/ --base Fauna",
-    "build": "npm run elm-graphql && elm-pages build --keep-cache",
+    "build": "npm run elm-graphql && build:hls-video && elm-pages build --keep-cache",
     "build:hls-video": "(cd hls-video-element && npm i && npm run build) && cp hls-video-element/dist/hls-video-element.js public/",
     "test": "elm-test",
     "autotest": "elm-test --watch",
