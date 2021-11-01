@@ -4,6 +4,10 @@ import Css
 import DataSource exposing (DataSource)
 import DataSource.File
 import DataSource.Glob as Glob
+import DataSource.Http
+import Duration exposing (Duration)
+import Graphql.OptionalArgument as OptionalArgument
+import Graphql.SelectionSet as SelectionSet
 import Head
 import Head.Seo as Seo
 import Html.Styled as Html
@@ -15,7 +19,14 @@ import OptimizedDecoder as Decode exposing (Decoder)
 import Page exposing (Page, PageWithState, StaticPayload)
 import Pages.PageUrl exposing (PageUrl)
 import Pages.Url
+import Request
 import Route
+import SanityApi.InputObject as InputObject
+import SanityApi.Object.Chapter
+import SanityApi.Object.MuxVideo
+import SanityApi.Object.MuxVideoAsset
+import SanityApi.Query
+import Secrets
 import Shared
 import Tailwind.Utilities as Tw
 import TailwindMarkdownRenderer2
@@ -49,18 +60,90 @@ routes =
     pages
 
 
-courseChapters : RouteParams -> DataSource (List Metadata)
+muxIdToDuration : String -> DataSource Duration
+muxIdToDuration muxId =
+    DataSource.Http.request
+        (Secrets.succeed
+            (\muxAuthToken ->
+                { url = "https://api.mux.com/video/v1/assets/" ++ muxId
+                , method = "GET"
+                , headers =
+                    [ ( "Authorization", "Basic " ++ muxAuthToken )
+                    ]
+                , body = DataSource.Http.emptyBody
+                }
+            )
+            |> Secrets.with "MUX_AUTH_TOKEN"
+        )
+        (Decode.at [ "data", "duration" ] Decode.float
+            |> Decode.map Basics.floor
+            |> Decode.map Duration.fromSeconds
+        )
+
+
+currentChapterMuxId : RouteParams -> DataSource String
+currentChapterMuxId routeParams =
+    let
+        _ =
+            Debug.log "routeParams" routeParams.section
+    in
+    SanityApi.Query.allChapter
+        (\optionals ->
+            { optionals
+                | where_ =
+                    InputObject.buildChapterFilter
+                        (\chapterOptionals ->
+                            { chapterOptionals
+                                | slug =
+                                    InputObject.buildSlugFilter
+                                        (\slugFilter ->
+                                            { slugFilter
+                                                | current =
+                                                    InputObject.buildStringFilter
+                                                        (\stringFilter ->
+                                                            { stringFilter
+                                                                | eq = OptionalArgument.Present routeParams.section
+                                                            }
+                                                        )
+                                                        |> OptionalArgument.Present
+                                            }
+                                        )
+                                        |> OptionalArgument.Present
+                            }
+                        )
+                        |> OptionalArgument.Present
+            }
+        )
+        (SanityApi.Object.Chapter.video
+            (SanityApi.Object.MuxVideo.asset SanityApi.Object.MuxVideoAsset.assetId
+                |> SelectionSet.nonNullOrFail
+            )
+            |> SelectionSet.nonNullOrFail
+            |> SelectionSet.nonNullOrFail
+        )
+        |> SelectionSet.map List.head
+        |> SelectionSet.nonNullOrFail
+        |> Request.staticGraphqlRequest
+
+
+courseChapters : RouteParams -> DataSource (List ( Metadata, Duration ))
 courseChapters current =
     pages
         |> DataSource.map
             (List.filterMap
                 (\chapter ->
                     if chapter.course == current.course then
-                        findFilePath chapter
-                            |> DataSource.andThen
-                                (\filePath ->
-                                    DataSource.File.onlyFrontmatter (metadataDecoder chapter) filePath
-                                )
+                        DataSource.map2 Tuple.pair
+                            (findFilePath chapter
+                                |> DataSource.andThen
+                                    (\filePath ->
+                                        DataSource.File.onlyFrontmatter (metadataDecoder chapter) filePath
+                                    )
+                            )
+                            (chapter
+                                |> currentChapterMuxId
+                                |> DataSource.andThen muxIdToDuration
+                            )
                             |> Just
 
                     else
@@ -165,7 +248,7 @@ head static =
 type alias Data =
     { metadata : Metadata
     , body : List (Html.Html Never)
-    , chapters : List Metadata
+    , chapters : List ( Metadata, Duration )
     }
 
 
@@ -205,14 +288,14 @@ view maybeUrl sharedModel static =
     }
 
 
-chaptersView : Metadata -> List Metadata -> Html.Html msg
+chaptersView : Metadata -> List ( Metadata, Duration ) -> Html.Html msg
 chaptersView current chapters =
     Html.ol []
         (chapters |> List.indexedMap (chapterView current))
 
 
-chapterView : Metadata -> Int -> Metadata -> Html.Html msg
-chapterView currentPage index chapter =
+chapterView : Metadata -> Int -> ( Metadata, Duration ) -> Html.Html msg
+chapterView currentPage index ( chapter, duration ) =
     Html.li
         [ css
             [ if currentPage.routeParams == chapter.routeParams then
@@ -232,6 +315,7 @@ chapterView currentPage index chapter =
                     ]
                 ]
                 [ Html.text <| String.fromInt (index + 1) ++ ". "
-                , Html.text chapter.title
+                , Html.text (chapter.title ++ " ")
+                , Duration.view duration
                 ]
         ]
