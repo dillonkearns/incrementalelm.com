@@ -307,7 +307,6 @@ view maybeUrl sharedModel static =
                         , Attr.src <| "/.netlify/functions/sign_playback_id?playbackId=" ++ static.data.metadata.playbackId
                         , Attr.controls True
                         , Attr.preload "auto"
-                        , Attr.style "border" "solid 2px blue"
                         , Attr.style "width" "800px"
                         , Attr.style "width" "800px"
                         , Attr.style "height" "450px"
