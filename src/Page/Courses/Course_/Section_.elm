@@ -81,7 +81,7 @@ muxIdToDuration muxId =
         )
 
 
-currentChapterMuxId : RouteParams -> DataSource String
+currentChapterMuxId : RouteParams -> DataSource { assetId : String, playbackId : String }
 currentChapterMuxId routeParams =
     let
         _ =
@@ -115,10 +115,22 @@ currentChapterMuxId routeParams =
             }
         )
         (SanityApi.Object.Chapter.video
-            (SanityApi.Object.MuxVideo.asset SanityApi.Object.MuxVideoAsset.assetId
+            (SanityApi.Object.MuxVideo.asset
+                (SelectionSet.map2
+                    (\assetId playbackId ->
+                        { assetId = assetId
+                        , playbackId = playbackId
+                        }
+                    )
+                    (SanityApi.Object.MuxVideoAsset.assetId
+                        |> SelectionSet.nonNullOrFail
+                    )
+                    (SanityApi.Object.MuxVideoAsset.playbackId
+                        |> SelectionSet.nonNullOrFail
+                    )
+                )
                 |> SelectionSet.nonNullOrFail
             )
-            |> SelectionSet.nonNullOrFail
             |> SelectionSet.nonNullOrFail
         )
         |> SelectionSet.map List.head
@@ -126,24 +138,17 @@ currentChapterMuxId routeParams =
         |> Request.staticGraphqlRequest
 
 
-courseChapters : RouteParams -> DataSource (List ( Metadata, Duration ))
+courseChapters : RouteParams -> DataSource (List Metadata)
 courseChapters current =
     pages
         |> DataSource.map
             (List.filterMap
                 (\chapter ->
                     if chapter.course == current.course then
-                        DataSource.map2 Tuple.pair
-                            (findFilePath chapter
-                                |> DataSource.andThen
-                                    (\filePath ->
-                                        DataSource.File.onlyFrontmatter (metadataDecoder chapter) filePath
-                                    )
-                            )
-                            (chapter
-                                |> currentChapterMuxId
-                                |> DataSource.andThen muxIdToDuration
-                            )
+                        (findFilePath chapter
+                            |> DataSource.andThen
+                                (\filePath -> metadata filePath chapter)
+                        )
                             |> Just
 
                     else
@@ -185,8 +190,9 @@ pages =
 
 type alias Metadata =
     { routeParams : RouteParams
-    , mediaId : String
     , title : String
+    , duration : Duration
+    , playbackId : String
     }
 
 
@@ -196,7 +202,8 @@ data routeParams =
         |> DataSource.andThen
             (\filePath ->
                 DataSource.map3 Data
-                    (DataSource.File.onlyFrontmatter (metadataDecoder routeParams) filePath)
+                    --(DataSource.File.onlyFrontmatter (metadataDecoder routeParams) filePath)
+                    (metadata filePath routeParams)
                     (MarkdownCodec.withoutFrontmatter TailwindMarkdownRenderer2.renderer filePath
                         |> DataSource.resolve
                     )
@@ -204,11 +211,41 @@ data routeParams =
             )
 
 
-metadataDecoder : RouteParams -> Decoder Metadata
-metadataDecoder routeParams =
-    Decode.map2 (Metadata routeParams)
-        (Decode.field "mediaId" Decode.string)
-        (Decode.field "title" Decode.string)
+
+--metadataDecoder : RouteParams -> Decoder Metadata
+--metadataDecoder routeParams =
+--    Decode.map2 (Metadata routeParams)
+--        (Decode.field "playbackId" Decode.string)
+--        (Decode.field "title" Decode.string)
+
+
+metadata : String -> RouteParams -> DataSource Metadata
+metadata filePath routeParams =
+    DataSource.map2
+        (\title other ->
+            { routeParams = routeParams
+            , title = title
+            , duration = other.duration
+            , playbackId = other.playbackId
+            }
+        )
+        (filePath
+            |> DataSource.File.onlyFrontmatter
+                (Decode.field "title" Decode.string)
+        )
+        (routeParams
+            |> currentChapterMuxId
+            |> DataSource.andThen
+                (\info ->
+                    DataSource.succeed
+                        (\duration ->
+                            { playbackId = info.playbackId
+                            , duration = duration
+                            }
+                        )
+                        |> DataSource.andMap (muxIdToDuration info.assetId)
+                )
+        )
 
 
 findFilePath : RouteParams -> DataSource String
@@ -248,7 +285,7 @@ head static =
 type alias Data =
     { metadata : Metadata
     , body : List (Html.Html Never)
-    , chapters : List ( Metadata, Duration )
+    , chapters : List Metadata
     }
 
 
@@ -271,7 +308,7 @@ view maybeUrl sharedModel static =
                 [ ( "my-player-" ++ static.routeParams.section
                   , Html.Styled.Keyed.node "hls-video"
                         [ Attr.id <| "my-player-" ++ static.routeParams.section
-                        , Attr.src <| "/.netlify/functions/sign_playback_id?playbackId=" ++ static.data.metadata.mediaId
+                        , Attr.src <| "/.netlify/functions/sign_playback_id?playbackId=" ++ static.data.metadata.playbackId
                         , Attr.controls True
                         , Attr.preload "auto"
                         , Attr.style "border" "solid 2px blue"
@@ -288,14 +325,14 @@ view maybeUrl sharedModel static =
     }
 
 
-chaptersView : Metadata -> List ( Metadata, Duration ) -> Html.Html msg
+chaptersView : Metadata -> List Metadata -> Html.Html msg
 chaptersView current chapters =
     Html.ol []
         (chapters |> List.indexedMap (chapterView current))
 
 
-chapterView : Metadata -> Int -> ( Metadata, Duration ) -> Html.Html msg
-chapterView currentPage index ( chapter, duration ) =
+chapterView : Metadata -> Int -> Metadata -> Html.Html msg
+chapterView currentPage index chapter =
     Html.li
         [ css
             [ if currentPage.routeParams == chapter.routeParams then
@@ -316,6 +353,6 @@ chapterView currentPage index ( chapter, duration ) =
                 ]
                 [ Html.text <| String.fromInt (index + 1) ++ ". "
                 , Html.text (chapter.title ++ " ")
-                , Duration.view duration
+                , Duration.view chapter.duration
                 ]
         ]
