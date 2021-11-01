@@ -1,3 +1,7 @@
 [submodule "elm-pages"]
 	path = elm-pages
 	url = https://github.com/dillonkearns/elm-pages.git
+
+[submodule "hls-video-element"]
+	path = hls-video-element
+	url = https://github.com/dillonkearns/hls-video-element.git

@@ -8,6 +8,7 @@ gen/Pages.elm
 elm-graphql-gen/
 gen/
 .elm-pages/
+public/hls-video-element.js
 
 # Local Netlify folder
 .netlify
