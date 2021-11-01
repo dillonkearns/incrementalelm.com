@@ -28,6 +28,7 @@ import SanityApi.Object.MuxVideoAsset
 import SanityApi.Query
 import Secrets
 import Shared
+import Tailwind.Breakpoints as Bp
 import Tailwind.Utilities as Tw
 import TailwindMarkdownRenderer2
 import View exposing (View)
@@ -307,9 +308,12 @@ view maybeUrl sharedModel static =
                         , Attr.src <| "/.netlify/functions/sign_playback_id?playbackId=" ++ static.data.metadata.playbackId
                         , Attr.controls True
                         , Attr.preload "auto"
-                        , Attr.style "width" "800px"
-                        , Attr.style "width" "800px"
-                        , Attr.style "height" "450px"
+                        , css
+                            [ Bp.lg [ size 800 ]
+                            , Bp.md [ size 600 ]
+                            , Bp.sm [ size 500 ]
+                            , size 300
+                            ]
                         ]
                         []
                   )
@@ -318,6 +322,14 @@ view maybeUrl sharedModel static =
             , Html.div [] static.data.body
             ]
     }
+
+
+size : Float -> Css.Style
+size width =
+    Css.batch
+        [ Css.width (Css.px width)
+        , Css.height (Css.px (width * 0.5625))
+        ]
 
 
 chaptersView : Metadata -> List Metadata -> Html.Html msg
