@@ -295,7 +295,8 @@ view maybeUrl sharedModel static =
     { title = ""
     , body =
         View.Tailwind
-            [ Html.Styled.Keyed.node "div"
+            [ titleView static.data.metadata.title
+            , Html.Styled.Keyed.node "div"
                 [ css
                     [ Tw.flex
                     , Tw.justify_around
@@ -323,6 +324,22 @@ view maybeUrl sharedModel static =
             , Html.div [] static.data.body
             ]
     }
+
+
+titleView : String -> Html.Html msg
+titleView titleText =
+    Html.h1
+        [ css
+            [ Tw.text_4xl
+            , Tw.font_bold
+            , Tw.tracking_tight
+            , Tw.mt_2
+            , Tw.mb_8
+            , [ Css.qt "Raleway" ] |> Css.fontFamilies
+            , Tw.text_foregroundStrong
+            ]
+        ]
+        [ Html.text titleText ]
 
 
 size : Float -> Css.Style
