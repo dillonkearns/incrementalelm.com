@@ -313,6 +313,7 @@ view maybeUrl sharedModel static =
                             , Bp.md [ size 600 ]
                             , Bp.sm [ size 500 ]
                             , size 300
+                            , Tw.mb_12
                             ]
                         ]
                         []
@@ -356,10 +357,22 @@ chapterView currentPage index chapter =
             |> Link.htmlLink2
                 [ css
                     [ Tw.w_full
+                    , Tw.flex
+                    , Tw.justify_between
+                    , Tw.p_2
                     ]
                 ]
                 [ Html.text <| String.fromInt (index + 1) ++ ". "
                 , Html.text (chapter.title ++ " ")
-                , Duration.view chapter.duration
+                , Duration.view
+                    [ css
+                        [ Tw.py_1
+                        , Tw.px_2
+                        , Tw.bg_foregroundStrong
+                        , Tw.rounded_xl
+                        , Tw.text_background
+                        ]
+                    ]
+                    chapter.duration
                 ]
         ]

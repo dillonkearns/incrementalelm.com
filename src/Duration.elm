@@ -1,6 +1,6 @@
 module Duration exposing (Duration, fromSeconds, view)
 
-import Html.Styled as Html exposing (Html)
+import Html.Styled as Html exposing (Attribute, Html)
 
 
 type alias Duration =
@@ -16,9 +16,9 @@ fromSeconds seconds =
     }
 
 
-view : Duration -> Html msg
-view duration =
-    Html.span []
+view : List (Attribute msg) -> Duration -> Html msg
+view attrs duration =
+    Html.span attrs
         [ Html.text <| String.fromInt duration.minutes
         , Html.text ":"
         , Html.text <| String.fromInt duration.seconds
