@@ -125,7 +125,7 @@ const unconfirmedEmail =
   "unconfirmed-email@example.com" as Email.ConfirmedEmail;
 ```
 
-The TypeScript language have a specific feature for opaque types (like [Flow's Opaque Type Aliases](https://flow.org/en/docs/types/opaque-types/)), but it [seems that they plan to stick with the current branded types approach as the recommended solution](https://github.com/microsoft/TypeScript/issues/15807).
+The TypeScript language could have a specific feature for opaque types (like [Flow's Opaque Type Aliases](https://flow.org/en/docs/types/opaque-types/)), but it [seems that they plan to stick with the current branded types approach as the recommended solution](https://github.com/microsoft/TypeScript/issues/15807).
 
 ## More Resources
 
