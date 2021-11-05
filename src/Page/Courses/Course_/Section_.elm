@@ -14,6 +14,7 @@ import Html.Styled as Html
 import Html.Styled.Attributes as Attr exposing (css)
 import Html.Styled.Keyed
 import Link
+import List.Extra
 import MarkdownCodec
 import OptimizedDecoder as Decode exposing (Decoder)
 import Page exposing (Page, PageWithState, StaticPayload)
@@ -314,12 +315,13 @@ view maybeUrl sharedModel static =
                             , Bp.md [ size 600 ]
                             , Bp.sm [ size 500 ]
                             , size 300
-                            , Tw.mb_12
+                            , Tw.mb_6
                             ]
                         ]
                         []
                   )
                 ]
+            , nextPreviousView static.data.metadata static.data.chapters
             , chaptersView static.data.metadata static.data.chapters
             , Html.div [] static.data.body
             ]
@@ -347,6 +349,75 @@ size width =
     Css.batch
         [ Css.width (Css.px width)
         , Css.height (Css.px (width * 0.5625))
+        ]
+
+
+nextPreviousView : Metadata -> List Metadata -> Html.Html msg
+nextPreviousView current chapters =
+    let
+        currentIndex : Int
+        currentIndex =
+            chapters
+                |> List.Extra.findIndex ((==) current)
+                |> Maybe.withDefault 0
+
+        previous : Maybe Metadata
+        previous =
+            chapters |> List.Extra.getAt (currentIndex - 1)
+
+        next : Maybe Metadata
+        next =
+            chapters |> List.Extra.getAt (currentIndex + 1)
+    in
+    Html.div
+        [ css
+            [ Tw.mb_6
+            , Tw.flex
+            , Tw.justify_between
+            ]
+        ]
+        [ previous
+            |> Maybe.map
+                (\justPrevious ->
+                    Route.Courses__Course___Section_ justPrevious.routeParams
+                        |> Link.htmlLink2
+                            [ css
+                                [ Css.hover
+                                    [ Tw.bg_foregroundStrong
+                                    , Tw.underline
+                                    ]
+                                , Tw.px_4
+                                , Tw.py_2
+                                , Tw.bg_foreground
+                                , Tw.text_background
+                                , Tw.rounded_lg
+                                ]
+                            ]
+                            [ Html.text <| "<- " ++ justPrevious.title
+                            ]
+                )
+            |> Maybe.withDefault (Html.span [] [])
+        , next
+            |> Maybe.map
+                (\justNext ->
+                    Route.Courses__Course___Section_ justNext.routeParams
+                        |> Link.htmlLink2
+                            [ css
+                                [ Css.hover
+                                    [ Tw.bg_foregroundStrong
+                                    , Tw.underline
+                                    ]
+                                , Tw.px_4
+                                , Tw.py_2
+                                , Tw.bg_foreground
+                                , Tw.text_background
+                                , Tw.rounded_lg
+                                ]
+                            ]
+                            [ Html.text <| justNext.title ++ " ->"
+                            ]
+                )
+            |> Maybe.withDefault (Html.span [] [])
         ]
 
 
