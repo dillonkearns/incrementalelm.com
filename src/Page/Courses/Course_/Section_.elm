@@ -377,48 +377,45 @@ nextPreviousView current chapters =
             ]
         ]
         [ previous
-            |> Maybe.map
-                (\justPrevious ->
-                    Route.Courses__Course___Section_ justPrevious.routeParams
-                        |> Link.htmlLink2
-                            [ css
-                                [ Css.hover
-                                    [ Tw.bg_foregroundStrong
-                                    , Tw.underline
-                                    ]
-                                , Tw.px_4
-                                , Tw.py_2
-                                , Tw.bg_foreground
-                                , Tw.text_background
-                                , Tw.rounded_lg
-                                ]
-                            ]
-                            [ Html.text <| "<- " ++ justPrevious.title
-                            ]
-                )
-            |> Maybe.withDefault (Html.span [] [])
+            |> nextPreviousButton Previous
         , next
-            |> Maybe.map
-                (\justNext ->
-                    Route.Courses__Course___Section_ justNext.routeParams
-                        |> Link.htmlLink2
-                            [ css
-                                [ Css.hover
-                                    [ Tw.bg_foregroundStrong
-                                    , Tw.underline
-                                    ]
-                                , Tw.px_4
-                                , Tw.py_2
-                                , Tw.bg_foreground
-                                , Tw.text_background
-                                , Tw.rounded_lg
-                                ]
-                            ]
-                            [ Html.text <| justNext.title ++ " ->"
-                            ]
-                )
-            |> Maybe.withDefault (Html.span [] [])
+            |> nextPreviousButton Next
         ]
+
+
+type NextOrPrevious
+    = Next
+    | Previous
+
+
+nextPreviousButton : NextOrPrevious -> Maybe Metadata -> Html.Html msg
+nextPreviousButton kind maybeNextOrPrevious =
+    maybeNextOrPrevious
+        |> Maybe.map
+            (\nextOrPrevious ->
+                Route.Courses__Course___Section_ nextOrPrevious.routeParams
+                    |> Link.htmlLink2
+                        [ css
+                            [ Css.hover
+                                [ Tw.bg_foregroundStrong
+                                , Tw.underline
+                                ]
+                            , Tw.px_4
+                            , Tw.py_2
+                            , Tw.bg_foreground
+                            , Tw.text_background
+                            , Tw.rounded_lg
+                            ]
+                        ]
+                        [ case kind of
+                            Previous ->
+                                Html.text <| "<- " ++ nextOrPrevious.title
+
+                            Next ->
+                                Html.text <| nextOrPrevious.title ++ " ->"
+                        ]
+            )
+        |> Maybe.withDefault (Html.span [] [])
 
 
 chaptersView : Metadata -> List Metadata -> Html.Html msg
