@@ -182,7 +182,6 @@ noteCard note =
     Html.li
         [ css
             [ Tw.border_2
-            , Tw.p_8
             , Tw.rounded_lg
             , Tw.border_solid
             , Tw.border_background
@@ -193,25 +192,32 @@ noteCard note =
         ]
         [ note.route
             |> Link.htmlLink2 []
-                [ Html.h2
+                [ Html.div
                     [ css
-                        [ Tw.font_bold
-                        , Tw.text_lg
-                        , Tw.text_foregroundStrong
-                        , Tw.pb_2
-                        , [ Css.qt "Raleway" ] |> Css.fontFamilies
+                        [ Tw.p_8
+                        , Tw.cursor_pointer
                         ]
                     ]
-                    [ text <|
-                        note.title
-                    ]
-                , div
-                    [ css
-                        [ Tw.text_sm
-                        , Tw.text_foregroundLight
+                    [ Html.h2
+                        [ css
+                            [ Tw.font_bold
+                            , Tw.text_lg
+                            , Tw.text_foregroundStrong
+                            , Tw.pb_2
+                            , [ Css.qt "Raleway" ] |> Css.fontFamilies
+                            ]
                         ]
-                    ]
-                    [ text note.description
+                        [ text <|
+                            note.title
+                        ]
+                    , div
+                        [ css
+                            [ Tw.text_sm
+                            , Tw.text_foregroundLight
+                            ]
+                        ]
+                        [ text note.description
+                        ]
                     ]
                 ]
         ]
