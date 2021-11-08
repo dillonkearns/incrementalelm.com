@@ -1,5 +1,6 @@
 module Page.Courses exposing (Data, Model, Msg, page)
 
+import Cloudinary
 import CourseIcon
 import Css
 import DataSource exposing (DataSource)
@@ -60,9 +61,9 @@ head static =
             , dimensions = Nothing
             , mimeType = Nothing
             }
-        , description = "TODO"
+        , description = "Master tools and techniques to become a better Elm developer."
         , locale = Nothing
-        , title = "TODO title" -- metadata.title -- TODO
+        , title = "Incremental Elm Courses"
         }
         |> Seo.website
 
