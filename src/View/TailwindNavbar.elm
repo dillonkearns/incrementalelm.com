@@ -81,7 +81,7 @@ view darkMode toggleDarkMode toggleMobileMenuMsg currentPath =
             ]
         , headerLink currentPath Route.Notes "Notes"
         , headerLink currentPath Route.Live "Live Streams"
-        , headerLink currentPath (Route.Page_ { page = "services" }) "Services"
+        , headerLink currentPath Route.Courses "Courses"
         , DarkMode.view
             [ css
                 [ Tw.ml_2
