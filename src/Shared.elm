@@ -153,8 +153,9 @@ view sharedData page model toMsg pageView =
                         ]
                         [ div
                             [ css
-                                [ Bp.md [ Tw.mx_auto ]
-                                , Tw.max_w_prose
+                                [ Tw.max_w_prose
+                                , Tw.w_full
+                                , Bp.md [ Tw.mx_auto ]
                                 ]
                             ]
                             [ div
