@@ -374,6 +374,12 @@ nextPreviousView current chapters =
             [ Tw.mb_6
             , Tw.flex
             , Tw.justify_between
+            , Tw.flex_col
+            , Bp.md
+                [ Tw.flex_row
+                ]
+            , Tw.w_full
+            , Tw.gap_2
             ]
         ]
         [ previous
@@ -405,6 +411,7 @@ nextPreviousButton kind maybeNextOrPrevious =
                             , Tw.bg_foreground
                             , Tw.text_background
                             , Tw.rounded_lg
+                            , Tw.text_center
                             ]
                         ]
                         [ case kind of
