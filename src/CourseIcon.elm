@@ -3,6 +3,7 @@ module CourseIcon exposing (..)
 import Html.Styled exposing (Html)
 import Svg.Styled as Svg exposing (path, svg)
 import Svg.Styled.Attributes as SvgAttr
+import Tailwind.Utilities as Tw
 
 
 elmTsInterop : Html msg
@@ -12,6 +13,10 @@ elmTsInterop =
         , SvgAttr.height "281.5"
         , SvgAttr.viewBox "0 0 1000 563"
         , SvgAttr.fill "none"
+        , SvgAttr.css
+            [ Tw.max_w_full
+            , Tw.bg_white
+            ]
         ]
         [ Svg.rect
             [ SvgAttr.x "119"
