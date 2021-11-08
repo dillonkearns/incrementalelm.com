@@ -1,5 +1,6 @@
 module Page.Courses.Course_.Section_ exposing (Data, Model, Msg, page)
 
+import Cloudinary
 import Css
 import DataSource exposing (DataSource)
 import DataSource.File
@@ -189,6 +190,7 @@ pages =
 type alias Metadata =
     { routeParams : RouteParams
     , title : String
+    , description : String
     , duration : Duration
     , playbackId : String
     }
@@ -220,16 +222,21 @@ data routeParams =
 metadata : String -> RouteParams -> DataSource Metadata
 metadata filePath routeParams =
     DataSource.map2
-        (\title other ->
+        (\frontmatter other ->
             { routeParams = routeParams
-            , title = title
+            , title = frontmatter.title
+            , description = frontmatter.description
             , duration = other.duration
             , playbackId = other.playbackId
             }
         )
         (filePath
             |> DataSource.File.onlyFrontmatter
-                (Decode.field "title" Decode.string)
+                (Decode.map2
+                    (\title description -> { title = title, description = description })
+                    (Decode.field "title" Decode.string)
+                    (Decode.field "description" Decode.string)
+                )
         )
         (routeParams
             |> currentChapterMuxId
@@ -268,14 +275,14 @@ head static =
         { canonicalUrlOverride = Nothing
         , siteName = "elm-pages"
         , image =
-            { url = Pages.Url.external "TODO"
+            { url = Cloudinary.url "v1636406821/elm-ts-interop-course.svg" Nothing 600
             , alt = "elm-pages logo"
             , dimensions = Nothing
             , mimeType = Nothing
             }
-        , description = "TODO"
+        , description = static.data.metadata.description
         , locale = Nothing
-        , title = "TODO title" -- metadata.title -- TODO
+        , title = "elm-ts-interop course - " ++ static.data.metadata.title
         }
         |> Seo.website
 
