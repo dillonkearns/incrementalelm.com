@@ -10,6 +10,7 @@ module.exports = {
         foregroundStrong: "var(--foreground-strong)",
         accent1: "var(--accent1)",
         accent2: "var(--accent2)",
+        highlight: "var(--highlight)",
       },
     },
   },

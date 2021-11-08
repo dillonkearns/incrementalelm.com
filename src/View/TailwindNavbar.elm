@@ -95,7 +95,9 @@ headerLink : Path -> Route -> String -> Html msg
 headerLink currentPagePath linkTo name =
     linkTo
         |> Link.htmlLink
-            [ css [ Css.fontFamilies [ "Raleway" ] ]
+            [ css
+                [ Css.fontFamilies [ "Raleway" ]
+                ]
             ]
             (linkInner currentPagePath linkTo name)
 
@@ -110,13 +112,14 @@ linkInner currentPagePath linkTo name =
     span
         [ css
             [ Tw.text_sm
+            , Tw.font_bold
             , Tw.p_2
             , Tw.whitespace_nowrap
             , if isCurrentPath then
                 Css.batch
-                    [ Tw.text_blue_600
+                    [ Tw.text_highlight
                     , Css.hover
-                        [ Tw.text_blue_700
+                        [ Tw.underline
                         ]
                     ]
 
@@ -124,7 +127,8 @@ linkInner currentPagePath linkTo name =
                 Css.batch
                     [ Tw.text_foreground
                     , Css.hover
-                        [ Tw.text_blue_700
+                        [ Tw.text_highlight
+                        , Tw.underline
                         ]
                     ]
             ]

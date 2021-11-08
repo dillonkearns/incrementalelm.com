@@ -132,6 +132,7 @@ video {
   --accent2: #b58900; */
   --accent1: rgba(0, 168, 232, 1);
   --accent2: rgba(0, 168, 232, 1);
+  --highlight: rgba(29, 78, 216, 1);
 }
 
 .dark {
@@ -143,6 +144,7 @@ video {
   /* --accent1: #d33682; */
   --accent1: #268bd2;
   --accent2: rgba(0, 168, 232, 1);
+  --highlight: rgba(59, 130, 246, 1);
 }
 
 li::marker {
