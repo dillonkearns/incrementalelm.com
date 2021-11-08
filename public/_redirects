@@ -3,3 +3,4 @@
 /learn/* /:splat 301
 /tips/* /:splat 301
 
+/courses/elm-ts-interop/ /courses/elm-ts-interop/intro 301
