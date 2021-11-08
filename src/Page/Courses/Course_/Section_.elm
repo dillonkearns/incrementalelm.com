@@ -441,14 +441,30 @@ chapterView currentPage index chapter =
         [ Route.Courses__Course___Section_ chapter.routeParams
             |> Link.htmlLink2
                 [ css
-                    [ Tw.w_full
-                    , Tw.flex
+                    [ Tw.flex
                     , Tw.justify_between
                     , Tw.p_2
                     ]
                 ]
-                [ Html.text <| String.fromInt (index + 1) ++ ". "
-                , Html.text (chapter.title ++ " ")
+                [ Html.div
+                    [ css
+                        [ Tw.gap_3
+                        , Tw.flex
+                        ]
+                    ]
+                    [ Html.span
+                        [ css
+                            []
+                        ]
+                        [ Html.text <| String.fromInt (index + 1) ++ ". " ]
+                    , Html.span
+                        [ css
+                            [ Tw.text_foregroundStrong
+                            , Tw.font_bold
+                            ]
+                        ]
+                        [ Html.text (chapter.title ++ " ") ]
+                    ]
                 , Duration.view
                     [ css
                         [ Tw.py_1
@@ -456,6 +472,7 @@ chapterView currentPage index chapter =
                         , Tw.bg_foregroundStrong
                         , Tw.rounded_xl
                         , Tw.text_background
+                        , Tw.text_sm
                         ]
                     ]
                     chapter.duration
