@@ -92,7 +92,7 @@ view maybeUrl sharedModel static =
                         , Tw.p_6
                         ]
                     ]
-                    [ CourseIcon.elmTsInterop
+                    [ Html.div [ css [ Tw.bg_white ] ] [ CourseIcon.elmTsInterop ]
                     , Html.div []
                         [ Html.h2
                             [ css
