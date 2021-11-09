@@ -330,7 +330,14 @@ view maybeUrl sharedModel static =
                 ]
             , nextPreviousView static.data.metadata static.data.chapters
             , chaptersView static.data.metadata static.data.chapters
-            , Html.div [] static.data.body
+            , Html.div
+                [ css
+                    [ Tw.mt_12
+                    ]
+                ]
+                (subTitleView "Chapter Notes"
+                    :: static.data.body
+                )
             ]
     }
 
@@ -340,6 +347,22 @@ titleView titleText =
     Html.h1
         [ css
             [ Tw.text_4xl
+            , Tw.font_bold
+            , Tw.tracking_tight
+            , Tw.mt_2
+            , Tw.mb_8
+            , [ Css.qt "Raleway" ] |> Css.fontFamilies
+            , Tw.text_foregroundStrong
+            ]
+        ]
+        [ Html.text titleText ]
+
+
+subTitleView : String -> Html.Html msg
+subTitleView titleText =
+    Html.h2
+        [ css
+            [ Tw.text_3xl
             , Tw.font_bold
             , Tw.tracking_tight
             , Tw.mt_2
