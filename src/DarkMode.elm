@@ -52,7 +52,7 @@ moonIcon =
         , SvgAttr.fill "none"
         , SvgAttr.viewBox "0 0 24 24"
         , SvgAttr.stroke "currentColor"
-        , SvgAttr.class "light-only"
+        , SvgAttr.class "dark-only"
         ]
         [ path
             [ SvgAttr.strokeLinecap "round"
@@ -70,7 +70,7 @@ sunIcon =
             [ Tw.h_6
             , Tw.w_6
             ]
-        , SvgAttr.class "dark-only"
+        , SvgAttr.class "light-only"
         , SvgAttr.fill "none"
         , SvgAttr.viewBox "0 0 24 24"
         , SvgAttr.stroke "currentColor"
