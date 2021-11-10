@@ -1,5 +1,4 @@
 ---
-mediaId: PoPr129O6KPOCMeCaihJaynGvFm5Pe2NN3q8CGWvbC00
 title: Encoding Custom Types
 description: We use TypeScript Literal Types to encode an Elm Custom Type, and see how elm-ts-interop keeps the two types decoupled.
 ---
