@@ -367,6 +367,8 @@ shikiDataSource info =
                     , HtmlAttr.style "padding" "0.75rem 1.25rem"
                     , HtmlAttr.style "font-size" "13px"
                     , HtmlAttr.style "border-radius" "0.5rem"
+                    , HtmlAttr.style "margin-top" "2rem"
+                    , HtmlAttr.style "margin-bottom" "2rem"
                     ]
                 )
             |> Decode.map Html.fromUnstyled
