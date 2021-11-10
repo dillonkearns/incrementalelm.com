@@ -478,7 +478,88 @@ htmlRenderers =
                 [ Html.text "Contact" ]
                 |> DataSource.succeed
         )
+    , Markdown.Html.tag "aside"
+        (\title children ->
+            children
+                |> DataSource.combine
+                |> DataSource.map
+                    (\resolvedChildren ->
+                        Html.details
+                            [ css
+                                [ Tw.border_2
+
+                                --
+                                --, Tw.border_dashed
+                                , Tw.rounded_lg
+                                , Tw.p_4
+                                , Tw.border_foregroundLight
+                                , Tw.mb_8
+                                ]
+                            ]
+                            (Html.summary
+                                [ css
+                                    [ Tw.cursor_pointer
+                                    , Tw.text_xl
+                                    , Tw.underline
+                                    , Tw.font_bold
+                                    , Tw.tracking_tight
+                                    , [ Css.qt "Raleway" ] |> Css.fontFamilies
+                                    , Tw.text_foregroundStrong
+                                    ]
+                                ]
+                                [ Html.text title
+                                ]
+                                :: [ Html.div
+                                        [ --css
+                                          --    [ Tw.border_4
+                                          --
+                                          --    --, Tw.border_dashed
+                                          --    , Tw.rounded_lg
+                                          --    , Tw.p_4
+                                          --    ]
+                                          css
+                                            [ Tw.p_4
+                                            ]
+                                        ]
+                                        resolvedChildren
+                                   ]
+                            )
+                    )
+        )
+        |> Markdown.Html.withAttribute "title"
     ]
+
+
+titleView : String -> Html.Html msg
+titleView titleText =
+    Html.h1
+        [ css
+            [ Tw.text_4xl
+            , Tw.font_bold
+            , Tw.tracking_tight
+            , Tw.mt_2
+            , Tw.mb_8
+            , [ Css.qt "Raleway" ] |> Css.fontFamilies
+            , Tw.text_foregroundStrong
+            ]
+        ]
+        [ Html.text titleText ]
+
+
+subTitleView : String -> Html.Html msg
+subTitleView titleText =
+    Html.h2
+        [ css
+            [ Tw.text_3xl
+            , Tw.font_bold
+            , Tw.tracking_tight
+            , Tw.mt_2
+            , Tw.mb_8
+            , [ Css.qt "Raleway" ] |> Css.fontFamilies
+            , Tw.text_foregroundStrong
+            ]
+        ]
+        [ Html.text titleText ]
 
 
 slugToAbsoluteUrl : String -> String
