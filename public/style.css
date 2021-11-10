@@ -123,7 +123,7 @@ video {
 
 :root {
   --background: #ffffff;
-  --selection-background: #fdfdfd;
+  --selection-background: #f0f0f0;
   --foreground: #374151;
   --foreground-strong: #111827;
   --foreground-light: #8f8f8f;
@@ -137,7 +137,7 @@ video {
 
 .dark {
   --background: #181c1f;
-  --selection-background: #073642;
+  --selection-background: rgba(131, 142, 160, 0.17);
   --foreground: #e4e1e1;
   --foreground-strong: #fdfdfd;
   --foreground-light: #959595;

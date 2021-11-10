@@ -149,9 +149,9 @@ reduceHtmlDataSource block =
         CodeSpan content ->
             Html.code
                 [ css
-                    [ Tw.font_semibold
-                    , Tw.font_medium
-                    , Css.color (Css.rgb 226 0 124) |> Css.important
+                    [ Tw.bg_selectionBackground
+                    , Tw.rounded_lg
+                    , Tw.p_1
                     ]
                 ]
                 [ Html.text content ]
@@ -167,7 +167,6 @@ reduceHtmlDataSource block =
                 , css
                     [ Tw.underline
                     , Tw.text_foregroundStrong
-                    , Tw.font_bold
                     , Tw.text_accent2
                     , Css.hover
                         [ Css.color (Css.rgb 226 0 124)
