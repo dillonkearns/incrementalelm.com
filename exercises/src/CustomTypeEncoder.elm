@@ -1,10 +1,13 @@
-module Main exposing (main)
+module CustomTypeEncoder exposing (main)
 
 import Expect
 import Html exposing (Html, div, h1, text)
+import Json.Encode
 import Random
 import Test exposing (Test, describe, test)
 import Test.Runner.Html exposing (defaultConfig, hidePassedTests, showPassedTests, viewResults)
+import TsJson.Encode as TsEncode
+import TsJson.Type
 
 
 config =
@@ -19,24 +22,60 @@ main =
         ]
 
 
-isPalindrome : String -> Bool
-isPalindrome input =
-    let
-        letters =
-            String.toList input
-    in
-    letters == List.reverse letters
-
-
 myTestSuite : Test
 myTestSuite =
-    describe "`isPalindrome`"
-        [ test "called with a valid palindrome should return true" <|
-            \_ -> Expect.true "should be true" (isPalindrome "kayak")
-        , test "called with a non-palindrome string should return false" <|
-            \_ -> Expect.false "should be false" (isPalindrome "canoe")
-        , test "called with a palindrome with various case should not be case-sensitive" <|
-            \_ -> Expect.true "should not be case-sensitive" (isPalindrome "Racecar")
-        , test "called with a palindrome should be punctuation-insensitive" <|
-            \_ -> Expect.true "should be punctuation-insensitive" (isPalindrome "Eva, can I see bees in a cave?")
+    describe "Encoding Custom Types"
+        [ test "literal" <|
+            \() ->
+                solution__ (TsEncode.literal (Json.Encode.string "hi!"))
+                    |> TsEncode.tsType
+                    |> TsJson.Type.toTypeScript
+                    |> Expect.equal "\"hi!\""
+        , test "you can map an encoder" <|
+            \() ->
+                { message = "Hello" }
+                    |> TsEncode.runExample
+                        (TsEncode.string
+                            |> TsEncode.map
+                                (\value ->
+                                    solution__ value.message
+                                )
+                        )
+                    |> Expect.equal
+                        { output = "\"Hello\""
+                        , tsType = "string"
+                        }
+        , test "dot-notation is equivalent to the long-form lambda syntax" <|
+            \() ->
+                { message = "Hello" }
+                    |> solution__ .message
+                    |> Expect.equal
+                        "Hello"
+        , test "you can even do transformations in the mapping like turning a string to uppercase" <|
+            \() ->
+                "hello"
+                    |> TsEncode.runExample
+                        (TsEncode.string
+                            |> TsEncode.map (solution__ String.toUpper)
+                        )
+                    |> Expect.equal
+                        { output = "\"HELLO\""
+                        , tsType = "string"
+                        }
+        , test "source of truth" <|
+            \() ->
+                ()
+                    |> TsEncode.runExample
+                        (TsEncode.literal (Json.Encode.string "hi!"))
+                    --|> TsJson.Type.toTypeScript
+                    |> Expect.equal
+                        { output = "\"hi!\""
+                        , tsType = "\"hi!\""
+                        }
         ]
+
+
+solution__ : a -> a
+solution__ value =
+    --Debug.todo "FIXME"
+    value
