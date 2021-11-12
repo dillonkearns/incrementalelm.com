@@ -1,29 +1,13 @@
 module CustomTypeEncoder exposing (main)
 
 import Expect
-import Html exposing (Html, div, h1, text)
 import Json.Encode
-import Random
-import Test exposing (Test, describe, test)
-import Test.Runner.Html exposing (defaultConfig, hidePassedTests, showPassedTests, viewResults)
+import Test.Koan exposing (Test, describe, test)
 import TsJson.Encode as TsEncode
 import TsJson.Type
 
 
-config =
-    Random.initialSeed 10000 |> defaultConfig |> showPassedTests
-
-
-main : Html msg
 main =
-    div []
-        [ h1 [] [ text "My Test Suite" ]
-        , div [] [ viewResults config myTestSuite ]
-        ]
-
-
-myTestSuite : Test
-myTestSuite =
     describe "Encoding Custom Types"
         [ test "literal" <|
             \() ->
@@ -73,6 +57,7 @@ myTestSuite =
                         , tsType = "\"hi!\""
                         }
         ]
+        |> Test.Koan.program
 
 
 solution__ : a -> a
