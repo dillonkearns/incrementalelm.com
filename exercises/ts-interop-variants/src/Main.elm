@@ -3,42 +3,60 @@ module Main exposing (main)
 import Expect
 import Json.Encode
 import Test.Koan exposing (Test, describe, test)
-import TsJson.Encode as TsEncode
+import TsJson.Encode as TsEncode exposing (required)
 import TsJson.Type
+
+
+type FromElm
+    = Alert
+        { message : String
+        , kind : String
+        }
+    | AttemptLogIn { username : String }
+    | SaveToLocalStorage
+        { key : String
+        , value : String
+        }
 
 
 main =
     describe "Encoding Custom Types"
-        [ test "TsEncode.literal can encode a string literal like \"hello\"" <|
-            \() ->
-                TsEncode.literal
-                    (Json.Encode.string (solution__ "hello"))
-                    |> TsEncode.tsType
-                    |> TsJson.Type.toTypeScript
-                    |> Expect.equal "\"hello\""
-        , test "a literal doesn't have to be a string, it can also be an int" <|
-            \() ->
-                TsEncode.literal
-                    (Json.Encode.int (solution__ 123))
-                    |> TsEncode.tsType
-                    |> TsJson.Type.toTypeScript
-                    |> Expect.equal "123"
-        , test "you can combine two literals in TypeScript with a union" <|
+        [ test "TsEncode.variantTagged lets you handle new variants with additional tags in Discriminated Unions" <|
             \() ->
                 TsEncode.union
-                    (\v200 v404 pageFound ->
-                        if pageFound then
-                            v200
+                    (\vAlert vAttemptLogIn vSaveToLocalStorage value ->
+                        case value of
+                            Alert string ->
+                                vAlert string
 
-                        else
-                            v404
+                            AttemptLogIn record ->
+                                vAttemptLogIn record
+
+                            SaveToLocalStorage record ->
+                                vSaveToLocalStorage record
                     )
-                    |> TsEncode.variantLiteral (Json.Encode.int 200)
-                    |> TsEncode.variantLiteral (solution__ (Json.Encode.int 404))
+                    |> TsEncode.variantTagged "alert"
+                        (TsEncode.object
+                            [ required "message" (\value -> value.message) TsEncode.string
+                            , required "logKind" (\value -> value.kind) TsEncode.string
+                            ]
+                        )
+                    |> TsEncode.variantTagged "attemptLogIn"
+                        (TsEncode.object
+                            [ required "username" (\value -> value.username) TsEncode.string
+                            ]
+                        )
+                    |> x____replace_me____x
+                        (TsEncode.object
+                            [ required "key" (\value -> value.key) TsEncode.string
+                            , required "value" (\value -> value.value) TsEncode.string
+                            ]
+                        )
                     |> TsEncode.buildUnion
                     |> TsEncode.tsType
                     |> TsJson.Type.toTypeScript
-                    |> Expect.equal "404 | 200"
+                    |> Expect.equal
+                        """{ data : { key : string; value : string }; tag : "saveToLocalStorage" } | { data : { username : string }; tag : "attemptLogIn" } | { data : { logKind : string; message : string }; tag : "alert" }"""
         ]
         |> Test.Koan.program
 
@@ -48,15 +66,6 @@ solution__ value =
     value
 
 
-type FILL_ME_IN
-    = Blank
-
-
-x____replace : FILL_ME_IN -> a
-x____replace _ =
+x____replace_me____x : a -> b
+x____replace_me____x _ =
     Debug.todo "FILL IN THE BLANK"
-
-
-me____x : FILL_ME_IN
-me____x =
-    Blank

@@ -45,7 +45,9 @@ fromElm =
         |> TsEncode.buildUnion
 ```
 
-TODO Exercise for adding a new variant Encoder.
+## Hands on with Encoding Discriminated Unions
+
+<ellie id="fQY3tzjQDRRa1" />
 
 ## Handle the new variant in TypeScript
 
