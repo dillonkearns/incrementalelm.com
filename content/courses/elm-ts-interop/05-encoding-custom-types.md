@@ -22,6 +22,10 @@ encoder =
 
 We get a TypeScript type `"hello!"`. Notice that it is a _type_, not just a value.
 
+## Hands On with Literal Types
+
+<ellie id="fQWYRPSQxvsa1" />
+
 ## Union encoders
 
 <aside title="TypeScript Union Types">
