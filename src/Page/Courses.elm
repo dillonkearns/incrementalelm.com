@@ -56,7 +56,10 @@ head static =
         { canonicalUrlOverride = Nothing
         , siteName = "elm-pages"
         , image =
-            { url = Pages.Url.external "TODO"
+            { url =
+                Cloudinary.url "v1614626600/Incremental_Elm_Logo_aeb8qs.png"
+                    Nothing
+                    400
             , alt = "elm-pages logo"
             , dimensions = Nothing
             , mimeType = Nothing
@@ -74,7 +77,7 @@ view :
     -> StaticPayload Data RouteParams
     -> View Msg
 view maybeUrl sharedModel static =
-    { title = "Placeholder"
+    { title = "Incremental Elm Courses"
     , body =
         Tailwind
             [ Route.Courses__Course___Section_
