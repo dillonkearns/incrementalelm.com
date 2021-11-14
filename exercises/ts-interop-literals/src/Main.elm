@@ -45,7 +45,6 @@ main =
 
 solution__ : a -> a
 solution__ value =
-    --Debug.todo "FIXME"
     value
 
 
@@ -53,16 +52,11 @@ type FILL_ME_IN
     = Blank
 
 
-me____x : FILL_ME_IN
-me____x =
-    Blank
-
-
 x____replace : FILL_ME_IN -> a
 x____replace _ =
     Debug.todo "FILL IN THE BLANK"
 
 
-x____replace2 : a
-x____replace2 =
-    Debug.todo ""
+me____x : FILL_ME_IN
+me____x =
+    Blank
