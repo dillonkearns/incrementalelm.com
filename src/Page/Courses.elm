@@ -108,7 +108,7 @@ view maybeUrl sharedModel static =
                                 , Tw.text_xl
                                 ]
                             ]
-                            [ Html.text "elm-ts-interop"
+                            [ Html.text "Intro to elm-ts-interop"
                             ]
                         ]
                     , Html.p []
