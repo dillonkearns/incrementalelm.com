@@ -1,4 +1,4 @@
-module Duration exposing (Duration, fromSeconds, view)
+module Duration exposing (Duration, fromSeconds, inMillis, view)
 
 import Html.Styled as Html exposing (Attribute, Html)
 
@@ -7,6 +7,11 @@ type alias Duration =
     { minutes : Int
     , seconds : Int
     }
+
+
+inMillis : Duration -> Int
+inMillis duration =
+    (duration.minutes * 60 + duration.seconds) * 1000
 
 
 fromSeconds : Int -> Duration

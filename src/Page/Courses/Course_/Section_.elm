@@ -337,6 +337,10 @@ view maybeUrl sharedModel static =
                             , Attr.src <| "/.netlify/functions/sign_playback_id?playbackId=" ++ static.data.metadata.playbackId
                             , Attr.controls True
                             , Attr.preload "auto"
+                            , Attr.attribute "lesson-id" (static.routeParams.course ++ "/" ++ static.routeParams.section)
+                            , Attr.attribute "title" static.data.metadata.title
+                            , Attr.attribute "duration" (Duration.inMillis static.data.metadata.duration |> String.fromInt)
+                            , Attr.attribute "series" static.routeParams.course
                             , css
                                 [ Bp.lg [ size 800 ]
                                 , Bp.md [ size 600 ]
