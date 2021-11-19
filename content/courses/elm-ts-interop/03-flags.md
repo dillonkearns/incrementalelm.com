@@ -2,6 +2,7 @@
 mediaId: ukOMTMbovbReAXDP71xSuAOYLk7vPUq44YJsKTcvHvI
 title: Flags
 description: We replace our flags decoder with an elm-ts-json Decoder to keep them in sync with TypeScript.
+free: true
 ---
 
 ## Wire in the Flags

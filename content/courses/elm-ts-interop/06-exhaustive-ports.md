@@ -1,6 +1,7 @@
 ---
 title: Exhaustive Ports
 description: We see how elm-ts-interop lets us do exhaustive checks for our ports just like an Elm update case expression.
+free: true
 ---
 
 - We add a variant to our InteropDefinitions.FromElm type

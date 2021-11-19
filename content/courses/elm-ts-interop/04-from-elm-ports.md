@@ -1,6 +1,7 @@
 ---
 title: FromElm Ports
 description: We replace our alert port with an elm-ts-json FromElm port to keep it in sync with TypeScript.
+free: true
 ---
 
 Replace our Vanilla port with our `FromElm` `elm-ts-interop` port:

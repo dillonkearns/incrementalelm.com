@@ -2,6 +2,7 @@
 mediaId: 02zQOjkbROx02LUBc69GvIw02EoSUvwEPkaHrKF011O2RRI
 title: Setup
 description: We install the NPM package, the InteropDefinitions file, and use it to generate TypeScript bindings for our Elm app's ports and flags.
+free: true
 ---
 
 ## Install the NPM Package

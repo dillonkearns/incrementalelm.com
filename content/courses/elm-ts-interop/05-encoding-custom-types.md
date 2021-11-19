@@ -1,6 +1,7 @@
 ---
 title: Encoding Custom Types
 description: We use TypeScript Literal Types to encode an Elm Custom Type, and see how elm-ts-interop keeps the two types decoupled.
+free: true
 ---
 
 - [`elm-review-ports` rule for `NoUnusedPorts`](https://package.elm-lang.org/packages/sparksp/elm-review-ports/latest/NoUnusedPorts)

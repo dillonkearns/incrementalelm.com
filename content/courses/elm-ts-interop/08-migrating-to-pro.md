@@ -3,6 +3,7 @@ title: Migrating to Pro
 description: elm-ts-interop Pro has the same type-safety as the Community Edition, but with some added convenience.
 start: video-demo-solution
 solution: video-demo-pro-solution
+free: true
 ---
 
 Purchase the elm-ts-interop Pro Edition and find the scaffolding tool at [elm-ts-interop.com](https://elm-ts-interop.com/).

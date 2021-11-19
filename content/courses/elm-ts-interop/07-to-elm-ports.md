@@ -1,6 +1,7 @@
 ---
 title: ToElm Ports
 description: We wire in our ToElm ports subscription and decode some additional ToElm data.
+free: true
 ---
 
 The source of truth is the exposed `interop` record in `InteropDefinitions.elm`.

@@ -2,6 +2,7 @@
 mediaId: 5a77al21yZgEdJ3le00O8JrWky2bEhRprvwwLTGLguqg
 title: What Is elm-ts-interop?
 description: elm-ts-interop generates TypeScript bindings for your Elm project's ports and flags.
+free: true
 ---
 
 - [`elm-ts-interop`](https://elm-ts-interop.com/)

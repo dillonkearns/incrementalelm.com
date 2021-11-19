@@ -11,7 +11,7 @@ import Graphql.OptionalArgument as OptionalArgument
 import Graphql.SelectionSet as SelectionSet
 import Head
 import Head.Seo as Seo
-import Html.Styled as Html
+import Html.Styled as Html exposing (Html)
 import Html.Styled.Attributes as Attr exposing (css)
 import Html.Styled.Keyed
 import Link
@@ -193,6 +193,7 @@ type alias Metadata =
     , description : String
     , duration : Duration
     , playbackId : String
+    , free : Bool
     }
 
 
@@ -226,16 +227,23 @@ metadata filePath routeParams =
             { routeParams = routeParams
             , title = frontmatter.title
             , description = frontmatter.description
+            , free = frontmatter.free
             , duration = other.duration
             , playbackId = other.playbackId
             }
         )
         (filePath
             |> DataSource.File.onlyFrontmatter
-                (Decode.map2
-                    (\title description -> { title = title, description = description })
+                (Decode.map3
+                    (\title description free ->
+                        { title = title
+                        , description = description
+                        , free = free
+                        }
+                    )
                     (Decode.field "title" Decode.string)
                     (Decode.field "description" Decode.string)
+                    (Decode.optionalField "free" Decode.bool |> Decode.map (Maybe.withDefault False))
                 )
         )
         (routeParams
@@ -294,40 +302,55 @@ type alias Data =
     }
 
 
+goProView : Html msg
+goProView =
+    Html.div []
+        [ Html.text "Go pro to see this video"
+        ]
+
+
 view :
     Maybe PageUrl
     -> Shared.Model
     -> StaticPayload Data RouteParams
     -> View Msg
 view maybeUrl sharedModel static =
+    let
+        loggedInSubscriber =
+            sharedModel.user |> Maybe.map .isPro |> Maybe.withDefault False
+    in
     { title = ""
     , body =
         View.Tailwind
             [ titleView static.data.metadata.title
-            , Html.Styled.Keyed.node "div"
-                [ css
-                    [ Tw.flex
-                    , Tw.justify_around
-                    , Tw.flex_grow
-                    ]
-                ]
-                [ ( "my-player-" ++ static.routeParams.section
-                  , Html.Styled.Keyed.node "hls-video"
-                        [ Attr.id <| "my-player-" ++ static.routeParams.section
-                        , Attr.src <| "/.netlify/functions/sign_playback_id?playbackId=" ++ static.data.metadata.playbackId
-                        , Attr.controls True
-                        , Attr.preload "auto"
-                        , css
-                            [ Bp.lg [ size 800 ]
-                            , Bp.md [ size 600 ]
-                            , Bp.sm [ size 500 ]
-                            , size 300
-                            , Tw.mb_6
-                            ]
+            , if static.data.metadata.free || loggedInSubscriber then
+                Html.Styled.Keyed.node "div"
+                    [ css
+                        [ Tw.flex
+                        , Tw.justify_around
+                        , Tw.flex_grow
                         ]
-                        []
-                  )
-                ]
+                    ]
+                    [ ( "my-player-" ++ static.routeParams.section
+                      , Html.Styled.Keyed.node "hls-video"
+                            [ Attr.id <| "my-player-" ++ static.routeParams.section
+                            , Attr.src <| "/.netlify/functions/sign_playback_id?playbackId=" ++ static.data.metadata.playbackId
+                            , Attr.controls True
+                            , Attr.preload "auto"
+                            , css
+                                [ Bp.lg [ size 800 ]
+                                , Bp.md [ size 600 ]
+                                , Bp.sm [ size 500 ]
+                                , size 300
+                                , Tw.mb_6
+                                ]
+                            ]
+                            []
+                      )
+                    ]
+
+              else
+                goProView
             , nextPreviousView static.data.metadata static.data.chapters
             , chaptersView static.data.metadata static.data.chapters
             , Html.div
