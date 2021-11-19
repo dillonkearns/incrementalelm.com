@@ -22,12 +22,24 @@ exports.handler =
         path: "/",
         maxAge: twoWeeks,
       });
+      const sessionActiveCookie = cookie.serialize(
+        "incremental-elm-session-active",
+        "true",
+        {
+          secure: false,
+          httpOnly: false,
+          path: "/",
+          maxAge: twoWeeks,
+        }
+      );
 
       return {
         body: JSON.stringify(await buildUpUser(token)),
         headers: {
           "Content-Type": "application/json",
-          "Set-Cookie": sessionCookie,
+        },
+        multiValueHeaders: {
+          "Set-Cookie": [sessionCookie, sessionActiveCookie],
         },
         statusCode: 200,
       };
