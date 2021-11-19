@@ -8,7 +8,7 @@ import Html exposing (Html)
 import Html.Styled exposing (div)
 import Html.Styled.Attributes as Attr exposing (css)
 import Http
-import Json.Decode
+import Json.Decode exposing (Decoder)
 import Pages.Flags
 import Pages.PageUrl exposing (PageUrl)
 import Path exposing (Path)
@@ -19,6 +19,7 @@ import Tailwind.Utilities as Tw
 import Task
 import Time
 import TwitchButton
+import User exposing (User)
 import View exposing (View)
 import View.TailwindNavbar
 
@@ -46,6 +47,7 @@ type alias Model =
     , isOnAir : TwitchButton.IsOnAir
     , now : Maybe Time.Posix
     , darkMode : DarkMode
+    , user : Maybe User
     }
 
 
@@ -75,6 +77,7 @@ init navigationKey flags maybePagePath =
 
                 Pages.Flags.PreRenderFlags ->
                     DarkMode.Light
+      , user = Nothing
       }
       --|> updateStyles
     , Cmd.batch
@@ -139,7 +142,7 @@ view sharedData page model toMsg pageView =
                         , Tw.bg_background
                         ]
                     ]
-                    [ View.TailwindNavbar.view model.darkMode ToggleDarkMode ToggleMobileMenu page.path |> Html.Styled.map toMsg
+                    [ View.TailwindNavbar.view model.user model.darkMode ToggleDarkMode ToggleMobileMenu page.path |> Html.Styled.map toMsg
                     , div
                         [ css
                             [ Tw.pt_32
@@ -180,6 +183,7 @@ type Msg
     | ToggleMobileMenu
     | OnAirUpdated (Result Http.Error TwitchButton.IsOnAir)
     | GotCurrentTime Time.Posix
+    | GotUser (Maybe User)
     | OnPageChange
         { path : Path
         , query : Maybe String
@@ -214,9 +218,14 @@ update msg model =
         GotCurrentTime posix ->
             ( { model | now = Just posix }, Cmd.none )
 
+        GotUser maybeUser ->
+            ( { model | user = maybeUser }, Cmd.none )
+
 
 subscriptions : Path -> Model -> Sub Msg
 subscriptions _ model =
     Sub.batch
-        [--, Time.every (oneSecond * 60) GotCurrentTime
+        [ --, Time.every (oneSecond * 60) GotCurrentTime
+          User.sub
+            |> Sub.map GotUser
         ]

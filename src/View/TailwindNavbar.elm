@@ -9,10 +9,11 @@ import Path exposing (Path)
 import Route exposing (Route)
 import Tailwind.Breakpoints as Bp
 import Tailwind.Utilities as Tw
+import User exposing (User)
 
 
-view : DarkMode -> msg -> msg -> Path -> Html msg
-view darkMode toggleDarkMode toggleMobileMenuMsg currentPath =
+view : Maybe User -> DarkMode -> msg -> msg -> Path -> Html msg
+view maybeUser darkMode toggleDarkMode toggleMobileMenuMsg currentPath =
     nav
         [ css
             [ Tw.flex
@@ -88,7 +89,22 @@ view darkMode toggleDarkMode toggleMobileMenuMsg currentPath =
                 ]
             ]
             toggleDarkMode
+        , maybeUser
+            |> Maybe.map userBadge
+            |> Maybe.withDefault (text "")
         ]
+
+
+userBadge : User -> Html msg
+userBadge user =
+    img
+        [ Attr.src user.avatarUrl
+        , css
+            [ Tw.h_8
+            , Tw.ml_4
+            ]
+        ]
+        []
 
 
 headerLink : Path -> Route -> String -> Html msg
