@@ -33,3 +33,18 @@ customElements.define(
     }
   }
 );
+customElements.define(
+  "utterances-comments",
+  class extends HTMLElement {
+    connectedCallback() {
+      var s = document.createElement("script");
+      s.setAttribute("src", "https://utteranc.es/client.js");
+      s.setAttribute("repo", "dillonkearns/incrementalelm.com");
+      s.setAttribute("issue-term", "pathname");
+      s.setAttribute("theme", "photon-dark");
+      s.setAttribute("crossorigin", "anonymous");
+      s.setAttribute("async", "");
+      document.body.appendChild(s);
+    }
+  }
+);

@@ -208,6 +208,11 @@ view :
     -> StaticPayload Data RouteParams
     -> View Msg
 view maybeUrl sharedModel model static =
+    let
+        isNote : Bool
+        isNote =
+            static.data.noteData /= Nothing
+    in
     { title = static.data.info.title
     , body =
         View.Tailwind
@@ -283,6 +288,12 @@ view maybeUrl sharedModel model static =
                             , backReferencesView "Links on this page" note.forwardReferences
                             ]
                     )
+               ]
+             , [ if isNote then
+                    node "utterances-comments" [] []
+
+                 else
+                    text ""
                ]
              ]
                 |> List.concat
