@@ -1,6 +1,6 @@
 ---
 publishAt: "2021-11-29"
-cover: 1587629329288-949a7cbefb89
+cover: 1584883636208-df09d7d180d3
 ---
 
 # When It Compiles, But Doesn't Work
