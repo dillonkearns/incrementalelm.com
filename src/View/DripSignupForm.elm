@@ -1,4 +1,4 @@
-module View.DripSignupForm exposing (viewNew)
+module View.DripSignupForm exposing (viewNew, viewNew2)
 
 import Css
 import Html.Styled exposing (..)
@@ -17,7 +17,7 @@ emailInput =
     dripInput
         { inputId = "drip-email"
         , type_ = "email"
-        , labelText = "Email Address"
+        , labelText = "Email"
         , name = "fields[email]"
         , display = Show
         , value = Nothing
@@ -41,7 +41,12 @@ dripInput details =
     div
         (case details.display of
             Show ->
-                [ style "margin-bottom" "20px", style "font-weight" "bold" ]
+                [ style "margin-bottom" "20px"
+                , style "font-weight" "bold"
+                , css
+                    [ Tw.flex_grow
+                    ]
+                ]
 
             Hide ->
                 [ style "display" "none", attribute "aria-hidden" "true" ]
@@ -125,7 +130,10 @@ viewNew buttonText formId signupDetails =
         , firstNameInput
         , referenceIdInput signupDetails.maybeReferenceId
         , websiteField
-        , div []
+        , div
+            [ css
+                []
+            ]
             [ input
                 [ class "button"
                 , dripAttribute "sign-up-button"
@@ -140,6 +148,61 @@ viewNew buttonText formId signupDetails =
                     , Tw.text_white
                     , Css.hover
                         [ Tw.bg_accent2
+                        ]
+                    ]
+                ]
+                []
+            ]
+        ]
+
+
+viewNew2 : String -> String -> { details | maybeReferenceId : Maybe String } -> Html msg
+viewNew2 buttonText formId signupDetails =
+    Html.Styled.form
+        [ action <| "https://www.getdrip.com/forms/" ++ formId ++ "/submissions"
+        , method "post"
+        , attribute "data-drip-embedded-form" formId
+        , style "font-family" "'Open Sans'"
+        , css [ Tw.p_4 ]
+        ]
+        [ h2 [ dripAttribute "headline", style "display" "none" ] [ text "Incremental Elm" ]
+        , div [ dripAttribute "description" ] []
+        , referenceIdInput signupDetails.maybeReferenceId
+        , div
+            [ css
+                [ Tw.flex
+                , Tw.w_full
+                , Tw.gap_4
+                ]
+            ]
+            [ emailInput
+            , firstNameInput
+            ]
+        , websiteField
+        , div []
+            [ input
+                [ class "button"
+                , dripAttribute "sign-up-button"
+                , name "subscribe"
+                , type_ "submit"
+                , value buttonText
+                , style "width" "100%"
+                , css
+                    [ Tw.cursor_pointer
+                    , Tw.p_2
+                    , Tw.rounded_lg
+                    , Tw.bg_gradient_to_b
+                    , Tw.from_accent1
+                    , Tw.font_bold
+                    , Tw.text_lg
+
+                    --, Tw.to_accent2
+                    , Tw.to_highlight
+                    , Tw.text_white
+                    , Css.hover
+                        [ Tw.bg_gradient_to_b
+                        , Tw.from_accent1
+                        , Tw.to_accent2
                         ]
                     ]
                 ]

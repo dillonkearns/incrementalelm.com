@@ -34,6 +34,7 @@ import Time
 import Timestamps exposing (Timestamps)
 import UnsplashImage exposing (UnsplashImage)
 import View exposing (View)
+import Widget.Signup
 
 
 hitsForPath : String -> SelectionSet Int RootMutation
@@ -278,6 +279,7 @@ view maybeUrl sharedModel model static =
                     ]
                ]
              , static.data.body
+             , [ div [ css [ Tw.my_8 ] ] [ Widget.Signup.view ] ]
              , [ viewIf static.data.noteData
                     (\note ->
                         div

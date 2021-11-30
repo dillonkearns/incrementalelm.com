@@ -128,13 +128,6 @@ lastFourView ssn =
     Html.text ("xxx-xx-" ++ lastFour ssn)
 ```
 
-<signup formid="906002494" buttontext="Get weekly elm tips!">
-# Get tips to improve your elm code every week
-
-- Go beyond learning what great elm code _looks like_. Learn **how to write it**.
-- Tips you won't find anywhere else to level up your elm skills
-  </signup>
-
 ## Takeaways
 
 You can start applying the Exit Gatekeeper pattern to your elm code right away!
