@@ -255,7 +255,7 @@ view maybeUrl sharedModel model static =
                                                     |> Date.fromPosix Time.utc
                                                 )
                                 in
-                                if publishedOrCreatedDate == (note.timestamps.updated |> Date.fromPosix Time.utc) then
+                                if Date.compare publishedOrCreatedDate (note.timestamps.updated |> Date.fromPosix Time.utc) == GT then
                                     text ""
 
                                 else
