@@ -44,7 +44,7 @@ customElements.define(
       s.setAttribute("theme", "photon-dark");
       s.setAttribute("crossorigin", "anonymous");
       s.setAttribute("async", "");
-      document.body.appendChild(s);
+      this.appendChild(s);
     }
   }
 );
