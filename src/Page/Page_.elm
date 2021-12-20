@@ -74,7 +74,7 @@ page : PageWithState RouteParams Data Model Msg
 page =
     Page.prerender
         { head = head
-        , routes = routes
+        , pages = pages
         , data = data
         }
         |> Page.buildWithLocalState
@@ -87,7 +87,7 @@ page =
 
                         GotViewCount _ ->
                             ( { model | views = Nothing }, Cmd.none )
-            , subscriptions = \_ _ _ _ -> Sub.none
+            , subscriptions = \_ _ _ _ _ -> Sub.none
             , init =
                 \_ _ static ->
                     let
@@ -105,8 +105,8 @@ page =
             }
 
 
-routes : DataSource (List RouteParams)
-routes =
+pages : DataSource (List RouteParams)
+pages =
     Glob.succeed RouteParams
         |> Glob.match (Glob.literal "content/")
         |> Glob.match (Glob.oneOf ( ( "page/", () ), [ ( "", () ) ] ))

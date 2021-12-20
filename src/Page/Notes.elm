@@ -42,7 +42,7 @@ page =
         |> Page.buildWithLocalState
             { view = view
             , update = update
-            , subscriptions = \_ _ _ _ -> Sub.none
+            , subscriptions = \_ _ _ _ _ -> Sub.none
             , init =
                 \_ _ _ ->
                     ( "", Cmd.none )

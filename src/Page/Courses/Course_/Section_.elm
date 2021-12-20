@@ -37,7 +37,7 @@ import View exposing (View)
 
 
 type alias Model =
-    ()
+    {}
 
 
 type alias Msg =
@@ -52,15 +52,10 @@ page : Page RouteParams Data
 page =
     Page.prerender
         { head = head
-        , routes = routes
+        , pages = pages
         , data = data
         }
         |> Page.buildNoState { view = view }
-
-
-routes : DataSource (List RouteParams)
-routes =
-    pages
 
 
 muxIdToDuration : String -> DataSource Duration

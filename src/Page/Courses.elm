@@ -19,7 +19,7 @@ import View exposing (Body(..), View)
 
 
 type alias Model =
-    ()
+    {}
 
 
 type alias Msg =
