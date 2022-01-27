@@ -6,12 +6,12 @@ import DataSource.Port
 import Html.Attributes as HtmlAttr
 import Html.Styled as Html exposing (Html)
 import Html.Styled.Attributes as Attr exposing (css)
+import Json.Decode as Decode
 import Json.Encode
 import Markdown.Block as Block
 import Markdown.Html
 import Markdown.Renderer
 import Markdown.Scaffolded exposing (..)
-import OptimizedDecoder as Decode
 import Shiki
 import Tailwind.Utilities as Tw
 import View.Ellie

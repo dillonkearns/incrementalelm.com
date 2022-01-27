@@ -11,6 +11,7 @@ import Head.Seo as Seo
 import Html.Styled as Html exposing (Html, div, text)
 import Html.Styled.Attributes exposing (css)
 import Link
+import Markdown.Block exposing (Block)
 import MarkdownCodec
 import Page exposing (Page, StaticPayload)
 import Pages.PageUrl exposing (PageUrl)
@@ -29,7 +30,7 @@ type alias Model =
 
 
 type alias Msg =
-    Never
+    ()
 
 
 type alias RouteParams =
@@ -99,7 +100,7 @@ data : DataSource Data
 data =
     DataSource.map2 Data
         (MarkdownCodec.withoutFrontmatter TailwindMarkdownRenderer2.renderer "content/index.md"
-            |> DataSource.resolve
+         --|> DataSource.resolve
         )
         mostViewedEnhanced
 
@@ -125,7 +126,7 @@ head static =
 
 
 type alias Data =
-    { body : List (Html Msg)
+    { body : List Block
     , mostViewedPaths : List Note
     }
 
@@ -143,7 +144,8 @@ view maybeUrl sharedModel static =
                 [ css
                     []
                 ]
-                static.data.body
+                --static.data.body
+                []
             , Html.h2
                 [ css
                     [ Tw.text_4xl

@@ -24,7 +24,7 @@ type alias Model =
 
 
 type alias Msg =
-    Never
+    ()
 
 
 type alias RouteParams =
@@ -46,6 +46,7 @@ data =
 
 
 
+--|> DataSource.distillBytes w2_encode_PageLive w2_decode_PageLive
 --head :
 --    StaticPayload Data RouteParams
 --    -> List Head.Tag

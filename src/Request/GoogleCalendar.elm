@@ -1,12 +1,13 @@
 module Request.GoogleCalendar exposing (Event, googleAddToCalendarLink, request)
 
 --import Pages.StaticHttp as StaticHttp
+--import Extra.Json.Decode.Exploration as Decode
 
 import DataSource exposing (DataSource)
 import DataSource.Http
-import Extra.Json.Decode.Exploration as Decode
-import OptimizedDecoder as Decode exposing (Decoder)
-import OptimizedDecoder.Pipeline as Pipeline
+import Iso8601
+import Json.Decode as Decode exposing (Decoder)
+import Json.Decode.Pipeline as Pipeline
 import Pages.Secrets as Secrets
 import Rfc3339
 import Time
@@ -31,7 +32,7 @@ decoder =
         |> Pipeline.required "summary" Decode.string
         |> Pipeline.optional "description" Decode.string ""
         |> Pipeline.optional "location" (Decode.map Just Decode.string) Nothing
-        |> Pipeline.requiredAt [ "start", "dateTime" ] Decode.iso8601
+        |> Pipeline.requiredAt [ "start", "dateTime" ] Iso8601.decoder
         |> Pipeline.required "htmlLink" Decode.string
         |> Decode.list
         |> Decode.field "items"

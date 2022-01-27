@@ -8,9 +8,11 @@ import Date exposing (Date)
 import Html exposing (Html)
 import Html.String
 import IcalFeed
+import Json.Decode as Decode
+import Json.Decode.Extra
+import Markdown.Renderer
 import MarkdownCodec
 import MarkdownHtmlRenderer
-import OptimizedDecoder as Decode
 import Pages
 import Path
 import Request
@@ -42,18 +44,13 @@ routes getStaticRoutes htmlToString =
                         , siteUrl = Site.canonicalUrl
                         }
                 )
-            |> DataSource.map (\body -> { body = body })
         )
         |> ApiRoute.literal "tips"
         |> ApiRoute.slash
         |> ApiRoute.literal "feed.xml"
         |> ApiRoute.single
     , ApiRoute.succeed
-        (DataSource.map
-            (\events ->
-                { body = IcalFeed.feed events
-                }
-            )
+        (DataSource.map IcalFeed.feed
             (Request.staticGraphqlRequest Request.Events.selection)
         )
         |> ApiRoute.literal "live.ics"
@@ -76,6 +73,11 @@ tipsFeedItems htmlToString =
                                 filePath
                                     |> MarkdownCodec.withoutFrontmatter
                                         MarkdownHtmlRenderer.renderer
+                                    |> DataSource.andThen
+                                        (\blocks ->
+                                            Markdown.Renderer.render MarkdownHtmlRenderer.renderer blocks
+                                                |> DataSource.fromResult
+                                        )
                                     |> DataSource.map
                                         (\body ->
                                             Just
@@ -116,7 +118,7 @@ tipDecoder filePath =
     filePath
         |> DataSource.File.onlyFrontmatter
             (Decode.map2 Tuple.pair
-                (Decode.optionalField
+                (Json.Decode.Extra.optionalField
                     "publishAt"
                     (Decode.string
                         |> Decode.andThen
@@ -130,7 +132,7 @@ tipDecoder filePath =
                             )
                     )
                 )
-                (Decode.optionalField "cover" UnsplashImage.decoder
+                (Json.Decode.Extra.optionalField "cover" UnsplashImage.decoder
                     |> Decode.map (Maybe.withDefault UnsplashImage.default)
                 )
             )

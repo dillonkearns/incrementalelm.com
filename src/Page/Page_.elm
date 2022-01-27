@@ -13,18 +13,19 @@ import Head
 import Head.Seo as Seo
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (css)
+import Json.Decode as Decode exposing (Decoder)
+import Json.Decode.Extra
 import Link
 import Markdown.Block as Block exposing (Block)
 import Markdown.Parser
+import Markdown.Renderer
 import MarkdownCodec
-import OptimizedDecoder as Decode exposing (Decoder)
 import Page exposing (Page, PageWithState, StaticPayload)
 import Pages.PageUrl exposing (PageUrl)
 import Pages.Url
 import Path
 import Regex
 import Route exposing (Route)
-import Serialize
 import Shared
 import String.Extra
 import Tailwind.Breakpoints as Bp
@@ -72,7 +73,7 @@ type alias RouteParams =
 
 page : PageWithState RouteParams Data Model Msg
 page =
-    Page.prerender
+    Page.preRender
         { head = head
         , pages = pages
         , data = data
@@ -146,7 +147,7 @@ data routeParams =
                             Data
                             (DataSource.File.onlyFrontmatter decoder filePath)
                             (MarkdownCodec.withoutFrontmatter TailwindMarkdownRenderer2.renderer filePath
-                                |> DataSource.resolve
+                             --|> DataSource.resolve
                             )
                             (MarkdownCodec.titleAndDescription filePath)
                             |> DataSource.andMap
@@ -162,7 +163,7 @@ data routeParams =
                             Data
                             (DataSource.File.onlyFrontmatter decoder filePath)
                             (MarkdownCodec.withoutFrontmatter TailwindMarkdownRenderer2.renderer filePath
-                                |> DataSource.resolve
+                             --|> DataSource.resolve
                             )
                             (MarkdownCodec.titleAndDescription filePath)
                             |> DataSource.andMap (DataSource.succeed Nothing)
@@ -177,7 +178,7 @@ type alias Metadata =
 
 type alias Data =
     { metadata : Metadata
-    , body : List (Html Msg)
+    , body : List Block
     , info : { title : String, description : String }
     , noteData : Maybe NoteRecord
     }
@@ -278,7 +279,10 @@ view maybeUrl sharedModel model static =
                         ]
                     ]
                ]
-             , static.data.body
+
+             --,static.data.body
+             --   |> Markdown.Renderer.render TailwindMarkdownRenderer2.renderer
+             --   |> Result.withDefault []
              , [ div [ css [ Tw.my_8 ] ] [ Widget.Signup.view ] ]
              , [ viewIf static.data.noteData
                     (\note ->
@@ -435,8 +439,8 @@ type alias PageMetadata =
 decoder : Decoder Metadata
 decoder =
     Decode.map2 Metadata
-        (Decode.optionalField "cover" UnsplashImage.decoder)
-        (Decode.optionalField
+        (Json.Decode.Extra.optionalField "cover" UnsplashImage.decoder)
+        (Json.Decode.Extra.optionalField
             "publishAt"
             (Decode.string
                 |> Decode.andThen
@@ -510,7 +514,6 @@ backReferences slug =
                     |> DataSource.map (List.filterMap identity)
                     |> DataSource.resolve
             )
-        |> DataSource.distillSerializeCodec "backrefs" (Serialize.list serializeBackRef)
 
 
 forwardRefs : String -> DataSource (List BackRef)
@@ -529,16 +532,6 @@ forwardRefs slug =
                     |> DataSource.fromResult
                     |> DataSource.resolve
             )
-        |> DataSource.distillSerializeCodec "forwardRefs" (Serialize.list serializeBackRef)
-
-
-serializeBackRef : Serialize.Codec e BackRef
-serializeBackRef =
-    Serialize.record BackRef
-        |> Serialize.field .slug Serialize.string
-        |> Serialize.field .title Serialize.string
-        |> Serialize.field .description Serialize.string
-        |> Serialize.finishRecord
 
 
 hasReferenceTo : String -> List Block -> Bool

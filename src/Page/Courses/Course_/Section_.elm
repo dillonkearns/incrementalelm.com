@@ -14,10 +14,12 @@ import Head.Seo as Seo
 import Html.Styled as Html exposing (Html)
 import Html.Styled.Attributes as Attr exposing (css)
 import Html.Styled.Keyed
+import Json.Decode as Decode
+import Json.Decode.Extra
 import Link
 import List.Extra
+import Markdown.Block exposing (Block)
 import MarkdownCodec
-import OptimizedDecoder as Decode exposing (Decoder)
 import Page exposing (Page, PageWithState, StaticPayload)
 import Pages.PageUrl exposing (PageUrl)
 import Pages.Url
@@ -41,7 +43,7 @@ type alias Model =
 
 
 type alias Msg =
-    Never
+    ()
 
 
 type alias RouteParams =
@@ -50,7 +52,7 @@ type alias RouteParams =
 
 page : Page RouteParams Data
 page =
-    Page.prerender
+    Page.preRender
         { head = head
         , pages = pages
         , data = data
@@ -201,7 +203,7 @@ data routeParams =
                     --(DataSource.File.onlyFrontmatter (metadataDecoder routeParams) filePath)
                     (metadata filePath routeParams)
                     (MarkdownCodec.withoutFrontmatter TailwindMarkdownRenderer2.renderer filePath
-                        |> DataSource.resolve
+                     --|> DataSource.resolve
                     )
                     (courseChapters routeParams)
             )
@@ -238,7 +240,7 @@ metadata filePath routeParams =
                     )
                     (Decode.field "title" Decode.string)
                     (Decode.field "description" Decode.string)
-                    (Decode.optionalField "free" Decode.bool |> Decode.map (Maybe.withDefault False))
+                    (Json.Decode.Extra.optionalField "free" Decode.bool |> Decode.map (Maybe.withDefault False))
                 )
         )
         (routeParams
@@ -292,7 +294,7 @@ head static =
 
 type alias Data =
     { metadata : Metadata
-    , body : List (Html.Html Never)
+    , body : List Block
     , chapters : List Metadata
     }
 
@@ -358,7 +360,8 @@ view maybeUrl sharedModel static =
                     ]
                 ]
                 (subTitleView "Chapter Notes"
-                    :: static.data.body
+                    :: []
+                 --static.data.body
                 )
             ]
     }
