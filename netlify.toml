@@ -1,7 +1,7 @@
 [build]
   publish = "dist/"
   functions = "functions/"
-  command = "npm install -g elm && npm install && npx --no-install elm-tooling install && npx elm-tailwind-modules --dir ./gen --tailwind-config tailwind.config.js && mkdir .elm-pages && npm run elm-graphql && npm run build:hls-video && npx elm-pages build"
+  command = "mkdir bin && export PATH=\"/opt/build/repo/bin:$PATH\" && echo $PATH && curl https://static.lamdera.com/bin/linux/lamdera -o bin/lamdera && chmod a+x bin/lamdera && npm install -g elm && npm install && npx --no-install elm-tooling install && npx elm-tailwind-modules --dir ./gen --tailwind-config tailwind.config.js && mkdir .elm-pages && npm run elm-graphql && npm run build:hls-video && npx elm-pages build"
 
 [build.environment]
   ELM_HOME = "$NETLIFY_BUILD_BASE/cache/elm"
