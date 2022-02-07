@@ -3,6 +3,7 @@ module Page.Courses.Course_.Section_ exposing (Data, Model, Msg, page)
 import Cloudinary
 import Css
 import DataSource exposing (DataSource)
+import DataSource.Env
 import DataSource.File
 import DataSource.Glob as Glob
 import DataSource.Http
@@ -30,7 +31,6 @@ import SanityApi.Object.Chapter
 import SanityApi.Object.MuxVideo
 import SanityApi.Object.MuxVideoAsset
 import SanityApi.Query
-import Secrets
 import Shared
 import Tailwind.Breakpoints as Bp
 import Tailwind.Utilities as Tw
@@ -62,23 +62,23 @@ page =
 
 muxIdToDuration : String -> DataSource Duration
 muxIdToDuration muxId =
-    DataSource.Http.request
-        (Secrets.succeed
+    DataSource.Env.expect "MUX_AUTH_TOKEN"
+        |> DataSource.andThen
             (\muxAuthToken ->
-                { url = "https://api.mux.com/video/v1/assets/" ++ muxId
-                , method = "GET"
-                , headers =
-                    [ ( "Authorization", "Basic " ++ muxAuthToken )
-                    ]
-                , body = DataSource.Http.emptyBody
-                }
+                DataSource.Http.request
+                    { url = "https://api.mux.com/video/v1/assets/" ++ muxId
+                    , method = "GET"
+                    , headers =
+                        [ ( "Authorization", "Basic " ++ muxAuthToken )
+                        ]
+                    , body = DataSource.Http.emptyBody
+                    }
+                    (Decode.at [ "data", "duration" ] Decode.float
+                        |> Decode.map Basics.floor
+                        |> Decode.map Duration.fromSeconds
+                        |> DataSource.Http.expectJson
+                    )
             )
-            |> Secrets.with "MUX_AUTH_TOKEN"
-        )
-        (Decode.at [ "data", "duration" ] Decode.float
-            |> Decode.map Basics.floor
-            |> Decode.map Duration.fromSeconds
-        )
 
 
 currentChapterMuxId : RouteParams -> DataSource { assetId : String, playbackId : String }

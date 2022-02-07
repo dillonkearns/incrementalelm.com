@@ -4,11 +4,11 @@ module Request.GoogleCalendar exposing (Event, googleAddToCalendarLink, request)
 --import Extra.Json.Decode.Exploration as Decode
 
 import DataSource exposing (DataSource)
+import DataSource.Env
 import DataSource.Http
 import Iso8601
 import Json.Decode as Decode exposing (Decoder)
 import Json.Decode.Pipeline as Pipeline
-import Pages.Secrets as Secrets
 import Rfc3339
 import Time
 import Time.Extra as Time
@@ -72,20 +72,20 @@ googleAddToCalendarLink event =
 
 request : DataSource (List Event)
 request =
-    DataSource.Http.get
-        (Secrets.succeed
+    DataSource.Env.expect "GOOGLE_CALENDAR_API_KEY"
+        |> DataSource.andThen
             (\key ->
-                "https://www.googleapis.com/calendar/v3/calendars/dillonkearns.com_4ksg89crjfvchds60t16dpqu98@group.calendar.google.com/events"
-                    ++ "?orderBy=startTime"
-                    ++ "&singleEvents=true"
-                    --++ "&timeMin="
-                    --++ Url.percentEncode (String.replace ".000Z" "Z" (Iso8601.fromTime Pages.builtAt))
-                    --++ "&timeMax="
-                    --++ Url.percentEncode (String.replace ".000Z" "Z" (Iso8601.fromTime (Time.add Time.Month 1 Time.utc Pages.builtAt)))
-                    ++ "&key="
-                    ++ key
-             --"https://api.github.com/repos/dillonkearns/elm-pages"
+                DataSource.Http.get
+                    ("https://www.googleapis.com/calendar/v3/calendars/dillonkearns.com_4ksg89crjfvchds60t16dpqu98@group.calendar.google.com/events"
+                        ++ "?orderBy=startTime"
+                        ++ "&singleEvents=true"
+                        --++ "&timeMin="
+                        --++ Url.percentEncode (String.replace ".000Z" "Z" (Iso8601.fromTime Pages.builtAt))
+                        --++ "&timeMax="
+                        --++ Url.percentEncode (String.replace ".000Z" "Z" (Iso8601.fromTime (Time.add Time.Month 1 Time.utc Pages.builtAt)))
+                        ++ "&key="
+                        ++ key
+                     --"https://api.github.com/repos/dillonkearns/elm-pages"
+                    )
+                    decoder
             )
-            |> Secrets.with "GOOGLE_CALENDAR_API_KEY"
-        )
-        decoder
