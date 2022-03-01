@@ -42,7 +42,7 @@ Step 1) In this case, we want to represent a validation (we can only turn Ints g
 Steps 2 and 3) Let's create our Custom Type and Type Bouncer.
 
 ```elm
-module Kelvin exposing (Kelvin)
+module Kelvin exposing (Kelvin, fromKelvin)
 
 type Kelvin = Kelvin Int
 
