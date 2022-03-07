@@ -5,14 +5,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8b87212d-8c08-4ce4-9d98-052e4d698888" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/elm-pages" beforeDir="false" afterPath="$PROJECT_DIR$/elm-pages" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/elm.json" beforeDir="false" afterPath="$PROJECT_DIR$/elm.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Page/Courses/Course_/Section_.elm" beforeDir="false" afterPath="$PROJECT_DIR$/src/Page/Courses/Course_/Section_.elm" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Request.elm" beforeDir="false" afterPath="$PROJECT_DIR$/src/Request.elm" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Request/Fauna.elm" beforeDir="false" afterPath="$PROJECT_DIR$/src/Request/Fauna.elm" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Request/GoogleCalendar.elm" beforeDir="false" afterPath="$PROJECT_DIR$/src/Request/GoogleCalendar.elm" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/port-data-source.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Page/Courses.elm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Page/Courses/Course_/Section_.elm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Page/Index.elm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Page/Live.elm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Page/Notes.elm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Page/Page_.elm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Site.elm" beforeDir="false" afterPath="$PROJECT_DIR$/src/Site.elm" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/TailwindMarkdownRenderer3.elm" beforeDir="false" afterPath="$PROJECT_DIR$/src/TailwindMarkdownRenderer3.elm" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/View/Ellie.elm" beforeDir="false" afterPath="$PROJECT_DIR$/src/View/Ellie.elm" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

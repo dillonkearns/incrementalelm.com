@@ -1,4 +1,4 @@
-module Page.Courses.Course_.Section_ exposing (Data, Model, Msg, page)
+module Route.Courses.Course_.Section_ exposing (Data, Model, Msg, route)
 
 import Cloudinary
 import Css
@@ -50,8 +50,8 @@ type alias RouteParams =
     { course : String, section : String }
 
 
-page : Page RouteParams Data
-page =
+route : Page RouteParams Data
+route =
     Page.preRender
         { head = head
         , pages = pages

@@ -1,4 +1,4 @@
-module Page.Courses exposing (Data, Model, Msg, page)
+module Route.Courses exposing (Data, Model, Msg, route)
 
 import Cloudinary
 import CourseIcon
@@ -30,8 +30,8 @@ type alias RouteParams =
     {}
 
 
-page : Page RouteParams Data
-page =
+route : Page RouteParams Data
+route =
     Page.single
         { head = head
         , data = data

@@ -1,4 +1,4 @@
-module Page.Index exposing (Data, Model, Msg, RouteParams, page)
+module Route.Index exposing (Data, Model, Msg, RouteParams, route)
 
 import Css
 import DataSource exposing (DataSource)
@@ -73,7 +73,7 @@ mostViewedEnhanced =
                 items
                     |> List.map
                         (\( path, hits ) ->
-                            DataSource.map (\{ title, description } route -> { title = title, description = description, route = route })
+                            DataSource.map (\{ title, description } route_ -> { title = title, description = description, route = route_ })
                                 (("content/" ++ String.dropLeft 1 path ++ ".md")
                                     |> MarkdownCodec.titleAndDescription
                                 )
@@ -87,8 +87,8 @@ mostViewedEnhanced =
         |> DataSource.resolve
 
 
-page : Page RouteParams Data
-page =
+route : Page RouteParams Data
+route =
     Page.single
         { head = head
         , data = data

@@ -1,4 +1,4 @@
-module Page.Notes exposing (Data, Model, Msg, Note, RouteParams, page)
+module Route.Notes exposing (Data, Model, Msg, Note, RouteParams, route)
 
 import Browser.Navigation
 import Css
@@ -33,8 +33,8 @@ type alias RouteParams =
     {}
 
 
-page : PageWithState RouteParams Data Model Msg
-page =
+route : PageWithState RouteParams Data Model Msg
+route =
     Page.single
         { head = head
         , data = data

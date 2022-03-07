@@ -1,4 +1,4 @@
-module Page.Page_ exposing (BackRef, Data, Model, Msg, PageMetadata, RouteParams, page)
+module Route.Page_ exposing (BackRef, Data, Model, Msg, PageMetadata, RouteParams, route)
 
 import DataSource exposing (DataSource)
 import DataSource.File
@@ -71,8 +71,8 @@ type alias RouteParams =
     { page : String }
 
 
-page : PageWithState RouteParams Data Model Msg
-page =
+route : PageWithState RouteParams Data Model Msg
+route =
     Page.preRender
         { head = head
         , pages = pages
@@ -349,8 +349,8 @@ backReferencesView_ allBackRefs =
 
 
 blogCard : Route -> { a | title : String, description : String } -> Html msg
-blogCard route info =
-    route
+blogCard route_ info =
+    route_
         |> Link.htmlLink
             [ css
                 [ Tw.flex
