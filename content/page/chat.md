@@ -14,6 +14,8 @@ The Incremental Elm Community Chat is a place for Elm Open Source creators and c
 
 <discord></discord>
 
+[Join the Incremental Elm Community Chat discord server](https://discord.gg/sbUD8Q96az).
+
 ## Code of Conduct
 
 The Incremental Elm Community Discord has the following code of conduct.
