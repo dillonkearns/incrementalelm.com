@@ -1,13 +1,14 @@
 module Request.GoogleCalendar exposing (Event, googleAddToCalendarLink, request)
 
 --import Pages.StaticHttp as StaticHttp
+--import Extra.Json.Decode.Exploration as Decode
 
 import DataSource exposing (DataSource)
+import DataSource.Env
 import DataSource.Http
-import Extra.Json.Decode.Exploration as Decode
-import OptimizedDecoder as Decode exposing (Decoder)
-import OptimizedDecoder.Pipeline as Pipeline
-import Pages.Secrets as Secrets
+import Iso8601
+import Json.Decode as Decode exposing (Decoder)
+import Json.Decode.Pipeline as Pipeline
 import Rfc3339
 import Time
 import Time.Extra as Time
@@ -31,7 +32,7 @@ decoder =
         |> Pipeline.required "summary" Decode.string
         |> Pipeline.optional "description" Decode.string ""
         |> Pipeline.optional "location" (Decode.map Just Decode.string) Nothing
-        |> Pipeline.requiredAt [ "start", "dateTime" ] Decode.iso8601
+        |> Pipeline.requiredAt [ "start", "dateTime" ] Iso8601.decoder
         |> Pipeline.required "htmlLink" Decode.string
         |> Decode.list
         |> Decode.field "items"
@@ -71,20 +72,20 @@ googleAddToCalendarLink event =
 
 request : DataSource (List Event)
 request =
-    DataSource.Http.get
-        (Secrets.succeed
+    DataSource.Env.expect "GOOGLE_CALENDAR_API_KEY"
+        |> DataSource.andThen
             (\key ->
-                "https://www.googleapis.com/calendar/v3/calendars/dillonkearns.com_4ksg89crjfvchds60t16dpqu98@group.calendar.google.com/events"
-                    ++ "?orderBy=startTime"
-                    ++ "&singleEvents=true"
-                    --++ "&timeMin="
-                    --++ Url.percentEncode (String.replace ".000Z" "Z" (Iso8601.fromTime Pages.builtAt))
-                    --++ "&timeMax="
-                    --++ Url.percentEncode (String.replace ".000Z" "Z" (Iso8601.fromTime (Time.add Time.Month 1 Time.utc Pages.builtAt)))
-                    ++ "&key="
-                    ++ key
-             --"https://api.github.com/repos/dillonkearns/elm-pages"
+                DataSource.Http.get
+                    ("https://www.googleapis.com/calendar/v3/calendars/dillonkearns.com_4ksg89crjfvchds60t16dpqu98@group.calendar.google.com/events"
+                        ++ "?orderBy=startTime"
+                        ++ "&singleEvents=true"
+                        --++ "&timeMin="
+                        --++ Url.percentEncode (String.replace ".000Z" "Z" (Iso8601.fromTime Pages.builtAt))
+                        --++ "&timeMax="
+                        --++ Url.percentEncode (String.replace ".000Z" "Z" (Iso8601.fromTime (Time.add Time.Month 1 Time.utc Pages.builtAt)))
+                        ++ "&key="
+                        ++ key
+                     --"https://api.github.com/repos/dillonkearns/elm-pages"
+                    )
+                    decoder
             )
-            |> Secrets.with "GOOGLE_CALENDAR_API_KEY"
-        )
-        decoder

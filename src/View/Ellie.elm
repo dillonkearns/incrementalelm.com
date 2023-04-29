@@ -13,7 +13,6 @@ import Graphql.SelectionSet exposing (SelectionSet)
 import Html.Styled as Html exposing (Html)
 import Html.Styled.Attributes as Attr exposing (css)
 import Json.Encode as Encode
-import Secrets
 import Tailwind.Utilities as Tw
 
 
@@ -149,24 +148,22 @@ myTestSuite =
 
 staticGraphqlRequest : SelectionSet value RootMutation -> DataSource value
 staticGraphqlRequest selectionSet =
-    DataSource.Http.unoptimizedRequest
-        (Secrets.succeed
-            { url = "https://ellie-app.com/api"
-            , method = "POST"
-            , headers = []
-            , body =
-                DataSource.Http.jsonBody
-                    (Encode.object
-                        [ ( "query"
-                          , selectionSet
-                                |> Graphql.Document.serializeMutation
-                                |> Encode.string
-                          )
-                        ]
-                    )
-            }
-        )
+    DataSource.Http.request
+        { url = "https://ellie-app.com/api"
+        , method = "POST"
+        , headers = []
+        , body =
+            DataSource.Http.jsonBody
+                (Encode.object
+                    [ ( "query"
+                      , selectionSet
+                            |> Graphql.Document.serializeMutation
+                            |> Encode.string
+                      )
+                    ]
+                )
+        }
         (selectionSet
             |> Graphql.Document.decoder
-            |> DataSource.Http.expectUnoptimizedJson
+            |> DataSource.Http.expectJson
         )

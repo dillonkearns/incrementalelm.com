@@ -1,4 +1,4 @@
-module Page.Index exposing (Data, Model, Msg, RouteParams, page)
+module Route.Index exposing (Data, Model, Msg, RouteParams, route)
 
 import Css
 import DataSource exposing (DataSource)
@@ -11,6 +11,7 @@ import Head.Seo as Seo
 import Html.Styled as Html exposing (Html, div, text)
 import Html.Styled.Attributes exposing (css)
 import Link
+import Markdown.Block exposing (Block)
 import MarkdownCodec
 import Page exposing (Page, StaticPayload)
 import Pages.PageUrl exposing (PageUrl)
@@ -29,7 +30,7 @@ type alias Model =
 
 
 type alias Msg =
-    Never
+    ()
 
 
 type alias RouteParams =
@@ -72,7 +73,7 @@ mostViewedEnhanced =
                 items
                     |> List.map
                         (\( path, hits ) ->
-                            DataSource.map (\{ title, description } route -> { title = title, description = description, route = route })
+                            DataSource.map (\{ title, description } route_ -> { title = title, description = description, route = route_ })
                                 (("content/" ++ String.dropLeft 1 path ++ ".md")
                                     |> MarkdownCodec.titleAndDescription
                                 )
@@ -86,8 +87,8 @@ mostViewedEnhanced =
         |> DataSource.resolve
 
 
-page : Page RouteParams Data
-page =
+route : Page RouteParams Data
+route =
     Page.single
         { head = head
         , data = data
@@ -99,7 +100,7 @@ data : DataSource Data
 data =
     DataSource.map2 Data
         (MarkdownCodec.withoutFrontmatter TailwindMarkdownRenderer2.renderer "content/index.md"
-            |> DataSource.resolve
+         --|> DataSource.resolve
         )
         mostViewedEnhanced
 
@@ -125,7 +126,7 @@ head static =
 
 
 type alias Data =
-    { body : List (Html Msg)
+    { body : List Block
     , mostViewedPaths : List Note
     }
 
@@ -143,7 +144,8 @@ view maybeUrl sharedModel static =
                 [ css
                     []
                 ]
-                static.data.body
+                --static.data.body
+                []
             , Html.h2
                 [ css
                     [ Tw.text_4xl

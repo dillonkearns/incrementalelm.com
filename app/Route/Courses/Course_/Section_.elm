@@ -1,8 +1,9 @@
-module Page.Courses.Course_.Section_ exposing (Data, Model, Msg, page)
+module Route.Courses.Course_.Section_ exposing (Data, Model, Msg, route)
 
 import Cloudinary
 import Css
 import DataSource exposing (DataSource)
+import DataSource.Env
 import DataSource.File
 import DataSource.Glob as Glob
 import DataSource.Http
@@ -14,10 +15,12 @@ import Head.Seo as Seo
 import Html.Styled as Html exposing (Html)
 import Html.Styled.Attributes as Attr exposing (css)
 import Html.Styled.Keyed
+import Json.Decode as Decode
+import Json.Decode.Extra
 import Link
 import List.Extra
+import Markdown.Block exposing (Block)
 import MarkdownCodec
-import OptimizedDecoder as Decode exposing (Decoder)
 import Page exposing (Page, PageWithState, StaticPayload)
 import Pages.PageUrl exposing (PageUrl)
 import Pages.Url
@@ -28,7 +31,6 @@ import SanityApi.Object.Chapter
 import SanityApi.Object.MuxVideo
 import SanityApi.Object.MuxVideoAsset
 import SanityApi.Query
-import Secrets
 import Shared
 import Tailwind.Breakpoints as Bp
 import Tailwind.Utilities as Tw
@@ -41,16 +43,16 @@ type alias Model =
 
 
 type alias Msg =
-    Never
+    ()
 
 
 type alias RouteParams =
     { course : String, section : String }
 
 
-page : Page RouteParams Data
-page =
-    Page.prerender
+route : Page RouteParams Data
+route =
+    Page.preRender
         { head = head
         , pages = pages
         , data = data
@@ -60,23 +62,23 @@ page =
 
 muxIdToDuration : String -> DataSource Duration
 muxIdToDuration muxId =
-    DataSource.Http.request
-        (Secrets.succeed
+    DataSource.Env.expect "MUX_AUTH_TOKEN"
+        |> DataSource.andThen
             (\muxAuthToken ->
-                { url = "https://api.mux.com/video/v1/assets/" ++ muxId
-                , method = "GET"
-                , headers =
-                    [ ( "Authorization", "Basic " ++ muxAuthToken )
-                    ]
-                , body = DataSource.Http.emptyBody
-                }
+                DataSource.Http.request
+                    { url = "https://api.mux.com/video/v1/assets/" ++ muxId
+                    , method = "GET"
+                    , headers =
+                        [ ( "Authorization", "Basic " ++ muxAuthToken )
+                        ]
+                    , body = DataSource.Http.emptyBody
+                    }
+                    (Decode.at [ "data", "duration" ] Decode.float
+                        |> Decode.map Basics.floor
+                        |> Decode.map Duration.fromSeconds
+                        |> DataSource.Http.expectJson
+                    )
             )
-            |> Secrets.with "MUX_AUTH_TOKEN"
-        )
-        (Decode.at [ "data", "duration" ] Decode.float
-            |> Decode.map Basics.floor
-            |> Decode.map Duration.fromSeconds
-        )
 
 
 currentChapterMuxId : RouteParams -> DataSource { assetId : String, playbackId : String }
@@ -201,7 +203,7 @@ data routeParams =
                     --(DataSource.File.onlyFrontmatter (metadataDecoder routeParams) filePath)
                     (metadata filePath routeParams)
                     (MarkdownCodec.withoutFrontmatter TailwindMarkdownRenderer2.renderer filePath
-                        |> DataSource.resolve
+                     --|> DataSource.resolve
                     )
                     (courseChapters routeParams)
             )
@@ -238,7 +240,7 @@ metadata filePath routeParams =
                     )
                     (Decode.field "title" Decode.string)
                     (Decode.field "description" Decode.string)
-                    (Decode.optionalField "free" Decode.bool |> Decode.map (Maybe.withDefault False))
+                    (Json.Decode.Extra.optionalField "free" Decode.bool |> Decode.map (Maybe.withDefault False))
                 )
         )
         (routeParams
@@ -292,7 +294,7 @@ head static =
 
 type alias Data =
     { metadata : Metadata
-    , body : List (Html.Html Never)
+    , body : List Block
     , chapters : List Metadata
     }
 
@@ -358,7 +360,8 @@ view maybeUrl sharedModel static =
                     ]
                 ]
                 (subTitleView "Chapter Notes"
-                    :: static.data.body
+                    :: []
+                 --static.data.body
                 )
             ]
     }

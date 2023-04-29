@@ -1,4 +1,4 @@
-module TailwindMarkdownRenderer2 exposing (renderer)
+module TailwindMarkdownRenderer3 exposing (renderer)
 
 import Css
 import DataSource exposing (DataSource)

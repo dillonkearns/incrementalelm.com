@@ -1,4 +1,4 @@
-module Page.Live exposing (Data, Model, Msg, RouteParams, page)
+module Route.Live exposing (Data, Model, Msg, RouteParams, route)
 
 --import TemplateType exposing (TemplateType)
 
@@ -24,15 +24,15 @@ type alias Model =
 
 
 type alias Msg =
-    Never
+    ()
 
 
 type alias RouteParams =
     {}
 
 
-page : Page RouteParams Data
-page =
+route : Page RouteParams Data
+route =
     Page.single
         { head = head
         , data = data
@@ -46,6 +46,7 @@ data =
 
 
 
+--|> DataSource.distillBytes w2_encode_PageLive w2_decode_PageLive
 --head :
 --    StaticPayload Data RouteParams
 --    -> List Head.Tag

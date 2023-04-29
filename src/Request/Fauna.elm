@@ -7,7 +7,6 @@ import Graphql.Http
 import Graphql.Operation exposing (RootMutation, RootQuery)
 import Graphql.SelectionSet exposing (SelectionSet)
 import Json.Encode as Encode
-import Secrets
 
 
 query : (Result (Graphql.Http.Error decodesTo) decodesTo -> msg) -> SelectionSet decodesTo RootQuery -> Cmd msg
@@ -28,26 +27,24 @@ mutation toMsg selection =
 
 dataSource : SelectionSet value RootQuery -> DataSource value
 dataSource selectionSet =
-    DataSource.Http.unoptimizedRequest
-        (Secrets.succeed
-            { url = faunaUrl
-            , method = "POST"
-            , headers = [ ( "authorization", faunaAuthValue ) ]
-            , body =
-                DataSource.Http.jsonBody
-                    (Encode.object
-                        [ ( "query"
-                          , selectionSet
-                                |> Graphql.Document.serializeQuery
-                                |> Encode.string
-                          )
-                        ]
-                    )
-            }
-        )
+    DataSource.Http.request
+        { url = faunaUrl
+        , method = "POST"
+        , headers = [ ( "authorization", faunaAuthValue ) ]
+        , body =
+            DataSource.Http.jsonBody
+                (Encode.object
+                    [ ( "query"
+                      , selectionSet
+                            |> Graphql.Document.serializeQuery
+                            |> Encode.string
+                      )
+                    ]
+                )
+        }
         (selectionSet
             |> Graphql.Document.decoder
-            |> DataSource.Http.expectUnoptimizedJson
+            |> DataSource.Http.expectJson
         )
 
 
