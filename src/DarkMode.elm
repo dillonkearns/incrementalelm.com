@@ -10,10 +10,10 @@ import Tailwind.Utilities as Tw
 
 darkModeDecoder : Json.Decode.Decoder DarkMode
 darkModeDecoder =
-    Json.Decode.bool
+    Json.Decode.string
         |> Json.Decode.map
-            (\isDark ->
-                if isDark then
+            (\value ->
+                if value == "dark" then
                     Dark
 
                 else
