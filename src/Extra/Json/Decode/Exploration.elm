@@ -1,7 +1,7 @@
 module Extra.Json.Decode.Exploration exposing (iso8601)
 
 import Iso8601
-import OptimizedDecoder as Decode exposing (Decoder)
+import Json.Decode as Decode exposing (Decoder)
 import Parser
 import Time exposing (Posix)
 

@@ -1,14 +1,10 @@
-module TailwindMarkdownRenderer2 exposing (renderer)
+module TailwindMarkdownViewRenderer exposing (renderer)
 
-import BackendTask exposing (BackendTask)
-import BackendTask.Custom
 import Css
-import FatalError exposing (FatalError)
+import Dict exposing (Dict)
 import Html.Attributes as HtmlAttr
 import Html.Styled as Html exposing (Html)
 import Html.Styled.Attributes as Attr exposing (css)
-import Json.Decode as Decode
-import Json.Encode
 import Markdown.Block as Block
 import Markdown.Html
 import Markdown.Renderer
@@ -19,16 +15,16 @@ import View.Ellie
 import Widget.Signup
 
 
-renderer : Markdown.Renderer.Renderer (BackendTask FatalError (Html msg))
-renderer =
+renderer : Dict String Shiki.Highlighted -> Markdown.Renderer.Renderer (Html msg)
+renderer highlights =
     toRenderer
-        { renderHtml = Markdown.Html.oneOf htmlRenderers
-        , renderMarkdown = withDataSource reduceHtmlDataSource
+        { renderHtml = Markdown.Html.oneOf (htmlRenderers highlights)
+        , renderMarkdown = reduceMarkdown highlights
         }
 
 
-reduceHtmlDataSource : Block (Html msg) -> BackendTask FatalError (Html msg)
-reduceHtmlDataSource block =
+reduceMarkdown : Dict String Shiki.Highlighted -> Block (Html msg) -> Html msg
+reduceMarkdown highlights block =
     case block of
         Paragraph children ->
             Html.p
@@ -39,10 +35,9 @@ reduceHtmlDataSource block =
                     ]
                 ]
                 children
-                |> BackendTask.succeed
 
         Heading { rawText, level, children } ->
-            (case level of
+            case level of
                 Block.H1 ->
                     Html.h1
                         [ css
@@ -123,25 +118,37 @@ reduceHtmlDataSource block =
                             ]
                         ]
                         children
-            )
-                |> BackendTask.succeed
 
         CodeBlock info ->
-            shikiDataSource info
+            case Dict.get info.body highlights of
+                Just highlighted ->
+                    Shiki.view
+                        [ HtmlAttr.style "font-family" "IBM Plex Mono"
+                        , HtmlAttr.style "padding" "0.75rem 1.25rem"
+                        , HtmlAttr.style "font-size" "13px"
+                        , HtmlAttr.style "border-radius" "0.5rem"
+                        , HtmlAttr.style "margin-top" "2rem"
+                        , HtmlAttr.style "margin-bottom" "2rem"
+                        ]
+                        highlighted
+                        |> Html.fromUnstyled
+
+                Nothing ->
+                    Html.pre
+                        [ css [ Tw.rounded_lg, Tw.p_4 ] ]
+                        [ Html.code [] [ Html.text info.body ] ]
 
         Text string ->
-            BackendTask.succeed (Html.text string)
+            Html.text string
 
         Emphasis content ->
-            BackendTask.succeed (Html.em [ css [ Tw.italic ] ] content)
+            Html.em [ css [ Tw.italic ] ] content
 
         Strong content ->
             Html.strong [ css [ Tw.font_bold ] ] content
-                |> BackendTask.succeed
 
         BlockQuote children ->
             Html.blockquote [] children
-                |> BackendTask.succeed
 
         CodeSpan content ->
             Html.code
@@ -152,11 +159,9 @@ reduceHtmlDataSource block =
                     ]
                 ]
                 [ Html.text content ]
-                |> BackendTask.succeed
 
         Strikethrough children ->
             Html.del [] children
-                |> BackendTask.succeed
 
         Link { destination, title, children } ->
             Html.a
@@ -175,17 +180,9 @@ reduceHtmlDataSource block =
                     |> Maybe.map List.singleton
                     |> Maybe.withDefault children
                 )
-                |> BackendTask.succeed
 
         Image image ->
-            case image.title of
-                Just _ ->
-                    Html.img [ Attr.src image.src, Attr.alt image.alt ] []
-                        |> BackendTask.succeed
-
-                Nothing ->
-                    Html.img [ Attr.src image.src, Attr.alt image.alt ] []
-                        |> BackendTask.succeed
+            Html.img [ Attr.src image.src, Attr.alt image.alt ] []
 
         UnorderedList { items } ->
             Html.ul
@@ -232,7 +229,6 @@ reduceHtmlDataSource block =
                                         (checkbox :: children)
                         )
                 )
-                |> BackendTask.succeed
 
         OrderedList { startingIndex, items } ->
             Html.ol
@@ -263,31 +259,24 @@ reduceHtmlDataSource block =
                                 itemBlocks
                         )
                 )
-                |> BackendTask.succeed
 
         ThematicBreak ->
             Html.hr [] []
-                |> BackendTask.succeed
 
         HardLineBreak ->
             Html.br [] []
-                |> BackendTask.succeed
 
         Table children ->
             Html.table [] children
-                |> BackendTask.succeed
 
         TableHeader children ->
             Html.thead [] children
-                |> BackendTask.succeed
 
         TableBody children ->
             Html.tbody [] children
-                |> BackendTask.succeed
 
         TableRow children ->
             Html.tr [] children
-                |> BackendTask.succeed
 
         TableCell maybeAlignment children ->
             let
@@ -310,7 +299,6 @@ reduceHtmlDataSource block =
                         |> Maybe.withDefault []
             in
             Html.td attrs children
-                |> BackendTask.succeed
 
         TableHeaderCell maybeAlignment children ->
             let
@@ -333,7 +321,6 @@ reduceHtmlDataSource block =
                         |> Maybe.withDefault []
             in
             Html.th attrs children
-                |> BackendTask.succeed
 
 
 rawTextToId : String -> String
@@ -344,36 +331,17 @@ rawTextToId rawText =
         |> String.toLower
 
 
-shikiDataSource : { body : String, language : Maybe String } -> BackendTask FatalError (Html msg)
-shikiDataSource info =
-    BackendTask.Custom.run "highlight"
-        (Json.Encode.object
-            [ ( "body", Json.Encode.string info.body )
-            , ( "language"
-              , info.language
-                    |> Maybe.map Json.Encode.string
-                    |> Maybe.withDefault Json.Encode.null
-              )
-            ]
-        )
-        (Shiki.decoder
-            |> Decode.map
-                (Shiki.view
-                    [ HtmlAttr.style "font-family" "IBM Plex Mono"
-                    , HtmlAttr.style "padding" "0.75rem 1.25rem"
-                    , HtmlAttr.style "font-size" "13px"
-                    , HtmlAttr.style "border-radius" "0.5rem"
-                    , HtmlAttr.style "margin-top" "2rem"
-                    , HtmlAttr.style "margin-bottom" "2rem"
-                    ]
-                )
-            |> Decode.map Html.fromUnstyled
-        )
-        |> BackendTask.allowFatal
+slugToAbsoluteUrl : String -> String
+slugToAbsoluteUrl slugOrUrl =
+    if slugOrUrl |> String.contains "/" then
+        slugOrUrl
+
+    else
+        "/" ++ slugOrUrl
 
 
-htmlRenderers : List (Markdown.Html.Renderer (List (BackendTask FatalError (Html msg)) -> BackendTask FatalError (Html msg)))
-htmlRenderers =
+htmlRenderers : Dict String Shiki.Highlighted -> List (Markdown.Html.Renderer (List (Html msg) -> Html msg))
+htmlRenderers highlights =
     [ Markdown.Html.tag "discord"
         (\_ ->
             Html.div
@@ -393,40 +361,29 @@ htmlRenderers =
                     ]
                     []
                 ]
-                |> BackendTask.succeed
         )
     , Markdown.Html.tag "signup"
         (\buttonText formId children ->
-            children
-                |> BackendTask.combine
-                |> BackendTask.andThen
-                    (\resolvedChildren -> BackendTask.succeed (Widget.Signup.view2 buttonText formId resolvedChildren))
+            Widget.Signup.view2 buttonText formId children
         )
         |> Markdown.Html.withAttribute "buttontext"
         |> Markdown.Html.withAttribute "formid"
     , Markdown.Html.tag "button"
         (\url children ->
-            children
-                |> BackendTask.combine
-                |> BackendTask.map
-                    (\resolvedChildren ->
-                        Html.a
-                            [ Attr.href url
-                            ]
-                            resolvedChildren
-                    )
+            Html.a
+                [ Attr.href url
+                ]
+                children
         )
         |> Markdown.Html.withAttribute "url"
     , Markdown.Html.tag "vimeo"
         (\id _ ->
             vimeoView id
-                |> BackendTask.succeed
         )
         |> Markdown.Html.withAttribute "id"
     , Markdown.Html.tag "ellie"
         (\id _ ->
             View.Ellie.view id
-                |> BackendTask.succeed
         )
         |> Markdown.Html.withAttribute "id"
     , Markdown.Html.tag "resource"
@@ -440,7 +397,6 @@ htmlRenderers =
                 , Attr.href url
                 ]
                 [ Html.text name ]
-                |> BackendTask.succeed
         )
         |> Markdown.Html.withAttribute "title"
         |> Markdown.Html.withAttribute "icon"
@@ -453,57 +409,42 @@ htmlRenderers =
                     []
                 ]
                 [ Html.text "Contact" ]
-                |> BackendTask.succeed
         )
     , Markdown.Html.tag "aside"
         (\title children ->
-            children
-                |> BackendTask.combine
-                |> BackendTask.map
-                    (\resolvedChildren ->
-                        Html.details
+            Html.details
+                [ css
+                    [ Tw.border_2
+                    , Tw.rounded_lg
+                    , Tw.p_4
+                    , Tw.border_foregroundLight
+                    , Tw.mb_8
+                    ]
+                ]
+                (Html.summary
+                    [ css
+                        [ Tw.cursor_pointer
+                        , Tw.text_xl
+                        , Tw.underline
+                        , Tw.font_bold
+                        , Tw.tracking_tight
+                        , [ Css.qt "Raleway" ] |> Css.fontFamilies
+                        , Tw.text_foregroundStrong
+                        ]
+                    ]
+                    [ Html.text title
+                    ]
+                    :: [ Html.div
                             [ css
-                                [ Tw.border_2
-                                , Tw.rounded_lg
-                                , Tw.p_4
-                                , Tw.border_foregroundLight
-                                , Tw.mb_8
+                                [ Tw.p_4
                                 ]
                             ]
-                            (Html.summary
-                                [ css
-                                    [ Tw.cursor_pointer
-                                    , Tw.text_xl
-                                    , Tw.underline
-                                    , Tw.font_bold
-                                    , Tw.tracking_tight
-                                    , [ Css.qt "Raleway" ] |> Css.fontFamilies
-                                    , Tw.text_foregroundStrong
-                                    ]
-                                ]
-                                [ Html.text title
-                                ]
-                                :: [ Html.div
-                                        [ css
-                                            [ Tw.p_4
-                                            ]
-                                        ]
-                                        resolvedChildren
-                                   ]
-                            )
-                    )
+                            children
+                       ]
+                )
         )
         |> Markdown.Html.withAttribute "title"
     ]
-
-
-slugToAbsoluteUrl : String -> String
-slugToAbsoluteUrl slugOrUrl =
-    if slugOrUrl |> String.contains "/" then
-        slugOrUrl
-
-    else
-        "/" ++ slugOrUrl
 
 
 vimeoView : String -> Html msg

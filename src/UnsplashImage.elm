@@ -1,7 +1,7 @@
 module UnsplashImage exposing (UnsplashImage, decoder, default, fromId, image, imagePath, rawUrl)
 
 import Element
-import OptimizedDecoder as Decode exposing (Decoder)
+import Json.Decode as Decode exposing (Decoder)
 import Pages.Url
 import Url.Builder exposing (string)
 

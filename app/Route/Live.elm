@@ -1,17 +1,15 @@
-module Page.Live exposing (Data, Model, Msg, RouteParams, page)
+module Route.Live exposing (ActionData, Data, Model, Msg, RouteParams, route)
 
---import TemplateType exposing (TemplateType)
-
-import DataSource exposing (DataSource)
+import BackendTask exposing (BackendTask)
+import FatalError exposing (FatalError)
 import Head
 import Head.Seo as Seo
 import Html.Styled as Html exposing (Html)
-import Page exposing (Page, StaticPayload)
-import Pages
-import Pages.PageUrl exposing (PageUrl)
+import PagesMsg exposing (PagesMsg)
 import Pages.Url
 import Request
 import Request.Events exposing (LiveStream)
+import RouteBuilder exposing (App, StatelessRoute)
 import Scalar exposing (DateTime, Id)
 import Shared
 import Time
@@ -24,46 +22,29 @@ type alias Model =
 
 
 type alias Msg =
-    Never
+    ()
 
 
 type alias RouteParams =
     {}
 
 
-page : Page RouteParams Data
-page =
-    Page.single
+type alias ActionData =
+    {}
+
+
+route : StatelessRoute RouteParams Data ActionData
+route =
+    RouteBuilder.single
         { head = head
         , data = data
         }
-        |> Page.buildNoState { view = view }
+        |> RouteBuilder.buildNoState { view = view }
 
 
-data : DataSource Data
+data : BackendTask FatalError Data
 data =
     Request.staticGraphqlRequest Request.Events.selection
-
-
-
---head :
---    StaticPayload Data RouteParams
---    -> List Head.Tag
---head static =
---    Seo.summary
---        { canonicalUrlOverride = Nothing
---        , siteName = "elm-pages"
---        , image =
---            { url = Pages.Url.external "TODO"
---            , alt = "elm-pages logo"
---            , dimensions = Nothing
---            , mimeType = Nothing
---            }
---        , description = "TODO"
---        , locale = Nothing
---        , title = "TODO title" -- metadata.title -- TODO
---        }
---        |> Seo.website
 
 
 type alias Data =
@@ -71,39 +52,36 @@ type alias Data =
 
 
 view :
-    Maybe PageUrl
+    App Data ActionData RouteParams
     -> Shared.Model
-    -> StaticPayload Data RouteParams
-    -> View Msg
-view maybeUrl sharedModel static =
+    -> View (PagesMsg Msg)
+view app sharedModel =
     let
         now : Maybe Time.Posix
         now =
-            -- TODO
-            Just Pages.builtAt
+            sharedModel.now
 
         isOnAir : TwitchButton.IsOnAir
         isOnAir =
-            -- TODO
-            TwitchButton.notOnAir
+            sharedModel.isOnAir
     in
     { title = "Incremental Elm Live Streams"
     , body =
         View.Tailwind
-            [ eventsView now isOnAir static.data
+            [ eventsView now isOnAir app.data
             ]
     }
 
 
 head :
-    StaticPayload Data RouteParams
+    App Data ActionData RouteParams
     -> List Head.Tag
-head static =
+head app =
     Seo.summaryLarge
         { canonicalUrlOverride = Nothing
         , siteName = "elm-pages"
         , image =
-            { url = Pages.Url.external "" -- metadata.image |> Maybe.withDefault Pages.images.icon
+            { url = Pages.Url.external ""
             , alt = "Incremental Elm live streams"
             , dimensions = Nothing
             , mimeType = Nothing

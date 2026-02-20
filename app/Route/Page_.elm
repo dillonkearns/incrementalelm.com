@@ -1,35 +1,34 @@
-module Page.Page_ exposing (BackRef, Data, Model, Msg, PageMetadata, RouteParams, page)
+module Route.Page_ exposing (ActionData, BackRef, Data, Model, Msg, PageMetadata, RouteParams, route)
 
-import DataSource exposing (DataSource)
-import DataSource.File
-import DataSource.Glob as Glob
+{- Fauna DB view tracking has been removed since Fauna GraphQL is dead. -}
+
+import BackendTask exposing (BackendTask)
+import BackendTask.File
+import BackendTask.Glob as Glob
 import Date exposing (Date)
-import Fauna.Mutation
-import Fauna.Object.Views
-import Graphql.Http
-import Graphql.Operation exposing (RootMutation)
-import Graphql.SelectionSet exposing (SelectionSet)
+import FatalError exposing (FatalError)
 import Head
 import Head.Seo as Seo
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (css)
+import Dict exposing (Dict)
+import Json.Decode as Decode exposing (Decoder)
 import Link
 import Markdown.Block as Block exposing (Block)
 import Markdown.Parser
 import MarkdownCodec
-import OptimizedDecoder as Decode exposing (Decoder)
-import Page exposing (Page, PageWithState, StaticPayload)
-import Pages.PageUrl exposing (PageUrl)
+import PagesMsg exposing (PagesMsg)
 import Pages.Url
-import Path
 import Regex
 import Route exposing (Route)
-import Serialize
+import RouteBuilder exposing (App, StatelessRoute)
 import Shared
+import Shiki
 import String.Extra
 import Tailwind.Breakpoints as Bp
+import TailwindMarkdownViewRenderer
 import Tailwind.Utilities as Tw
-import TailwindMarkdownRenderer2
+
 import Time
 import Timestamps exposing (Timestamps)
 import UnsplashImage exposing (UnsplashImage)
@@ -37,83 +36,41 @@ import View exposing (View)
 import Widget.Signup
 
 
-hitsForPath : String -> SelectionSet Int RootMutation
-hitsForPath path =
-    Fauna.Mutation.viewPath
-        { path = path
-        }
-        Fauna.Object.Views.hits
-
-
-getViewCount : RouteParams -> Cmd Msg
-getViewCount routeParams =
-    let
-        selection =
-            hitsForPath (Route.toPath (Route.Page_ routeParams) |> Path.toAbsolute)
-    in
-    selection
-        |> Graphql.Http.mutationRequest "https://graphql.us.fauna.com/graphql"
-        |> Graphql.Http.withHeader "authorization" "Bearer fnAEWjYIVjAASOb7tn1P4EkEY4hUXnKyqw6kenuA"
-        |> Graphql.Http.send GotViewCount
-
-
 type alias Model =
-    { views : Maybe Int
-    }
+    {}
 
 
-type Msg
-    = GotViewCount (Result (Graphql.Http.Error Int) Int)
+type alias Msg =
+    ()
 
 
 type alias RouteParams =
     { page : String }
 
 
-page : PageWithState RouteParams Data Model Msg
-page =
-    Page.prerender
+type alias ActionData =
+    {}
+
+
+route : StatelessRoute RouteParams Data ActionData
+route =
+    RouteBuilder.preRender
         { head = head
         , pages = pages
         , data = data
         }
-        |> Page.buildWithLocalState
-            { view = view
-            , update =
-                \_ _ _ _ msg model ->
-                    case msg of
-                        GotViewCount (Ok viewCount) ->
-                            ( { model | views = Just viewCount }, Cmd.none )
-
-                        GotViewCount _ ->
-                            ( { model | views = Nothing }, Cmd.none )
-            , subscriptions = \_ _ _ _ _ -> Sub.none
-            , init =
-                \_ _ static ->
-                    let
-                        isNote : Bool
-                        isNote =
-                            static.data.noteData /= Nothing
-                    in
-                    ( { views = Nothing }
-                    , if isNote then
-                        getViewCount static.routeParams
-
-                      else
-                        Cmd.none
-                    )
-            }
+        |> RouteBuilder.buildNoState { view = view }
 
 
-pages : DataSource (List RouteParams)
+pages : BackendTask FatalError (List RouteParams)
 pages =
     Glob.succeed RouteParams
         |> Glob.match (Glob.literal "content/")
         |> Glob.match (Glob.oneOf ( ( "page/", () ), [ ( "", () ) ] ))
         |> Glob.capture Glob.wildcard
         |> Glob.match (Glob.literal ".md")
-        |> Glob.toDataSource
-        |> DataSource.map
+        |> Glob.toBackendTask
+        |> BackendTask.map
             (List.filter
                 (\value -> value.page /= "index")
             )
@@ -124,7 +81,7 @@ type PageKind
     | NotePage
 
 
-findFilePath : String -> DataSource ( String, PageKind )
+findFilePath : String -> BackendTask FatalError ( String, PageKind )
 findFilePath slug =
     Glob.succeed Tuple.pair
         |> Glob.captureFilePath
@@ -133,39 +90,50 @@ findFilePath slug =
         |> Glob.match (Glob.literal slug)
         |> Glob.match (Glob.literal ".md")
         |> Glob.expectUniqueMatch
+        |> BackendTask.allowFatal
 
 
-data : RouteParams -> DataSource Data
+data : RouteParams -> BackendTask FatalError Data
 data routeParams =
     findFilePath routeParams.page
-        |> DataSource.andThen
+        |> BackendTask.andThen
             (\( filePath, pageKind ) ->
                 case pageKind of
                     NotePage ->
-                        DataSource.map3
-                            Data
-                            (DataSource.File.onlyFrontmatter decoder filePath)
-                            (MarkdownCodec.withoutFrontmatter TailwindMarkdownRenderer2.renderer filePath
-                                |> DataSource.resolve
+                        BackendTask.map2
+                            (\( meta, bh, info ) noteRecord ->
+                                { metadata = meta
+                                , body = bh.body
+                                , highlights = bh.highlights
+                                , info = info
+                                , noteData = Just noteRecord
+                                }
                             )
-                            (MarkdownCodec.titleAndDescription filePath)
-                            |> DataSource.andMap
-                                (DataSource.map3 NoteRecord
-                                    (backReferences routeParams.page)
-                                    (forwardRefs routeParams.page)
-                                    (Timestamps.data filePath)
-                                    |> DataSource.map Just
-                                )
+                            (BackendTask.map3
+                                (\a b c -> ( a, b, c ))
+                                (BackendTask.File.onlyFrontmatter decoder filePath |> BackendTask.allowFatal)
+                                (MarkdownCodec.bodyAndHighlights filePath)
+                                (MarkdownCodec.titleAndDescription filePath)
+                            )
+                            (BackendTask.map3 NoteRecord
+                                (backReferences routeParams.page)
+                                (forwardRefs routeParams.page)
+                                (Timestamps.data filePath)
+                            )
 
                     Page ->
-                        DataSource.map3
-                            Data
-                            (DataSource.File.onlyFrontmatter decoder filePath)
-                            (MarkdownCodec.withoutFrontmatter TailwindMarkdownRenderer2.renderer filePath
-                                |> DataSource.resolve
+                        BackendTask.map3
+                            (\meta bh info ->
+                                { metadata = meta
+                                , body = bh.body
+                                , highlights = bh.highlights
+                                , info = info
+                                , noteData = Nothing
+                                }
                             )
+                            (BackendTask.File.onlyFrontmatter decoder filePath |> BackendTask.allowFatal)
+                            (MarkdownCodec.bodyAndHighlights filePath)
                             (MarkdownCodec.titleAndDescription filePath)
-                            |> DataSource.andMap (DataSource.succeed Nothing)
             )
 
 
@@ -177,16 +145,10 @@ type alias Metadata =
 
 type alias Data =
     { metadata : Metadata
-    , body : List (Html Msg)
+    , body : String
+    , highlights : Dict String Shiki.Highlighted
     , info : { title : String, description : String }
     , noteData : Maybe NoteRecord
-    }
-
-
-type alias CommonData =
-    { metadata : PageMetadata
-    , body : List (Html Msg)
-    , title : String
     }
 
 
@@ -203,18 +165,20 @@ formatDate =
 
 
 view :
-    Maybe PageUrl
+    App Data ActionData RouteParams
     -> Shared.Model
-    -> Model
-    -> StaticPayload Data RouteParams
-    -> View Msg
-view maybeUrl sharedModel model static =
+    -> View (PagesMsg Msg)
+view app sharedModel =
     let
         isNote : Bool
         isNote =
-            static.data.noteData /= Nothing
+            app.data.noteData /= Nothing
+
+        renderedBody =
+            MarkdownCodec.renderMarkdown (TailwindMarkdownViewRenderer.renderer app.data.highlights) app.data.body
+                |> Result.withDefault [ text "Error rendering markdown" ]
     in
-    { title = static.data.info.title
+    { title = app.data.info.title
     , body =
         View.Tailwind
             ([ [ div
@@ -224,18 +188,13 @@ view maybeUrl sharedModel model static =
                     ]
                     [ div
                         []
-                        [ viewIf static.data.noteData
+                        [ viewIf app.data.noteData
                             (\note ->
-                                case static.data.metadata.publishedAt of
+                                case app.data.metadata.publishedAt of
                                     Just publishDate ->
                                         text <| "Published " ++ formatDate publishDate
 
                                     Nothing ->
-                                        let
-                                            asDate : Date
-                                            asDate =
-                                                note.timestamps.created |> Date.fromPosix Time.utc
-                                        in
                                         text <|
                                             "Created "
                                                 ++ (note.timestamps.created
@@ -245,11 +204,11 @@ view maybeUrl sharedModel model static =
                             )
                         ]
                     , div []
-                        [ viewIf static.data.noteData
+                        [ viewIf app.data.noteData
                             (\note ->
                                 let
                                     publishedOrCreatedDate =
-                                        static.data.metadata.publishedAt
+                                        app.data.metadata.publishedAt
                                             |> Maybe.withDefault
                                                 (note.timestamps.created
                                                     |> Date.fromPosix Time.utc
@@ -267,20 +226,11 @@ view maybeUrl sharedModel model static =
                                                )
                             )
                         ]
-                    , div []
-                        [ model.views
-                            |> Maybe.map
-                                (\views ->
-                                    String.fromInt views ++ " views"
-                                )
-                            |> Maybe.map text
-                            |> Maybe.withDefault (br [] [])
-                        ]
                     ]
                ]
-             , static.data.body
+             , renderedBody
              , [ div [ css [ Tw.my_8 ] ] [ Widget.Signup.view ] ]
-             , [ viewIf static.data.noteData
+             , [ viewIf app.data.noteData
                     (\note ->
                         div
                             [ css
@@ -345,8 +295,8 @@ backReferencesView_ allBackRefs =
 
 
 blogCard : Route -> { a | title : String, description : String } -> Html msg
-blogCard route info =
-    route
+blogCard cardRoute info =
+    cardRoute
         |> Link.htmlLink
             [ css
                 [ Tw.flex
@@ -403,24 +353,24 @@ blogCard route info =
 
 
 head :
-    StaticPayload Data RouteParams
+    App Data ActionData RouteParams
     -> List Head.Tag
-head static =
+head app =
     Seo.summaryLarge
         { canonicalUrlOverride = Nothing
         , siteName = "Incremental Elm"
         , image =
             { url =
-                static.data.metadata.cover
+                app.data.metadata.cover
                     |> Maybe.withDefault UnsplashImage.default
                     |> UnsplashImage.rawUrl
                     |> Pages.Url.external
-            , alt = static.data.info.title
+            , alt = app.data.info.title
             , dimensions = Nothing
             , mimeType = Nothing
             }
-        , description = static.data.info.description
-        , title = static.data.info.title
+        , description = app.data.info.description
+        , title = app.data.info.title
         , locale = Nothing
         }
         |> Seo.website
@@ -435,19 +385,21 @@ type alias PageMetadata =
 decoder : Decoder Metadata
 decoder =
     Decode.map2 Metadata
-        (Decode.optionalField "cover" UnsplashImage.decoder)
-        (Decode.optionalField
-            "publishAt"
-            (Decode.string
-                |> Decode.andThen
-                    (\isoString ->
-                        case Date.fromIsoString isoString of
-                            Ok date ->
-                                Decode.succeed date
+        (Decode.maybe (Decode.field "cover" UnsplashImage.decoder))
+        (Decode.maybe
+            (Decode.field
+                "publishAt"
+                (Decode.string
+                    |> Decode.andThen
+                        (\isoString ->
+                            case Date.fromIsoString isoString of
+                                Ok date ->
+                                    Decode.succeed date
 
-                            Err error ->
-                                Decode.fail error
-                    )
+                                Err error ->
+                                    Decode.fail error
+                        )
+                )
             )
         )
 
@@ -466,7 +418,7 @@ type alias BackRef =
     }
 
 
-notes : DataSource (List { topic : String, filePath : String })
+notes : BackendTask FatalError (List { topic : String, filePath : String })
 notes =
     Glob.succeed
         (\topic filePath -> { topic = topic, filePath = filePath })
@@ -474,20 +426,21 @@ notes =
         |> Glob.capture Glob.wildcard
         |> Glob.match (Glob.literal ".md")
         |> Glob.captureFilePath
-        |> Glob.toDataSource
-        |> DataSource.map (List.filter (\value -> value.topic /= "index"))
+        |> Glob.toBackendTask
+        |> BackendTask.map (List.filter (\value -> value.topic /= "index"))
 
 
-backReferences : String -> DataSource (List BackRef)
+backReferences : String -> BackendTask FatalError (List BackRef)
 backReferences slug =
     notes
-        |> DataSource.andThen
+        |> BackendTask.andThen
             (\allNotes ->
                 allNotes
                     |> List.map
                         (\note ->
-                            DataSource.File.bodyWithoutFrontmatter ("content/" ++ note.topic ++ ".md")
-                                |> DataSource.andThen
+                            BackendTask.File.bodyWithoutFrontmatter ("content/" ++ note.topic ++ ".md")
+                                |> BackendTask.allowFatal
+                                |> BackendTask.andThen
                                     (\rawMarkdown ->
                                         rawMarkdown
                                             |> Markdown.Parser.parse
@@ -495,28 +448,28 @@ backReferences slug =
                                                 (\blocks ->
                                                     if hasReferenceTo slug blocks then
                                                         MarkdownCodec.titleAndDescription note.filePath
-                                                            |> DataSource.map
+                                                            |> BackendTask.map
                                                                 (\{ title, description } -> BackRef note.topic title description)
                                                             |> Just
 
                                                     else
                                                         Nothing
                                                 )
-                                            |> Result.mapError (\_ -> "Markdown error")
-                                            |> DataSource.fromResult
+                                            |> Result.withDefault Nothing
+                                            |> Maybe.map (BackendTask.map Just)
+                                            |> Maybe.withDefault (BackendTask.succeed Nothing)
                                     )
                         )
-                    |> DataSource.combine
-                    |> DataSource.map (List.filterMap identity)
-                    |> DataSource.resolve
+                    |> BackendTask.combine
+                    |> BackendTask.map (List.filterMap identity)
             )
-        |> DataSource.distillSerializeCodec "backrefs" (Serialize.list serializeBackRef)
 
 
-forwardRefs : String -> DataSource (List BackRef)
+forwardRefs : String -> BackendTask FatalError (List BackRef)
 forwardRefs slug =
-    DataSource.File.bodyWithoutFrontmatter ("content/" ++ slug ++ ".md")
-        |> DataSource.andThen
+    BackendTask.File.bodyWithoutFrontmatter ("content/" ++ slug ++ ".md")
+        |> BackendTask.allowFatal
+        |> BackendTask.andThen
             (\rawMarkdown ->
                 rawMarkdown
                     |> Markdown.Parser.parse
@@ -525,20 +478,9 @@ forwardRefs slug =
                             blocks
                                 |> forwardReferences
                         )
-                    |> Result.mapError (\_ -> "Markdown error")
-                    |> DataSource.fromResult
-                    |> DataSource.resolve
+                    |> Result.withDefault []
+                    |> BackendTask.combine
             )
-        |> DataSource.distillSerializeCodec "forwardRefs" (Serialize.list serializeBackRef)
-
-
-serializeBackRef : Serialize.Codec e BackRef
-serializeBackRef =
-    Serialize.record BackRef
-        |> Serialize.field .slug Serialize.string
-        |> Serialize.field .title Serialize.string
-        |> Serialize.field .description Serialize.string
-        |> Serialize.finishRecord
 
 
 hasReferenceTo : String -> List Block -> Bool
@@ -560,7 +502,7 @@ hasReferenceTo slug blocks =
             False
 
 
-forwardReferences : List Block -> List (DataSource BackRef)
+forwardReferences : List Block -> List (BackendTask FatalError BackRef)
 forwardReferences blocks =
     blocks
         |> Block.inlineFoldl
@@ -568,16 +510,16 @@ forwardReferences blocks =
                 case inline of
                     Block.Link rawSlug _ _ ->
                         let
-                            slug =
+                            cleanSlug =
                                 rawSlug
                                     |> Regex.replace (Regex.fromString "^/" |> Maybe.withDefault Regex.never) (\_ -> "")
                                     |> Regex.replace (Regex.fromString "/$" |> Maybe.withDefault Regex.never) (\_ -> "")
                                     |> Regex.replace (Regex.fromString "#.*" |> Maybe.withDefault Regex.never) (\_ -> "")
                         in
-                        if isWikiLink slug then
-                            (MarkdownCodec.titleAndDescription ("content/" ++ slug ++ ".md")
-                                |> DataSource.map
-                                    (\{ title, description } -> BackRef slug title description)
+                        if isWikiLink cleanSlug then
+                            (MarkdownCodec.titleAndDescription ("content/" ++ cleanSlug ++ ".md")
+                                |> BackendTask.map
+                                    (\{ title, description } -> BackRef cleanSlug title description)
                             )
                                 :: links
 

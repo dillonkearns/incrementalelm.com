@@ -1,58 +1,57 @@
 module Api exposing (routes)
 
 import ApiRoute
-import DataSource exposing (DataSource)
-import DataSource.File
-import DataSource.Glob as Glob
+import BackendTask exposing (BackendTask)
+import BackendTask.Custom
+import BackendTask.File
+import BackendTask.Glob as Glob
 import Date exposing (Date)
+import FatalError exposing (FatalError)
+import Time
 import Html exposing (Html)
 import Html.String
+import Json.Encode
 import IcalFeed
+import Json.Decode as Decode
 import MarkdownCodec
 import MarkdownHtmlRenderer
-import OptimizedDecoder as Decode
-import Pages
-import Path
+import Route exposing (Route)
 import Request
 import Request.Events
-import Route exposing (Route)
 import Rss
 import Site
-import Time
+import UrlPath
 import UnsplashImage exposing (UnsplashImage)
-import UpcomingEvent
 
 
 routes :
-    DataSource (List Route)
-    -> (Html Never -> String)
+    BackendTask FatalError (List Route)
+    -> (Maybe { indent : Int, newLines : Bool } -> Html Never -> String)
     -> List (ApiRoute.ApiRoute ApiRoute.Response)
 routes getStaticRoutes htmlToString =
     [ ApiRoute.succeed
-        (tipsFeedItems htmlToString
-            |> DataSource.map
+        (tipsFeedItems (\html -> htmlToString Nothing html)
+            |> BackendTask.map
                 (\feedItems ->
                     Rss.generate
                         { title = "Incremental Elm Tips"
                         , description = "Incremental Elm Consulting"
                         , url = Site.canonicalUrl ++ "/tips"
-                        , lastBuildTime = Pages.builtAt
+                        , lastBuildTime = feedItems.builtAt
                         , generator = Just "elm-pages"
-                        , items = feedItems
+                        , items = feedItems.items
                         , siteUrl = Site.canonicalUrl
                         }
                 )
-            |> DataSource.map (\body -> { body = body })
         )
         |> ApiRoute.literal "tips"
         |> ApiRoute.slash
         |> ApiRoute.literal "feed.xml"
         |> ApiRoute.single
     , ApiRoute.succeed
-        (DataSource.map
+        (BackendTask.map
             (\events ->
-                { body = IcalFeed.feed events
-                }
+                IcalFeed.feed events
             )
             (Request.staticGraphqlRequest Request.Events.selection)
         )
@@ -61,22 +60,34 @@ routes getStaticRoutes htmlToString =
     ]
 
 
-tipsFeedItems : (Html Never -> String) -> DataSource (List Rss.Item)
+tipsFeedItems : (Html Never -> String) -> BackendTask FatalError { items : List Rss.Item, builtAt : Time.Posix }
 tipsFeedItems htmlToString =
+    BackendTask.map2
+        (\items builtAt -> { items = items, builtAt = builtAt })
+        (tipsFeedItemsInner htmlToString)
+        (BackendTask.Custom.run "now"
+            Json.Encode.null
+            (Decode.int |> Decode.map Time.millisToPosix)
+            |> BackendTask.allowFatal
+        )
+
+
+tipsFeedItemsInner : (Html Never -> String) -> BackendTask FatalError (List Rss.Item)
+tipsFeedItemsInner htmlToString =
     Glob.succeed
         (\slug filePath ->
             tipDecoder filePath
-                |> DataSource.andThen
+                |> BackendTask.andThen
                     (\maybeMetadata ->
                         case maybeMetadata of
                             Nothing ->
-                                DataSource.succeed Nothing
+                                BackendTask.succeed Nothing
 
                             Just metadata ->
                                 filePath
                                     |> MarkdownCodec.withoutFrontmatter
                                         MarkdownHtmlRenderer.renderer
-                                    |> DataSource.map
+                                    |> BackendTask.map
                                         (\body ->
                                             Just
                                                 { body =
@@ -93,9 +104,9 @@ tipsFeedItems htmlToString =
         |> Glob.capture Glob.wildcard
         |> Glob.match (Glob.literal ".md")
         |> Glob.captureFilePath
-        |> Glob.toDataSource
-        |> DataSource.resolve
-        |> DataSource.map
+        |> Glob.toBackendTask
+        |> BackendTask.andThen BackendTask.combine
+        |> BackendTask.map
             (\coreItems ->
                 coreItems
                     |> List.filterMap identity
@@ -111,35 +122,38 @@ type alias TipMetadata =
     }
 
 
-tipDecoder : String -> DataSource (Maybe TipMetadata)
+tipDecoder : String -> BackendTask FatalError (Maybe TipMetadata)
 tipDecoder filePath =
     filePath
-        |> DataSource.File.onlyFrontmatter
+        |> BackendTask.File.onlyFrontmatter
             (Decode.map2 Tuple.pair
-                (Decode.optionalField
-                    "publishAt"
-                    (Decode.string
-                        |> Decode.andThen
-                            (\isoString ->
-                                case Date.fromIsoString isoString of
-                                    Ok date ->
-                                        Decode.succeed date
+                (Decode.maybe
+                    (Decode.field
+                        "publishAt"
+                        (Decode.string
+                            |> Decode.andThen
+                                (\isoString ->
+                                    case Date.fromIsoString isoString of
+                                        Ok date ->
+                                            Decode.succeed date
 
-                                    Err error ->
-                                        Decode.fail error
-                            )
+                                        Err error ->
+                                            Decode.fail error
+                                )
+                        )
                     )
                 )
-                (Decode.optionalField "cover" UnsplashImage.decoder
+                (Decode.maybe (Decode.field "cover" UnsplashImage.decoder)
                     |> Decode.map (Maybe.withDefault UnsplashImage.default)
                 )
             )
-        |> DataSource.andThen
+        |> BackendTask.allowFatal
+        |> BackendTask.andThen
             (\( maybePublishAt, cover ) ->
                 case maybePublishAt of
                     Just publishAt ->
                         MarkdownCodec.titleAndDescription filePath
-                            |> DataSource.map
+                            |> BackendTask.map
                                 (\{ title, description } ->
                                     Just
                                         { title = title
@@ -150,7 +164,7 @@ tipDecoder filePath =
                                 )
 
                     Nothing ->
-                        DataSource.succeed Nothing
+                        BackendTask.succeed Nothing
             )
 
 
@@ -163,7 +177,7 @@ tipToFeedItem :
 tipToFeedItem { metadata, body, slug } =
     { title = metadata.title
     , description = metadata.description
-    , url = Route.Page_ { page = slug } |> Route.toPath |> Path.toAbsolute
+    , url = Route.Page_ { page = slug } |> Route.toPath |> UrlPath.toAbsolute
     , categories = []
     , author = "Dillon Kearns"
     , pubDate = Rss.Date metadata.publishedAt
@@ -171,25 +185,3 @@ tipToFeedItem { metadata, body, slug } =
     , contentEncoded = Just body
     , enclosure = Nothing
     }
-
-
-
---, events
---    |> List.sortBy
---        (\event ->
---            Time.posixToMillis event.startsAt
---        )
---    |> List.reverse
---    |> List.head
---    |> Maybe.map
---        (\upcoming ->
---            UpcomingEvent.json upcoming
---        )
---    |> (\json ->
---            case json of
---                Just value ->
---                    Ok value
---
---                Nothing ->
---                    Err "No upcoming events found."
---       )

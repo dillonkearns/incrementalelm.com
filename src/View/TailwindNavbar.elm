@@ -5,21 +5,19 @@ import DarkMode exposing (DarkMode)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes as Attr exposing (css)
 import Link
-import Path exposing (Path)
 import Route exposing (Route)
 import Tailwind.Breakpoints as Bp
 import Tailwind.Utilities as Tw
+import UrlPath exposing (UrlPath)
 import User exposing (User)
 
 
-view : Maybe User -> DarkMode -> msg -> msg -> Path -> Html msg
+view : Maybe User -> DarkMode -> msg -> msg -> UrlPath -> Html msg
 view maybeUser darkMode toggleDarkMode toggleMobileMenuMsg currentPath =
     nav
         [ css
             [ Tw.flex
             , Tw.items_center
-
-            --, Tw.bg_white
             , Tw.z_20
             , Tw.fixed
             , Tw.top_0
@@ -33,11 +31,6 @@ view maybeUser darkMode toggleDarkMode toggleMobileMenuMsg currentPath =
             , Tw.bg_background
             , Tw.border_gray_900
             , Tw.text_foreground
-
-            --, Bp.dark
-            --    [ Tw.bg_dark
-            --    , Tw.border_gray_900
-            --    ]
             ]
         ]
         [ div
@@ -69,8 +62,6 @@ view maybeUser darkMode toggleDarkMode toggleMobileMenuMsg currentPath =
                         , Tw.neg_ml_2
                         , Tw.font_extrabold
                         , Tw.inline
-
-                        -- TODO try with https://package.elm-lang.org/packages/rtfeldman/elm-css/latest/Css#pseudoClass
                         , Bp.md
                             [ Tw.inline
                             ]
@@ -107,7 +98,7 @@ userBadge user =
         []
 
 
-headerLink : Path -> Route -> String -> Html msg
+headerLink : UrlPath -> Route -> String -> Html msg
 headerLink currentPagePath linkTo name =
     linkTo
         |> Link.htmlLink
@@ -118,12 +109,12 @@ headerLink currentPagePath linkTo name =
             (linkInner currentPagePath linkTo name)
 
 
-linkInner : Path -> Route -> String -> Html msg
+linkInner : UrlPath -> Route -> String -> Html msg
 linkInner currentPagePath linkTo name =
     let
         isCurrentPath : Bool
         isCurrentPath =
-            (Path.toSegments currentPagePath |> List.head) == (linkTo |> Route.toPath |> Path.toSegments |> List.head)
+            List.head currentPagePath == List.head (Route.toPath linkTo)
     in
     span
         [ css

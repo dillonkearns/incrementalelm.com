@@ -1,9 +1,10 @@
-port module Shared exposing (Data, Model, Msg(..), template)
+module Shared exposing (Data, Model, Msg(..), SharedMsg(..), template)
 
-import Browser.Navigation
+import BackendTask exposing (BackendTask)
 import Css
 import DarkMode exposing (DarkMode)
-import DataSource
+import Effect exposing (Effect)
+import FatalError exposing (FatalError)
 import Html exposing (Html)
 import Html.Styled exposing (div)
 import Html.Styled.Attributes as Attr exposing (css)
@@ -11,7 +12,6 @@ import Http
 import Json.Decode exposing (Decoder)
 import Pages.Flags
 import Pages.PageUrl exposing (PageUrl)
-import Path exposing (Path)
 import Route exposing (Route)
 import SharedTemplate exposing (SharedTemplate)
 import Tailwind.Breakpoints as Bp
@@ -19,12 +19,10 @@ import Tailwind.Utilities as Tw
 import Task
 import Time
 import TwitchButton
+import UrlPath exposing (UrlPath)
 import User exposing (User)
 import View exposing (View)
 import View.TailwindNavbar
-
-
-port toggleDarkMode : () -> Cmd msg
 
 
 template : SharedTemplate Msg Model Data msg
@@ -51,21 +49,24 @@ type alias Model =
     }
 
 
+type SharedMsg
+    = NoOp
+
+
 init :
-    Maybe Browser.Navigation.Key
-    -> Pages.Flags.Flags
+    Pages.Flags.Flags
     ->
         Maybe
             { path :
-                { path : Path
+                { path : UrlPath
                 , query : Maybe String
                 , fragment : Maybe String
                 }
             , metadata : route
             , pageUrl : Maybe PageUrl
             }
-    -> ( Model, Cmd Msg )
-init navigationKey flags maybePagePath =
+    -> ( Model, Effect Msg )
+init flags maybePagePath =
     ( { showMenu = False
       , isOnAir = TwitchButton.notOnAir
       , now = Nothing
@@ -79,62 +80,41 @@ init navigationKey flags maybePagePath =
                     DarkMode.Light
       , user = Nothing
       }
-      --|> updateStyles
-    , Cmd.batch
-        [ --Dom.getViewport
-          --    |> Task.perform InitialViewport
-          TwitchButton.request |> Cmd.map OnAirUpdated
-        , Time.now |> Task.perform GotCurrentTime
+    , Effect.batch
+        [ Effect.fromCmd (TwitchButton.request |> Cmd.map OnAirUpdated)
+        , Effect.fromCmd (Time.now |> Task.perform GotCurrentTime)
         ]
     )
 
 
-
---updateStyles : Model -> Model
---updateStyles model =
---    { model
---        | styles =
---            model.styles
---                |> List.indexedMap makeTranslated
---    }
---update : Msg -> Model -> ( Model, Cmd Msg )
---update msg model =
---    case msg of
---        OnPageChange _ ->
---            ( { model | showMobileMenu = False }, Cmd.none )
---
---subscriptions : Path -> Model -> Sub Msg
---subscriptions _ _ =
---    Sub.none
-
-
-data : DataSource.DataSource Data
+data : BackendTask FatalError Data
 data =
-    DataSource.succeed ()
+    BackendTask.succeed ()
 
 
 view :
     Data
     ->
-        { path : Path
+        { path : UrlPath
         , route : Maybe Route
         }
     -> Model
     -> (Msg -> msg)
     -> View msg
-    -> { body : Html msg, title : String }
+    -> { body : List (Html msg), title : String }
 view sharedData page model toMsg pageView =
     case pageView.body of
         View.ElmUi _ ->
             { title = pageView.title
             , body =
-                Html.div [] []
+                [ Html.div [] []
+                ]
             }
 
         View.Tailwind nodes ->
             { title = pageView.title
             , body =
-                div
+                [ div
                     [ css
                         [ Tw.min_h_screen
                         , Tw.w_full
@@ -175,6 +155,7 @@ view sharedData page model toMsg pageView =
                         ]
                     ]
                     |> Html.Styled.toUnstyled
+                ]
             }
 
 
@@ -185,47 +166,50 @@ type Msg
     | GotCurrentTime Time.Posix
     | GotUser (Maybe User)
     | OnPageChange
-        { path : Path
+        { path : UrlPath
         , query : Maybe String
         , fragment : Maybe String
         }
+    | SharedMsg SharedMsg
 
 
-update : Msg -> Model -> ( Model, Cmd Msg )
+update : Msg -> Model -> ( Model, Effect Msg )
 update msg model =
     case msg of
         ToggleDarkMode ->
-            ( model, toggleDarkMode () )
+            ( model, Effect.ToggleDarkMode )
 
         ToggleMobileMenu ->
-            ( { model | showMenu = not model.showMenu }, Cmd.none )
+            ( { model | showMenu = not model.showMenu }, Effect.none )
 
         OnPageChange _ ->
             ( { model
                 | showMenu = False
               }
-            , Cmd.none
+            , Effect.none
             )
 
         OnAirUpdated result ->
             case result of
                 Ok isOnAir ->
-                    ( { model | isOnAir = isOnAir }, Cmd.none )
+                    ( { model | isOnAir = isOnAir }, Effect.none )
 
                 Err _ ->
-                    ( model, Cmd.none )
+                    ( model, Effect.none )
 
         GotCurrentTime posix ->
-            ( { model | now = Just posix }, Cmd.none )
+            ( { model | now = Just posix }, Effect.none )
 
         GotUser maybeUser ->
-            ( { model | user = maybeUser }, Cmd.none )
+            ( { model | user = maybeUser }, Effect.none )
+
+        SharedMsg _ ->
+            ( model, Effect.none )
 
 
-subscriptions : Path -> Model -> Sub Msg
+subscriptions : UrlPath -> Model -> Sub Msg
 subscriptions _ model =
     Sub.batch
-        [ --, Time.every (oneSecond * 60) GotCurrentTime
-          User.sub
+        [ User.sub
             |> Sub.map GotUser
         ]

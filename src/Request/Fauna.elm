@@ -1,13 +1,13 @@
 module Request.Fauna exposing (dataSource, mutation, query)
 
-import DataSource exposing (DataSource)
-import DataSource.Http
+import BackendTask exposing (BackendTask)
+import BackendTask.Http
+import FatalError exposing (FatalError)
 import Graphql.Document
 import Graphql.Http
 import Graphql.Operation exposing (RootMutation, RootQuery)
 import Graphql.SelectionSet exposing (SelectionSet)
 import Json.Encode as Encode
-import Secrets
 
 
 query : (Result (Graphql.Http.Error decodesTo) decodesTo -> msg) -> SelectionSet decodesTo RootQuery -> Cmd msg
@@ -26,29 +26,30 @@ mutation toMsg selection =
         |> Graphql.Http.send toMsg
 
 
-dataSource : SelectionSet value RootQuery -> DataSource value
+dataSource : SelectionSet value RootQuery -> BackendTask FatalError value
 dataSource selectionSet =
-    DataSource.Http.unoptimizedRequest
-        (Secrets.succeed
-            { url = faunaUrl
-            , method = "POST"
-            , headers = [ ( "authorization", faunaAuthValue ) ]
-            , body =
-                DataSource.Http.jsonBody
-                    (Encode.object
-                        [ ( "query"
-                          , selectionSet
-                                |> Graphql.Document.serializeQuery
-                                |> Encode.string
-                          )
-                        ]
-                    )
-            }
-        )
+    BackendTask.Http.request
+        { url = faunaUrl
+        , method = "POST"
+        , headers = [ ( "authorization", faunaAuthValue ) ]
+        , body =
+            BackendTask.Http.jsonBody
+                (Encode.object
+                    [ ( "query"
+                      , selectionSet
+                            |> Graphql.Document.serializeQuery
+                            |> Encode.string
+                      )
+                    ]
+                )
+        , retries = Nothing
+        , timeoutInMs = Nothing
+        }
         (selectionSet
             |> Graphql.Document.decoder
-            |> DataSource.Http.expectUnoptimizedJson
+            |> BackendTask.Http.expectJson
         )
+        |> BackendTask.allowFatal
 
 
 faunaUrl =

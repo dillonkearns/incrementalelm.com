@@ -1,12 +1,14 @@
-module Page.Courses.Course_.Section_ exposing (Data, Model, Msg, page)
+module Route.Courses.Course_.Section_ exposing (ActionData, Data, Model, Msg, route)
 
+import BackendTask exposing (BackendTask)
+import BackendTask.Env
+import BackendTask.File
+import BackendTask.Glob as Glob
+import BackendTask.Http
 import Cloudinary
 import Css
-import DataSource exposing (DataSource)
-import DataSource.File
-import DataSource.Glob as Glob
-import DataSource.Http
 import Duration exposing (Duration)
+import FatalError exposing (FatalError)
 import Graphql.OptionalArgument as OptionalArgument
 import Graphql.SelectionSet as SelectionSet
 import Head
@@ -14,25 +16,27 @@ import Head.Seo as Seo
 import Html.Styled as Html exposing (Html)
 import Html.Styled.Attributes as Attr exposing (css)
 import Html.Styled.Keyed
+import Json.Decode as Decode exposing (Decoder)
 import Link
 import List.Extra
+import Dict exposing (Dict)
 import MarkdownCodec
-import OptimizedDecoder as Decode exposing (Decoder)
-import Page exposing (Page, PageWithState, StaticPayload)
-import Pages.PageUrl exposing (PageUrl)
+import PagesMsg exposing (PagesMsg)
 import Pages.Url
 import Request
 import Route
+import RouteBuilder exposing (App, StatelessRoute)
 import SanityApi.InputObject as InputObject
 import SanityApi.Object.Chapter
 import SanityApi.Object.MuxVideo
 import SanityApi.Object.MuxVideoAsset
 import SanityApi.Query
-import Secrets
 import Shared
+import Shiki
 import Tailwind.Breakpoints as Bp
 import Tailwind.Utilities as Tw
-import TailwindMarkdownRenderer2
+import TailwindMarkdownViewRenderer
+import UrlPath exposing (UrlPath)
 import View exposing (View)
 
 
@@ -41,45 +45,52 @@ type alias Model =
 
 
 type alias Msg =
-    Never
+    ()
 
 
 type alias RouteParams =
     { course : String, section : String }
 
 
-page : Page RouteParams Data
-page =
-    Page.prerender
+type alias ActionData =
+    {}
+
+
+route : StatelessRoute RouteParams Data ActionData
+route =
+    RouteBuilder.preRender
         { head = head
         , pages = pages
         , data = data
         }
-        |> Page.buildNoState { view = view }
+        |> RouteBuilder.buildNoState { view = view }
 
 
-muxIdToDuration : String -> DataSource Duration
+muxIdToDuration : String -> BackendTask FatalError Duration
 muxIdToDuration muxId =
-    DataSource.Http.request
-        (Secrets.succeed
-            (\muxAuthToken ->
-                { url = "https://api.mux.com/video/v1/assets/" ++ muxId
-                , method = "GET"
-                , headers =
-                    [ ( "Authorization", "Basic " ++ muxAuthToken )
-                    ]
-                , body = DataSource.Http.emptyBody
-                }
+    BackendTask.Env.expect "MUX_AUTH_TOKEN"
+        |> BackendTask.allowFatal
+        |> BackendTask.andThen
+            (\authToken ->
+                BackendTask.Http.getWithOptions
+                    { url = "https://api.mux.com/video/v1/assets/" ++ muxId
+                    , expect =
+                        BackendTask.Http.expectJson
+                            (Decode.at [ "data", "duration" ] Decode.float
+                                |> Decode.map Basics.floor
+                                |> Decode.map Duration.fromSeconds
+                            )
+                    , headers = [ ( "Authorization", "Basic " ++ authToken ) ]
+                    , cacheStrategy = Nothing
+                    , retries = Nothing
+                    , timeoutInMs = Nothing
+                    , cachePath = Nothing
+                    }
+                    |> BackendTask.allowFatal
             )
-            |> Secrets.with "MUX_AUTH_TOKEN"
-        )
-        (Decode.at [ "data", "duration" ] Decode.float
-            |> Decode.map Basics.floor
-            |> Decode.map Duration.fromSeconds
-        )
 
 
-currentChapterMuxId : RouteParams -> DataSource { assetId : String, playbackId : String }
+currentChapterMuxId : RouteParams -> BackendTask FatalError { assetId : String, playbackId : String }
 currentChapterMuxId routeParams =
     SanityApi.Query.allChapter
         (\optionals ->
@@ -132,27 +143,29 @@ currentChapterMuxId routeParams =
         |> Request.staticGraphqlRequest
 
 
-courseChapters : RouteParams -> DataSource (List Metadata)
+courseChapters : RouteParams -> BackendTask FatalError (List Metadata)
 courseChapters current =
     pages
-        |> DataSource.map
-            (List.filterMap
-                (\chapter ->
-                    if chapter.course == current.course then
-                        (findFilePath chapter
-                            |> DataSource.andThen
-                                (\filePath -> metadata filePath chapter)
+        |> BackendTask.andThen
+            (\allPages ->
+                allPages
+                    |> List.filterMap
+                        (\chapter ->
+                            if chapter.course == current.course then
+                                (findFilePath chapter
+                                    |> BackendTask.andThen
+                                        (\filePath -> metadata filePath chapter)
+                                )
+                                    |> Just
+
+                            else
+                                Nothing
                         )
-                            |> Just
-
-                    else
-                        Nothing
-                )
+                    |> BackendTask.combine
             )
-        |> DataSource.resolve
 
 
-pages : DataSource (List RouteParams)
+pages : BackendTask FatalError (List RouteParams)
 pages =
     Glob.succeed
         (\course order section ->
@@ -168,8 +181,8 @@ pages =
         |> Glob.match (Glob.literal "-")
         |> Glob.capture Glob.wildcard
         |> Glob.match (Glob.literal ".md")
-        |> Glob.toDataSource
-        |> DataSource.map
+        |> Glob.toBackendTask
+        |> BackendTask.map
             (\sections ->
                 sections
                     |> List.sortBy .order
@@ -192,32 +205,28 @@ type alias Metadata =
     }
 
 
-data : RouteParams -> DataSource Data
+data : RouteParams -> BackendTask FatalError Data
 data routeParams =
     findFilePath routeParams
-        |> DataSource.andThen
+        |> BackendTask.andThen
             (\filePath ->
-                DataSource.map3 Data
-                    --(DataSource.File.onlyFrontmatter (metadataDecoder routeParams) filePath)
-                    (metadata filePath routeParams)
-                    (MarkdownCodec.withoutFrontmatter TailwindMarkdownRenderer2.renderer filePath
-                        |> DataSource.resolve
+                BackendTask.map3
+                    (\meta bh chapters ->
+                        { metadata = meta
+                        , body = bh.body
+                        , highlights = bh.highlights
+                        , chapters = chapters
+                        }
                     )
+                    (metadata filePath routeParams)
+                    (MarkdownCodec.bodyAndHighlights filePath)
                     (courseChapters routeParams)
             )
 
 
-
---metadataDecoder : RouteParams -> Decoder Metadata
---metadataDecoder routeParams =
---    Decode.map2 (Metadata routeParams)
---        (Decode.field "playbackId" Decode.string)
---        (Decode.field "title" Decode.string)
-
-
-metadata : String -> RouteParams -> DataSource Metadata
+metadata : String -> RouteParams -> BackendTask FatalError Metadata
 metadata filePath routeParams =
-    DataSource.map2
+    BackendTask.map2
         (\frontmatter other ->
             { routeParams = routeParams
             , title = frontmatter.title
@@ -228,7 +237,7 @@ metadata filePath routeParams =
             }
         )
         (filePath
-            |> DataSource.File.onlyFrontmatter
+            |> BackendTask.File.onlyFrontmatter
                 (Decode.map3
                     (\title description free ->
                         { title = title
@@ -238,25 +247,26 @@ metadata filePath routeParams =
                     )
                     (Decode.field "title" Decode.string)
                     (Decode.field "description" Decode.string)
-                    (Decode.optionalField "free" Decode.bool |> Decode.map (Maybe.withDefault False))
+                    (Decode.maybe (Decode.field "free" Decode.bool) |> Decode.map (Maybe.withDefault False))
                 )
+            |> BackendTask.allowFatal
         )
         (routeParams
             |> currentChapterMuxId
-            |> DataSource.andThen
+            |> BackendTask.andThen
                 (\info ->
-                    DataSource.succeed
-                        (\duration ->
-                            { playbackId = info.playbackId
-                            , duration = duration
-                            }
-                        )
-                        |> DataSource.andMap (muxIdToDuration info.assetId)
+                    muxIdToDuration info.assetId
+                        |> BackendTask.map
+                            (\duration ->
+                                { playbackId = info.playbackId
+                                , duration = duration
+                                }
+                            )
                 )
         )
 
 
-findFilePath : RouteParams -> DataSource String
+findFilePath : RouteParams -> BackendTask FatalError String
 findFilePath routeParams =
     Glob.succeed identity
         |> Glob.captureFilePath
@@ -268,12 +278,13 @@ findFilePath routeParams =
         |> Glob.match (Glob.literal routeParams.section)
         |> Glob.match (Glob.literal ".md")
         |> Glob.expectUniqueMatch
+        |> BackendTask.allowFatal
 
 
 head :
-    StaticPayload Data RouteParams
+    App Data ActionData RouteParams
     -> List Head.Tag
-head static =
+head app =
     Seo.summary
         { canonicalUrlOverride = Nothing
         , siteName = "elm-pages"
@@ -283,16 +294,17 @@ head static =
             , dimensions = Nothing
             , mimeType = Nothing
             }
-        , description = static.data.metadata.description
+        , description = app.data.metadata.description
         , locale = Nothing
-        , title = "elm-ts-interop course - " ++ static.data.metadata.title
+        , title = "elm-ts-interop course - " ++ app.data.metadata.title
         }
         |> Seo.website
 
 
 type alias Data =
     { metadata : Metadata
-    , body : List (Html.Html Never)
+    , body : String
+    , highlights : Dict String Shiki.Highlighted
     , chapters : List Metadata
     }
 
@@ -305,11 +317,10 @@ goProView =
 
 
 view :
-    Maybe PageUrl
+    App Data ActionData RouteParams
     -> Shared.Model
-    -> StaticPayload Data RouteParams
-    -> View Msg
-view maybeUrl sharedModel static =
+    -> View (PagesMsg Msg)
+view app sharedModel =
     let
         loggedInSubscriber =
             sharedModel.user |> Maybe.map .isPro |> Maybe.withDefault False
@@ -317,8 +328,8 @@ view maybeUrl sharedModel static =
     { title = ""
     , body =
         View.Tailwind
-            [ titleView static.data.metadata.title
-            , if static.data.metadata.free || loggedInSubscriber then
+            [ titleView app.data.metadata.title
+            , if app.data.metadata.free || loggedInSubscriber then
                 Html.Styled.Keyed.node "div"
                     [ css
                         [ Tw.flex
@@ -326,16 +337,16 @@ view maybeUrl sharedModel static =
                         , Tw.flex_grow
                         ]
                     ]
-                    [ ( "my-player-" ++ static.routeParams.section
+                    [ ( "my-player-" ++ app.routeParams.section
                       , Html.Styled.Keyed.node "hls-video"
-                            [ Attr.id <| "my-player-" ++ static.routeParams.section
-                            , Attr.src <| "/.netlify/functions/sign_playback_id?playbackId=" ++ static.data.metadata.playbackId
+                            [ Attr.id <| "my-player-" ++ app.routeParams.section
+                            , Attr.src <| "/.netlify/functions/sign_playback_id?playbackId=" ++ app.data.metadata.playbackId
                             , Attr.controls True
                             , Attr.preload "auto"
-                            , Attr.attribute "lesson-id" (static.routeParams.course ++ "/" ++ static.routeParams.section)
-                            , Attr.attribute "title" static.data.metadata.title
-                            , Attr.attribute "duration" (Duration.inMillis static.data.metadata.duration |> String.fromInt)
-                            , Attr.attribute "series" static.routeParams.course
+                            , Attr.attribute "lesson-id" (app.routeParams.course ++ "/" ++ app.routeParams.section)
+                            , Attr.attribute "title" app.data.metadata.title
+                            , Attr.attribute "duration" (Duration.inMillis app.data.metadata.duration |> String.fromInt)
+                            , Attr.attribute "series" app.routeParams.course
                             , css
                                 [ Bp.lg [ size 800 ]
                                 , Bp.md [ size 600 ]
@@ -350,15 +361,17 @@ view maybeUrl sharedModel static =
 
               else
                 goProView
-            , nextPreviousView static.data.metadata static.data.chapters
-            , chaptersView static.data.metadata static.data.chapters
+            , nextPreviousView app.data.metadata app.data.chapters
+            , chaptersView app.data.metadata app.data.chapters
             , Html.div
                 [ css
                     [ Tw.mt_12
                     ]
                 ]
                 (subTitleView "Chapter Notes"
-                    :: static.data.body
+                    :: (MarkdownCodec.renderMarkdown (TailwindMarkdownViewRenderer.renderer app.data.highlights) app.data.body
+                            |> Result.withDefault [ Html.text "Error rendering markdown" ]
+                       )
                 )
             ]
     }

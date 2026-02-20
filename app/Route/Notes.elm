@@ -1,9 +1,10 @@
-module Page.Notes exposing (Data, Model, Msg, Note, RouteParams, page)
+module Route.Notes exposing (ActionData, Data, Model, Msg, Note, RouteParams, route)
 
-import Browser.Navigation
+import BackendTask exposing (BackendTask)
+import BackendTask.Glob as Glob
 import Css
-import DataSource exposing (DataSource)
-import DataSource.Glob as Glob
+import Effect exposing (Effect)
+import FatalError exposing (FatalError)
 import Head
 import Head.Seo as Seo
 import Html.Styled exposing (..)
@@ -11,13 +12,14 @@ import Html.Styled.Attributes as Attr exposing (css)
 import Html.Styled.Events
 import Link
 import MarkdownCodec
-import Page exposing (PageWithState, StaticPayload)
-import Pages.PageUrl exposing (PageUrl)
+import PagesMsg exposing (PagesMsg)
 import Pages.Url
 import Route exposing (Route)
+import RouteBuilder exposing (App, StatefulRoute)
 import Shared
 import Tailwind.Breakpoints as Bp
 import Tailwind.Utilities as Tw
+import UrlPath exposing (UrlPath)
 import View exposing (View)
 
 
@@ -33,39 +35,41 @@ type alias RouteParams =
     {}
 
 
-page : PageWithState RouteParams Data Model Msg
-page =
-    Page.single
+type alias ActionData =
+    {}
+
+
+route : StatefulRoute RouteParams Data ActionData Model Msg
+route =
+    RouteBuilder.single
         { head = head
         , data = data
         }
-        |> Page.buildWithLocalState
+        |> RouteBuilder.buildWithLocalState
             { view = view
             , update = update
-            , subscriptions = \_ _ _ _ _ -> Sub.none
+            , subscriptions = \_ _ _ _ -> Sub.none
             , init =
-                \_ _ _ ->
-                    ( "", Cmd.none )
+                \_ _ ->
+                    ( "", Effect.none )
             }
 
 
 update :
-    PageUrl
-    -> Maybe Browser.Navigation.Key
+    App Data ActionData RouteParams
     -> Shared.Model
-    -> StaticPayload Data RouteParams
     -> Msg
     -> Model
-    -> ( Model, Cmd Msg )
-update _ _ _ _ msg model =
+    -> ( Model, Effect Msg )
+update _ _ msg model =
     case msg of
         OnSearchInput newInput ->
-            ( newInput, Cmd.none )
+            ( newInput, Effect.none )
 
 
-data : DataSource Data
+data : BackendTask FatalError Data
 data =
-    DataSource.map Data
+    BackendTask.map Data
         nonEmptyNotes
 
 
@@ -75,39 +79,33 @@ type alias Data =
 
 
 view :
-    Maybe PageUrl
+    App Data ActionData RouteParams
     -> Shared.Model
     -> Model
-    -> StaticPayload Data RouteParams
-    -> View Msg
-view maybeUrl sharedModel model static =
+    -> View (PagesMsg Msg)
+view app sharedModel model =
     { title = "Incremental Elm Wiki"
     , body =
         View.Tailwind
-            [ div
-                [ css
-                    [ Tw.font_bold
-                    , Tw.text_xl
-                    , Tw.text_center
-                    , Css.fontFamilies [ "Raleway" ]
+            (List.map (Html.Styled.map PagesMsg.fromMsg)
+                [ div
+                    [ css
+                        [ Tw.font_bold
+                        , Tw.text_xl
+                        , Tw.text_center
+                        , Css.fontFamilies [ "Raleway" ]
+                        ]
                     ]
+                    [ text "Incremental Elm Notes" ]
+                , searchInput model
+                , notesList model app.data.notes
                 ]
-                [ text "Incremental Elm Notes" ]
-
-            --, input
-            --    [ Attr.type_ "text"
-            --    , Attr.value model
-            --    , Html.Styled.Events.onInput OnSearchInput
-            --    ]
-            --    []
-            , searchInput model
-            , -- Html.Styled.Lazy.lazy2
-              notesList model static.data.notes
-            ]
+            )
     }
 
 
-notesList searchQuery notes =
+notesList : String -> List Note -> Html Msg
+notesList searchQuery noteList =
     ul
         [ css
             [ Tw.list_disc
@@ -115,7 +113,7 @@ notesList searchQuery notes =
             , Tw.mt_5
             ]
         ]
-        (notes
+        (noteList
             |> List.filterMap
                 (\note ->
                     if noteMatches searchQuery note then
@@ -156,40 +154,47 @@ type alias Note =
     }
 
 
-nonEmptyNotes : DataSource (List Note)
+nonEmptyNotes : BackendTask FatalError (List Note)
 nonEmptyNotes =
     Glob.succeed
         (\filePath topic ->
             MarkdownCodec.isPlaceholder filePath
-                |> DataSource.map
-                    (Maybe.map
-                        (\() ->
-                            MarkdownCodec.noteTitle filePath
-                                |> DataSource.map
-                                    (\title ->
-                                        { route = Route.Page_ { page = topic }
-                                        , slug = topic
-                                        , title = title
-                                        }
-                                    )
-                        )
+                |> BackendTask.andThen
+                    (\maybeNotPlaceholder ->
+                        case maybeNotPlaceholder of
+                            Nothing ->
+                                BackendTask.succeed Nothing
+
+                            Just () ->
+                                MarkdownCodec.noteTitle filePath
+                                    |> BackendTask.map
+                                        (\title ->
+                                            Just
+                                                { route = Route.Page_ { page = topic }
+                                                , slug = topic
+                                                , title = title
+                                                }
+                                        )
                     )
         )
         |> Glob.captureFilePath
         |> Glob.match (Glob.literal "content/")
         |> Glob.capture Glob.wildcard
         |> Glob.match (Glob.literal ".md")
-        |> Glob.toDataSource
-        |> DataSource.resolve
-        |> DataSource.map (List.filterMap identity)
-        |> DataSource.resolve
-        |> DataSource.map (List.filter (\{ slug } -> slug /= "index"))
+        |> Glob.toBackendTask
+        |> BackendTask.andThen
+            (\items ->
+                items
+                    |> BackendTask.combine
+            )
+        |> BackendTask.map (List.filterMap identity)
+        |> BackendTask.map (List.filter (\{ slug } -> slug /= "index"))
 
 
 head :
-    StaticPayload Data RouteParams
+    App Data ActionData RouteParams
     -> List Head.Tag
-head static =
+head app =
     Seo.summaryLarge
         { canonicalUrlOverride = Nothing
         , siteName = "Incremental Elm"
@@ -240,8 +245,6 @@ searchInput searchQuery =
                     [ Tw.shadow_sm
                     , Tw.block
                     , Tw.w_full
-
-                    --, Tw.form_input
                     , Tw.rounded_md
                     , Tw.border_gray_700
                     , Tw.rounded
