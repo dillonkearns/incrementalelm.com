@@ -7,7 +7,7 @@
     "serve": "npm run build && http-server ./dist -a localhost -p 3000 --gzip -c31557600",
     "elm-graphql": "PATH=$(npm bin):$PATH elm-graphql https://oqagd84p.api.sanity.io/v1/graphql/production/default --skip-elm-format --output elm-graphql-gen/ --base SanityApi --scalar-codecs Scalar && elm-graphql https://ellie-app.com/api --base EllieApi --output elm-graphql-gen/ --skip-elm-format",
     "build": "npm run elm-graphql && npm run build:hls-video && elm-pages build --keep-cache",
-    "build:hls-video": "(cd hls-video-element && npm i && npm run build) && cp hls-video-element/dist/hls-video-element.js public/",
+    "build:hls-video": "(cd hls-video-element && npm i --legacy-peer-deps && npm run build) && cp hls-video-element/dist/hls-video-element.js public/",
     "build:tailwind": "elm-tailwind-modules --dir ./gen --tailwind-config tailwind.config.js ",
     "test": "elm-test",
     "autotest": "elm-test --watch",
