@@ -16,7 +16,7 @@ import Route
 import RouteBuilder exposing (App, StatelessRoute)
 import Shared
 import Tailwind.Utilities as Tw
-import View exposing (Body(..), View)
+import View exposing (Body(..), View, freeze)
 
 
 type alias Model =
@@ -84,7 +84,7 @@ view app sharedModel =
     { title = "Incremental Elm Courses"
     , body =
         Tailwind
-            [ Route.Courses__Course___Section_
+            [ (Route.Courses__Course___Section_
                 { course = "elm-ts-interop"
                 , section = "intro"
                 }
@@ -137,5 +137,9 @@ view app sharedModel =
                         [ Html.text "Watch Now"
                         ]
                     ]
+              )
+                |> Html.toUnstyled
+                |> freeze
+                |> Html.fromUnstyled
             ]
     }

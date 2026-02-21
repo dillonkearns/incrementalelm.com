@@ -32,7 +32,7 @@ import Tailwind.Utilities as Tw
 import Time
 import Timestamps exposing (Timestamps)
 import UnsplashImage exposing (UnsplashImage)
-import View exposing (View)
+import View exposing (View, freeze)
 import Widget.Signup
 
 
@@ -169,19 +169,10 @@ view :
     -> Shared.Model
     -> View (PagesMsg Msg)
 view app sharedModel =
-    let
-        isNote : Bool
-        isNote =
-            app.data.noteData /= Nothing
-
-        renderedBody =
-            MarkdownCodec.renderMarkdown (TailwindMarkdownViewRenderer.renderer app.data.highlights) app.data.body
-                |> Result.withDefault [ text "Error rendering markdown" ]
-    in
     { title = app.data.info.title
     , body =
         View.Tailwind
-            ([ [ div
+            [ ([ div
                     [ css
                         [ Tw.text_xs
                         ]
@@ -227,10 +218,12 @@ view app sharedModel =
                             )
                         ]
                     ]
-               ]
-             , renderedBody
-             , [ div [ css [ Tw.my_8 ] ] [ Widget.Signup.view ] ]
-             , [ viewIf app.data.noteData
+               , (MarkdownCodec.renderMarkdown (TailwindMarkdownViewRenderer.renderer app.data.highlights) app.data.body
+                    |> Result.withDefault [ text "Error rendering markdown" ]
+                 )
+                    |> div []
+               , div [ css [ Tw.my_8 ] ] [ Widget.Signup.view ]
+               , viewIf app.data.noteData
                     (\note ->
                         div
                             [ css
@@ -240,16 +233,18 @@ view app sharedModel =
                             , backReferencesView "Links on this page" note.forwardReferences
                             ]
                     )
-               ]
-             , [ if isNote then
+               , if app.data.noteData /= Nothing then
                     node "utterances-comments" [] []
 
                  else
                     text ""
                ]
-             ]
-                |> List.concat
-            )
+                |> div []
+                |> Html.Styled.toUnstyled
+                |> freeze
+                |> Html.Styled.fromUnstyled
+              )
+            ]
     }
 
 

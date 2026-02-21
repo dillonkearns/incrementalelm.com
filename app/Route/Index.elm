@@ -15,7 +15,7 @@ import Shared
 import Shiki
 import TailwindMarkdownViewRenderer
 import UnsplashImage
-import View exposing (View)
+import View exposing (View, freeze)
 
 
 type alias Model =
@@ -80,18 +80,15 @@ view :
     -> Shared.Model
     -> View (PagesMsg Msg)
 view app sharedModel =
-    let
-        renderedBody =
-            MarkdownCodec.renderMarkdown (TailwindMarkdownViewRenderer.renderer app.data.highlights) app.data.body
-                |> Result.withDefault [ Html.text "Error rendering markdown" ]
-    in
     { title = "Incremental Elm"
     , body =
         View.Tailwind
-            [ div
-                [ css
-                    []
-                ]
-                renderedBody
+            [ (MarkdownCodec.renderMarkdown (TailwindMarkdownViewRenderer.renderer app.data.highlights) app.data.body
+                |> Result.withDefault [ Html.text "Error rendering markdown" ]
+                |> div []
+                |> Html.toUnstyled
+              )
+                |> freeze
+                |> Html.fromUnstyled
             ]
     }

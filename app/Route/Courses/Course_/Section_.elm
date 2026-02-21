@@ -37,7 +37,7 @@ import Tailwind.Breakpoints as Bp
 import Tailwind.Utilities as Tw
 import TailwindMarkdownViewRenderer
 import UrlPath exposing (UrlPath)
-import View exposing (View)
+import View exposing (View, freeze)
 
 
 type alias Model =
@@ -329,6 +329,9 @@ view app sharedModel =
     , body =
         View.Tailwind
             [ titleView app.data.metadata.title
+                |> Html.toUnstyled
+                |> freeze
+                |> Html.fromUnstyled
             , if app.data.metadata.free || loggedInSubscriber then
                 Html.Styled.Keyed.node "div"
                     [ css
@@ -362,8 +365,14 @@ view app sharedModel =
               else
                 goProView
             , nextPreviousView app.data.metadata app.data.chapters
+                |> Html.toUnstyled
+                |> freeze
+                |> Html.fromUnstyled
             , chaptersView app.data.metadata app.data.chapters
-            , Html.div
+                |> Html.toUnstyled
+                |> freeze
+                |> Html.fromUnstyled
+            , (Html.div
                 [ css
                     [ Tw.mt_12
                     ]
@@ -373,6 +382,10 @@ view app sharedModel =
                             |> Result.withDefault [ Html.text "Error rendering markdown" ]
                        )
                 )
+              )
+                |> Html.toUnstyled
+                |> freeze
+                |> Html.fromUnstyled
             ]
     }
 
