@@ -1,7 +1,7 @@
 [build]
   publish = "dist/"
   functions = "functions/"
-  command = "npm install -g elm && npm install && npx --no-install elm-tooling install && mkdir -p .elm-pages .elm-tailwind && npm run build"
+  command = "npm install -g elm && npm install && npx --no-install elm-tooling install && mkdir -p .elm-pages && npm run build"
 
 [build.environment]
   ELM_HOME = "$NETLIFY_BUILD_BASE/cache/elm"

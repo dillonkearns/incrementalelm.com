@@ -9,6 +9,7 @@ elm-graphql-gen/
 gen/
 
 .elm-pages/
+.elm-tailwind/
 public/hls-video-element.js
 
 # Local Netlify folder
