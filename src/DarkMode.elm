@@ -27,6 +27,7 @@ type DarkMode
     | Light
 
 
+view : List (Html.Attribute msg) -> msg -> Html.Html msg
 view attrs onClick =
     Html.button
         (Html.Events.onClick onClick :: attrs)
@@ -35,6 +36,7 @@ view attrs onClick =
         ]
 
 
+moonIcon : Svg.Svg msg
 moonIcon =
     svg
         [ SvgAttr.class ("dark-only " ++ Tw.toClass (batch [ Tw.h s6, Tw.w s6 ]))
@@ -52,6 +54,7 @@ moonIcon =
         ]
 
 
+sunIcon : Svg.Svg msg
 sunIcon =
     svg
         [ SvgAttr.class ("light-only " ++ Tw.toClass (batch [ Tw.h s6, Tw.w s6 ]))

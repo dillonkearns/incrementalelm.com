@@ -51,6 +51,7 @@ extractTextHelp inline text =
 
 extractInlineBlockText : Block -> String
 extractInlineBlockText block =
+    -- known-unoptimized-recursion
     case block of
         Paragraph inlines ->
             extractInlineText inlines

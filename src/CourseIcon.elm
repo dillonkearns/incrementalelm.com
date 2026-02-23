@@ -1,4 +1,4 @@
-module CourseIcon exposing (..)
+module CourseIcon exposing (elmTsInterop)
 
 import Html exposing (Html)
 import Svg exposing (path, svg)

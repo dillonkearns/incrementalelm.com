@@ -100,7 +100,7 @@ tipsFeedItemsInner htmlToString =
                                         )
                     )
         )
-        |> Glob.match (Glob.literal "content/")
+        |> Glob.match (Glob.literal "garden/")
         |> Glob.capture Glob.wildcard
         |> Glob.match (Glob.literal ".md")
         |> Glob.captureFilePath

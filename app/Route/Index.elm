@@ -44,7 +44,7 @@ route =
 
 data : BackendTask FatalError Data
 data =
-    MarkdownCodec.bodyAndHighlights "content/index.md"
+    MarkdownCodec.bodyAndHighlights "garden/index.md"
         |> BackendTask.map (\bh -> Data bh.body bh.highlights)
 
 

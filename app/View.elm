@@ -1,4 +1,4 @@
-module View exposing (Body(..), View, freeze, freezableToHtml, htmlToFreezable, map, placeholder)
+module View exposing (Body(..), Freezable, View, freezableToHtml, freeze, htmlToFreezable, map, placeholder)
 
 import Html
 

@@ -96,6 +96,7 @@ head app =
 eventsView : Maybe Time.Posix -> TwitchButton.IsOnAir -> List LiveStream -> Html msg
 eventsView maybeNow isOnAir events =
     let
+        upcoming : List LiveStream
         upcoming =
             events
                 |> List.filter

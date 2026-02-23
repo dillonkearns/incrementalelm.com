@@ -7,8 +7,9 @@ dist/
 gen/Pages.elm
 elm-graphql-gen/
 gen/
-.elm-tailwind/
+
 .elm-pages/
+.elm-tailwind/
 public/hls-video-element.js
 
 # Local Netlify folder

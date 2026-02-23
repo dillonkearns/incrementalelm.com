@@ -23,7 +23,7 @@ icon svgPath =
         , SvgAttr.viewBox "0 0 24 24"
         , SvgAttr.fill "currentColor"
         ]
-        [ Svg.path
+        [ path
             [ SvgAttr.d svgPath
             ]
             []

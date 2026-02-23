@@ -49,6 +49,7 @@ config =
             [ -- Glob module ignored because of https://github.com/sparksp/elm-review-imports/issues/3#issuecomment-854262659
               "src/DataSource/Glob.elm"
             , "src/ApiRoute.elm"
+            , "src/View/DripSignupForm.elm" -- Html.form clashes with Html.Attributes.form
             ]
      , NoUnoptimizedRecursion.rule (NoUnoptimizedRecursion.optOutWithComment "known-unoptimized-recursion")
         |> ignoreInTest
@@ -82,6 +83,7 @@ config =
                                 ]
                             |> Rule.ignoreErrorsForDirectories
                                 [ "src/ElmHtml"
+                                , "app" -- elm-pages contract files
                                 ]
                     )
            )
@@ -92,6 +94,7 @@ config =
                     |> Rule.ignoreErrorsForDirectories
                         [ "src/ElmHtml"
                         , ".elm-pages"
+                        , ".elm-tailwind"
                         , "elm-pages/src"
                         , "elm-graphql-gen"
                         , "gen"

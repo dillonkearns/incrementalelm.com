@@ -1,4 +1,4 @@
-module Route.Courses.Course_.Section_ exposing (ActionData, Data, Model, Msg, route)
+module Route.Courses.Course_.Section_ exposing (ActionData, Data, Metadata, Model, Msg, RouteParams, route)
 
 import BackendTask exposing (BackendTask)
 import BackendTask.Env
@@ -6,6 +6,7 @@ import BackendTask.File
 import BackendTask.Glob as Glob
 import BackendTask.Http
 import Cloudinary
+import Dict exposing (Dict)
 import Duration exposing (Duration)
 import FatalError exposing (FatalError)
 import Graphql.OptionalArgument as OptionalArgument
@@ -18,10 +19,9 @@ import Html.Keyed
 import Json.Decode as Decode exposing (Decoder)
 import Link
 import List.Extra
-import Dict exposing (Dict)
 import MarkdownCodec
-import PagesMsg exposing (PagesMsg)
 import Pages.Url
+import PagesMsg exposing (PagesMsg)
 import Request
 import Route
 import RouteBuilder exposing (App, StatelessRoute)
@@ -34,7 +34,7 @@ import Shared
 import Shiki
 import Tailwind as Tw exposing (batch, classes)
 import Tailwind.Breakpoints exposing (lg, md, sm)
-import Tailwind.Theme exposing (accent1, background, s1, s2, s4, s6, s8, s12)
+import Tailwind.Theme exposing (accent1, background, s1, s12, s2, s4, s6, s8)
 import TailwindMarkdownViewRenderer
 import UrlPath exposing (UrlPath)
 import View exposing (View, freeze)
@@ -322,6 +322,7 @@ view :
     -> View (PagesMsg Msg)
 view app sharedModel =
     let
+        loggedInSubscriber : Bool
         loggedInSubscriber =
             sharedModel.user |> Maybe.map .isPro |> Maybe.withDefault False
     in
@@ -366,7 +367,7 @@ view app sharedModel =
                 |> freeze
             , chaptersView app.data.metadata app.data.chapters
                 |> freeze
-            , (Html.div
+            , Html.div
                 [ classes
                     [ Tw.mt s12
                     ]
@@ -376,7 +377,6 @@ view app sharedModel =
                             |> Result.withDefault [ Html.text "Error rendering markdown" ]
                        )
                 )
-              )
                 |> freeze
             ]
     }

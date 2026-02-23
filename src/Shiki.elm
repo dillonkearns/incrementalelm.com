@@ -1,4 +1,4 @@
-module Shiki exposing (Highlighted, decoder, view)
+module Shiki exposing (Highlighted, ShikiToken, decoder, view)
 
 import Html exposing (Html)
 import Html.Attributes as Attr exposing (class)
@@ -27,7 +27,7 @@ decoder =
         (Decode.field "bg" Decode.string)
 
 
-shikiTokenDecoder : Decode.Decoder ShikiToken
+shikiTokenDecoder : Decoder ShikiToken
 shikiTokenDecoder =
     Decode.map3 ShikiToken
         (Decode.field "content" Decode.string)
@@ -61,6 +61,7 @@ view attrs highlighted =
         |> List.indexedMap
             (\lineIndex line ->
                 let
+                    isLastLine : Bool
                     isLastLine =
                         List.length highlighted.lines == (lineIndex + 1)
                 in

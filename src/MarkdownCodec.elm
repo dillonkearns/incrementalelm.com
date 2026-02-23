@@ -1,4 +1,4 @@
-module MarkdownCodec exposing (bodyAndHighlights, isPlaceholder, noteTitle, renderMarkdown, titleAndDescription, withFrontmatter, withFrontmatterResolved, withoutFrontmatter, withoutFrontmatterResolved)
+module MarkdownCodec exposing (bodyAndHighlights, isPlaceholder, noteTitle, renderMarkdown, titleAndDescription, withoutFrontmatter)
 
 import BackendTask exposing (BackendTask)
 import BackendTask.Custom
@@ -193,63 +193,6 @@ withoutFrontmatter renderer filePath =
                     |> Markdown.Renderer.render renderer
                     |> resultToBackendTask
             )
-
-
-withFrontmatter :
-    (frontmatter -> List view -> value)
-    -> Decode.Decoder frontmatter
-    -> Markdown.Renderer.Renderer view
-    -> String
-    -> BackendTask FatalError value
-withFrontmatter constructor frontmatterDecoder renderer filePath =
-    BackendTask.map2 constructor
-        (StaticFile.onlyFrontmatter
-            frontmatterDecoder
-            filePath
-            |> BackendTask.allowFatal
-        )
-        (StaticFile.bodyWithoutFrontmatter
-            filePath
-            |> BackendTask.allowFatal
-            |> BackendTask.andThen
-                (\rawBody ->
-                    rawBody
-                        |> Markdown.Parser.parse
-                        |> Result.mapError (\_ -> "Couldn't parse markdown.")
-                        |> resultToBackendTask
-                )
-            |> BackendTask.andThen
-                (\blocks ->
-                    blocks
-                        |> Markdown.Renderer.render renderer
-                        |> resultToBackendTask
-                )
-        )
-
-
-withFrontmatterResolved :
-    (frontmatter -> List view -> value)
-    -> Decode.Decoder frontmatter
-    -> Markdown.Renderer.Renderer (BackendTask FatalError view)
-    -> String
-    -> BackendTask FatalError value
-withFrontmatterResolved constructor frontmatterDecoder renderer filePath =
-    BackendTask.map2 constructor
-        (StaticFile.onlyFrontmatter
-            frontmatterDecoder
-            filePath
-            |> BackendTask.allowFatal
-        )
-        (withoutFrontmatterResolved renderer filePath)
-
-
-withoutFrontmatterResolved :
-    Markdown.Renderer.Renderer (BackendTask FatalError view)
-    -> String
-    -> BackendTask FatalError (List view)
-withoutFrontmatterResolved renderer filePath =
-    withoutFrontmatter renderer filePath
-        |> BackendTask.andThen BackendTask.combine
 
 
 resultToBackendTask : Result String a -> BackendTask FatalError a

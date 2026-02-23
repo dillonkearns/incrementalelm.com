@@ -1,4 +1,4 @@
-port module User exposing (User, sub, userDecoder)
+port module User exposing (User, sub)
 
 import Json.Decode exposing (Decoder)
 

@@ -1,4 +1,4 @@
-port module Effect exposing (Effect(..), batch, fromCmd, map, none, perform)
+port module Effect exposing (Effect(..), FormData, batch, fromCmd, map, none, perform)
 
 import Browser.Navigation
 import Form
@@ -49,6 +49,7 @@ fromCmd =
 
 map : (a -> b) -> Effect a -> Effect b
 map fn effect =
+    -- known-unoptimized-recursion
     case effect of
         None ->
             None
@@ -104,6 +105,7 @@ perform :
     -> Effect pageMsg
     -> Cmd msg
 perform ({ fromPageMsg, key } as helpers) effect =
+    -- known-unoptimized-recursion
     case effect of
         None ->
             Cmd.none

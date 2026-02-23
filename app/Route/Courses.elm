@@ -1,4 +1,4 @@
-module Route.Courses exposing (ActionData, Data, Model, Msg, route)
+module Route.Courses exposing (ActionData, Data, Model, Msg, RouteParams, route)
 
 import BackendTask exposing (BackendTask)
 import Cloudinary
@@ -9,8 +9,8 @@ import Head.Seo as Seo
 import Html
 import Html.Attributes as Attr
 import Link
-import PagesMsg exposing (PagesMsg)
 import Pages.Url
+import PagesMsg exposing (PagesMsg)
 import Route
 import RouteBuilder exposing (App, StatelessRoute)
 import Shared
