@@ -193,6 +193,7 @@ reduceMarkdown highlights block =
                             case item of
                                 Block.ListItem task children ->
                                     let
+                                        checkbox : Html msg
                                         checkbox =
                                             case task of
                                                 Block.NoTask ->
@@ -275,6 +276,7 @@ reduceMarkdown highlights block =
 
         TableCell maybeAlignment children ->
             let
+                attrs : List (Html.Attribute msg)
                 attrs =
                     maybeAlignment
                         |> Maybe.map
@@ -297,6 +299,7 @@ reduceMarkdown highlights block =
 
         TableHeaderCell maybeAlignment children ->
             let
+                attrs : List (Html.Attribute msg)
                 attrs =
                     maybeAlignment
                         |> Maybe.map

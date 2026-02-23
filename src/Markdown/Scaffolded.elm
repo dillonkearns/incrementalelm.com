@@ -5,7 +5,6 @@
 
 module Markdown.Scaffolded exposing
     ( Block(..)
-    , withDataSource
     , toRenderer
     )
 
@@ -28,15 +27,6 @@ the [What are reducers?](#what-are-reducers-) section.
 # Main Datastructure
 
 @docs Block
-
-
-# High-level Transformations
-
-These functions are not as composable as [transformation building blocks](#transformation-building-blocks),
-but might suffice for your use case. Take a look at the other section if you find you need
-something better.
-
-@docs withDataSource
 
 
 # Transformation Building Blocks
@@ -144,8 +134,6 @@ I mean to aggregate utilites for transforming Blocks in this section.
 
 -}
 
-import BackendTask exposing (BackendTask)
-import FatalError exposing (FatalError)
 import Markdown.Block as Block
 import Markdown.Html
 import Markdown.Renderer exposing (Renderer)
@@ -198,152 +186,6 @@ type Block children
     | TableHeaderCell (Maybe Block.Alignment) (List children)
 
 
-{-| This transform allows you to perform elm-pages' BackendTask requests without having to
-think about how to thread these through your renderer.
-
-Some applications that can be realized like this:
-
-  - Verifying that all links in your markdown do resolve at page build-time
-    (Note: This currently needs some change in elm-pages, so it's not possible _yet_)
-  - Giving custom elm-markdown HTML elements the ability to perform BackendTask requests
-
-
-### Missing Functionality
-
-If this function doesn't quite do what you need to do, try using `foldStaticHttpRequests`.
-The `wihtStaticHttpRequests` definition basically just documents a common pattern.
-Its implementation is just 1 line of code.
-
--}
-withDataSource :
-    (Block view -> BackendTask FatalError view)
-    -> (Block (BackendTask FatalError view) -> BackendTask FatalError view)
-withDataSource reducer markdown =
-    markdown |> foldStaticHttpRequests |> BackendTask.andThen reducer
-
-
-{-| Accumulate elm-page's
-[`BackendTask`](https://package.elm-lang.org/packages/dillonkearns/elm-pages/latest/BackendTask)s
-over blocks.
-
-Using this, it is possible to write reducers that produce views as a result of performing
-static http requests.
-
--}
-foldStaticHttpRequests : Block (BackendTask FatalError view) -> BackendTask FatalError (Block view)
-foldStaticHttpRequests markdown =
-    case markdown of
-        Heading { level, rawText, children } ->
-            children
-                |> allStaticHttp
-                |> BackendTask.map
-                    (\chdr ->
-                        Heading { level = level, rawText = rawText, children = chdr }
-                    )
-
-        Paragraph children ->
-            children
-                |> allStaticHttp
-                |> BackendTask.map Paragraph
-
-        BlockQuote children ->
-            children
-                |> allStaticHttp
-                |> BackendTask.map BlockQuote
-
-        Text content ->
-            Text content
-                |> BackendTask.succeed
-
-        CodeSpan content ->
-            CodeSpan content
-                |> BackendTask.succeed
-
-        Strong children ->
-            children
-                |> allStaticHttp
-                |> BackendTask.map Strong
-
-        Emphasis children ->
-            children
-                |> allStaticHttp
-                |> BackendTask.map Emphasis
-
-        Link { title, destination, children } ->
-            children
-                |> allStaticHttp
-                |> BackendTask.map
-                    (\chdr ->
-                        Link { title = title, destination = destination, children = chdr }
-                    )
-
-        Image imageInfo ->
-            Image imageInfo
-                |> BackendTask.succeed
-
-        UnorderedList { items } ->
-            items
-                |> List.map
-                    (\(Block.ListItem task children) ->
-                        children
-                            |> allStaticHttp
-                            |> BackendTask.map (Block.ListItem task)
-                    )
-                |> allStaticHttp
-                |> BackendTask.map (\itms -> UnorderedList { items = itms })
-
-        OrderedList { startingIndex, items } ->
-            items
-                |> List.map allStaticHttp
-                |> allStaticHttp
-                |> BackendTask.map
-                    (\itms ->
-                        OrderedList { startingIndex = startingIndex, items = itms }
-                    )
-
-        CodeBlock codeBlockInfo ->
-            CodeBlock codeBlockInfo
-                |> BackendTask.succeed
-
-        HardLineBreak ->
-            HardLineBreak
-                |> BackendTask.succeed
-
-        ThematicBreak ->
-            ThematicBreak
-                |> BackendTask.succeed
-
-        Table children ->
-            children
-                |> allStaticHttp
-                |> BackendTask.map Table
-
-        TableHeader children ->
-            children
-                |> allStaticHttp
-                |> BackendTask.map TableHeader
-
-        TableBody children ->
-            children
-                |> allStaticHttp
-                |> BackendTask.map TableBody
-
-        TableRow children ->
-            children
-                |> allStaticHttp
-                |> BackendTask.map TableRow
-
-        TableHeaderCell maybeAlignment children ->
-            children
-                |> allStaticHttp
-                |> BackendTask.map (TableHeaderCell maybeAlignment)
-
-        TableCell maybeAlignment children ->
-            children
-                |> allStaticHttp
-                |> BackendTask.map (TableCell maybeAlignment)
-
-
 {-| Convert a function that works with `Block` to a `Renderer` for use with
 elm-markdown.
 
@@ -389,11 +231,3 @@ toRenderer { renderMarkdown, renderHtml } =
     , tableCell = \maybeAlignment -> TableCell maybeAlignment >> renderMarkdown
     }
 
-
-
--- LOCAL DEFINITIONS
-
-
-allStaticHttp : List (BackendTask FatalError a) -> BackendTask FatalError (List a)
-allStaticHttp =
-    List.foldr (BackendTask.map2 (::)) (BackendTask.succeed [])

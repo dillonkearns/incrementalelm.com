@@ -11,9 +11,11 @@ url :
     -> Pages.Url.Url
 url asset format width =
     let
+        base : String
         base =
             "https://res.cloudinary.com/dillonkearns/image/upload"
 
+        fetch_format : String
         fetch_format =
             case format of
                 Just MimeType.Png ->
@@ -28,6 +30,7 @@ url asset format width =
                 Nothing ->
                     "auto"
 
+        transforms : String
         transforms =
             [ "c_pad"
             , "w_" ++ String.fromInt width

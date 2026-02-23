@@ -322,6 +322,7 @@ view :
     -> View (PagesMsg Msg)
 view app sharedModel =
     let
+        loggedInSubscriber : Bool
         loggedInSubscriber =
             sharedModel.user |> Maybe.map .isPro |> Maybe.withDefault False
     in

@@ -43,6 +43,7 @@ renderer =
     , link =
         \link content ->
             let
+                fullUrl : String
                 fullUrl =
                     if link.destination |> String.startsWith "/" then
                         Site.canonicalUrl ++ link.destination
@@ -88,6 +89,7 @@ renderer =
                             case item of
                                 Block.ListItem task children ->
                                     let
+                                        checkbox : Html Never
                                         checkbox =
                                             case task of
                                                 Block.NoTask ->
@@ -165,6 +167,7 @@ renderer =
     , tableHeaderCell =
         \maybeAlignment ->
             let
+                attrs : List (Html.Attribute Never)
                 attrs =
                     maybeAlignment
                         |> Maybe.map
@@ -187,6 +190,7 @@ renderer =
     , tableCell =
         \maybeAlignment ->
             let
+                attrs : List (Html.Attribute Never)
                 attrs =
                     maybeAlignment
                         |> Maybe.map

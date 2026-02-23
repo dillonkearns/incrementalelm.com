@@ -196,6 +196,7 @@ view app sharedModel =
                         [ viewIf app.data.noteData
                             (\note ->
                                 let
+                                    publishedOrCreatedDate : Date
                                     publishedOrCreatedDate =
                                         app.data.metadata.publishedAt
                                             |> Maybe.withDefault
@@ -498,6 +499,7 @@ forwardReferences blocks =
                 case inline of
                     Block.Link rawSlug _ _ ->
                         let
+                            cleanSlug : String
                             cleanSlug =
                                 rawSlug
                                     |> Regex.replace (Regex.fromString "^/" |> Maybe.withDefault Regex.never) (\_ -> "")

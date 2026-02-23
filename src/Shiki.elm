@@ -61,6 +61,7 @@ view attrs highlighted =
         |> List.indexedMap
             (\lineIndex line ->
                 let
+                    isLastLine : Bool
                     isLastLine =
                         List.length highlighted.lines == (lineIndex + 1)
                 in
