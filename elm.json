@@ -5,7 +5,7 @@
         "app",
         "elm-graphql-gen",
         ".elm-pages",
-        "gen"
+        ".elm-tailwind"
     ],
     "elm-version": "0.19.1",
     "dependencies": {
@@ -28,6 +28,7 @@
             "elm/json": "1.1.3",
             "elm/parser": "1.1.0",
             "elm/regex": "1.0.0",
+            "elm/svg": "1.0.1",
             "elm/time": "1.0.0",
             "elm/url": "1.0.0",
             "elm/virtual-dom": "1.0.3",
@@ -39,12 +40,10 @@
             "justinmimbs/date": "4.1.0",
             "justinmimbs/time-extra": "1.2.0",
             "mdgriffith/elm-codegen": "6.0.1",
-            "mdgriffith/elm-ui": "1.1.8",
             "miniBill/elm-codec": "2.2.0",
             "noahzgordon/elm-color-extra": "1.0.2",
             "pablohirafuji/elm-syntax-highlight": "3.7.1",
             "robinheghan/fnv1a": "1.0.0",
-            "rtfeldman/elm-css": "18.0.0",
             "rtfeldman/elm-iso8601-date-strings": "1.1.4",
             "ryan-haskell/date-format": "1.0.0",
             "the-sett/elm-syntax-dsl": "6.0.3",
@@ -70,6 +69,7 @@
             "lukewestby/elm-string-interpolate": "1.0.4",
             "miniBill/elm-unicode": "1.1.1",
             "robinheghan/murmur3": "1.0.0",
+            "rtfeldman/elm-css": "18.0.0",
             "rtfeldman/elm-hex": "1.0.0",
             "stil4m/elm-syntax": "7.3.8",
             "stil4m/structured-writer": "1.0.3",

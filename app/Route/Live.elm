@@ -4,7 +4,7 @@ import BackendTask exposing (BackendTask)
 import FatalError exposing (FatalError)
 import Head
 import Head.Seo as Seo
-import Html.Styled as Html exposing (Html)
+import Html exposing (Html)
 import PagesMsg exposing (PagesMsg)
 import Pages.Url
 import Request

@@ -1,8 +1,8 @@
 module Icon exposing (github, twitter)
 
-import Html.Styled exposing (Html)
-import Svg.Styled as Svg
-import Svg.Styled.Attributes as SvgAttr
+import Html exposing (Html)
+import Svg exposing (path, svg)
+import Svg.Attributes as SvgAttr
 
 
 twitter : Html msg
@@ -17,7 +17,7 @@ github =
 
 icon : String -> Html msg
 icon svgPath =
-    Svg.svg
+    svg
         [ SvgAttr.width "15"
         , SvgAttr.height "15"
         , SvgAttr.viewBox "0 0 24 24"

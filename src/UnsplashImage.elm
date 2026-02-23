@@ -1,6 +1,5 @@
-module UnsplashImage exposing (UnsplashImage, decoder, default, fromId, image, imagePath, rawUrl)
+module UnsplashImage exposing (UnsplashImage, decoder, default, fromId, imagePath, rawUrl)
 
-import Element
 import Json.Decode as Decode exposing (Decoder)
 import Pages.Url
 import Url.Builder exposing (string)
@@ -13,17 +12,6 @@ type UnsplashImage
 default : UnsplashImage
 default =
     fromId "1587382668076-5101b7cd8eae"
-
-
-image :
-    List (Element.Attribute msg)
-    -> UnsplashImage
-    -> Element.Element msg
-image attrs (UnsplashImage url_) =
-    Element.image attrs
-        { src = url_
-        , description = "Cover image"
-        }
 
 
 imagePath : UnsplashImage -> Pages.Url.Url

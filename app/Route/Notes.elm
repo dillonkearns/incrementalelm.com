@@ -2,14 +2,13 @@ module Route.Notes exposing (ActionData, Data, Model, Msg, Note, RouteParams, ro
 
 import BackendTask exposing (BackendTask)
 import BackendTask.Glob as Glob
-import Css
 import Effect exposing (Effect)
 import FatalError exposing (FatalError)
 import Head
 import Head.Seo as Seo
-import Html.Styled exposing (..)
-import Html.Styled.Attributes as Attr exposing (css)
-import Html.Styled.Events
+import Html exposing (..)
+import Html.Attributes as Attr
+import Html.Events
 import Link
 import MarkdownCodec
 import PagesMsg exposing (PagesMsg)
@@ -17,8 +16,9 @@ import Pages.Url
 import Route exposing (Route)
 import RouteBuilder exposing (App, StatefulRoute)
 import Shared
-import Tailwind.Breakpoints as Bp
-import Tailwind.Utilities as Tw
+import Tailwind as Tw exposing (classes)
+import Tailwind.Breakpoints exposing (sm)
+import Tailwind.Theme exposing (s1, s2, s5, s7)
 import UrlPath exposing (UrlPath)
 import View exposing (View)
 
@@ -87,13 +87,13 @@ view app sharedModel model =
     { title = "Incremental Elm Wiki"
     , body =
         View.Tailwind
-            (List.map (Html.Styled.map PagesMsg.fromMsg)
+            (List.map (Html.map PagesMsg.fromMsg)
                 [ div
-                    [ css
-                        [ Tw.font_bold
-                        , Tw.text_xl
+                    [ classes
+                        [ Tw.raw "font-bold"
+                        , Tw.raw "text-xl"
                         , Tw.text_center
-                        , Css.fontFamilies [ "Raleway" ]
+                        , Tw.raw "font-raleway"
                         ]
                     ]
                     [ text "Incremental Elm Notes" ]
@@ -107,10 +107,10 @@ view app sharedModel model =
 notesList : String -> List Note -> Html Msg
 notesList searchQuery noteList =
     ul
-        [ css
-            [ Tw.list_disc
-            , Tw.mb_5
-            , Tw.mt_5
+        [ classes
+            [ Tw.raw "list-disc"
+            , Tw.mb s5
+            , Tw.mt s5
             ]
         ]
         (noteList
@@ -119,19 +119,17 @@ notesList searchQuery noteList =
                     if noteMatches searchQuery note then
                         note.route
                             |> Link.htmlLink
-                                [ css
-                                    [ Css.hover
-                                        [ Css.color (Css.rgb 226 0 124)
-                                        ]
+                                [ classes
+                                    [ Tw.raw "hover:text-pink-link"
                                     ]
                                 ]
                                 (text note.title)
                             |> List.singleton
                             |> li
-                                [ css
-                                    [ Tw.ml_7
-                                    , Tw.mb_2
-                                    , Tw.mt_2
+                                [ classes
+                                    [ Tw.ml s7
+                                    , Tw.mb s2
+                                    , Tw.mt s2
                                     ]
                                 ]
                             |> Just
@@ -223,16 +221,16 @@ searchInput searchQuery =
         []
         [ label
             [ Attr.for "filter"
-            , css
+            , classes
                 [ Tw.block
-                , Tw.text_sm
-                , Tw.font_medium
+                , Tw.raw "text-sm"
+                , Tw.raw "font-medium"
                 ]
             ]
             [ text "Filter" ]
         , div
-            [ css
-                [ Tw.mt_1
+            [ classes
+                [ Tw.mt s1
                 ]
             ]
             [ input
@@ -240,16 +238,16 @@ searchInput searchQuery =
                 , Attr.name "filter"
                 , Attr.id "search"
                 , Attr.value searchQuery
-                , Html.Styled.Events.onInput OnSearchInput
-                , css
-                    [ Tw.shadow_sm
+                , Html.Events.onInput OnSearchInput
+                , classes
+                    [ Tw.raw "shadow-sm"
                     , Tw.block
                     , Tw.w_full
-                    , Tw.rounded_md
-                    , Tw.border_gray_700
+                    , Tw.raw "rounded-md"
+                    , Tw.raw "border-gray-700"
                     , Tw.rounded
-                    , Bp.sm
-                        [ Tw.text_sm
+                    , sm
+                        [ Tw.raw "text-sm"
                         ]
                     ]
                 , Attr.placeholder "Your Filter Query"

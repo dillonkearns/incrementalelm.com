@@ -1,13 +1,13 @@
 module View.TailwindNavbar exposing (view)
 
-import Css
 import DarkMode exposing (DarkMode)
-import Html.Styled exposing (..)
-import Html.Styled.Attributes as Attr exposing (css)
+import Html exposing (..)
+import Html.Attributes as Attr
 import Link
 import Route exposing (Route)
-import Tailwind.Breakpoints as Bp
-import Tailwind.Utilities as Tw
+import Tailwind as Tw exposing (batch, classes)
+import Tailwind.Breakpoints exposing (md)
+import Tailwind.Theme exposing (background, highlight, s0, s2, s4, s6, s8, s16)
 import UrlPath exposing (UrlPath)
 import User exposing (User)
 
@@ -15,57 +15,55 @@ import User exposing (User)
 view : Maybe User -> DarkMode -> msg -> msg -> UrlPath -> Html msg
 view maybeUser darkMode toggleDarkMode toggleMobileMenuMsg currentPath =
     nav
-        [ css
+        [ classes
             [ Tw.flex
             , Tw.items_center
             , Tw.z_20
             , Tw.fixed
-            , Tw.top_0
-            , Tw.left_0
-            , Tw.right_0
-            , Tw.h_16
+            , Tw.raw "top-0"
+            , Tw.raw "left-0"
+            , Tw.raw "right-0"
+            , Tw.h s16
             , Tw.border_b
-            , Tw.border_gray_200
-            , Tw.px_6
+            , Tw.raw "border-gray-200"
+            , Tw.px s6
             , Tw.shadow
-            , Tw.bg_background
-            , Tw.border_gray_900
-            , Tw.text_foreground
+            , Tw.bg_simple background
+            , Tw.raw "border-gray-900"
+            , Tw.raw "text-foreground"
             ]
         ]
         [ div
-            [ css
+            [ classes
                 [ Tw.hidden
                 , Tw.w_full
                 , Tw.flex
                 , Tw.items_center
-                , Bp.md
+                , md
                     [ Tw.block
                     ]
                 ]
             ]
             [ a
-                [ css
+                [ classes
                     [ Tw.no_underline
-                    , Tw.text_current
+                    , Tw.raw "text-current"
                     , Tw.flex
                     , Tw.items_center
-                    , Css.hover
-                        [ Tw.opacity_75
-                        ]
+                    , Tw.raw "hover:opacity-75"
                     ]
                 , Attr.href "/"
                 ]
                 [ span
-                    [ css
-                        [ Tw.mr_0
-                        , Tw.neg_ml_2
-                        , Tw.font_extrabold
+                    [ classes
+                        [ Tw.mr s0
+                        , Tw.raw "-ml-2"
+                        , Tw.raw "font-extrabold"
                         , Tw.inline
-                        , Bp.md
+                        , md
                             [ Tw.inline
                             ]
-                        , Css.fontFamilies [ "Raleway" ]
+                        , Tw.raw "font-raleway"
                         ]
                     ]
                     [ text "Incremental Elm" ]
@@ -75,8 +73,8 @@ view maybeUser darkMode toggleDarkMode toggleMobileMenuMsg currentPath =
         , headerLink currentPath Route.Live "Live Streams"
         , headerLink currentPath Route.Courses "Courses"
         , DarkMode.view
-            [ css
-                [ Tw.ml_2
+            [ classes
+                [ Tw.ml s2
                 ]
             ]
             toggleDarkMode
@@ -90,9 +88,9 @@ userBadge : User -> Html msg
 userBadge user =
     img
         [ Attr.src user.avatarUrl
-        , css
-            [ Tw.h_8
-            , Tw.ml_4
+        , classes
+            [ Tw.h s8
+            , Tw.ml s4
             ]
         ]
         []
@@ -102,8 +100,8 @@ headerLink : UrlPath -> Route -> String -> Html msg
 headerLink currentPagePath linkTo name =
     linkTo
         |> Link.htmlLink
-            [ css
-                [ Css.fontFamilies [ "Raleway" ]
+            [ classes
+                [ Tw.raw "font-raleway"
                 ]
             ]
             (linkInner currentPagePath linkTo name)
@@ -117,26 +115,22 @@ linkInner currentPagePath linkTo name =
             List.head currentPagePath == List.head (Route.toPath linkTo)
     in
     span
-        [ css
-            [ Tw.text_sm
-            , Tw.font_bold
-            , Tw.p_2
+        [ classes
+            [ Tw.raw "text-sm"
+            , Tw.raw "font-bold"
+            , Tw.p s2
             , Tw.whitespace_nowrap
             , if isCurrentPath then
-                Css.batch
-                    [ Tw.text_highlight
-                    , Css.hover
-                        [ Tw.underline
-                        ]
+                batch
+                    [ Tw.text_simple highlight
+                    , Tw.raw "hover:underline"
                     ]
 
               else
-                Css.batch
-                    [ Tw.text_foreground
-                    , Css.hover
-                        [ Tw.text_highlight
-                        , Tw.underline
-                        ]
+                batch
+                    [ Tw.raw "text-foreground"
+                    , Tw.raw "hover:text-highlight"
+                    , Tw.raw "hover:underline"
                     ]
             ]
         ]

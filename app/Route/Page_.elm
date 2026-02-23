@@ -9,8 +9,8 @@ import Date exposing (Date)
 import FatalError exposing (FatalError)
 import Head
 import Head.Seo as Seo
-import Html.Styled exposing (..)
-import Html.Styled.Attributes exposing (css)
+import Html exposing (..)
+import Html.Attributes as Attr
 import Dict exposing (Dict)
 import Json.Decode as Decode exposing (Decoder)
 import Link
@@ -25,9 +25,10 @@ import RouteBuilder exposing (App, StatelessRoute)
 import Shared
 import Shiki
 import String.Extra
-import Tailwind.Breakpoints as Bp
+import Tailwind as Tw exposing (classes)
+import Tailwind.Breakpoints exposing (lg)
+import Tailwind.Theme exposing (s2, s3, s5, s6, s8, s12)
 import TailwindMarkdownViewRenderer
-import Tailwind.Utilities as Tw
 
 import Time
 import Timestamps exposing (Timestamps)
@@ -173,8 +174,8 @@ view app sharedModel =
     , body =
         View.Tailwind
             [ ([ div
-                    [ css
-                        [ Tw.text_xs
+                    [ classes
+                        [ Tw.raw "text-xs"
                         ]
                     ]
                     [ div
@@ -221,14 +222,12 @@ view app sharedModel =
                , (MarkdownCodec.renderMarkdown (TailwindMarkdownViewRenderer.renderer app.data.highlights) app.data.body
                     |> Result.withDefault [ text "Error rendering markdown" ]
                  )
-                    |> div []
-               , div [ css [ Tw.my_8 ] ] [ Widget.Signup.view ]
+                    |> div [ classes [ Tw.flex, Tw.flex_col ] ]
+               , div [ classes [ Tw.my s8 ] ] [ Widget.Signup.view ]
                , viewIf app.data.noteData
                     (\note ->
                         div
-                            [ css
-                                []
-                            ]
+                            []
                             [ backReferencesView "Notes that link here" note.backReferences
                             , backReferencesView "Links on this page" note.forwardReferences
                             ]
@@ -240,9 +239,7 @@ view app sharedModel =
                     text ""
                ]
                 |> div []
-                |> Html.Styled.toUnstyled
                 |> freeze
-                |> Html.Styled.fromUnstyled
               )
             ]
     }
@@ -269,15 +266,15 @@ backReferencesView title backRefs =
 backReferencesView_ : List BackRef -> Html msg
 backReferencesView_ allBackRefs =
     div
-        [ css
-            [ Tw.mt_12
-            , Tw.max_w_lg
-            , Tw.mx_auto
+        [ classes
+            [ Tw.mt s12
+            , Tw.raw "max-w-lg"
+            , Tw.raw "mx-auto"
             , Tw.grid
-            , Tw.gap_5
-            , Bp.lg
-                [ Tw.grid_cols_2
-                , Tw.max_w_none
+            , Tw.raw "gap-5"
+            , lg
+                [ Tw.raw "grid-cols-2"
+                , Tw.raw "max-w-none"
                 ]
             ]
         ]
@@ -293,48 +290,48 @@ blogCard : Route -> { a | title : String, description : String } -> Html msg
 blogCard cardRoute info =
     cardRoute
         |> Link.htmlLink
-            [ css
+            [ classes
                 [ Tw.flex
                 , Tw.flex_col
-                , Tw.rounded_lg
-                , Tw.shadow_lg
+                , Tw.raw "rounded-lg"
+                , Tw.raw "shadow-lg"
                 , Tw.overflow_hidden
                 ]
             ]
             (div
-                [ css
-                    [ Tw.flex_1
-                    , Tw.bg_white
-                    , Tw.p_6
+                [ classes
+                    [ Tw.raw "flex-1"
+                    , Tw.raw "bg-white"
+                    , Tw.p s6
                     , Tw.flex
                     , Tw.flex_col
                     , Tw.justify_between
                     ]
                 ]
                 [ div
-                    [ css
-                        [ Tw.flex_1
+                    [ classes
+                        [ Tw.raw "flex-1"
                         ]
                     ]
                     [ span
-                        [ css
+                        [ classes
                             [ Tw.block
-                            , Tw.mt_2
+                            , Tw.mt s2
                             ]
                         ]
                         [ p
-                            [ css
-                                [ Tw.text_xl
-                                , Tw.font_semibold
-                                , Tw.text_gray_900
+                            [ classes
+                                [ Tw.raw "text-xl"
+                                , Tw.raw "font-semibold"
+                                , Tw.raw "text-gray-900"
                                 ]
                             ]
                             [ text info.title ]
                         , p
-                            [ css
-                                [ Tw.mt_3
-                                , Tw.text_base
-                                , Tw.text_gray_500
+                            [ classes
+                                [ Tw.mt s3
+                                , Tw.raw "text-base"
+                                , Tw.raw "text-gray-500"
                                 ]
                             ]
                             [ info.description

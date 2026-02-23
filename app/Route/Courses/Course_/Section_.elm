@@ -6,16 +6,15 @@ import BackendTask.File
 import BackendTask.Glob as Glob
 import BackendTask.Http
 import Cloudinary
-import Css
 import Duration exposing (Duration)
 import FatalError exposing (FatalError)
 import Graphql.OptionalArgument as OptionalArgument
 import Graphql.SelectionSet as SelectionSet
 import Head
 import Head.Seo as Seo
-import Html.Styled as Html exposing (Html)
-import Html.Styled.Attributes as Attr exposing (css)
-import Html.Styled.Keyed
+import Html exposing (Html)
+import Html.Attributes as Attr
+import Html.Keyed
 import Json.Decode as Decode exposing (Decoder)
 import Link
 import List.Extra
@@ -33,8 +32,9 @@ import SanityApi.Object.MuxVideoAsset
 import SanityApi.Query
 import Shared
 import Shiki
-import Tailwind.Breakpoints as Bp
-import Tailwind.Utilities as Tw
+import Tailwind as Tw exposing (batch, classes)
+import Tailwind.Breakpoints exposing (lg, md, sm)
+import Tailwind.Theme exposing (accent1, background, s1, s2, s4, s6, s8, s12)
 import TailwindMarkdownViewRenderer
 import UrlPath exposing (UrlPath)
 import View exposing (View, freeze)
@@ -329,33 +329,31 @@ view app sharedModel =
     , body =
         View.Tailwind
             [ titleView app.data.metadata.title
-                |> Html.toUnstyled
                 |> freeze
-                |> Html.fromUnstyled
             , if app.data.metadata.free || loggedInSubscriber then
-                Html.Styled.Keyed.node "div"
-                    [ css
+                Html.Keyed.node "div"
+                    [ classes
                         [ Tw.flex
-                        , Tw.justify_around
-                        , Tw.flex_grow
+                        , Tw.raw "justify-around"
+                        , Tw.grow
                         ]
                     ]
                     [ ( "my-player-" ++ app.routeParams.section
-                      , Html.Styled.Keyed.node "hls-video"
+                      , Html.Keyed.node "hls-video"
                             [ Attr.id <| "my-player-" ++ app.routeParams.section
                             , Attr.src <| "/.netlify/functions/sign_playback_id?playbackId=" ++ app.data.metadata.playbackId
                             , Attr.controls True
-                            , Attr.preload "auto"
+                            , Attr.attribute "preload" "auto"
                             , Attr.attribute "lesson-id" (app.routeParams.course ++ "/" ++ app.routeParams.section)
                             , Attr.attribute "title" app.data.metadata.title
                             , Attr.attribute "duration" (Duration.inMillis app.data.metadata.duration |> String.fromInt)
                             , Attr.attribute "series" app.routeParams.course
-                            , css
-                                [ Bp.lg [ size 800 ]
-                                , Bp.md [ size 600 ]
-                                , Bp.sm [ size 500 ]
-                                , size 300
-                                , Tw.mb_6
+                            , classes
+                                [ lg [ Tw.raw "w-[800px] h-[450px]" ]
+                                , md [ Tw.raw "w-[600px] h-[337.5px]" ]
+                                , sm [ Tw.raw "w-[500px] h-[281.25px]" ]
+                                , Tw.raw "w-[300px] h-[168.75px]"
+                                , Tw.mb s6
                                 ]
                             ]
                             []
@@ -365,16 +363,12 @@ view app sharedModel =
               else
                 goProView
             , nextPreviousView app.data.metadata app.data.chapters
-                |> Html.toUnstyled
                 |> freeze
-                |> Html.fromUnstyled
             , chaptersView app.data.metadata app.data.chapters
-                |> Html.toUnstyled
                 |> freeze
-                |> Html.fromUnstyled
             , (Html.div
-                [ css
-                    [ Tw.mt_12
+                [ classes
+                    [ Tw.mt s12
                     ]
                 ]
                 (subTitleView "Chapter Notes"
@@ -383,54 +377,44 @@ view app sharedModel =
                        )
                 )
               )
-                |> Html.toUnstyled
                 |> freeze
-                |> Html.fromUnstyled
             ]
     }
 
 
-titleView : String -> Html.Html msg
+titleView : String -> Html msg
 titleView titleText =
     Html.h1
-        [ css
-            [ Tw.text_4xl
-            , Tw.font_bold
-            , Tw.tracking_tight
-            , Tw.mt_2
-            , Tw.mb_8
-            , [ Css.qt "Raleway" ] |> Css.fontFamilies
-            , Tw.text_foregroundStrong
+        [ classes
+            [ Tw.raw "text-4xl"
+            , Tw.raw "font-bold"
+            , Tw.raw "tracking-tight"
+            , Tw.mt s2
+            , Tw.mb s8
+            , Tw.raw "font-raleway"
+            , Tw.raw "text-foreground-strong"
             ]
         ]
         [ Html.text titleText ]
 
 
-subTitleView : String -> Html.Html msg
+subTitleView : String -> Html msg
 subTitleView titleText =
     Html.h2
-        [ css
-            [ Tw.text_3xl
-            , Tw.font_bold
-            , Tw.tracking_tight
-            , Tw.mt_2
-            , Tw.mb_8
-            , [ Css.qt "Raleway" ] |> Css.fontFamilies
-            , Tw.text_foregroundStrong
+        [ classes
+            [ Tw.raw "text-3xl"
+            , Tw.raw "font-bold"
+            , Tw.raw "tracking-tight"
+            , Tw.mt s2
+            , Tw.mb s8
+            , Tw.raw "font-raleway"
+            , Tw.raw "text-foreground-strong"
             ]
         ]
         [ Html.text titleText ]
 
 
-size : Float -> Css.Style
-size width =
-    Css.batch
-        [ Css.width (Css.px width)
-        , Css.height (Css.px (width * 0.5625))
-        ]
-
-
-nextPreviousView : Metadata -> List Metadata -> Html.Html msg
+nextPreviousView : Metadata -> List Metadata -> Html msg
 nextPreviousView current chapters =
     let
         currentIndex : Int
@@ -448,16 +432,16 @@ nextPreviousView current chapters =
             chapters |> List.Extra.getAt (currentIndex + 1)
     in
     Html.div
-        [ css
-            [ Tw.mb_6
+        [ classes
+            [ Tw.mb s6
             , Tw.flex
             , Tw.justify_between
             , Tw.flex_col
-            , Bp.md
+            , md
                 [ Tw.flex_row
                 ]
             , Tw.w_full
-            , Tw.gap_2
+            , Tw.raw "gap-2"
             ]
         ]
         [ previous
@@ -472,23 +456,21 @@ type NextOrPrevious
     | Previous
 
 
-nextPreviousButton : NextOrPrevious -> Maybe Metadata -> Html.Html msg
+nextPreviousButton : NextOrPrevious -> Maybe Metadata -> Html msg
 nextPreviousButton kind maybeNextOrPrevious =
     maybeNextOrPrevious
         |> Maybe.map
             (\nextOrPrevious ->
                 Route.Courses__Course___Section_ nextOrPrevious.routeParams
                     |> Link.htmlLink2
-                        [ css
-                            [ Css.hover
-                                [ Tw.bg_foregroundStrong
-                                , Tw.underline
-                                ]
-                            , Tw.px_4
-                            , Tw.py_2
-                            , Tw.bg_foreground
-                            , Tw.text_background
-                            , Tw.rounded_lg
+                        [ classes
+                            [ Tw.raw "hover:bg-foreground-strong"
+                            , Tw.raw "hover:underline"
+                            , Tw.px s4
+                            , Tw.py s2
+                            , Tw.raw "bg-foreground"
+                            , Tw.text_simple background
+                            , Tw.raw "rounded-lg"
                             , Tw.text_center
                             ]
                         ]
@@ -503,61 +485,57 @@ nextPreviousButton kind maybeNextOrPrevious =
         |> Maybe.withDefault (Html.span [] [])
 
 
-chaptersView : Metadata -> List Metadata -> Html.Html msg
+chaptersView : Metadata -> List Metadata -> Html msg
 chaptersView current chapters =
     Html.ol []
         (chapters |> List.indexedMap (chapterView current))
 
 
-chapterView : Metadata -> Int -> Metadata -> Html.Html msg
+chapterView : Metadata -> Int -> Metadata -> Html msg
 chapterView currentPage index chapter =
     Html.li
-        [ css
+        [ classes
             [ if currentPage.routeParams == chapter.routeParams then
-                Tw.bg_accent1
+                Tw.bg_simple accent1
 
               else
-                Tw.bg_background
-            , Css.hover
-                [ Tw.bg_accent1
-                ]
+                Tw.bg_simple background
+            , Tw.raw "hover:bg-accent1"
             ]
         ]
         [ Route.Courses__Course___Section_ chapter.routeParams
             |> Link.htmlLink2
-                [ css
+                [ classes
                     [ Tw.flex
                     , Tw.justify_between
-                    , Tw.p_2
+                    , Tw.p s2
                     ]
                 ]
                 [ Html.div
-                    [ css
-                        [ Tw.gap_3
+                    [ classes
+                        [ Tw.raw "gap-3"
                         , Tw.flex
                         ]
                     ]
                     [ Html.span
-                        [ css
-                            []
-                        ]
+                        []
                         [ Html.text <| String.fromInt (index + 1) ++ ". " ]
                     , Html.span
-                        [ css
-                            [ Tw.text_foregroundStrong
-                            , Tw.font_bold
+                        [ classes
+                            [ Tw.raw "text-foreground-strong"
+                            , Tw.raw "font-bold"
                             ]
                         ]
                         [ Html.text (chapter.title ++ " ") ]
                     ]
                 , Duration.view
-                    [ css
-                        [ Tw.py_1
-                        , Tw.px_2
-                        , Tw.bg_foregroundStrong
-                        , Tw.rounded_xl
-                        , Tw.text_background
-                        , Tw.text_sm
+                    [ classes
+                        [ Tw.py s1
+                        , Tw.px s2
+                        , Tw.raw "bg-foreground-strong"
+                        , Tw.raw "rounded-xl"
+                        , Tw.text_simple background
+                        , Tw.raw "text-sm"
                         ]
                     ]
                     chapter.duration

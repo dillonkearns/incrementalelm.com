@@ -4,8 +4,7 @@ import BackendTask exposing (BackendTask)
 import FatalError exposing (FatalError)
 import Head
 import Head.Seo as Seo
-import Html.Styled as Html exposing (div)
-import Html.Styled.Attributes exposing (css)
+import Html exposing (div)
 import Dict exposing (Dict)
 import MarkdownCodec
 import PagesMsg exposing (PagesMsg)
@@ -83,12 +82,9 @@ view app sharedModel =
     { title = "Incremental Elm"
     , body =
         View.Tailwind
-            [ (MarkdownCodec.renderMarkdown (TailwindMarkdownViewRenderer.renderer app.data.highlights) app.data.body
+            [ MarkdownCodec.renderMarkdown (TailwindMarkdownViewRenderer.renderer app.data.highlights) app.data.body
                 |> Result.withDefault [ Html.text "Error rendering markdown" ]
                 |> div []
-                |> Html.toUnstyled
-              )
                 |> freeze
-                |> Html.fromUnstyled
             ]
     }

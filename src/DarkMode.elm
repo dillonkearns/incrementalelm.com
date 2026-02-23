@@ -1,11 +1,12 @@
 module DarkMode exposing (DarkMode(..), darkModeDecoder, view)
 
-import Html.Styled
-import Html.Styled.Events
+import Html
+import Html.Events
 import Json.Decode
-import Svg.Styled exposing (path, svg)
-import Svg.Styled.Attributes as SvgAttr
-import Tailwind.Utilities as Tw
+import Svg exposing (path, svg)
+import Svg.Attributes as SvgAttr
+import Tailwind as Tw exposing (batch)
+import Tailwind.Theme exposing (s6)
 
 
 darkModeDecoder : Json.Decode.Decoder DarkMode
@@ -27,32 +28,19 @@ type DarkMode
 
 
 view attrs onClick =
-    Html.Styled.button
-        (Html.Styled.Events.onClick onClick :: attrs)
+    Html.button
+        (Html.Events.onClick onClick :: attrs)
         [ sunIcon
         , moonIcon
         ]
 
 
-
---case darkMode of
---    Light ->
---        sunIcon
---
---    Dark ->
---        moonIcon
-
-
 moonIcon =
     svg
-        [ SvgAttr.css
-            [ Tw.h_6
-            , Tw.w_6
-            ]
+        [ SvgAttr.class ("dark-only " ++ Tw.toClass (batch [ Tw.h s6, Tw.w s6 ]))
         , SvgAttr.fill "none"
         , SvgAttr.viewBox "0 0 24 24"
         , SvgAttr.stroke "currentColor"
-        , SvgAttr.class "dark-only"
         ]
         [ path
             [ SvgAttr.strokeLinecap "round"
@@ -66,11 +54,7 @@ moonIcon =
 
 sunIcon =
     svg
-        [ SvgAttr.css
-            [ Tw.h_6
-            , Tw.w_6
-            ]
-        , SvgAttr.class "light-only"
+        [ SvgAttr.class ("light-only " ++ Tw.toClass (batch [ Tw.h s6, Tw.w s6 ]))
         , SvgAttr.fill "none"
         , SvgAttr.viewBox "0 0 24 24"
         , SvgAttr.stroke "currentColor"

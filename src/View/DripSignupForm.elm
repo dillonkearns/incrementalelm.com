@@ -1,10 +1,9 @@
 module View.DripSignupForm exposing (viewNew, viewNew2)
 
-import Css
-import Html.Styled exposing (..)
-import Html.Styled.Attributes exposing (..)
-import Tailwind.Breakpoints as Bp
-import Tailwind.Utilities as Tw
+import Html exposing (..)
+import Html.Attributes exposing (..)
+import Tailwind as Tw exposing (classes)
+import Tailwind.Theme exposing (accent1, s1, s2, s4)
 
 
 dripAttribute : String -> Attribute msg
@@ -43,8 +42,8 @@ dripInput details =
             Show ->
                 [ style "margin-bottom" "20px"
                 , style "font-weight" "bold"
-                , css
-                    [ Tw.flex_grow
+                , classes
+                    [ Tw.grow
                     ]
                 ]
 
@@ -57,14 +56,14 @@ dripInput details =
             ([ type_ details.type_
              , id details.inputId
              , name details.name
-             , css
+             , classes
                 [ Tw.w_full
-                , Tw.border_foregroundLight
+                , Tw.raw "border-foreground-light"
                 , Tw.border_2
-                , Tw.border_solid
-                , Tw.rounded_md
-                , Tw.pt_1
-                , Tw.mt_1
+                , Tw.raw "border-solid"
+                , Tw.raw "rounded-md"
+                , Tw.pt s1
+                , Tw.mt s1
                 ]
              ]
                 |> includeValueIfPresent details.value
@@ -117,12 +116,12 @@ referenceIdInput maybeReferenceId =
 
 viewNew : String -> String -> { details | maybeReferenceId : Maybe String } -> Html msg
 viewNew buttonText formId signupDetails =
-    Html.Styled.form
+    Html.form
         [ action <| "https://www.getdrip.com/forms/" ++ formId ++ "/submissions"
         , method "post"
         , attribute "data-drip-embedded-form" formId
         , style "font-family" "'Open Sans'"
-        , css [ Tw.p_4 ]
+        , classes [ Tw.p s4 ]
         ]
         [ h2 [ dripAttribute "headline", style "display" "none" ] [ text "Incremental Elm" ]
         , div [ dripAttribute "description" ] []
@@ -131,9 +130,7 @@ viewNew buttonText formId signupDetails =
         , referenceIdInput signupDetails.maybeReferenceId
         , websiteField
         , div
-            [ css
-                []
-            ]
+            []
             [ input
                 [ class "button"
                 , dripAttribute "sign-up-button"
@@ -141,14 +138,12 @@ viewNew buttonText formId signupDetails =
                 , type_ "submit"
                 , value buttonText
                 , style "width" "100%"
-                , css
-                    [ Tw.bg_accent1
+                , classes
+                    [ Tw.bg_simple accent1
                     , Tw.cursor_pointer
-                    , Tw.p_2
-                    , Tw.text_white
-                    , Css.hover
-                        [ Tw.bg_accent2
-                        ]
+                    , Tw.p s2
+                    , Tw.raw "text-white"
+                    , Tw.raw "hover:bg-accent2"
                     ]
                 ]
                 []
@@ -158,21 +153,21 @@ viewNew buttonText formId signupDetails =
 
 viewNew2 : String -> String -> { details | maybeReferenceId : Maybe String } -> Html msg
 viewNew2 buttonText formId signupDetails =
-    Html.Styled.form
+    Html.form
         [ action <| "https://www.getdrip.com/forms/" ++ formId ++ "/submissions"
         , method "post"
         , attribute "data-drip-embedded-form" formId
         , style "font-family" "'Open Sans'"
-        , css [ Tw.p_4 ]
+        , classes [ Tw.p s4 ]
         ]
         [ h2 [ dripAttribute "headline", style "display" "none" ] [ text "Incremental Elm" ]
         , div [ dripAttribute "description" ] []
         , referenceIdInput signupDetails.maybeReferenceId
         , div
-            [ css
+            [ classes
                 [ Tw.flex
                 , Tw.w_full
-                , Tw.gap_4
+                , Tw.raw "gap-4"
                 ]
             ]
             [ emailInput
@@ -187,23 +182,19 @@ viewNew2 buttonText formId signupDetails =
                 , type_ "submit"
                 , value buttonText
                 , style "width" "100%"
-                , css
+                , classes
                     [ Tw.cursor_pointer
-                    , Tw.p_2
-                    , Tw.rounded_lg
-                    , Tw.bg_gradient_to_b
-                    , Tw.from_accent1
-                    , Tw.font_bold
-                    , Tw.text_lg
-
-                    --, Tw.to_accent2
-                    , Tw.to_highlight
-                    , Tw.text_white
-                    , Css.hover
-                        [ Tw.bg_gradient_to_b
-                        , Tw.from_accent1
-                        , Tw.to_accent2
-                        ]
+                    , Tw.p s2
+                    , Tw.raw "rounded-lg"
+                    , Tw.raw "bg-gradient-to-b"
+                    , Tw.raw "from-accent1"
+                    , Tw.raw "font-bold"
+                    , Tw.raw "text-lg"
+                    , Tw.raw "to-highlight"
+                    , Tw.raw "text-white"
+                    , Tw.raw "hover:bg-gradient-to-b"
+                    , Tw.raw "hover:from-accent1"
+                    , Tw.raw "hover:to-accent2"
                     ]
                 ]
                 []

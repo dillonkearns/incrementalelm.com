@@ -1,6 +1,6 @@
 module Duration exposing (Duration, fromSeconds, inMillis, view)
 
-import Html.Styled as Html exposing (Attribute, Html)
+import Html exposing (Attribute, Html)
 
 
 type alias Duration =

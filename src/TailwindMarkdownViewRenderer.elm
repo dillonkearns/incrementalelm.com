@@ -1,16 +1,16 @@
 module TailwindMarkdownViewRenderer exposing (renderer)
 
-import Css
 import Dict exposing (Dict)
 import Html.Attributes as HtmlAttr
-import Html.Styled as Html exposing (Html)
-import Html.Styled.Attributes as Attr exposing (css)
+import Html exposing (Html)
+import Html.Attributes as Attr
 import Markdown.Block as Block
 import Markdown.Html
 import Markdown.Renderer
 import Markdown.Scaffolded exposing (..)
 import Shiki
-import Tailwind.Utilities as Tw
+import Tailwind as Tw exposing (batch, classes)
+import Tailwind.Theme exposing (accent2, background, s1, s2, s4, s5, s6, s7, s8, s12)
 import View.Ellie
 import Widget.Signup
 
@@ -28,10 +28,10 @@ reduceMarkdown highlights block =
     case block of
         Paragraph children ->
             Html.p
-                [ css
-                    [ Tw.bg_background
-                    , Tw.text_foreground
-                    , Tw.mb_5
+                [ classes
+                    [ Tw.bg_simple background
+                    , Tw.raw "text-foreground"
+                    , Tw.mb s5
                     ]
                 ]
                 children
@@ -40,14 +40,15 @@ reduceMarkdown highlights block =
             case level of
                 Block.H1 ->
                     Html.h1
-                        [ css
-                            [ Tw.text_4xl
-                            , Tw.font_bold
-                            , Tw.tracking_tight
-                            , Tw.mt_2
-                            , Tw.mb_8
-                            , [ Css.qt "Raleway" ] |> Css.fontFamilies
-                            , Tw.text_foregroundStrong
+                        [ classes
+                            [ Tw.raw "text-4xl"
+                            , Tw.raw "leading-10"
+                            , Tw.raw "font-bold"
+                            , Tw.raw "tracking-tight"
+                            , Tw.mt s2
+                            , Tw.mb s8
+                            , Tw.raw "font-raleway"
+                            , Tw.raw "text-foreground-strong"
                             ]
                         ]
                         children
@@ -56,32 +57,33 @@ reduceMarkdown highlights block =
                     Html.h2
                         [ Attr.id (rawTextToId rawText)
                         , Attr.attribute "name" (rawTextToId rawText)
-                        , css
-                            [ Tw.text_2xl
-                            , Tw.font_semibold
-                            , Tw.tracking_tight
-                            , Tw.mt_12
-                            , Tw.text_foregroundStrong
-                            , Tw.pb_1
-                            , Tw.mb_6
+                        , classes
+                            [ Tw.raw "text-2xl"
+                            , Tw.raw "leading-8"
+                            , Tw.raw "font-semibold"
+                            , Tw.raw "tracking-tight"
+                            , Tw.mt s12
+                            , Tw.raw "text-foreground-strong"
+                            , Tw.pb s1
+                            , Tw.mb s6
                             , Tw.border_b
-                            , [ Css.qt "Raleway" ] |> Css.fontFamilies
+                            , Tw.raw "font-raleway"
                             ]
                         ]
                         [ Html.a
                             [ Attr.href <| "#" ++ rawTextToId rawText
-                            , css
-                                [ Tw.no_underline |> Css.important
+                            , classes
+                                [ Tw.raw "!no-underline"
                                 ]
                             ]
                             (children
                                 ++ [ Html.span
                                         [ Attr.class "anchor-icon"
-                                        , css
-                                            [ Tw.ml_2
-                                            , Tw.text_gray_500
+                                        , classes
+                                            [ Tw.ml s2
+                                            , Tw.raw "text-gray-500"
                                             , Tw.select_none
-                                            , Tw.text_foregroundStrong
+                                            , Tw.raw "text-foreground-strong"
                                             ]
                                         ]
                                         [ Html.text "#" ]
@@ -109,12 +111,13 @@ reduceMarkdown highlights block =
                         Block.H6 ->
                             Html.h6
                     )
-                        [ css
-                            [ Tw.font_bold
-                            , Tw.text_lg
-                            , Tw.mt_8
-                            , Tw.mb_4
-                            , Tw.text_foregroundStrong
+                        [ classes
+                            [ Tw.raw "font-bold"
+                            , Tw.raw "text-lg"
+                            , Tw.raw "leading-7"
+                            , Tw.mt s8
+                            , Tw.mb s4
+                            , Tw.raw "text-foreground-strong"
                             ]
                         ]
                         children
@@ -131,31 +134,30 @@ reduceMarkdown highlights block =
                         , HtmlAttr.style "margin-bottom" "2rem"
                         ]
                         highlighted
-                        |> Html.fromUnstyled
 
                 Nothing ->
                     Html.pre
-                        [ css [ Tw.rounded_lg, Tw.p_4 ] ]
+                        [ classes [ Tw.raw "rounded-lg", Tw.p s4 ] ]
                         [ Html.code [] [ Html.text info.body ] ]
 
         Text string ->
             Html.text string
 
         Emphasis content ->
-            Html.em [ css [ Tw.italic ] ] content
+            Html.em [ classes [ Tw.italic ] ] content
 
         Strong content ->
-            Html.strong [ css [ Tw.font_bold ] ] content
+            Html.strong [ classes [ Tw.raw "font-bold" ] ] content
 
         BlockQuote children ->
             Html.blockquote [] children
 
         CodeSpan content ->
             Html.code
-                [ css
-                    [ Tw.bg_selectionBackground
-                    , Tw.rounded_lg
-                    , Tw.p_1
+                [ classes
+                    [ Tw.raw "bg-selection-background"
+                    , Tw.raw "rounded-lg"
+                    , Tw.p s1
                     ]
                 ]
                 [ Html.text content ]
@@ -166,13 +168,10 @@ reduceMarkdown highlights block =
         Link { destination, title, children } ->
             Html.a
                 [ Attr.href <| slugToAbsoluteUrl destination
-                , css
+                , classes
                     [ Tw.underline
-                    , Tw.text_foregroundStrong
-                    , Tw.text_accent2
-                    , Css.hover
-                        [ Css.color (Css.rgb 226 0 124)
-                        ]
+                    , Tw.text_simple accent2
+                    , Tw.raw "hover:text-pink-link"
                     ]
                 ]
                 (title
@@ -186,10 +185,10 @@ reduceMarkdown highlights block =
 
         UnorderedList { items } ->
             Html.ul
-                [ css
-                    [ Tw.list_disc
-                    , Tw.mb_5
-                    , Tw.mt_5
+                [ classes
+                    [ Tw.raw "list-disc"
+                    , Tw.mb s5
+                    , Tw.mt s5
                     ]
                 ]
                 (items
@@ -220,10 +219,10 @@ reduceMarkdown highlights block =
                                                         []
                                     in
                                     Html.li
-                                        [ css
-                                            [ Tw.ml_7
-                                            , Tw.mb_2
-                                            , Tw.mt_2
+                                        [ classes
+                                            [ Tw.ml s7
+                                            , Tw.mb s2
+                                            , Tw.mt s2
                                             ]
                                         ]
                                         (checkbox :: children)
@@ -235,20 +234,20 @@ reduceMarkdown highlights block =
                 (case startingIndex of
                     1 ->
                         [ Attr.start startingIndex
-                        , css
-                            [ Tw.list_decimal
-                            , Tw.list_inside
-                            , Tw.mt_5
-                            , Tw.mb_5
+                        , classes
+                            [ Tw.raw "list-decimal"
+                            , Tw.raw "list-inside"
+                            , Tw.mt s5
+                            , Tw.mb s5
                             ]
                         ]
 
                     _ ->
-                        [ css
-                            [ Tw.list_decimal
-                            , Tw.list_inside
-                            , Tw.mt_5
-                            , Tw.mb_5
+                        [ classes
+                            [ Tw.raw "list-decimal"
+                            , Tw.raw "list-inside"
+                            , Tw.mt s5
+                            , Tw.mb s5
                             ]
                         ]
                 )
@@ -345,10 +344,10 @@ htmlRenderers highlights =
     [ Markdown.Html.tag "discord"
         (\_ ->
             Html.div
-                [ css
+                [ classes
                     [ Tw.flex
                     , Tw.justify_center
-                    , Tw.p_8
+                    , Tw.p s8
                     ]
                 ]
                 [ Html.iframe
@@ -389,9 +388,9 @@ htmlRenderers highlights =
     , Markdown.Html.tag "resource"
         (\name _ url _ ->
             Html.a
-                [ css
-                    [ Tw.font_bold
-                    , Tw.text_lg
+                [ classes
+                    [ Tw.raw "font-bold"
+                    , Tw.raw "text-lg"
                     , Tw.underline
                     ]
                 , Attr.href url
@@ -405,38 +404,36 @@ htmlRenderers highlights =
         (\_ ->
             Html.a
                 [ Attr.href "mailto:dillon@incrementalelm.com"
-                , css
-                    []
                 ]
                 [ Html.text "Contact" ]
         )
     , Markdown.Html.tag "aside"
         (\title children ->
             Html.details
-                [ css
+                [ classes
                     [ Tw.border_2
-                    , Tw.rounded_lg
-                    , Tw.p_4
-                    , Tw.border_foregroundLight
-                    , Tw.mb_8
+                    , Tw.raw "rounded-lg"
+                    , Tw.p s4
+                    , Tw.raw "border-foreground-light"
+                    , Tw.mb s8
                     ]
                 ]
                 (Html.summary
-                    [ css
+                    [ classes
                         [ Tw.cursor_pointer
-                        , Tw.text_xl
+                        , Tw.raw "text-xl"
                         , Tw.underline
-                        , Tw.font_bold
-                        , Tw.tracking_tight
-                        , [ Css.qt "Raleway" ] |> Css.fontFamilies
-                        , Tw.text_foregroundStrong
+                        , Tw.raw "font-bold"
+                        , Tw.raw "tracking-tight"
+                        , Tw.raw "font-raleway"
+                        , Tw.raw "text-foreground-strong"
                         ]
                     ]
                     [ Html.text title
                     ]
                     :: [ Html.div
-                            [ css
-                                [ Tw.p_4
+                            [ classes
+                                [ Tw.p s4
                                 ]
                             ]
                             children

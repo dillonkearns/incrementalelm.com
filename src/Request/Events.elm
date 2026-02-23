@@ -2,8 +2,8 @@ module Request.Events exposing (Guest, LiveStream, NamedZone, Project, guestSele
 
 import Graphql.Operation exposing (RootQuery)
 import Graphql.SelectionSet as SelectionSet exposing (SelectionSet)
-import Html.Styled as Html exposing (Html)
-import Html.Styled.Attributes as Attr exposing (css)
+import Html exposing (Html)
+import Html.Attributes as Attr
 import Icon
 import Json.Encode as Encode
 import Request.GoogleCalendar as GoogleCalendar
@@ -15,7 +15,8 @@ import SanityApi.Object.Project
 import SanityApi.Object.SanityImageAsset
 import SanityApi.Query as Query
 import Scalar exposing (DateTime)
-import Tailwind.Utilities as Tw
+import Tailwind as Tw exposing (classes)
+import Tailwind.Theme exposing (background, s8)
 import Time
 import Youtube
 
@@ -103,42 +104,40 @@ view event =
     Html.div
         []
         [ Html.p
-            [ css
-                [ Tw.shadow_lg
-                , Tw.p_8
-                , Tw.max_w_md
-                , Tw.space_y_5
+            [ classes
+                [ Tw.raw "shadow-lg"
+                , Tw.p s8
+                , Tw.raw "max-w-md"
+                , Tw.raw "space-y-5"
                 ]
             ]
             [ Html.text event.title
             ]
         , guestsView event.guest
         , Html.p
-            [ css [ Tw.text_xs ]
+            [ classes [ Tw.raw "text-xs" ]
             ]
             [ Html.text event.description ]
         , Html.div []
             [ Html.node "intl-time"
                 [ Attr.property "editorValue" (event.startsAt |> Time.posixToMillis |> Encode.int)
-                , css
-                    [ Tw.text_sm
-                    , Tw.font_bold
+                , classes
+                    [ Tw.raw "text-sm"
+                    , Tw.raw "font-bold"
                     ]
                 ]
                 []
             ]
         , Html.a
             [ Attr.href (GoogleCalendar.googleAddToCalendarLink event)
-            , css
-                [ Tw.rounded_xl
-                , Tw.text_background
-                , Tw.bg_foreground
+            , classes
+                [ Tw.raw "rounded-xl"
+                , Tw.text_simple background
+                , Tw.raw "bg-foreground"
                 ]
             ]
             [ Html.text "Add to Google Calendar"
             ]
-
-        -- , TwitchButton.view
         ]
 
 
@@ -150,32 +149,32 @@ recordingView2 event =
 
         Just youtubeId ->
             Html.div
-                [ css
-                    [ Tw.shadow_lg
-                    , Tw.p_8
-                    , Tw.max_w_md
-                    , Tw.space_y_5
+                [ classes
+                    [ Tw.raw "shadow-lg"
+                    , Tw.p s8
+                    , Tw.raw "max-w-md"
+                    , Tw.raw "space-y-5"
                     ]
                 ]
-                [ Youtube.view youtubeId |> Html.fromUnstyled
+                [ Youtube.view youtubeId
                 , Html.p
-                    [ css
-                        [ Tw.font_bold
-                        , Tw.text_xl
+                    [ classes
+                        [ Tw.raw "font-bold"
+                        , Tw.raw "text-xl"
                         ]
                     ]
                     [ Html.text event.title ]
                 , guestsView event.guest
                 , Html.p
-                    [ css [ Tw.text_xs ]
+                    [ classes [ Tw.raw "text-xs" ]
                     ]
                     [ Html.text event.description ]
                 , Html.div []
                     [ Html.node "intl-time"
                         [ Attr.property "editorValue" (event.startsAt |> Time.posixToMillis |> Encode.int)
-                        , css
-                            [ Tw.text_sm
-                            , Tw.font_bold
+                        , classes
+                            [ Tw.raw "text-sm"
+                            , Tw.raw "font-bold"
                             ]
                         ]
                         []
@@ -186,7 +185,7 @@ recordingView2 event =
 guestsView : List Guest -> Html msg
 guestsView guests =
     Html.div
-        [ css [ Tw.text_sm ]
+        [ classes [ Tw.raw "text-sm" ]
         ]
         (List.map guestView guests)
 
@@ -194,12 +193,12 @@ guestsView guests =
 guestView : { a | name : String, twitter : Maybe String, github : Maybe String } -> Html msg
 guestView guest =
     Html.div
-        [ css [ Tw.space_x_2, Tw.flex ]
+        [ classes [ Tw.raw "space-x-2", Tw.flex ]
         ]
         [ Html.div []
             [ [ Html.text "Guest: " ]
                 |> Html.span
-                    [ css [] ]
+                    []
             , Html.text guest.name
             ]
         , socialBadges guest
@@ -209,9 +208,9 @@ guestView guest =
 socialBadges : { a | twitter : Maybe String, github : Maybe String } -> Html msg
 socialBadges guest =
     Html.div
-        [ css
+        [ classes
             [ Tw.flex
-            , Tw.space_x_2
+            , Tw.raw "space-x-2"
             ]
         ]
         ([ guest.twitter

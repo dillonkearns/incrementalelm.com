@@ -1,8 +1,6 @@
 module View exposing (Body(..), View, freeze, freezableToHtml, htmlToFreezable, map, placeholder)
 
-import Element exposing (Element)
 import Html
-import Html.Styled as Styled
 
 
 type alias View msg =
@@ -12,8 +10,7 @@ type alias View msg =
 
 
 type Body msg
-    = ElmUi (List (Element msg))
-    | Tailwind (List (Styled.Html msg))
+    = Tailwind (List (Html.Html msg))
 
 
 map : (msg1 -> msg2) -> View msg1 -> View msg2
@@ -21,18 +18,15 @@ map fn doc =
     { title = doc.title
     , body =
         case doc.body of
-            ElmUi elements ->
-                List.map (Element.map fn) elements |> ElmUi
-
             Tailwind nodes ->
-                List.map (Styled.map fn) nodes |> Tailwind
+                List.map (Html.map fn) nodes |> Tailwind
     }
 
 
 placeholder : String -> View msg
 placeholder moduleName =
     { title = "Placeholder - " ++ moduleName
-    , body = Tailwind [ Styled.text moduleName ]
+    , body = Tailwind [ Html.text moduleName ]
     }
 
 

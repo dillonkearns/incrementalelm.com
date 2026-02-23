@@ -3,19 +3,19 @@ module Route.Courses exposing (ActionData, Data, Model, Msg, route)
 import BackendTask exposing (BackendTask)
 import Cloudinary
 import CourseIcon
-import Css
 import FatalError exposing (FatalError)
 import Head
 import Head.Seo as Seo
-import Html.Styled as Html
-import Html.Styled.Attributes as Attr exposing (css)
+import Html
+import Html.Attributes as Attr
 import Link
 import PagesMsg exposing (PagesMsg)
 import Pages.Url
 import Route
 import RouteBuilder exposing (App, StatelessRoute)
 import Shared
-import Tailwind.Utilities as Tw
+import Tailwind as Tw exposing (classes)
+import Tailwind.Theme exposing (background, s2, s4, s6)
 import View exposing (Body(..), View, freeze)
 
 
@@ -89,27 +89,25 @@ view app sharedModel =
                 , section = "intro"
                 }
                 |> Link.htmlLink2
-                    [ css
+                    [ classes
                         [ Tw.border_2
-                        , Tw.border_foreground
-                        , Tw.rounded_lg
+                        , Tw.raw "border-foreground"
+                        , Tw.raw "rounded-lg"
                         , Tw.flex
                         , Tw.flex_col
                         , Tw.items_center
-                        , Tw.gap_4
-                        , Tw.p_6
+                        , Tw.raw "gap-4"
+                        , Tw.p s6
                         ]
                     ]
                     [ Html.div
-                        [ css
-                            []
-                        ]
+                        []
                         [ CourseIcon.elmTsInterop ]
                     , Html.div []
                         [ Html.h2
-                            [ css
-                                [ Tw.font_bold
-                                , Tw.text_xl
+                            [ classes
+                                [ Tw.raw "font-bold"
+                                , Tw.raw "text-xl"
                                 ]
                             ]
                             [ Html.text "Intro to elm-ts-interop"
@@ -119,16 +117,14 @@ view app sharedModel =
                         [ Html.text "Intro to the basics of using elm-ts-interop to generate TypeScript bindings for type-safe ports and flags."
                         ]
                     , Html.a
-                        [ css
-                            [ Css.hover
-                                [ Tw.bg_foregroundStrong
-                                , Tw.underline
-                                ]
-                            , Tw.px_4
-                            , Tw.py_2
-                            , Tw.bg_foreground
-                            , Tw.text_background
-                            , Tw.rounded_lg
+                        [ classes
+                            [ Tw.raw "hover:bg-foreground-strong"
+                            , Tw.raw "hover:underline"
+                            , Tw.px s4
+                            , Tw.py s2
+                            , Tw.raw "bg-foreground"
+                            , Tw.text_simple background
+                            , Tw.raw "rounded-lg"
                             , Tw.text_center
                             , Tw.cursor_pointer
                             ]
@@ -138,8 +134,6 @@ view app sharedModel =
                         ]
                     ]
               )
-                |> Html.toUnstyled
                 |> freeze
-                |> Html.fromUnstyled
             ]
     }

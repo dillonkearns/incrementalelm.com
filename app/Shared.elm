@@ -1,21 +1,20 @@
 module Shared exposing (Data, Model, Msg(..), SharedMsg(..), template)
 
 import BackendTask exposing (BackendTask)
-import Css
 import DarkMode exposing (DarkMode)
 import Effect exposing (Effect)
 import FatalError exposing (FatalError)
-import Html exposing (Html)
-import Html.Styled exposing (div)
-import Html.Styled.Attributes as Attr exposing (css)
+import Html exposing (Html, div)
+import Html.Attributes as Attr
 import Http
 import Json.Decode exposing (Decoder)
 import Pages.Flags
 import Pages.PageUrl exposing (PageUrl)
 import Route exposing (Route)
 import SharedTemplate exposing (SharedTemplate)
-import Tailwind.Breakpoints as Bp
-import Tailwind.Utilities as Tw
+import Tailwind as Tw exposing (classes)
+import Tailwind.Breakpoints exposing (md)
+import Tailwind.Theme exposing (background, s8, s16, s32)
 import Task
 import Time
 import TwitchButton
@@ -104,48 +103,41 @@ view :
     -> { body : List (Html msg), title : String }
 view sharedData page model toMsg pageView =
     case pageView.body of
-        View.ElmUi _ ->
-            { title = pageView.title
-            , body =
-                [ Html.div [] []
-                ]
-            }
-
         View.Tailwind nodes ->
             { title = pageView.title
             , body =
                 [ div
-                    [ css
-                        [ Tw.min_h_screen
+                    [ classes
+                        [ Tw.raw "min-h-screen"
                         , Tw.w_full
                         , Tw.relative
-                        , Tw.bg_background
+                        , Tw.bg_simple background
                         ]
                     ]
-                    [ View.TailwindNavbar.view model.user model.darkMode ToggleDarkMode ToggleMobileMenu page.path |> Html.Styled.map toMsg
+                    [ View.TailwindNavbar.view model.user model.darkMode ToggleDarkMode ToggleMobileMenu page.path |> Html.map toMsg
                     , div
-                        [ css
-                            [ Tw.pt_32
-                            , Tw.pb_16
-                            , Tw.px_8
+                        [ classes
+                            [ Tw.pt s32
+                            , Tw.pb s16
+                            , Tw.px s8
                             , Tw.flex
                             , Tw.flex_col
-                            , Tw.text_foreground
+                            , Tw.raw "text-foreground"
                             , Tw.items_center
                             ]
                         ]
                         [ div
-                            [ css
-                                [ Tw.max_w_prose
+                            [ classes
+                                [ Tw.raw "max-w-prose"
                                 , Tw.w_full
-                                , Bp.md [ Tw.mx_auto ]
+                                , md [ Tw.raw "mx-auto" ]
                                 ]
                             ]
                             [ div
-                                [ css
-                                    [ Tw.text_foreground
-                                    , Css.fontFamilies [ "Open Sans" ]
-                                    , Tw.leading_7
+                                [ classes
+                                    [ Tw.raw "text-foreground"
+                                    , Tw.raw "font-open-sans"
+                                    , Tw.raw "leading-7"
                                     , Tw.flex
                                     , Tw.flex_col
                                     ]
@@ -154,7 +146,6 @@ view sharedData page model toMsg pageView =
                             ]
                         ]
                     ]
-                    |> Html.Styled.toUnstyled
                 ]
             }
 

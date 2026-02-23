@@ -1,32 +1,33 @@
 module Widget.Signup exposing (view, view2)
 
-import Html.Styled as Html exposing (Html)
-import Html.Styled.Attributes exposing (css)
-import Tailwind.Utilities as Tw
+import Html exposing (Html)
+import Html.Attributes as Attr
+import Tailwind as Tw exposing (classes)
+import Tailwind.Theme exposing (s4)
 import View.DripSignupForm
 
 
 view2 : String -> String -> List (Html msg) -> Html msg
 view2 buttonText formId body =
     Html.div
-        [ css
+        [ classes
             [ Tw.flex
             , Tw.justify_center
-            , Tw.border_foreground
+            , Tw.raw "border-foreground"
             ]
         ]
         [ Html.div
-            [ css
-                [ Tw.p_4
-                , Tw.max_w_lg
-                , Tw.shadow_xl
-                , Tw.border_foregroundLight
+            [ classes
+                [ Tw.p s4
+                , Tw.raw "max-w-lg"
+                , Tw.raw "shadow-xl"
+                , Tw.raw "border-foreground-light"
                 , Tw.border_2
-                , Tw.border_solid
+                , Tw.raw "border-solid"
                 ]
             ]
             [ Html.div
-                [ css [ Tw.text_center ]
+                [ classes [ Tw.text_center ]
                 ]
                 body
             , View.DripSignupForm.viewNew buttonText formId { maybeReferenceId = Nothing }
@@ -38,28 +39,27 @@ view2 buttonText formId body =
 view : Html msg
 view =
     Html.div
-        [ css
+        [ classes
             [ Tw.flex
             , Tw.justify_center
-            , Tw.border_foreground
+            , Tw.raw "border-foreground"
             ]
         ]
         [ Html.div
-            [ css
-                [ Tw.p_4
-                , Tw.max_w_lg
-                , Tw.shadow_xl
-                , Tw.border_foregroundLight
+            [ classes
+                [ Tw.p s4
+                , Tw.raw "max-w-lg"
+                , Tw.raw "shadow-xl"
+                , Tw.raw "border-foreground-light"
                 , Tw.border_2
-                , Tw.border_solid
+                , Tw.raw "border-solid"
                 ]
             ]
             [ Html.p
-                [ css []
-                ]
+                []
                 [ Html.text "Sign up to get my latest Elm posts and course notifications in your inbox."
                 ]
             , View.DripSignupForm.viewNew2 "Subscribe" "906002494" { maybeReferenceId = Nothing }
-            , Html.p [ css [] ] [ Html.text "Pure Elm content. Unsubscribe any time." ]
+            , Html.p [] [ Html.text "Pure Elm content. Unsubscribe any time." ]
             ]
         ]
