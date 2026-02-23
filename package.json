@@ -27,7 +27,7 @@
     "@types/node": "^22.12.0",
     "codemirror": "^5.48.2",
     "elm-optimize-level-2": "^0.2.3",
-    "elm-pages": "^3.1.4",
+    "elm-pages": "^3.1.5",
     "elm-review": "^2.13.5",
     "elm-tailwind-classes": "^0.2.0",
     "elm-tooling": "^1.1.0",
