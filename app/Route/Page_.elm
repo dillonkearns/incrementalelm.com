@@ -66,8 +66,7 @@ route =
 pages : BackendTask FatalError (List RouteParams)
 pages =
     Glob.succeed RouteParams
-        |> Glob.match (Glob.literal "content/")
-        |> Glob.match (Glob.oneOf ( ( "page/", () ), [ ( "", () ) ] ))
+        |> Glob.match (Glob.oneOf ( ( "garden/", () ), [ ( "content/page/", () ) ] ))
         |> Glob.capture Glob.wildcard
         |> Glob.match (Glob.literal ".md")
         |> Glob.toBackendTask
@@ -86,8 +85,7 @@ findFilePath : String -> BackendTask FatalError ( String, PageKind )
 findFilePath slug =
     Glob.succeed Tuple.pair
         |> Glob.captureFilePath
-        |> Glob.match (Glob.literal "content/")
-        |> Glob.capture (Glob.oneOf ( ( "page/", Page ), [ ( "", NotePage ) ] ))
+        |> Glob.capture (Glob.oneOf ( ( "content/page/", Page ), [ ( "garden/", NotePage ) ] ))
         |> Glob.match (Glob.literal slug)
         |> Glob.match (Glob.literal ".md")
         |> Glob.expectUniqueMatch
@@ -414,7 +412,7 @@ notes : BackendTask FatalError (List { topic : String, filePath : String })
 notes =
     Glob.succeed
         (\topic filePath -> { topic = topic, filePath = filePath })
-        |> Glob.match (Glob.literal "content/")
+        |> Glob.match (Glob.literal "garden/")
         |> Glob.capture Glob.wildcard
         |> Glob.match (Glob.literal ".md")
         |> Glob.captureFilePath
@@ -430,7 +428,7 @@ backReferences slug =
                 allNotes
                     |> List.map
                         (\note ->
-                            BackendTask.File.bodyWithoutFrontmatter ("content/" ++ note.topic ++ ".md")
+                            BackendTask.File.bodyWithoutFrontmatter ("garden/" ++ note.topic ++ ".md")
                                 |> BackendTask.allowFatal
                                 |> BackendTask.andThen
                                     (\rawMarkdown ->
@@ -459,7 +457,7 @@ backReferences slug =
 
 forwardRefs : String -> BackendTask FatalError (List BackRef)
 forwardRefs slug =
-    BackendTask.File.bodyWithoutFrontmatter ("content/" ++ slug ++ ".md")
+    BackendTask.File.bodyWithoutFrontmatter ("garden/" ++ slug ++ ".md")
         |> BackendTask.allowFatal
         |> BackendTask.andThen
             (\rawMarkdown ->
@@ -509,7 +507,7 @@ forwardReferences blocks =
                                     |> Regex.replace (Regex.fromString "#.*" |> Maybe.withDefault Regex.never) (\_ -> "")
                         in
                         if isWikiLink cleanSlug then
-                            (MarkdownCodec.titleAndDescription ("content/" ++ cleanSlug ++ ".md")
+                            (MarkdownCodec.titleAndDescription ("garden/" ++ cleanSlug ++ ".md")
                                 |> BackendTask.map
                                     (\{ title, description } -> BackRef cleanSlug title description)
                             )
