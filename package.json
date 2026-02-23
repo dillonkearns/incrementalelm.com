@@ -24,7 +24,7 @@
     "@mux/mux-node": "^3.3.1",
     "@tailwindcss/vite": "^4.2.0",
     "@types/glob": "^7.1.1",
-    "@types/node": "^12.6.8",
+    "@types/node": "^22.12.0",
     "codemirror": "^5.48.2",
     "elm-optimize-level-2": "^0.2.3",
     "elm-pages": "^3.1.3",
