@@ -7,7 +7,7 @@ dist/
 gen/Pages.elm
 elm-graphql-gen/
 gen/
-.elm-tailwind/
+
 .elm-pages/
 public/hls-video-element.js
 
