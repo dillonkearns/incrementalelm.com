@@ -7,4 +7,4 @@
 	url = https://github.com/dillonkearns/hls-video-element.git
 [submodule "garden"]
 	path = garden
-	url = git@github.com:dillonkearns/notes.git
+	url = https://github.com/dillonkearns/notes.git
