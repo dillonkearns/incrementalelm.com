@@ -3,7 +3,6 @@ module TailwindMarkdownRenderer2 exposing (renderer)
 import BackendTask exposing (BackendTask)
 import BackendTask.Custom
 import FatalError exposing (FatalError)
-import Html.Attributes as HtmlAttr
 import Html exposing (Html)
 import Html.Attributes as Attr
 import Json.Decode as Decode
@@ -13,8 +12,8 @@ import Markdown.Html
 import Markdown.Renderer
 import Markdown.Scaffolded exposing (..)
 import Shiki
-import Tailwind as Tw exposing (batch, classes)
-import Tailwind.Theme exposing (accent2, background, s1, s2, s4, s5, s6, s7, s8, s12)
+import Tailwind as Tw exposing (classes)
+import Tailwind.Theme exposing (accent2, background, s1, s12, s2, s4, s5, s6, s7, s8)
 import View.Ellie
 import Widget.Signup
 
@@ -155,10 +154,6 @@ reduceHtmlDataSource block =
                     ]
                 ]
                 [ Html.text content ]
-                |> BackendTask.succeed
-
-        Strikethrough children ->
-            Html.del [] children
                 |> BackendTask.succeed
 
         Link { destination, title, children } ->
@@ -359,12 +354,12 @@ shikiDataSource info =
         (Shiki.decoder
             |> Decode.map
                 (Shiki.view
-                    [ HtmlAttr.style "font-family" "IBM Plex Mono"
-                    , HtmlAttr.style "padding" "0.75rem 1.25rem"
-                    , HtmlAttr.style "font-size" "13px"
-                    , HtmlAttr.style "border-radius" "0.5rem"
-                    , HtmlAttr.style "margin-top" "2rem"
-                    , HtmlAttr.style "margin-bottom" "2rem"
+                    [ Attr.style "font-family" "IBM Plex Mono"
+                    , Attr.style "padding" "0.75rem 1.25rem"
+                    , Attr.style "font-size" "13px"
+                    , Attr.style "border-radius" "0.5rem"
+                    , Attr.style "margin-top" "2rem"
+                    , Attr.style "margin-bottom" "2rem"
                     ]
                 )
         )

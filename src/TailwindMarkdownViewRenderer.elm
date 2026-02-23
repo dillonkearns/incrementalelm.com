@@ -1,7 +1,6 @@
 module TailwindMarkdownViewRenderer exposing (renderer)
 
 import Dict exposing (Dict)
-import Html.Attributes as HtmlAttr
 import Html exposing (Html)
 import Html.Attributes as Attr
 import Markdown.Block as Block
@@ -9,8 +8,8 @@ import Markdown.Html
 import Markdown.Renderer
 import Markdown.Scaffolded exposing (..)
 import Shiki
-import Tailwind as Tw exposing (batch, classes)
-import Tailwind.Theme exposing (accent2, background, s1, s2, s4, s5, s6, s7, s8, s12)
+import Tailwind as Tw exposing (classes)
+import Tailwind.Theme exposing (accent2, background, s1, s12, s2, s4, s5, s6, s7, s8)
 import View.Ellie
 import Widget.Signup
 
@@ -18,7 +17,7 @@ import Widget.Signup
 renderer : Dict String Shiki.Highlighted -> Markdown.Renderer.Renderer (Html msg)
 renderer highlights =
     toRenderer
-        { renderHtml = Markdown.Html.oneOf (htmlRenderers highlights)
+        { renderHtml = Markdown.Html.oneOf htmlRenderers
         , renderMarkdown = reduceMarkdown highlights
         }
 
@@ -126,12 +125,12 @@ reduceMarkdown highlights block =
             case Dict.get info.body highlights of
                 Just highlighted ->
                     Shiki.view
-                        [ HtmlAttr.style "font-family" "IBM Plex Mono"
-                        , HtmlAttr.style "padding" "0.75rem 1.25rem"
-                        , HtmlAttr.style "font-size" "13px"
-                        , HtmlAttr.style "border-radius" "0.5rem"
-                        , HtmlAttr.style "margin-top" "2rem"
-                        , HtmlAttr.style "margin-bottom" "2rem"
+                        [ Attr.style "font-family" "IBM Plex Mono"
+                        , Attr.style "padding" "0.75rem 1.25rem"
+                        , Attr.style "font-size" "13px"
+                        , Attr.style "border-radius" "0.5rem"
+                        , Attr.style "margin-top" "2rem"
+                        , Attr.style "margin-bottom" "2rem"
                         ]
                         highlighted
 
@@ -161,9 +160,6 @@ reduceMarkdown highlights block =
                     ]
                 ]
                 [ Html.text content ]
-
-        Strikethrough children ->
-            Html.del [] children
 
         Link { destination, title, children } ->
             Html.a
@@ -339,8 +335,8 @@ slugToAbsoluteUrl slugOrUrl =
         "/" ++ slugOrUrl
 
 
-htmlRenderers : Dict String Shiki.Highlighted -> List (Markdown.Html.Renderer (List (Html msg) -> Html msg))
-htmlRenderers highlights =
+htmlRenderers : List (Markdown.Html.Renderer (List (Html msg) -> Html msg))
+htmlRenderers =
     [ Markdown.Html.tag "discord"
         (\_ ->
             Html.div

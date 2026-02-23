@@ -11,8 +11,8 @@ import Html.Attributes as Attr
 import Html.Events
 import Link
 import MarkdownCodec
-import PagesMsg exposing (PagesMsg)
 import Pages.Url
+import PagesMsg exposing (PagesMsg)
 import Route exposing (Route)
 import RouteBuilder exposing (App, StatefulRoute)
 import Shared
@@ -87,7 +87,7 @@ view app sharedModel model =
     { title = "Incremental Elm Wiki"
     , body =
         View.Tailwind
-            (List.map (Html.map PagesMsg.fromMsg)
+            (List.map (map PagesMsg.fromMsg)
                 [ div
                     [ classes
                         [ Tw.raw "font-bold"

@@ -1,7 +1,6 @@
 module Widget.Signup exposing (view, view2)
 
 import Html exposing (Html)
-import Html.Attributes as Attr
 import Tailwind as Tw exposing (classes)
 import Tailwind.Theme exposing (s4)
 import View.DripSignupForm

@@ -7,13 +7,13 @@ import Link
 import Route exposing (Route)
 import Tailwind as Tw exposing (batch, classes)
 import Tailwind.Breakpoints exposing (md)
-import Tailwind.Theme exposing (background, highlight, s0, s2, s4, s6, s8, s16)
+import Tailwind.Theme exposing (background, highlight, s0, s16, s2, s4, s6, s8)
 import UrlPath exposing (UrlPath)
 import User exposing (User)
 
 
 view : Maybe User -> DarkMode -> msg -> msg -> UrlPath -> Html msg
-view maybeUser darkMode toggleDarkMode toggleMobileMenuMsg currentPath =
+view maybeUser _ toggleDarkMode _ currentPath =
     nav
         [ classes
             [ Tw.flex

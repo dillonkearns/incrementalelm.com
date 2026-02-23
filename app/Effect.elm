@@ -1,4 +1,4 @@
-port module Effect exposing (Effect(..), batch, fromCmd, map, none, perform)
+port module Effect exposing (Effect(..), FormData, batch, fromCmd, map, none, perform)
 
 import Browser.Navigation
 import Form

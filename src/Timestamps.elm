@@ -1,8 +1,7 @@
-module Timestamps exposing (Timestamps, data, format)
+module Timestamps exposing (Timestamps, data)
 
 import BackendTask exposing (BackendTask)
 import BackendTask.Custom
-import DateFormat
 import FatalError exposing (FatalError)
 import Json.Decode as Decode
 import Json.Encode
@@ -59,21 +58,3 @@ secondsStringToPosix posixTime =
         |> String.toInt
         |> Maybe.map (\unixTimeInSeconds -> (unixTimeInSeconds * 1000) |> Time.millisToPosix)
         |> Result.fromMaybe "Expected int"
-
-
-format : Time.Posix -> String
-format posix =
-    DateFormat.format
-        [ DateFormat.monthNameFull
-        , DateFormat.text " "
-        , DateFormat.dayOfMonthNumber
-        , DateFormat.text ", "
-        , DateFormat.yearNumber
-        ]
-        pacificZone
-        posix
-
-
-pacificZone : Time.Zone
-pacificZone =
-    Time.customZone (-60 * 7) []

@@ -1,4 +1,4 @@
-module Route.Page_ exposing (ActionData, BackRef, Data, Model, Msg, PageMetadata, RouteParams, route)
+module Route.Page_ exposing (ActionData, BackRef, Data, Metadata, Model, Msg, NoteRecord, PageMetadata, RouteParams, route)
 
 {- Fauna DB view tracking has been removed since Fauna GraphQL is dead. -}
 
@@ -6,19 +6,19 @@ import BackendTask exposing (BackendTask)
 import BackendTask.File
 import BackendTask.Glob as Glob
 import Date exposing (Date)
+import Dict exposing (Dict)
 import FatalError exposing (FatalError)
 import Head
 import Head.Seo as Seo
 import Html exposing (..)
 import Html.Attributes as Attr
-import Dict exposing (Dict)
 import Json.Decode as Decode exposing (Decoder)
 import Link
 import Markdown.Block as Block exposing (Block)
 import Markdown.Parser
 import MarkdownCodec
-import PagesMsg exposing (PagesMsg)
 import Pages.Url
+import PagesMsg exposing (PagesMsg)
 import Regex
 import Route exposing (Route)
 import RouteBuilder exposing (App, StatelessRoute)
@@ -27,9 +27,8 @@ import Shiki
 import String.Extra
 import Tailwind as Tw exposing (classes)
 import Tailwind.Breakpoints exposing (lg)
-import Tailwind.Theme exposing (s2, s3, s5, s6, s8, s12)
+import Tailwind.Theme exposing (s12, s2, s3, s5, s6, s8)
 import TailwindMarkdownViewRenderer
-
 import Time
 import Timestamps exposing (Timestamps)
 import UnsplashImage exposing (UnsplashImage)
@@ -171,7 +170,7 @@ view app sharedModel =
     { title = app.data.info.title
     , body =
         View.Tailwind
-            [ ([ div
+            [ [ div
                     [ classes
                         [ Tw.raw "text-xs"
                         ]
@@ -217,12 +216,12 @@ view app sharedModel =
                             )
                         ]
                     ]
-               , (MarkdownCodec.renderMarkdown (TailwindMarkdownViewRenderer.renderer app.data.highlights) app.data.body
+              , (MarkdownCodec.renderMarkdown (TailwindMarkdownViewRenderer.renderer app.data.highlights) app.data.body
                     |> Result.withDefault [ text "Error rendering markdown" ]
-                 )
+                )
                     |> div [ classes [ Tw.flex, Tw.flex_col ] ]
-               , div [ classes [ Tw.my s8 ] ] [ Widget.Signup.view ]
-               , viewIf app.data.noteData
+              , div [ classes [ Tw.my s8 ] ] [ Widget.Signup.view ]
+              , viewIf app.data.noteData
                     (\note ->
                         div
                             []
@@ -230,15 +229,14 @@ view app sharedModel =
                             , backReferencesView "Links on this page" note.forwardReferences
                             ]
                     )
-               , if app.data.noteData /= Nothing then
+              , if app.data.noteData /= Nothing then
                     node "utterances-comments" [] []
 
-                 else
+                else
                     text ""
-               ]
+              ]
                 |> div []
                 |> freeze
-              )
             ]
     }
 
